@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<link rel=stylesheet href=css/style.css>
+</head>
+<body>
+  <div id=top></div>
+
+  <div id=timeline></div>
+
+  <div class=main-app id=search>
+    <input id=normal-search class=search>
+    <a id=clear-search>X</a>
+    <button onclick=search($("#normal-search").val())>Search</button>
+  </div>
+
+  <div id=video-list></div>
+<!--
+  <span class="main-app toggle" id=filter>
+    <button title="Sort By Last Seen" onclick=sort('AGE',this)>Most Recent</button>
+    <button title="Sort By Times Seen" onclick=sort('COUNT',this)>Most Frequent</button>
+    <button class=selected title="Sort Alphabetically" onclick=sort('ALPHA',this)>Alphabetical</button>
+    <button onclick=sort('HISTORY',this)>Viewed History</button>
+  </span>
+  -->
+  <div id=splash>
+    <h2>Browse related videos on YouTube.</h2>
+    Paste a YouTube URL below to start browsing from it <a href=http://qaa.ath.cx/ytwatch.jpg>[ screenshot ]</a>
+    <br>
+    <input id=initial-search class=search>
+    <button onclick=search($("#initial-search").val())>Ok, that was easy!</button>
+  </div>
+
+</body>
+
+<script src=js/jquery-1.6.2.min.js></script>
+<script src=js/jstorage.min.js></script>
+<script src=js/underscore-min.js></script>
+<script src=js/_inject.min.js></script>
+<script src=js/utils.js></script>
+<script src=js/swfobject.js></script>
+<script src=js/db.js></script>
+<script src=js/timeline.js></script>
+<script src=js/app.js></script>
+</html>
