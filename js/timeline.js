@@ -1,7 +1,52 @@
 var Timeline = (function(){
   var 
     data = {},
+    maxPlayer = 3,
+
+    // The centroid, or currently playing track is floor(maxPlayer / 2)
+    centroid = Math.floor(maxPlayer / 2),
+
+    // idsActive is the list of is, corresponding to the vidContiainers
+    // that should be currently loaded.  Trivially, idsActive[centroid]
+    // should usually be playing
+    idsActive = [],
+
+    ix,
     uniq = 0;
+
+  $(function(){
+    // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
+    // videos we which to play.
+    for(var ix = 0; ix < maxPlayer; ix++) {
+      $("<div id=vidContainer-" + ix + ">").appendTo("#timeline");
+    }
+  });
+
+  var updateRunning = false;
+  function updateytplayer() {
+    updateRunning = true;
+
+    // mechanics for moving the centroid
+    if(player[play.active].getCurrentTime() > 0) {
+      if(player[play.active].getDuration() - player[play.active].getCurrentTime() < 10) {
+        if(play.nextFlag == true) {
+          go_next();
+          play.nextFlag = false;
+        }
+      }
+    }
+  }
+
+  self.onYouTubePlayerReady = function(playerId) {
+    var id = parseInt(playerId.substr(-1));
+    player[id] = document.getElementById(playerId);
+
+    if(!updateRunning) {
+      setInterval(updateytplayer, 250);
+    }
+
+    player[id].playVideo();
+  }
 
   return {
     data: data,
