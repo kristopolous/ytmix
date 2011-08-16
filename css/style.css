@@ -12,8 +12,8 @@ button{background:#ccccd0 url("twf.png") repeat-x scroll 0 -4px;
   cursor:pointer;display:inline-block;color:#222230;font-size:11px;text-align:center;margin:5px;padding:5px 6px;border:1px solid #888}
 button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445}
 
-#timeline{position:fixed;top:0;left:0;vertical-align:top;margin-left:-2px;z-index:18}
-#timeline .track{position:relative;display:inline-block;margin:3px 0 0 0;text-align:center;font-size:0.75em;min-height:200px;width:203px;color:#ccc;vertical-align:top;background:#1d2030;padding:7px 0 3px}
+#timeline{position:fixed;top:0;left:0;vertical-align:top;margin-left:-2px;z-index:18;white-space:nowrap;overflow-x:auto;width:100%}
+#timeline .track{white-space:normal;position:relative;display:inline-block;margin:3px 0 0 0;text-align:center;font-size:0.75em;min-height:200px;width:203px;color:#ccc;vertical-align:top;background:#1d2030;padding:7px 0 3px}
 #timeline .removal{position:absolute;top:0;left:0;height:40px;width:203px;font-size:24px;color:#aaa;background:#333;padding-top:12px}
 #timeline .removal:hover{color:#fff;background:#000}
 #timeline a{color:#ccc}
