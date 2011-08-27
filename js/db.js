@@ -1,3 +1,10 @@
+//
+// db.js Javascript Database 0.0.1
+// https://github.com/kristopolous/db.js
+//
+// Copyright 2011, Chris McKenzie
+// Dual licensed under the MIT or GPL Version 2 licenses.
+//
 (function(){
 
   var 
@@ -253,7 +260,10 @@
     return set;
   }
 
+  // This is like the SQL "in" operator, which is a reserved JS word.  You can invoke it either
+  // with a static array or a callback
   var isin = (function() {
+    // It has a cache for optimization
     var cache = {};
 
     return function (param1, param2) {
@@ -340,7 +350,7 @@
   }
 
   function deepcopy(from) {
-    //@http://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-clone-a-javascript-object
+    // @http://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-clone-a-javascript-object
     return extend({}, from);
   }
 
@@ -567,7 +577,8 @@
 
 
   var safe_stain = (function() {
-    var pub = {},
+    var 
+      pub = {},
       stainid = 0;
 
     pub.stain = function(list) {
@@ -576,6 +587,7 @@
       for(var ix = 0, len = list.length; ix < len; ix++) {
         list[ix].constructor('i', stainid);
       }
+
       return stainid;
     }
 
@@ -607,6 +619,7 @@
       _indexCache = {},
       _indexLock = false,
       _indexQueue = [],
+      _template = false,
       raw = [];
 
     raw._indexCache = _indexCache;
@@ -677,12 +690,36 @@
       return list;
     }
 
+    function list2data(list) {
+      var ret = [];
+
+      for(var ix = 0, len = list.length; ix < len; ix++) {
+        ret[ix] = raw[list[ix]];
+      }
+
+      return ret;
+    }
+
     var ret = expression();
     ret.isin = isin;
     ret.has = has;
     ret.like = like;
-    ret.each = eachRun;
+    ret.each = ret.map = eachRun;
 
+    ret.template = {
+      create: function(opt) { _template = opt; },
+      update: function(opt) { extend(_template || {}, opt); },
+      get: function() { return _template },
+      destroy: function() { _template = false }
+    }; 
+
+    //
+    // group
+    //
+    // This is like SQLs groupby function. It will take results from any other function and then
+    // return them as a hash where the keys are the field values and the results are an array
+    // of the rows that match that value.
+    //
     ret.group = function(field) {
       var groupMap = {};
 
@@ -702,10 +739,25 @@
       return chain(groupMap);
     } 
 
+    //
+    // sync
+    //
+    // The callbacks in this list are called
+    // every time the database changes with
+    // the raw value of the database.
+    //
     ret.sync = function(callback) {
       syncList.push(callback); 
     }
 
+    //
+    // sort
+    //
+    // This is like SQLs orderby function.  If you pass it just a field, then
+    // the results are returned in ascending order (x - y).  
+    //
+    // You can also supply a second parameter of a case insensitive "asc" and "desc" like in SQL.
+    //
     ret.order = ret.sort = function (arg0, arg1) {
       var 
         key, 
@@ -758,20 +810,24 @@
       return filter.sort(fnSort);
     }
 
-    function list2data(list) {
-      var ret = [];
-
-      for(var ix = 0, len = list.length; ix < len; ix++) {
-        ret[ix] = raw[list[ix]];
-      }
-
-      return ret;
-    }
-
+    // 
+    // constrain
+    //
+    // This is to constrain the database.  Currently you can enforce a unique
+    // key value through something like `db.constrain('unique', 'somekey')`.
+    // You should probably run this early, as unlike in RDBMSs, it doesn't do
+    // a historical check nor does it create a optimized hash to index by
+    // this key ... it just does a lookup every time as of now.
+    //
     ret.constrain = function() {
       constraints = extend(constraints, kvarg(arguments)); 
     }
 
+    //
+    // inverse
+    //
+    // Invert a set of results.
+    //
     ret.inverse = function(list) {
       if(arguments.length == 0 && _.isArr(this)) {
         list = this;
@@ -790,6 +846,11 @@
         );
     }
 
+    //
+    // findFirst
+    //
+    // This is a shorthand to find for when you are only expecting one result.
+    //
     ret.findFirst = function(){
       var res = ret.find.apply(this, slice.call(arguments));
 
@@ -800,6 +861,16 @@
       }
     }
 
+    //
+    // select
+    //
+    // This will extract the values of a particular key from the filtered list
+    // and then return it as an array or an array of arrays, depending on
+    // which is relevant for the query.
+    //
+    // You can also do db.select(' * ') to retrieve all fields, although the 
+    // key values of these fields aren't currently being returned.
+    //
     ret.select = function(field) {
       var 
         filter,
@@ -844,6 +915,12 @@
       return chain(values(resultList));
     }
 
+    // 
+    // insert
+    //
+    // This is to insert data into the database.  You can either insert
+    // data as a list of arguments, as an array, or as a single object.
+    //
     ret.insert = function(param) {
       var 
         constraintMap = {},
@@ -881,6 +958,25 @@
 
         var ix = raw.length, data;
 
+        // insert from a template if available
+        if(_template) {
+          var instance = {};
+          
+          // create a template instance that's capable
+          // of holding evaluations
+          each(_template, function(key, value) {
+            if(_.isFun(value)) {
+              instance[ key ] = value();
+            } else {
+              instance[ key ] = value;
+            }
+          });
+
+          // map the values to be inserted upon
+          // the instance of this template
+          which = extend(instance, which);
+        }
+
         try {
           if(_unsafe) {
             raw.push(which);
@@ -914,12 +1010,15 @@
       );
     }
 
+    //
+    // update
+    //
     // Update allows you to set newvalue to all
     // parameters matching constraint where constraint
     // is either a set of K/V pairs or a result
     // of find so that you can do something like
     //
-    // You can also run a function on it
+    // Update also can take a callback.
     //
     //   var result = db.find(constraint);
     //   result.update({a: b});
@@ -978,6 +1077,11 @@
       );
     }
 
+    // remove
+    // 
+    // This will remove the entries from the database but also return them if
+    // you want to manipulate them.  You can invoke this with a constraint.
+    //
     ret.remove = function(constraint) {
       var 
         end, start,
@@ -1040,7 +1144,13 @@
   _DB.unsafe = function() { _unsafe = true; }
   _DB.deepcopy = deepcopy;
 
-
+  //
+  // reduceLeft
+  //
+  // This does a traditional left-reduction on a list
+  // as popular in list comprehension suites common in 
+  // functional programming.
+  //
   _DB.reduceLeft = function(initial, oper) {
     var lambda = new Function("y,x", "return y " + oper);
 
@@ -1059,6 +1169,13 @@
     }
   }
 
+  //
+  // reduceRight
+  //
+  // This does a traditional right-reduction on a list
+  // as popular in list comprehension suites common in 
+  // functional programming.
+  //
   _DB.reduceRight = function(initial, oper) {
     var lambda = new Function("y,x", "return y " + oper);
 

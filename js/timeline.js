@@ -11,6 +11,8 @@ var Timeline = (function(){
     // should usually be playing
     idsActive = [],
 
+    player = {},
+
     ix,
     uniq = 0;
 
@@ -19,6 +21,11 @@ var Timeline = (function(){
     // videos we which to play.
     for(var ix = 0; ix < maxPlayer; ix++) {
       $("<div id=vidContainer-" + ix + ">").appendTo("#timeline");
+
+      swfobject.embedSWF("http://www.youtube.com/apiplayer?" +
+        "version=3&enablejsapi=1&playerapiid=player-" + ix,
+        "vidContainer-" + ix, "188", "152", "9", null, null, 
+        {allowScriptAccess: "always"}, {id: 'ytPlayer-' + ix});
     }
   });
 
@@ -26,6 +33,7 @@ var Timeline = (function(){
   function updateytplayer() {
     updateRunning = true;
 
+/*
     // mechanics for moving the centroid
     if(player[play.active].getCurrentTime() > 0) {
       if(player[play.active].getDuration() - player[play.active].getCurrentTime() < 10) {
@@ -35,10 +43,12 @@ var Timeline = (function(){
         }
       }
     }
+*/
   }
 
   self.onYouTubePlayerReady = function(playerId) {
     var id = parseInt(playerId.substr(-1));
+    console.log(id, playerId);
     player[id] = document.getElementById(playerId);
 
     if(!updateRunning) {
@@ -50,9 +60,11 @@ var Timeline = (function(){
 
   return {
     data: data,
+
     // Swap out a flash controller for an image of the youtube video.
     // This is done wo we don't have a lot of flash controllers at once
     makeImage: function(){}, 
+
     remove: function(index){
       // find the yt id at the index to
       // be removed
@@ -104,8 +116,12 @@ var Timeline = (function(){
       data[myid].dom = $("<div />")
         .addClass('track')
         .append(data[myid].remover)
-        .append("<embed type=application/x-shockwave-flash wmode=transparent allowscriptaccess=always width=188 height=152 src=http://www.youtube.com/v/" + ytid + "&hl=en&fs=1&autoplay=1></embed>")
+    	  .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
         .append(data[myid].title)
+
+      console.log(player);
+      eval(_inject('add'));
+      player[0].loadVideoById(ytid);
 
       data[myid].remover.click(function(){
         Timeline.remove(myid);

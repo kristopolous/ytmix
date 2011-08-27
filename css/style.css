@@ -3,7 +3,6 @@ span{display:inline-block}
 a{color:#333;cursor:pointer}
 a:hover{text-decoration:none}
 tt{font-family:'Trebuchet MS',Helvetica,sans-serif}
-img{cursor:pointer;width:112px;height:90px}
 input{font-family:'Trebuchet MS',Helvetica,sans-serif;margin-top:5px;font-size:15px;background:url(w.png);border:1px inset #334444;margin-right:3px;color:#012;padding:2px;width:500px}
 input:focus{border-color:#0af}
 button:hover{background-color:#08a;color:#fff;border-color:#8ae}
@@ -14,9 +13,11 @@ button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445
 
 #timeline{position:fixed;top:0;left:0;vertical-align:top;margin-left:-2px;z-index:18;white-space:nowrap;overflow-x:auto;width:100%}
 #timeline .track{white-space:normal;position:relative;display:inline-block;margin:3px 0 0 0;text-align:center;font-size:0.75em;min-height:200px;width:203px;color:#ccc;vertical-align:top;background:#1d2030;padding:7px 0 3px}
+#timeline .track img{width:188px;height:141px;position:absolute}
 #timeline .removal{position:absolute;top:0;left:0;height:40px;width:203px;font-size:24px;color:#aaa;background:#333;padding-top:12px}
 #timeline .removal:hover{color:#fff;background:#000}
 #timeline a{color:#ccc}
+#timeline object{visibility:hidden;position:absolute;top:-1000px;left:-1000px}
 
 #top {position:fixed;top:0;left:0;background:#aab;height:228px;width:100%;background: #aaaab0;overflow:visible;z-index:10}
 
@@ -34,7 +35,7 @@ button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445
 .main-app{display:none}
 
 #video-list {margin-top:230px;margin-left:3px;}
-#video-list img{border:1px solid #1D2030}
+#video-list img{width:120px;height:90px}
 #video-list .hover{display:none;position:absolute;top:0;left:;width:170px;opacity:0.8}
 #video-list .hover a{display:block;height:35px;font-size:20px;background:#11111c url('twf.png') repeat-x 0 -6px;margin-bottom:3px;color:#ccc;padding-top:8px}
 #video-list .hover a:hover{color:#fff;background-color:#33333f}
