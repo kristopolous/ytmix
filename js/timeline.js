@@ -6,7 +6,7 @@ var Timeline = (function(){
     // The centroid, or currently playing track is floor(maxPlayer / 2)
     centroid = Math.floor(maxPlayer / 2),
 
-    // idsActive is the list of is, corresponding to the vidContiainers
+    // idsActive is the list of ids, corresponding to the vidContiainers
     // that should be currently loaded.  Trivially, idsActive[centroid]
     // should usually be playing
     idsActive = [],
@@ -14,13 +14,13 @@ var Timeline = (function(){
     player = {},
 
     ix,
-    uniq = 0;
+    UNIQ = 0;
 
   $(function(){
     // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
     // videos we which to play.
     for(var ix = 0; ix < maxPlayer; ix++) {
-      $("<div id=vidContainer-" + ix + ">").appendTo("#timeline");
+      $("<div id=vidContainer-" + ix + ">").appendTo("#players");
 
       swfobject.embedSWF("http://www.youtube.com/apiplayer?" +
         "version=3&enablejsapi=1&playerapiid=player-" + ix,
@@ -33,17 +33,26 @@ var Timeline = (function(){
   function updateytplayer() {
     updateRunning = true;
 
-/*
     // mechanics for moving the centroid
-    if(player[play.active].getCurrentTime() > 0) {
-      if(player[play.active].getDuration() - player[play.active].getCurrentTime() < 10) {
+    if(player.active && player.active.getCurrentTime() > 0) {
+
+      $("#punch").html(- (player.active.getDuration() - player.active.getCurrentTime()).toFixed(2));
+
+      if(! ev.isset('timeline.dragging') ) {
+        $("#control").css('left', - (
+          player.start + 
+          200 * (player.active.getCurrentTime() / player.active.getDuration()) -
+          $("#now").offset().left
+        ) + 'px');
+      }
+
+      if(player.active.getDuration() - player.active.getCurrentTime() < 10) {
         if(play.nextFlag == true) {
           go_next();
           play.nextFlag = false;
         }
       }
     }
-*/
   }
 
   self.onYouTubePlayerReady = function(playerId) {
@@ -52,10 +61,11 @@ var Timeline = (function(){
     player[id] = document.getElementById(playerId);
 
     if(!updateRunning) {
-      setInterval(updateytplayer, 250);
+      setInterval(updateytplayer, 100);
     }
 
     player[id].playVideo();
+    ev.set('yt.ready');
   }
 
   return {
@@ -101,8 +111,40 @@ var Timeline = (function(){
       data[index].active = false;
     },
 
+    play: function(dbid) {
+      ev.isset('yt.ready', function(){
+        player.current = data[dbid];
+        eval(_inject('add'));
+        player[0].loadVideoById(player.current.ytid);
+        player.active = player[0];
+        player.start = $(data[dbid].dom).offset().left - $("#control").offset().left;
+      });
+    },
+
+    seekTo: function(offset) {
+    },
+
+    init: function() {
+      ev.isset('timeline.init', function(){
+        $("#control").draggable({
+          axis: 'x',
+          start: function(){
+            ev.set('timeline.dragging');
+          },
+          stop: function() {
+            ev.unset('timeline.dragging');
+            Timeline.seekTo($("#control").offset().left);
+          }
+        });
+      });
+
+      ev.set('timeline.init');
+    },
+
     add: function(ytid) {
-      var myid = uniq;
+      var myid = UNIQ;
+
+      Timeline.init();
 
       data[myid] = {
         index: myid,
@@ -119,23 +161,20 @@ var Timeline = (function(){
     	  .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
         .append(data[myid].title)
 
-      console.log(player);
-      eval(_inject('add'));
-      player[1].loadVideoById(ytid);
-
       data[myid].remover.click(function(){
         Timeline.remove(myid);
         gen();
       });
 
-      data[myid].dom.appendTo('#timeline');
+      data[myid].dom.appendTo('#control');
 
       if(db.findFirst({ytid: ytid}).related) {
         Timeline.update(myid);
       }
 
-      uniq ++;
+      UNIQ ++;
 
+      Timeline.play(myid);
       return myid;
     },
 

@@ -5,8 +5,17 @@
 </head>
 <body>
   <div id=top></div>
+  <div id=tools></div>
 
-  <div id=timeline></div>
+  <div id=timeline>
+    <div id=players></div>
+    <div id=control></div>
+    <div id=now></div>
+    <div id=mixer>
+      <div id=master></div>
+      <div id=punch></div>
+    </div>
+  </div>
 
   <div class=main-app id=search>
     <input id=normal-search class=search>
@@ -23,7 +32,6 @@
       <input id=initial-search class=search>
       <button onclick=search($("#initial-search").val())>Ok, that was easy!</button>
     </div>
-    <br>
     <div>
       <h2>Gallery</h2>
       <p>You can check out some existing stations by clicking below</p>
@@ -33,12 +41,16 @@
 </body>
 
 <script src=js/jquery-1.6.2.min.js></script>
+<script src=js/jquery-ui-1.8.16.custom.min.js></script>
 <script src=js/jstorage.min.js></script>
 <script src=js/underscore-min.js></script>
 <script src=js/_inject.min.js></script>
 <script src=js/utils.js></script>
+<script src=js/evda.js></script>
 <script src=js/swfobject.js></script>
 <script src=js/db.js></script>
+<script src=js/player.js></script>
+<script src=js/mixer.js></script>
 <script src=js/timeline.js></script>
 <script src=js/app.js></script>
 </html>

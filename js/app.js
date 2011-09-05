@@ -4,6 +4,7 @@ var
   results = {},
 	query = false,
   splash = true,
+  ev = EvDa(),
   db = DB();
 
 db.constrain('unique', 'ytid');
