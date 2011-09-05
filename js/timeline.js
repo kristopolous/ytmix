@@ -25,7 +25,7 @@ var Timeline = (function(){
       swfobject.embedSWF("http://www.youtube.com/apiplayer?" +
         "version=3&enablejsapi=1&playerapiid=player-" + ix,
         "vidContainer-" + ix, "188", "152", "9", null, null, 
-        {allowScriptAccess: "always"}, {id: 'ytPlayer-' + ix});
+        {allowScriptAccess: "always"}, {id: 'player-' + ix});
     }
   });
 
@@ -121,7 +121,7 @@ var Timeline = (function(){
 
       console.log(player);
       eval(_inject('add'));
-      player[0].loadVideoById(ytid);
+      player[1].loadVideoById(ytid);
 
       data[myid].remover.click(function(){
         Timeline.remove(myid);

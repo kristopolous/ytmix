@@ -27,7 +27,8 @@ button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445
 #query:focus{background:white}
 #filter{position:fixed;padding:0px;width:100%;bottom:0px;left:0px;}
 
-#splash{font-size:14px;color:#444455;z-index:15;-moz-border-radius:3px;-webkit-border-radius:3px;position:absolute;top:20px;left:20%;background:#AAAAAe;padding:10px 15px 20px 25px}
+#splash{position:absolute;top:0;left:0;text-align:center;z-index:20}
+#splash div{text-align:left;margin:20px;display:inline-block;font-size:14px;color:#444455;z-index:15;-moz-border-radius:3px;-webkit-border-radius:3px;background:#AAAAAe;padding:10px 15px 20px 25px}
 #splash a { color: #33a;font-size:11px;text-decoration:none}
 #splash h2{margin:5px;padding:0;color:#028;margin-left:-2px}
 #splash button{margin-top:9px;display:block;margin-left:0}

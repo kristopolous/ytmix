@@ -15,20 +15,19 @@
   </div>
 
   <div id=video-list></div>
-<!--
-  <span class="main-app toggle" id=filter>
-    <button title="Sort By Last Seen" onclick=sort('AGE',this)>Most Recent</button>
-    <button title="Sort By Times Seen" onclick=sort('COUNT',this)>Most Frequent</button>
-    <button class=selected title="Sort Alphabetically" onclick=sort('ALPHA',this)>Alphabetical</button>
-    <button onclick=sort('HISTORY',this)>Viewed History</button>
-  </span>
-  -->
   <div id=splash>
-    <h2>Browse related videos on YouTube.</h2>
-    Paste a YouTube URL below to start browsing from it <a href=http://qaa.ath.cx/ytwatch.jpg>[ screenshot ]</a>
+    <div>
+      <h2>Create custom radio stations</h2>
+      Search by an artist or a song or paste a YouTube URL below to start <a href=http://qaa.ath.cx/ytwatch.jpg>[ screenshot ]</a>
+      <br>
+      <input id=initial-search class=search>
+      <button onclick=search($("#initial-search").val())>Ok, that was easy!</button>
+    </div>
     <br>
-    <input id=initial-search class=search>
-    <button onclick=search($("#initial-search").val())>Ok, that was easy!</button>
+    <div>
+      <h2>Gallery</h2>
+      <p>You can check out some existing stations by clicking below</p>
+    </div>
   </div>
 
 </body>

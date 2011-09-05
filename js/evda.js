@@ -1,299 +1,124 @@
-function EvDa ( ) {
+function EvDa () {
   var 
-    pub = {},
+    // Underscore shortcuts ... pleases the minifier
+    each = _.each,
+    keys = _.keys,
+    extend = _.extend,
+    flatten = _.flatten,
+
+    // Internals
     data = {},
-    fHandle = 0,
-    fMap = {},
+    funHandle = 0,
+    funMap = {},
+    hook = ['test', /* 'before', */ 'when', 'after' /*, 'finally' */ ],
     stageMap = {},
-    keyCheck = {},
-    Do = {},
-    slice = Array.prototype.slice,
-    shared = {};
+    keyCheck = {};
 
-  Do.Stage = function ( key, value, meta, opts ) {
+  function Invoke ( key, value, meta ) {
     var 
-      runList = stageMap[opts.stage][key],
-      len;
-    
-    if ( ! runList ) {
-      return opts.result;
-    }
-
-    len = runList.length;
-
-    for ( var ix = 0; ix < len; ix++ ) {
-      opts.result[runList[ix]] = runList[ix] ( value, {
-        meta: meta,
-        oldValue: opts.oldValue,
-        currentValue: data[key],
-        key: key,
-        deregister: function ( ) {
-          runList[ix].oneShot = true;
-        }
-      });
-    }
-
-    for ( ix = 0; ix < len; ix++ ) {
-      if ( runList[ix].oneShot ) {
-        deregister ( runList[ix] );
-      }
-    }
-  }
-
-  Do.Invoke = function ( key, value, meta ) {
-    var 
-      oldValue = data[key],
+      old = data[key],
+      callback,
+      runList,
       result = {};
 
-    if ( value !== undefined ) {
-      data[key] = value;
-    }
+    data[key] = value;
 
-    Do.Stage ( key, value, meta, {
-      result: result, 
-      stage: 'invoke', 
-      oldValue: oldValue
+    each( hook, function(stage) {
+      runList = stageMap[stage][key];
+
+      // Runlist is an array
+      each(runList, function(callback, index) {
+
+        result[ index ] = callback ( value, {
+          meta: meta,
+          old: old,
+          current: value,
+          key: key,
+          remove: function () {
+            // we just set a flag here to
+            // maintain index integrity
+            callback.rm = true;
+          }
+
+        });
+      });
+
+      each(runList, function(callback) {
+        if ( callback.rm ) {
+          remove ( callback );
+        }
+      });
     });
 
-    Do.Stage ( key, value, meta, {
-      result: result, 
-      stage: 'after',
-      oldValue: oldValue
-    });
-
-    delete keyCheck[key];
+    keyCheck[key] = false;
     return result;
   }
 
-  Do.Test = function ( key, value, meta ) {
+  function Test ( key, value, meta ) {
     var  
-      len = stageMap.test[key].length,
-      result = {},
-      success = 0,
+      times = stageMap.test[key].length,
       failure = 0;
 
     function check ( ok ) {
-      if ( arguments.length == 0 ) {
-        ok = true;
-      }
+      times --;
+      failure += (ok === false);
 
-      success += ok;
-      failure += !ok;
-
-      if ( success + failure == len ) {
-        if ( failure ) { 
-          keyCheck[key] = false;
-        } else {
-          return Do.Invoke ( key, value, meta );
+      if ( ! times ) {
+        if ( ! failure ) { 
+          Invoke ( key, value, meta );
         }
+
+        keyCheck[key] = false;
       }
     }
 
-    _.each ( stageMap.test[key], function ( cb ) {
-      result[cb.ix] = 
-        cb ( value, {
-          meta: meta,
-          oldValue: data[key],
-          callback: check,
-          key: key,
-          deregister: function ( ) {
-            deregister ( cb );
-          }
-        });
+    each ( stageMap.test[key], function ( callback ) {
+      callback ( value, {
+        meta: meta,
+        old: data[key],
+        callback: check,
+        key: key,
+        remove: function () {
+          remove ( callback );
+        }
+      });
     });
   }
 
-  Do.Run = function ( key, value, meta ) {
+  function register ( callback ) {
+    callback.refs = [];
+    funMap[ callback.ix = ++funHandle ] = callback;
+  }
+
+  function run ( keyList, value, meta ) {
     var result = {};
 
-    if ( keyCheck[key] ) {
-      return result;
-    }
-  
-    keyCheck[key] = true;
+    each ( flatten([ keyList ]), function ( key ) {
+      if ( ! keyCheck[key] ) {
+      
+        keyCheck[key] = true;
 
-    if ( ! stageMap.test[key] ) {
-      result = Do.Invoke ( key, value, meta );
-    } else {
-      result = Do.Test ( key, value, meta );
-    }
+        result[key] = stageMap.test[key] ?
+          Test ( key, value, meta ) :
+          Invoke ( key, value, meta );
+      }
+    });
 
     return result;
   }
 
-  function register ( callback ) {
-    callback.ix = ++fHandle;
-    callback.refList = [];
-    fMap[callback.ix] = callback;
+  function remove ( handle ) {
+    each ( handle.refs, function ( tuple ) {
+      var
+        stage = tuple[0],
+        key = tuple[1];
 
-    return callback;
+      stageMap[stage][key] = 
+        _.without( stageMap[stage][key], handle );
+    });
+
+    delete funMap[handle.ix];
   }
-
-  function inherit ( opts ) {
-    return _.extend ( opts.child, opts.parent );
-  }
-
-  function deregister ( handle ) {
-    if ( handle.refList ) {
-
-      _.each ( handle.refList, function ( tuple ) {
-        var
-          stage = tuple[0],
-          key = tuple[1], 
-
-          offset = _.indexOf ( stageMap[stage][key], handle );
-
-        stageMap[stage][key].splice ( offset, 1 );
-      });
-    }
-
-    delete fMap[handle.ix];
-  }
-
-
-  shared = {
-    ifChanged: function ( key, value ) {
-      if (! ( key in data ) ) {           
-        return shared.run ( key, value );
-      }
-
-      if ( data[key] !== value ) {
-        return shared.run ( key, value );
-      }
-
-      return false;
-    },
-
-    popandpush: function ( key, value ) {
-      if ( !is.array ( data[key] ) ) {
-        data[key] = [];
-      }
-
-      data[key].pop ( );
-      data[key].push ( value );
-      data[key].current = value;
-
-      return shared.run ( key, data[key] );
-    },
-
-    pop: function ( key ) {
-      if ( !is.array ( data[key] ) ) {
-        return false;
-      }
-
-      data[key].pop ( );
-      if ( data[key].length > 0 ) {
-        data[key].current = data[key][data[key].length - 1];
-      } else {
-        data[key].current = undefined;
-      }
-
-      return shared.run ( key, data[key] );
-    },
-
-    append: function ( key, value ) {
-      if ( !is.array ( data[key] ) ) {
-        data[key] = [];
-      }
-
-      data[key].push ( value );
-      data[key].current = value;
-      
-      return shared.run ( key, data[key] );
-    },
-
-    setHash: function ( key, map ) {
-      return shared.run ( key, _.extend ( true, map, data[key] ) );
-    },
-
-    onSet: function ( key, callback ) {
-      var obj = shared.invoke ( key, callback );
-      return obj.handle;
-    },
-
-    decr: function ( key ) {
-      if ( key in data && typeof data[key] == 'number' ) {
-        return shared.run ( key, data[key] - 1 );
-      } else {
-        return shared.run ( key, 0 );
-      }
-    },
-
-    incr: function ( key ) {
-      if ( key in data && typeof data[key] == 'number' ) {
-        return shared.run ( key, data[key] + 1 );
-      } else {
-        return shared.run ( key, 1 );
-      }
-    },
-
-    run: function ( keyList, value, meta ) {
-      var result = {};
-
-      if ( _.isString ( keyList ) ) {
-        keyList = [keyList];
-      }
-      _.each ( keyList, function ( key ) {
-        result[key] = Do.Run ( key, value, meta );
-      });
-
-      return result;
-    },
-
-    notNull: function ( key, cb ) {
-      if ( ( key in data ) && data[key] !== null ) {
-        cb ( data[key] );
-      } else {
-        return shared.onSet.once ( key, cb );
-      }
-    },
-
-    meta: function ( prop ) {
-      return chain ({meta: prop}); 
-    },
-
-    deregister: deregister
-  };
-
-  shared.push = shared.append;
-  shared.share = shared.meta;
-
-  shared.onSet.once = function ( key, stageMap ) {
-    var handle = shared.onSet ( key, stageMap );
-
-    handle.oneShot = true;
-    return handle;
-  };
-
-  _.each ( 'test,invoke,after'.split ( ',' ), function ( stage ) {
-    stageMap[stage] = {};
-
-    shared[stage] = function ( keyList, callback ) {
-
-      if ( callback ) {
-        callback = register ( callback );
-
-        if ( _.isString ( keyList ) ) {
-          keyList = [keyList];
-        }
-        _.each ( keyList, function ( key ) {
-
-          if ( !stageMap[stage][key] ) {
-            stageMap[stage][key] = [];
-          }
-
-          stageMap[stage][key].push ( callback );
-
-          callback.refList.push ( [stage, key] );
-        });
-      }
-
-      return inherit ({
-        child: {handle: callback},
-        parent: shared
-      });
-    }
-  });
 
   function chain ( obj ) {
     var context = {};
@@ -304,14 +129,17 @@ function EvDa ( ) {
       obj.scope = [obj.scope];
     }
 
-    if ( !obj.meta ) {
-      obj.meta = [];
-    }
+    obj.meta = obj.meta || [];
 
-    _.each ( _.keys ( shared ), function ( func ) {
-      context[func] = function ( ){
+    each ( keys ( pub ), function ( func ) {
+      context[func] = function () {
         
-        shared[func].apply ( this, obj.scope.concat ( slice.call ( arguments ), obj.meta ) );
+        pub[func].apply ( this, 
+          obj.scope.concat ( 
+            _.toArray ( arguments ), 
+            obj.meta 
+          ) 
+        );
 
         return context;
       }
@@ -320,76 +148,125 @@ function EvDa ( ) {
     return context;
   }
 
-  // Events have chains
-  pub.Event = function ( scope, invoke ) {
-    if ( arguments.length == 0 ) {
-      return stageMap;
+
+  function pub ( scope, value ) {
+    var 
+      len = arguments.length,
+      context = {};
+
+    if ( len == 0 ) {
+      return [data, stageMap];
     }
 
-    var context = chain ({ scope: scope });
-     
-    if ( _.isFunction ( invoke ) ) {
-      context.invoke ( invoke );
-    } else if ( arguments.length > 1 ){
-      context.run ( invoke );
-    } else if ( arguments[0].constructor == Object ) {
-      context = {};
-      for ( var key in arguments[0] ) {
-        context[key] = pub.Event ( key, arguments[0][key] );
+    if ( _.isObject(scope) ) {
+
+      each( scope, function( _value, _key ) {
+        context[_key] = pub ( _key, _value );
+      });
+
+      return context;
+    }
+
+    if ( len == 1 ) {
+      if( scope.search(/[*?]/) + 1 ) {
+        return _.select( keys(data), function(toTest) {
+          return toTest.match(scope);
+        });
       }
+
+      return data[ scope ];
+    } 
+
+    context = chain ({ scope: scope });
+     
+    if ( _.isFunction ( value ) ) {
+      context.when ( value );
+    } else if ( len > 1 ){
+      context.run ( value );
     }
 
     return context;
   }
 
-  // Data has getters and setters
-  pub.Data = function ( key, value ) {
-    var 
-      args = slice.call ( arguments ),
-      ret = {},
-      params = [];
+  each ( hook, function ( stage ) {
+    stageMap[stage] = {};
 
-    if ( arguments.length === 0 ) {
-      return data;
+    pub[stage] = function ( keyList, callback ) {
+
+      register ( callback );
+
+      each ( flatten([ keyList ]), function ( key ) {
+
+        stageMap[stage][key] = 
+          (stageMap[stage][key] || []).concat(callback);
+
+        callback.refs.push ( [stage, key] );
+      });
+
+      return extend ( 
+        pub,
+        { handle: callback }
+      );
     }
-
-    if ( typeof key === 'object' ) {
-      for ( var el in key ) {
-        ret[el] = arguments.callee.apply ( this, [el, key[el]] );
-      }
-
-      return ret;
-    }
-
-    if ( arguments.length == 1 ) {
-
-      if ( _.isArray ( data[key] ) ) { 
-        try { 
-          _.isFunction ( data[key].push );
-        } catch ( ex ) {
-          console.log ( "woops, caught a bad error for " + key );
-          data[key] = slice.call ( data[key] );
-        }
-      }
-
-      return data[key];
-    } 
-
-    if ( this.constructor == Array ) {
-      params = this;
-    }
-
-    return shared.run.apply ( this, args.concat ( params ) );
-  }
-
-  _.each ( "Event,Data".split ( ',' ), function ( which ) {
-    inherit ({
-      child: pub[which],
-      parent: shared
-    });
   });
 
-  shared.set = pub.Data;
-  pub.Data.set = pub.Data;
-  return pub;
+  // remove the test
+  hook.shift();
+
+  return extend(pub, {
+    // If we are pushing and popping a non-array then
+    // it's better that the browser tosses the error
+    // to the user than we try to be graceful and silent
+    // Therein, we don't try to handle input validation
+    // and just try it anyway
+    push: function ( key, value ) {
+      data[key] = data[key] || [];
+      data[key].current = data[key].push ( value );
+      
+      return run ( key, data[key] );
+    },
+
+    pop: function ( key ) {
+      data[key].pop ();
+      data[key].current = _.last(data[key]);
+
+      return run ( key, data[key] );
+    },
+
+    once: function ( key, callback ) {
+      var ret = pub.when ( key, callback );
+
+      ret.handle.rm = true;
+      return ret;
+    },
+
+    decr: function ( key ) {
+      // if key isn't in data, it returns 0 and sets it
+      // if key is in data but isn't a number, it returns NaN and sets it
+      // if key is 1, then it gets reduced to 0, getting 0,
+      // if key is any other number, than it gets set
+      return run ( key, data[key] - 1 || 0 );
+    },
+
+    incr: function ( key ) {
+      // we can't use the same trick here because if we
+      // hit 0, it will auto-increment to 1
+      return run ( key, _.isNumber(data[key]) ? (data[key] + 1) : 1 );
+    },
+
+    exists: function ( key, callback ) {
+      if ( ! (key in data) ) {
+        return pub.once ( key, callback );
+      }
+
+      callback ( data[key] );
+    },
+
+    /* share: function ( prop ) { return chain ({ meta: prop }); }, */
+
+    run: run,
+    get: pub,
+    set: pub,
+    remove: remove
+  });
 }

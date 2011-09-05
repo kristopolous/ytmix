@@ -160,6 +160,7 @@ results.remove = function(ytid){
 function loadit(ytid){
   if(!db.findFirst({ytid: ytid}).serverData) {
 
+    eval(_inject('anyname'));
     var id = Timeline.add(ytid);
 
     $.getJSON(
