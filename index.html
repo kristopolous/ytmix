@@ -4,37 +4,40 @@
 <link rel=stylesheet href=css/style.css>
 </head>
 <body>
-  <div id=top></div>
-  <div id=tools></div>
+  <div class=main-app>
+    <div id=top></div>
+    <div id=tools></div>
 
-  <div id=timeline>
-    <div id=players></div>
-    <div id=control></div>
-    <div id=now></div>
-    <div id=mixer>
-      <div id=master></div>
-      <div id=punch></div>
+    <div id=timeline>
+      <div id=players></div>
+      <div id=control></div>
+      <div id=now></div>
+      <div id=mixer>
+        <div id=master></div>
+        <div id=punch></div>
+      </div>
     </div>
-  </div>
 
-  <div class=main-app id=search>
-    <input id=normal-search class=search>
-    <a id=clear-search>X</a>
-    <button onclick=search($("#normal-search").val())>Search</button>
-  </div>
+    <div class=main-app id=search>
+      <input id=normal-search class=search>
+      <a id=clear-search>X</a>
+      <button onclick=search($("#normal-search").val())>Search</button>
+    </div>
 
-  <div id=video-list></div>
+    <div id=video-list></div>
+  </div>
   <div id=splash>
+    <h1>Create custom radio stations</h1>
+
     <div>
-      <h2>Create custom radio stations</h2>
-      Search by an artist or a song or paste a YouTube URL below to start <a href=http://qaa.ath.cx/ytwatch.jpg>[ screenshot ]</a>
-      <br>
+      <p>Search by an artist or a song or paste a YouTube URL below to start <a href=http://qaa.ath.cx/ytwatch.jpg>[ screenshot ]</a></p>
       <input id=initial-search class=search>
       <button onclick=search($("#initial-search").val())>Ok, that was easy!</button>
     </div>
-    <div>
-      <h2>Gallery</h2>
-      <p>You can check out some existing stations by clicking below</p>
+    <br>
+    <div id=history>
+      <p>Here are some things you have already checked out</p>
+      <div id=splash-history></div>
     </div>
   </div>
 
@@ -46,6 +49,7 @@
 <script src=js/underscore-min.js></script>
 <script src=js/_inject.min.js></script>
 <script src=js/utils.js></script>
+<script src=js/store.js></script>
 <script src=js/evda.js></script>
 <script src=js/swfobject.js></script>
 <script src=js/db.js></script>

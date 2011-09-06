@@ -112,6 +112,8 @@ function addVids(vidList) {
 function search(query) {
   transition();
 
+  Store.create();
+
   if(query.slice(0,5).toLowerCase() == 'http:') {
     var parts = query.split(/[\.=&#?]/);
 
@@ -161,7 +163,6 @@ results.remove = function(ytid){
 function loadit(ytid){
   if(!db.findFirst({ytid: ytid}).serverData) {
 
-    eval(_inject('anyname'));
     var id = Timeline.add(ytid);
 
     $.getJSON(
@@ -206,14 +207,30 @@ function transition(){
     opacity:1
   }, 1000);
 
-  $("#splash").fadeOut(500);
+  $("#splash").css('display','none');
+  $("#top").animate({opacity: 0.8}, 200);
 }
+
+function loadHistory(){
+  if(Store.recent().length) {
+    $("#history").css('display','inline-block');
+  }
+
+  _.each(Store.recent(), function(which, index) {
+    $("<span class=track>")
+      .append("<img src=http://i4.ytimg.com/vi/" + which[0] + "/default.jpg><p>" + which[1] + "</p>")
+      .click(function(){
+        transition();
+        _.each(Store.get(index), loadit);
+      }).appendTo("#splash-history");
+  });
+}
+
 $(function(){
   $("#clear-search").click(function(){
     search("");
   });
 
-	$("#top").css('opacity', 0.8);
 
 	$(".toggle").mousedown(function(e){
 		e.preventDefault();
@@ -224,4 +241,6 @@ $(function(){
   });
 
   $("#initial-search").focus();
+
+  loadHistory();
 });

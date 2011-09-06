@@ -46,12 +46,13 @@ var Timeline = (function(){
         ) + 'px');
       }
 
+      /*
       if(player.active.getDuration() - player.active.getCurrentTime() < 10) {
         if(play.nextFlag == true) {
           go_next();
           play.nextFlag = false;
         }
-      }
+      }*/
     }
   }
 
@@ -182,6 +183,8 @@ var Timeline = (function(){
       var obj = db.findFirst({ytid: data[id].ytid});
 
       data[id].title.html(obj.title);
+
+      Store.add(id, [data[id].ytid, obj.title]);
 
       db.find({
         ytid: db.isin(obj.related)

@@ -10,10 +10,12 @@ button:active{background:#088 url(twf.png) repeat-x 13px 0}
 button{background:#ccccd0 url("twf.png") repeat-x scroll 0 -4px;
   cursor:pointer;display:inline-block;color:#222230;font-size:11px;text-align:center;margin:5px;padding:5px 6px;border:1px solid #888}
 button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445}
+h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
+
+.track{white-space:normal;position:relative;display:inline-block;margin:3px 0 0 0;text-align:center;font-size:0.75em;min-height:200px;width:203px;color:#ccc;vertical-align:top;background:#1d2030;padding:7px 0 3px}
+.track img{width:188px;height:141px}
 
 #timeline{position:fixed;top:0;left:0;vertical-align:top;margin-left:-2px;z-index:18;white-space:nowrap;overflow-x:hidden;width:100%}
-#timeline .track{white-space:normal;position:relative;display:inline-block;margin:3px 0 0 0;text-align:center;font-size:0.75em;min-height:200px;width:203px;color:#ccc;vertical-align:top;background:#1d2030;padding:7px 0 3px}
-#timeline .track img{width:188px;height:141px}
 #timeline .removal{position:absolute;top:0;left:0;height:40px;width:203px;font-size:24px;color:#aaa;background:#333;padding-top:12px;z-index:75}
 #timeline .removal:hover{color:#fff;background:#000}
 #timeline a{color:#ccc}
@@ -27,11 +29,14 @@ button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445
 #query:focus{background:white}
 #filter{position:fixed;padding:0px;width:100%;bottom:0px;left:0px;}
 
-#splash{position:absolute;top:0;left:0;text-align:center;z-index:20}
-#splash div{text-align:left;margin:20px;display:inline-block;font-size:14px;color:#444455;z-index:15;-moz-border-radius:3px;-webkit-border-radius:3px;background:#AAAAAe;padding:10px 15px 20px 25px}
+#splash{text-align:center;z-index:20}
+#splash > div{text-align:left;margin:20px;display:inline-block;font-size:14px;color:#444455;z-index:15;-moz-border-radius:3px;-webkit-border-radius:3px;background:#AAAAAe;padding:10px 15px 20px 25px}
 #splash a { color: #33a;font-size:11px;text-decoration:none}
 #splash h2{margin:5px;padding:0;color:#028;margin-left:-2px}
 #splash button{margin-top:9px;display:block;margin-left:0}
+#splash p{font-size:18px;color:#fff;font-weight:bold;max-width:500px;margin:0.25em}
+#splash .track{cursor:pointer}
+#splash .track p{font-size:12px;font-weight:normal}
 
 .main-app{display:none}
 
@@ -50,5 +55,7 @@ button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445
 #control{position:relative;z-index:40;overflow:hidden}
 #now{position:absolute;top:6px;left:33.3%;width:3px;background:lime;height:200px;border:1px solid green;z-index:40}
 
-#mixer{position:absolute;top:0;right:0;width:200px;background:black;height:100%}
+#mixer{position:absolute;top:0;right:0;width:200px;background:black;height:100%;z-index:45}
 #punch{color:white;font-size:24px}
+
+#history{display:none}
