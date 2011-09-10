@@ -25,6 +25,11 @@ var Store = (function(){
       });
     },
 
+    remove: function(index) {
+      history.splice(index, 1); 
+      $.jStorage.set('history', history);
+    },
+
     add: function(offset, tuple) {
       history[index][offset] = tuple;
       $.jStorage.set('history', history);

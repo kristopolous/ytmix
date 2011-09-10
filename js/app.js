@@ -161,36 +161,39 @@ results.remove = function(ytid){
 }
 
 function loadit(ytid){
-  if(!db.findFirst({ytid: ytid}).serverData) {
+  ev.isset('flash.load', function(){
+    if(!db.findFirst({ytid: ytid}).serverData) {
 
-    var id = Timeline.add(ytid);
+      var id = Timeline.add(ytid);
 
-    $.getJSON(
-      'api/related.php',
-      {v: ytid}, 
+      $.getJSON(
+        'api/related.php',
+        {v: ytid}, 
 
-      function (data){
-        db.insert({
-          ytid: ytid
-        }).update({
-          removed: 0,
-          count: 0,
-          title: Utils.clean(data.title),
-          related: _.map(data.related, function(which) {
-            return which[1];
-          }),
-          serverData: data
+        function (data){
+          db.insert({
+            ytid: ytid
+          }).update({
+            removed: 0,
+            count: 0,
+            length: data.length,
+            title: Utils.clean(data.title),
+            related: _.map(data.related, function(which) {
+              return which[1];
+            }),
+            serverData: data
+          });
+
+          addVids(data.related);
+      
+          Timeline.update(id);
+
+          gen();
         });
-
-        addVids(data.related)
-    
-        Timeline.update(id);
-
-	      gen();
-      });
-  } else {
-    Timeline.add(ytid);
-  }
+    } else {
+      Timeline.add(ytid);
+    }
+  });
 }
 
 function transition(){
@@ -217,12 +220,27 @@ function loadHistory(){
   }
 
   _.each(Store.recent(), function(which, index) {
-    $("<span class=track>")
+    var 
+      container,
+      forget,
+      play;
+
+    forget = $("<button>forget</button>").click(function(){
+      Store.remove(index);
+      container.slideUp();
+    });
+
+    play = $("<button>play</butotn>").click(function(){
+      transition();
+      ev.set('noplay');
+      _.each(Store.get(index), loadit);
+      ev.unset('noplay');
+      Timeline.play(0);
+    });
+
+    container = $("<span class=track>")
       .append("<img src=http://i4.ytimg.com/vi/" + which[0] + "/default.jpg><p>" + which[1] + "</p>")
-      .click(function(){
-        transition();
-        _.each(Store.get(index), loadit);
-      }).appendTo("#splash-history");
+      .append(forget).append(play).appendTo("#splash-history");
   });
 }
 
@@ -243,4 +261,19 @@ $(function(){
   $("#initial-search").focus();
 
   loadHistory();
+
+  $("#zoom").mousemove(function(e){
+    $("#scale").css('font-size', (e.layerY / 2) + "%");
+  });
+
+  $("#now").css('opacity',0.6).draggable({
+    axis: 'x',
+    drag: function(){
+      $("#scale").css('margin-left', $("#now").offset().left);
+    },
+    stop: function() {
+      $("#scale").css('margin-left', $("#now").offset().left);
+    }
+  });
+
 });

@@ -9,12 +9,19 @@
     <div id=tools></div>
 
     <div id=timeline>
-      <div id=players></div>
-      <div id=control></div>
-      <div id=now></div>
+      <span id=valign></span>
+      <span id=scale>
+        <div id=now></div>
+        <div id=control></div>
+      </span>
       <div id=mixer>
         <div id=master></div>
-        <div id=punch></div>
+        <div id=time></div>
+        <div id=punch>
+          <button onclick=Timeline.pause()>Pause</button>
+          <button onclick=Timeline.play()>Play</button>
+        </div>
+        <div id=zoom></div>
       </div>
     </div>
 
@@ -43,6 +50,7 @@
 
 </body>
 
+      <div id=players></div>
 <script src=js/jquery-1.6.2.min.js></script>
 <script src=js/jquery-ui-1.8.16.custom.min.js></script>
 <script src=js/jstorage.min.js></script>

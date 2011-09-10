@@ -12,16 +12,18 @@ button{background:#ccccd0 url("twf.png") repeat-x scroll 0 -4px;
 button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445}
 h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 
-.track{white-space:normal;position:relative;display:inline-block;margin:3px 0 0 0;text-align:center;font-size:0.75em;min-height:200px;width:203px;color:#ccc;vertical-align:top;background:#1d2030;padding:7px 0 3px}
-.track img{width:188px;height:141px}
+.track{white-space:normal;position:relative;display:inline-block;margin:0 0 0 0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#1d2030;padding:0.5em 0 0.1em}
+.track img{width:12em}
+.track a{display:block}
 
-#timeline{position:fixed;top:0;left:0;vertical-align:top;margin-left:-2px;z-index:18;white-space:nowrap;overflow-x:hidden;width:100%}
+#timeline{position:fixed;top:0;left:0;vertical-align:top;z-index:18;white-space:nowrap;overflow-x:hidden;width:100%}
 #timeline .removal{position:absolute;top:0;left:0;height:40px;width:203px;font-size:24px;color:#aaa;background:#333;padding-top:12px;z-index:75}
 #timeline .removal:hover{color:#fff;background:#000}
 #timeline a{color:#ccc}
 #timeline object{visibility:hidden;position:absolute;top:-1000px;left:-1000px}
+#valign{display:inline-block;vertical-align:middle;width:0;height:200px}
 
-#top {position:fixed;top:0;left:0;background:#aab;height:228px;width:100%;background: #aaaab0;overflow:visible;z-index:10}
+#top {position:fixed;top:0;left:0;background:#aab;height:200px;width:100%;background: #aaaab0;overflow:visible;z-index:10}
 
 #search{position:fixed;bottom:0px;right:0px;padding:0px 9px;z-index:15}
 #search input{width:250px;vertical-align:sub}
@@ -33,10 +35,10 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 #splash > div{text-align:left;margin:20px;display:inline-block;font-size:14px;color:#444455;z-index:15;-moz-border-radius:3px;-webkit-border-radius:3px;background:#AAAAAe;padding:10px 15px 20px 25px}
 #splash a { color: #33a;font-size:11px;text-decoration:none}
 #splash h2{margin:5px;padding:0;color:#028;margin-left:-2px}
-#splash button{margin-top:9px;display:block;margin-left:0}
+#splash button{margin-top:9px;display:inline-block;margin-left:0}
 #splash p{font-size:18px;color:#fff;font-weight:bold;max-width:500px;margin:0.25em}
 #splash .track{cursor:pointer}
-#splash .track p{font-size:12px;font-weight:normal}
+#splash .track p{font-size:12px;font-weight:normal;display:block}
 
 .main-app{display:none}
 
@@ -51,11 +53,13 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 
 #clear-search{display:inline-block;width:0;text-indent:-24px;font-size:16px;font-weight:bold;color:#333;padding-top:3px;vertical-align:middle}
 
-
-#control{position:relative;z-index:40;overflow:hidden}
-#now{position:absolute;top:6px;left:33.3%;width:3px;background:lime;height:200px;border:1px solid green;z-index:40}
+#scale{margin-left:3%;vertical-align:middle;font-size:85%}
+#control{display:inline-block;position:relative;z-index:40}
+#now{width:8px;background:lime;height:12.6em;z-index:45;display:inline-block;vertical-align:bottom;position:absolute}
 
 #mixer{position:absolute;top:0;right:0;width:200px;background:black;height:100%;z-index:45}
 #punch{color:white;font-size:24px}
 
 #history{display:none}
+#players{position:absolute;top:-1000px;left:-1000px}
+#zoom{position:absolute;right:0;top:0;height:200px;background:#55a;width:20px}

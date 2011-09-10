@@ -1,7 +1,8 @@
 var Timeline = (function(){
   var 
     data = {},
-    maxPlayer = 3,
+    maxPlayer = 2,
+    Loaded = 0,
 
     // The centroid, or currently playing track is floor(maxPlayer / 2)
     centroid = Math.floor(maxPlayer / 2),
@@ -12,8 +13,10 @@ var Timeline = (function(){
     idsActive = [],
 
     player = {},
+    Total,
 
     ix,
+    scale = 0.04, // ems per second
     UNIQ = 0;
 
   $(function(){
@@ -36,29 +39,27 @@ var Timeline = (function(){
     // mechanics for moving the centroid
     if(player.active && player.active.getCurrentTime() > 0) {
 
-      $("#punch").html(- (player.active.getDuration() - player.active.getCurrentTime()).toFixed(2));
+      $("#time").html(- (player.active.getDuration() - player.active.getCurrentTime()).toFixed(2));
 
       if(! ev.isset('timeline.dragging') ) {
-        $("#control").css('left', - (
-          player.start + 
-          200 * (player.active.getCurrentTime() / player.active.getDuration()) -
-          $("#now").offset().left
-        ) + 'px');
+        $("#control").css('left', - 100 * ((player.active.getCurrentTime() + player.current.offset) / Total) + "%");
       }
 
-      /*
-      if(player.active.getDuration() - player.active.getCurrentTime() < 10) {
-        if(play.nextFlag == true) {
-          go_next();
-          play.nextFlag = false;
+      if(player.active.getDuration() - player.active.getCurrentTime() < 2) {
+        if( data[player.current.index + 1] ){
+          Timeline.play(player.current.index + 1);
         }
-      }*/
+      }
     }
   }
 
   self.onYouTubePlayerReady = function(playerId) {
     var id = parseInt(playerId.substr(-1));
-    console.log(id, playerId);
+    Loaded ++;
+
+    if(Loaded == maxPlayer) {
+      ev.set('flash.load');
+    }
     player[id] = document.getElementById(playerId);
 
     if(!updateRunning) {
@@ -71,10 +72,6 @@ var Timeline = (function(){
 
   return {
     data: data,
-
-    // Swap out a flash controller for an image of the youtube video.
-    // This is done wo we don't have a lot of flash controllers at once
-    makeImage: function(){}, 
 
     remove: function(index){
       // find the yt id at the index to
@@ -96,26 +93,33 @@ var Timeline = (function(){
       // remove it from the dom
       data[index].dom.remove();
 
-      // find the related videos with respect
-      // to the ytid to be removed
-      db.find().update(function(data) {
-
-        // remove this from the reference list.
-        data.reference = _.without(data.reference, index);
-
-        // this makes our lives eaiser
-        data.count = data.reference.length;
-      });
-
       db.find('count', 0).remove();
 
       data[index].active = false;
     },
 
+    pause: function(){
+      player.active.pauseVideo();
+    },
+
+    update_offset: function(){
+      var aggregate = 0;
+      Total = _.reduce(_.pluck(data, 'length'), function(a, b) { return (a || 0) + (b || 0) }, 0);
+
+      for(index in data) {
+        data[index].offset = aggregate;
+        aggregate += (data[index].length || 0);
+      }
+    },
+
     play: function(dbid) {
+      if(!arguments.length) {
+        return player.active.playVideo();
+      }
+
       ev.isset('yt.ready', function(){
         player.current = data[dbid];
-        eval(_inject('add'));
+        Timeline.update_offset();
         player[0].loadVideoById(player.current.ytid);
         player.active = player[0];
         player.start = $(data[dbid].dom).offset().left - $("#control").offset().left;
@@ -123,6 +127,22 @@ var Timeline = (function(){
     },
 
     seekTo: function(offset) {
+      Timeline.update_offset();
+
+      var 
+        relative = offset * Total,
+        aggregate = 0,
+        index;
+
+      for(index = 0;;index++) {
+        if((! data[index + 1]) || data[index + 1].offset > relative) {
+          if(index != player.current.index) {
+            Timeline.play(index);
+          }
+          player.active.seekTo(relative - data[index].offset);
+          break;
+        }
+      }
     },
 
     init: function() {
@@ -134,7 +154,11 @@ var Timeline = (function(){
           },
           stop: function() {
             ev.unset('timeline.dragging');
-            Timeline.seekTo($("#control").offset().left);
+            var 
+              offset = $("#control").offset().left - $("#scale").offset().left,
+              relative = offset / $("#control").width();
+
+            Timeline.seekTo( - relative);
           }
         });
       });
@@ -158,7 +182,6 @@ var Timeline = (function(){
 
       data[myid].dom = $("<div />")
         .addClass('track')
-        .append(data[myid].remover)
     	  .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
         .append(data[myid].title)
 
@@ -175,7 +198,9 @@ var Timeline = (function(){
 
       UNIQ ++;
 
-      Timeline.play(myid);
+      if(!ev.isset('noplay')) {
+        Timeline.play(myid);
+      }
       return myid;
     },
 
@@ -186,16 +211,14 @@ var Timeline = (function(){
 
       Store.add(id, [data[id].ytid, obj.title]);
 
+      data[id].length = obj.length;
+      data[id].dom.css('width', obj.length * scale + 'em');
+
       db.find({
         ytid: db.isin(obj.related)
-      }).update(function(data) {
-        if(!data.reference) {
-          data.reference = [];
-        }
-        data.reference.push(id);
-
-        data.count = data.reference.length;
       });
+
+      Timeline.update_offset();
     }
   };
 })();
