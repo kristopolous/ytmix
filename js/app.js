@@ -58,7 +58,11 @@ function gen(){
       play = $("<a />").html('play').click(function(){
         loadit(which.ytid);
       }),
-      queue = $("<a />").html('queue'),
+      queue = $("<a />").html('queue').click(function(){
+        ev.set('noplay');
+        loadit(which.ytid);
+        ev.unset('noplay');
+      }),
       remove = $("<a />").html('remove').click(function(){
         results.remove(which.ytid)
       }),
