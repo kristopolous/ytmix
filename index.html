@@ -6,30 +6,31 @@
 <body>
   <div class=main-app>
     <div id=top></div>
-    <div id=tools></div>
+    <div id=tools>
+      <div class=main-app id=search>
+        <input id=normal-search class=search>
+        <a id=clear-search>X</a>
+        <button onclick=search($("#normal-search").val())>Search</button>
+      </div>
+      <span id=mixer>
+        <button onclick=Timeline.pause()>Pause</button>
+        <button onclick=Timeline.play()>Play</button>
+      </span>
+      <span>
+        Name: Untitled
+        <button>Change</button>
+      </span>
+  </div>
 
     <div id=timeline>
       <span id=valign></span>
       <span id=scale>
         <div id=now></div>
         <div id=control></div>
-      </span>
-      <div id=mixer>
-        <div id=master></div>
-        <div id=time></div>
-        <div id=punch>
-          <button onclick=Timeline.pause()>Pause</button>
-          <button onclick=Timeline.play()>Play</button>
-        </div>
         <div id=zoom></div>
-      </div>
+      </span>
     </div>
 
-    <div class=main-app id=search>
-      <input id=normal-search class=search>
-      <a id=clear-search>X</a>
-      <button onclick=search($("#normal-search").val())>Search</button>
-    </div>
 
     <div id=video-list></div>
   </div>

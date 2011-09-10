@@ -39,8 +39,6 @@ var Timeline = (function(){
     // mechanics for moving the centroid
     if(player.active && player.active.getCurrentTime() > 0) {
 
-      $("#time").html(- (player.active.getDuration() - player.active.getCurrentTime()).toFixed(2));
-
       if(! ev.isset('timeline.dragging') ) {
         $("#control").css('left', - 100 * ((player.active.getCurrentTime() + player.current.offset) / Total) + "%");
       }
@@ -174,21 +172,22 @@ var Timeline = (function(){
       data[myid] = {
         index: myid,
         flash: true,
-        remover: $("<a class=removal>remove</a>").css('opacity',0.6),
         ytid: ytid,
         active: true,
         title: $("<a target=_blank href=http://www.youtube.com/watch?v=" + ytid + "/>")
       };
 
+      var handle = $("<div class=handle</div>");
+      handle.myid = myid;
+
       data[myid].dom = $("<div />")
         .addClass('track')
+        .hover(
+          function(){handle.css('display','block')},
+          function(){handle.css('display','none')}
+        )
     	  .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
         .append(data[myid].title)
-
-      data[myid].remover.click(function(){
-        Timeline.remove(myid);
-        gen();
-      });
 
       data[myid].dom.appendTo('#control');
 

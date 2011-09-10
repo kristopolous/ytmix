@@ -12,7 +12,7 @@ button{background:#ccccd0 url("twf.png") repeat-x scroll 0 -4px;
 button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445}
 h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 
-.track{white-space:normal;position:relative;display:inline-block;margin:0 0 0 0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#1d2030;padding:0.5em 0 0.1em}
+.track{white-space:normal;position:relative;display:inline-block;margin:0 0 0 0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#1d2030;padding:0.5em 0 0.1em;overflow:hidden}
 .track img{width:12em}
 .track a{display:block}
 
@@ -23,9 +23,9 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 #timeline object{visibility:hidden;position:absolute;top:-1000px;left:-1000px}
 #valign{display:inline-block;vertical-align:middle;width:0;height:200px}
 
-#top {position:fixed;top:0;left:0;background:#aab;height:200px;width:100%;background: #aaaab0;overflow:visible;z-index:10}
+#top {position:fixed;top:0;left:0;background:#556;height:200px;width:100%;background: #aaaab0;overflow:visible;z-index:10}
 
-#search{position:fixed;bottom:0px;right:0px;padding:0px 9px;z-index:15}
+#search{padding:0px 9px}
 #search input{width:250px;vertical-align:sub}
 
 #query:focus{background:white}
@@ -57,9 +57,10 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 #control{display:inline-block;position:relative;z-index:40}
 #now{width:8px;background:lime;height:12.6em;z-index:45;display:inline-block;vertical-align:bottom;position:absolute}
 
-#mixer{position:absolute;top:0;right:0;width:200px;background:black;height:100%;z-index:45}
 #punch{color:white;font-size:24px}
 
 #history{display:none}
 #players{position:absolute;top:-1000px;left:-1000px}
-#zoom{position:absolute;right:0;top:0;height:200px;background:#55a;width:20px}
+#zoom{position:absolute;right:0;top:0;height:200px;background:#55a;width:20px;z-index:50}
+
+#tools{position:fixed;top:200px;background:#aaa;z-index:45;width:100%}
