@@ -112,6 +112,7 @@ var Timeline = (function(){
   }
 
   return {
+    player: player,
     data: data,
 
     remove: function(index){
@@ -259,7 +260,7 @@ var Timeline = (function(){
 
       data[id].title.html(obj.title);
 
-      Store.add(id, [data[id].ytid, obj.title]);
+      Local.add(id, [data[id].ytid, obj.title]);
 
       data[id].length = obj.length;
       data[id].dom.css('width', obj.length * scale + 'em');

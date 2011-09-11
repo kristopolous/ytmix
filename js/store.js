@@ -1,4 +1,93 @@
-var Store = (function(){
+var Remote = (function(){
+  var 
+    _id,
+    _requestID = 0;
+
+  function remote(opts) {
+    var 
+      reqID = _requestID ++,
+      onSuccess = opts.onSuccess,
+      onFailure = opts.onFailure;
+
+    if(onSuccess) {
+      delete opts.onSuccess;
+    }
+
+    if(onFailure) {
+      delete opts.onFailure;
+    }
+
+    $.getJSON('api/playlist.php', opts, function(ret) {
+      var meta = {  
+        reqID: reqID,
+        opts: opts,
+        ret: ret
+      };
+
+      if(ret[0] == true && onSuccess) {
+        onSuccess(ret[1]);
+      } 
+
+      if(ret[0] == false){
+        console.log(meta);
+
+        if(onFailure) { 
+          onFailure(ret[1]);
+        }
+      }
+
+      ev.emit('remote', meta);
+    });
+
+    return reqID;
+  }
+
+  return {
+    create: function(callback){
+      return remote({
+        func: 'createID',
+        onSuccess: function(id) {
+          _id = id;
+          if(callback) {
+            callback(id);
+          }
+        }
+      });
+    },
+
+    getId: function(id, callback) {
+      return remote({
+        func: 'get',
+        id: id,
+        onSuccess: function(data) {
+          _id = data.id;
+          if(callback) {
+            callback(data);
+          }
+        }
+      });
+    },
+
+    update: function(data) {
+      if(id === undefined) {
+        throw new TypeError();
+      } 
+
+      return remote(_.extend(
+        { func: 'update' },
+        data
+      ));
+    },
+
+    setName: function(name) {
+      return update({
+        name: name
+      });
+    }
+  };
+})();
+
+var Local = (function(){
   var 
     playlist = [],
     history,
@@ -36,7 +125,7 @@ var Store = (function(){
     },
 
     recent: function() {
-      return _.map(history.slice(-3), function(which) {
+      return _.map(history.slice(-7), function(which) {
         return which[0];
       });
     }

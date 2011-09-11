@@ -120,7 +120,7 @@ function addVids(vidList) {
 function search(query) {
   transition();
 
-  Store.create();
+  Local.create();
 
   if(query.slice(0,5).toLowerCase() == 'http:') {
     var parts = query.split(/[\.=&#?]/);
@@ -239,25 +239,25 @@ function resize(){
 }
 
 function loadHistory(){
-  if(Store.recent().length) {
+  if(Local.recent().length) {
     $("#history").css('display','inline-block');
   }
 
-  _.each(Store.recent(), function(which, index) {
+  _.each(Local.recent(), function(which, index) {
     var 
       container,
       forget,
       play;
 
     forget = $("<button>forget</button>").click(function(){
-      Store.remove(index);
+      Local.remove(index);
       container.slideUp();
     });
 
     play = $("<button>play</butotn>").click(function(){
       transition();
       ev.set('noplay');
-      _.each(Store.get(index), loadit);
+      _.each(Local.get(index), loadit);
       ev.unset('noplay');
       Timeline.play(0);
     });
