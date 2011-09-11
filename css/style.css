@@ -1,4 +1,4 @@
-body{background:#000513;color:#888;font-family:'Trebuchet MS',Helvetica,sans-serif;margin:0}
+body{background:#000513;color:#888;font-family:'Trebuchet MS',Helvetica,sans-serif;margin:0;overflow:hidden}
 span{display:inline-block}
 a{color:#333;cursor:pointer}
 a:hover{text-decoration:none}
@@ -16,17 +16,15 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 .track img{width:12em}
 .track a{display:block}
 
-#timeline{position:fixed;top:0;left:0;vertical-align:top;z-index:18;white-space:nowrap;overflow-x:hidden;width:100%}
+#timeline{vertical-align:top;z-index:18;white-space:nowrap;overflow-x:hidden;width:100%}
 #timeline .removal{position:absolute;top:0;left:0;height:40px;width:203px;font-size:24px;color:#aaa;background:#333;padding-top:12px;z-index:75}
 #timeline .removal:hover{color:#fff;background:#000}
 #timeline a{color:#ccc}
 #timeline object{visibility:hidden;position:absolute;top:-1000px;left:-1000px}
 #valign{display:inline-block;vertical-align:middle;width:0;height:200px}
 
-#top {position:fixed;top:0;left:0;background:#556;height:200px;width:100%;background: #aaaab0;overflow:visible;z-index:10}
-
-#search{padding:0px 9px}
-#search input{width:250px;vertical-align:sub}
+.main-app{display:block;width:100%}
+#normal-search{width:250px;vertical-align:sub}
 
 #query:focus{background:white}
 #filter{position:fixed;padding:0px;width:100%;bottom:0px;left:0px;}
@@ -42,7 +40,7 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 
 .main-app{display:none}
 
-#video-list {margin-top:230px;margin-left:3px;}
+#video-list {overflow-y:scroll}
 #video-list img{width:120px;height:90px}
 #video-list .hover{display:none;position:absolute;top:0;left:;width:170px;opacity:0.8}
 #video-list .hover a{display:block;height:35px;font-size:20px;background:#11111c url('twf.png') repeat-x 0 -6px;margin-bottom:3px;color:#ccc;padding-top:8px}
@@ -63,4 +61,4 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 #players{position:absolute;top:-1000px;left:-1000px}
 #zoom{position:absolute;right:0;top:0;height:200px;background:#55a;width:20px;z-index:50}
 
-#tools{position:fixed;top:200px;background:#aaa;z-index:45;width:100%}
+#tools{background:#aaa;z-index:45;width:100%}

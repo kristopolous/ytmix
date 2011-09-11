@@ -5,23 +5,6 @@
 </head>
 <body>
   <div class=main-app>
-    <div id=top></div>
-    <div id=tools>
-      <div class=main-app id=search>
-        <input id=normal-search class=search>
-        <a id=clear-search>X</a>
-        <button onclick=search($("#normal-search").val())>Search</button>
-      </div>
-      <span id=mixer>
-        <button onclick=Timeline.pause()>Pause</button>
-        <button onclick=Timeline.play()>Play</button>
-      </span>
-      <span>
-        Name: Untitled
-        <button>Change</button>
-      </span>
-  </div>
-
     <div id=timeline>
       <span id=valign></span>
       <span id=scale>
@@ -30,10 +13,18 @@
         <div id=zoom></div>
       </span>
     </div>
-
-
+    <input id=normal-search class=search>
+    <a id=clear-search>X</a>
+    <button onclick=search($("#normal-search").val())>Search</button>
+    <button onclick=Timeline.pause()>Pause</button>
+    <button onclick=Timeline.play()>Play</button>
+    <span>
+      Name: Untitled
+      <button>Change</button>
+    </span>
     <div id=video-list></div>
   </div>
+
   <div id=splash>
     <h1>Create custom radio stations</h1>
 

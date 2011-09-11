@@ -218,6 +218,11 @@ function transition(){
   $("#top").animate({opacity: 0.8}, 200);
 }
 
+function resize(){
+  var height = window.innerHeight || document.body.offsetHeight;
+  $("#video-list").css('height', (height - 240) + 'px')
+}
+
 function loadHistory(){
   if(Store.recent().length) {
     $("#history").css('display','inline-block');
@@ -280,4 +285,7 @@ $(function(){
     }
   });
 
+  resize();
+
+  $(window).resize(resize);
 });
