@@ -20,7 +20,7 @@ foreach($videoList as $video){
 
   $out['vidList'][] = Array(
     'title' => $video['title']['$t'],
-    'id' => $ytid,
+    'ytid' => $ytid,
     'length' => $video['media$group']['yt$duration']['seconds']
   );
 }

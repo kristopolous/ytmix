@@ -20,6 +20,33 @@ function sort(mode, el) {
 	gen();
 }
 
+function addVideo(opts) {
+  var 
+    play = $("<a>play</a>").click(function(){
+      loadit(opts.ytid);
+    }),
+    queue = $("<a>queue</a>").click(function(){
+      ev.set('noplay');
+      loadit(opts.ytid);
+      ev.unset('noplay');
+    }),
+    remove = $("<a />").html('remove').click(function(){
+      results.remove(opts.ytid)
+    }),
+    hoverControl = $("<span class=hover>")
+      .append(play)
+      .append(queue);
+
+  $("<span class=result/>")
+    .hover(
+      function(){ hoverControl.css('display','block') }, 
+      function(){ hoverControl.css('display','none') }
+    )
+    .append("<img src=http://i4.ytimg.com/vi/" + opts.ytid + "/default.jpg><p>" + opts.title + "</p>")
+    .append(hoverControl)
+    .appendTo(opts.container);
+}
+
 function gen(){
 	var emit = db.find({hide: db(' !== true')});
 
@@ -54,33 +81,10 @@ function gen(){
   $("#video-list").html('');
 
   _.each(emit, function(which) {
-    var 
-      play = $("<a />").html('play').click(function(){
-        loadit(which.ytid);
-      }),
-      queue = $("<a />").html('queue').click(function(){
-        ev.set('noplay');
-        loadit(which.ytid);
-        ev.unset('noplay');
-      }),
-      remove = $("<a />").html('remove').click(function(){
-        results.remove(which.ytid)
-      }),
-      hoverControl = $("<span class=hover>")
-        .append(play)
-        .append(queue)
-        .append(remove);
-
-    $("#video-list").append(
-      $("<span />")
-        .hover(function(){
-          hoverControl.css('display','block')
-        }, function(){
-          hoverControl.css('display','none')
-        })
-        .append("<img src=http://i4.ytimg.com/vi/" + which.ytid + "/default.jpg><p>" + which.title + "</p>")
-        .append(hoverControl)
-    );
+    addVideo(_.extend(
+      {container: "#video-list"},
+      which
+    ));
 	});
 }
 
@@ -223,8 +227,12 @@ function resize(){
     width = window.innerWidth || document.body.offsetWidth,
     height = window.innerHeight || document.body.offsetHeight;
 
-  $(".resize").css('height', (height - 240) + 'px');
-  $("#video-list").css('width', (width - 205) + 'px');
+  $(".resize").css('height', (height - 225) + 'px');
+
+  $("#video-list").css({
+    height: (height - 200) + 'px',
+    width: (width - 215) + 'px'
+  });
 }
 
 function loadHistory(){
@@ -260,8 +268,12 @@ function loadHistory(){
   });
 }
 
-(function(){
+$(function(){
   var lastSearch = '', searchID = 0, lastID = 0;
+
+  $("#normal-search").focus(function(){
+    this.select();
+  });
 
   setInterval(function(){
     var query = $("#normal-search").val();
@@ -283,20 +295,22 @@ function loadHistory(){
 
         var instance;
 
+        $("#search-results").children().remove();
+
         for(var ix = 0; ix < res.vidList.length; ix++) {
           instance = res.vidList[ix];
 
-          $("#search-results").append(instance.toSource());
+          addVideo(_.extend(
+            {container: "#search-results"},
+            instance
+          ));
         }
       });
     }
-  }, 250);
-})();
+  }, 650);
+});
 
 $(function(){
-  $("#clear-search").click(function(){
-    search("");
-  });
 
 	$(".toggle").mousedown(function(e){
 		e.preventDefault();

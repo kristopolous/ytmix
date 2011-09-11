@@ -4,14 +4,14 @@ p{margin:0}
 a{color:#333;cursor:pointer}
 a:hover{text-decoration:none}
 tt{font-family:'Trebuchet MS',Helvetica,sans-serif}
-input{font-family:'Trebuchet MS',Helvetica,sans-serif;margin-top:5px;font-size:15px;background:url(w.png);border:1px inset #334444;margin-right:3px;color:#012;padding:2px;width:500px}
-input:focus{border-color:#0af}
+input{font-family:'Trebuchet MS',Helvetica,sans-serif;font-size:15px;background:#222;color:#fff;border:1px inset #334444;padding:2px;width:500px}
 button:hover{background-color:#08a;color:#fff;border-color:#8ae}
 button:active{background:#088 url(twf.png) repeat-x 13px 0}
 button{background:#ccccd0 url("twf.png") repeat-x scroll 0 -4px;
   cursor:pointer;display:inline-block;color:#222230;font-size:11px;text-align:center;margin:5px;padding:5px 6px;border:1px solid #888}
 button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445}
-h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
+h1{text-shadow: 1px 1px 1px #88a;color:#ccc}
+#playlist-name{position:absolute;top:5px;left:5px;margin:0;z-index:50;font-size:16px}
 
 .splash-container{background:#1d2030;margin-left:8px;width:200px;text-align:center}
 .track{white-space:normal;position:relative;display:inline-block;margin:0 0 0 0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#1d2030;padding:0.5em 0 0.1em;overflow:hidden}
@@ -26,7 +26,6 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 #valign{display:inline-block;vertical-align:middle;width:0;height:200px}
 
 .main-app{display:block;width:100%}
-#normal-search{width:184px;vertical-align:sub}
 
 #query:focus{background:white}
 #filter{position:fixed;padding:0px;width:100%;bottom:0px;left:0px;}
@@ -43,17 +42,15 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 .main-app{display:none}
 
 #video-list {display:inline-block}
-#video-list img{width:120px;height:90px}
-#video-list .hover{display:none;position:absolute;top:0;left:;width:170px;opacity:0.8}
-#video-list .hover a{display:block;height:35px;font-size:20px;background:#11111c url('twf.png') repeat-x 0 -6px;margin-bottom:3px;color:#ccc;padding-top:8px}
-#video-list .hover a:hover{color:#fff;background-color:#33333f}
+.result{background:#1d2030;display:inline-block;width:180px;text-align:center;padding:5px 3px 3px 3px;margin:3px;vertical-align:top;position:relative}
+.result img{width:120px;height:90px}
+.result .hover{display:none;position:absolute;top:0;left:;width:170px;opacity:0.8}
+.result .hover a{display:block;height:35px;font-size:20px;background:#11111c url('twf.png') repeat-x 0 -6px;margin-bottom:3px;color:#ccc;padding-top:8px}
+.result .hover a:hover{color:#fff;background-color:#33333f}
 
-#video-list span{background:#1d2030;display:inline-block;width:180px;text-align:center;padding:5px 3px 3px 3px;margin:3px;vertical-align:top;position:relative}
-#video-list p{border-top:1px solid #666676;padding:4px 2px;margin:1px;font-size:11px;color:#888897;height:40px;overflow:hidden;vertical-align:top;display:block;text-align:left;}
+.result p{border-top:1px solid #666676;padding:4px 2px;margin:1px;font-size:11px;color:#888897;height:30px;overflow:hidden;vertical-align:top;display:block;text-align:left;}
 
-#clear-search{display:inline-block;width:0;text-indent:-24px;font-size:16px;font-weight:bold;color:#333;padding-top:3px;vertical-align:middle}
-
-#scale{margin-left:3%;vertical-align:middle;font-size:85%}
+#scale{margin-left:40%;vertical-align:middle;font-size:85%}
 #control{display:inline-block;position:relative;z-index:40}
 #now{width:8px;background:lime;height:12.6em;z-index:45;display:inline-block;vertical-align:bottom;position:absolute}
 
@@ -64,11 +61,11 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 #zoom{position:absolute;right:0;top:0;height:200px;background:#55a;width:20px;z-index:50}
 
 #tools{background:#aaa;z-index:45;width:100%}
-#search-results{width:200px;display:inline-block}
+#search-results{width:210px}
 #playlist-container{float:right}
 
-.coy-button{box-shadow: 0 0 1px 1px #223;border-radius:2px;padding:3px 6px;cursor:pointer}
+.coy-button{border-radius:2px;padding:3px 6px;cursor:pointer}
 .coy-button:hover{box-shadow: 0 0 2px 2px #55c}
 
-#normal-search{color:#fff}
+#normal-search{color:#fff;width:203px;vertical-align:sub}
 .resize{overflow-y:auto}
