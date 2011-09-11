@@ -42,7 +42,7 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 
 .main-app{display:none}
 
-#video-list {overflow-y:auto;display:inline-block}
+#video-list {display:inline-block}
 #video-list img{width:120px;height:90px}
 #video-list .hover{display:none;position:absolute;top:0;left:;width:170px;opacity:0.8}
 #video-list .hover a{display:block;height:35px;font-size:20px;background:#11111c url('twf.png') repeat-x 0 -6px;margin-bottom:3px;color:#ccc;padding-top:8px}
@@ -69,3 +69,6 @@ h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 
 .coy-button{box-shadow: 0 0 1px 1px #223;border-radius:2px;padding:3px 6px;cursor:pointer}
 .coy-button:hover{box-shadow: 0 0 2px 2px #55c}
+
+#normal-search{color:#fff}
+.resize{overflow-y:auto}

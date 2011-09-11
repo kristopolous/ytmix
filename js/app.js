@@ -260,11 +260,43 @@ function loadHistory(){
   });
 }
 
+(function(){
+  var lastSearch = '', searchID = 0, lastID = 0;
+
+  setInterval(function(){
+    var query = $("#normal-search").val();
+
+    if(query != lastSearch) {
+      lastSearch = query;
+
+      $.getJSON('api/ytsearch.php', { 
+          id: ++searchID,
+          q: query
+        }, function(res) {
+        console.log(res);
+
+        if(res.id < lastID) {
+          return;
+        }
+
+        lastID = res.id;
+
+        var instance;
+
+        for(var ix = 0; ix < res.vidList.length; ix++) {
+          instance = res.vidList[ix];
+
+          $("#search-results").append(instance.toSource());
+        }
+      });
+    }
+  }, 250);
+})();
+
 $(function(){
   $("#clear-search").click(function(){
     search("");
   });
-
 
 	$(".toggle").mousedown(function(e){
 		e.preventDefault();
