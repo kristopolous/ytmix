@@ -219,8 +219,12 @@ function transition(){
 }
 
 function resize(){
-  var height = window.innerHeight || document.body.offsetHeight;
-  $("#video-list").css('height', (height - 240) + 'px')
+  var 
+    width = window.innerWidth || document.body.offsetWidth,
+    height = window.innerHeight || document.body.offsetHeight;
+
+  $(".resize").css('height', (height - 240) + 'px');
+  $("#video-list").css('width', (width - 205) + 'px');
 }
 
 function loadHistory(){
@@ -273,16 +277,6 @@ $(function(){
   $("#initial-search").focus();
 
   loadHistory();
-
-  $("#now").css('opacity',0.6).draggable({
-    axis: 'x',
-    drag: function(){
-      $("#scale").css('margin-left', $("#now").offset().left);
-    },
-    stop: function() {
-      $("#scale").css('margin-left', $("#now").offset().left);
-    }
-  });
 
   resize();
 

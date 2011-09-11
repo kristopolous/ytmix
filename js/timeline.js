@@ -2,6 +2,7 @@ var Timeline = (function(){
   var 
     data = {},
     maxPlayer = 2,
+    isPlaying = true,
     Loaded = 0,
 
     // The centroid, or currently playing track is floor(maxPlayer / 2)
@@ -21,6 +22,29 @@ var Timeline = (function(){
     UNIQ = 0;
 
   $(function(){
+    var isDragging = false;
+
+    $("#now").click(function(){
+      if(isDragging) {
+        isDragging = false;
+      } else { 
+        Timeline.pauseplay();
+      }
+    });
+
+    $("#now").css('opacity',0.6).draggable({
+      axis: 'x',
+      start:function(){
+        isDragging = true;
+      },
+      drag: function(){
+        $("#scale").css('margin-left', $("#now").offset().left);
+      },
+      stop: function() {
+        $("#scale").css('margin-left', $("#now").offset().left);
+      }
+    });
+
     // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
     // videos we which to play.
     for(var ix = 0; ix < maxPlayer; ix++) {
@@ -115,8 +139,16 @@ var Timeline = (function(){
       data[index].active = false;
     },
 
-    pause: function(){
-      player.active.pauseVideo();
+    pauseplay: function(){
+      if(isPlaying) {
+        isPlaying = false;
+        player.active.pauseVideo();
+        $("#now").css('background','red');
+      } else {
+        isPlaying = true;
+        player.active.playVideo();
+        $("#now").css('background','lime');
+      }
     },
 
     update_offset: function(){

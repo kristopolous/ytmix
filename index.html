@@ -13,16 +13,17 @@
         <div id=zoom></div>
       </span>
     </div>
-    <input id=normal-search class=search>
-    <a id=clear-search>X</a>
-    <button onclick=search($("#normal-search").val())>Search</button>
-    <button onclick=Timeline.pause()>Pause</button>
-    <button onclick=Timeline.play()>Play</button>
-    <span>
-      Name: Untitled
-      <button>Change</button>
-    </span>
-    <div id=video-list></div>
+    <div id=toolbar>
+      <input id=normal-search class=search>
+      <a id=clear-search>X</a>
+      <span id=playlist-container>
+        <p class=coy-button id=playlist-name>Name: Untitled</p>
+      </span>
+    </div>
+    <div>
+      <span class=resize id=search-results></span>
+      <span class=resize id=video-list></span>
+    </div>
   </div>
 
   <div id=splash>
