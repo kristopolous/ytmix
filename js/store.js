@@ -3,7 +3,7 @@ var Remote = (function(){
     _id,
     _requestID = 0;
 
-  function remote(opts) {
+  self.remote = function(opts) {
     var 
       reqID = _requestID ++,
       onSuccess = opts.onSuccess,
@@ -24,15 +24,22 @@ var Remote = (function(){
         ret: ret
       };
 
-      if(ret[0] == true && onSuccess) {
-        onSuccess(ret[1]);
+      if(_.isString(ret.status)) {
+        ret.status = {
+          "true": true,
+          "false": false
+        }[ret.status];
+      }
+
+      if(ret.status === true && onSuccess) {
+        onSuccess(ret.result);
       } 
 
-      if(ret[0] == false){
+      if(ret.status === false){
         console.log(meta);
 
         if(onFailure) { 
-          onFailure(ret[1]);
+          onFailure(ret.result);
         }
       }
 

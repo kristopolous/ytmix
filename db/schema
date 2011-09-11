@@ -23,6 +23,8 @@
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `playlist` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `authors` text default '',
+  `active` text default '',
   `name` text,
   `tracklist` text,
   `viewcount` int(11) DEFAULT 0,

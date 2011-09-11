@@ -271,6 +271,7 @@ function EvDa () {
     /* share: function ( prop ) { return chain ({ meta: prop }); }, */
 
     run: run,
+    emit: run,
     get: pub,
     set: function(k, v) {
       if(arguments.length == 1) { 

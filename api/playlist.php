@@ -2,6 +2,10 @@
 
 include ('../lib/common.php');
 
+function pl_createUser() {
+  result('true', uniqid('', true));
+}
+
 function pl_createID() {
   mysql_query('insert into playlist values ()');
   return mysql_insert_id();
