@@ -12,6 +12,7 @@ button{background:#ccccd0 url("twf.png") repeat-x scroll 0 -4px;
 button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445}
 h1{text-shadow: 1px 1px 1px #88a, -1px -1px 1px #aa8;color:#ccc}
 
+.splash-container{background:#1d2030;margin-left:8px;width:200px;text-align:center}
 .track{white-space:normal;position:relative;display:inline-block;margin:0 0 0 0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#1d2030;padding:0.5em 0 0.1em;overflow:hidden}
 .track img{width:12em}
 .track a{display:block}

@@ -247,9 +247,12 @@ function loadHistory(){
       Timeline.play(0);
     });
 
-    container = $("<span class=track>")
-      .append("<img src=http://i4.ytimg.com/vi/" + which[0] + "/default.jpg><p>" + which[1] + "</p>")
-      .append(forget).append(play).appendTo("#splash-history");
+    container = $("<span class=splash-container>").append(
+      $("<span class=track>")
+        .append("<img src=http://i4.ytimg.com/vi/" + which[0] + "/default.jpg><p>" + which[1] + "</p>")
+       ).append(
+         $("<div />").append(forget).append(play)
+       ).appendTo("#splash-history");
   });
 }
 
@@ -270,10 +273,6 @@ $(function(){
   $("#initial-search").focus();
 
   loadHistory();
-
-  $("#zoom").mousemove(function(e){
-    $("#scale").css('font-size', (e.layerY / 2) + "%");
-  });
 
   $("#now").css('opacity',0.6).draggable({
     axis: 'x',

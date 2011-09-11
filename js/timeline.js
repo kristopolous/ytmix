@@ -16,6 +16,7 @@ var Timeline = (function(){
     Total,
 
     ix,
+    Zoom = 85,
     scale = 0.04, // ems per second
     UNIQ = 0;
 
@@ -30,6 +31,24 @@ var Timeline = (function(){
         "vidContainer-" + ix, "188", "152", "9", null, null, 
         {allowScriptAccess: "always"}, {id: 'player-' + ix});
     }
+
+    function zoomsize(){
+      Zoom = Math.min(98, Zoom);
+      Zoom = Math.max(5, Zoom);
+      $("#scale").css('font-size', Zoom + "%");
+    }
+
+    $("#timeline").mousewheel(function(e, delta) {
+      console.log(Zoom);
+      Zoom += delta;
+      zoomsize();
+    });
+
+    $("#zoom").mousemove(function(e){
+      Zoom = e.layerY / 2;
+      zoomsize();
+    });
+
   });
 
   var updateRunning = false;
