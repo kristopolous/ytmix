@@ -51,7 +51,7 @@ h1{text-shadow: 1px 1px 1px #88a;color:#ccc}
 .result p{border-top:1px solid #666676;padding:4px 2px;margin:1px;font-size:11px;color:#888897;height:30px;overflow:hidden;vertical-align:top;display:block;text-align:left;}
 
 #scale{margin-left:40%;vertical-align:middle;font-size:85%}
-#control{display:inline-block;position:relative;z-index:40}
+#control{display:inline-block;position:relative;z-index:40;height:12em}
 #now{width:8px;background:lime;height:12.6em;z-index:45;display:inline-block;vertical-align:bottom;position:absolute}
 
 #punch{color:white;font-size:24px}

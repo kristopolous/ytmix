@@ -133,6 +133,9 @@ function search(query) {
         return;
       }
     }
+  } else {
+    $("#normal-search").val(query);
+    return;
   }
 
   $("#query")
