@@ -18,11 +18,12 @@ $(function(){
     if(query != lastSearch) {
       lastSearch = query;
 
+      // gen({query: query});
+
       $.getJSON('api/ytsearch.php', { 
           id: ++searchID,
           q: query
         }, function(res) {
-        console.log(res);
 
         if(res.id < lastID) {
           return;
@@ -48,7 +49,7 @@ $(function(){
 });
 
 function search(query) {
-  transition();
+  ev.set('app.state', 'main');
 
   Local.create();
 

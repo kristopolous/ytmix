@@ -5,7 +5,7 @@
 </head>
 <body>
   <div class=main-app>
-    <h1>Name: <b class=coy-button id=playlist-name>Untitled</b></h1>
+    <h4 id=playlist-control>Name: <b class=coy-button id=playlist-name>Untitled</b></h4>
     <div id=timeline>
       <span id=valign></span>
       <span id=scale>
@@ -41,21 +41,27 @@
 </body>
 
 <div id=players></div>
-<script src=js/jquery-1.6.2.min.js></script>
-<script src=js/jquery-ui-1.8.16.custom.min.js></script>
-<script src=js/jquery.mousewheel.min.js></script>
-<script src=js/jstorage.min.js></script>
-<script src=js/underscore-min.js></script>
-<script src=js/_inject.min.js></script>
-<script src=js/db.min.js></script>
-<script src=js/evda.min.js></script>
-<script>var db = DB(), ev = EvDa();</script>
-<script src=js/utils.js></script>
-<script src=js/hash.js></script>
-<script src=js/search.js></script>
-<script src=js/related.js></script>
-<script src=js/store.js></script>
-<script src=js/swfobject.js></script>
-<script src=js/timeline.js></script>
-<script src=js/app.js></script>
 </html>
+
+<!-- Dependencies { -->
+  <script src=js/jquery-1.6.2.min.js></script>
+  <script src=js/jquery-ui-1.8.16.custom.min.js></script>
+  <script src=js/jquery.mousewheel.min.js></script>
+  <script src=js/jstorage.min.js></script>
+  <script src=js/underscore-min.js></script>
+  <script src=js/_inject.min.js></script>
+  <script src=js/db.min.js></script>
+  <script src=js/evda.min.js></script>
+<!-- } -->
+
+<!-- Application { -->
+  <script src=js/_init_.js></script>
+  <script src=js/utils.js></script>
+  <script src=js/hash.js></script>
+  <script src=js/search.js></script>
+  <script src=js/related.js></script>
+  <script src=js/store.js></script>
+  <script src=js/swfobject.js></script>
+  <script src=js/timeline.js></script>
+  <script src=js/app.js></script>
+<!-- } -->

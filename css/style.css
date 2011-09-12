@@ -1,4 +1,4 @@
-body{background:#000513;color:#888;font-family:'Trebuchet MS',Helvetica,sans-serif;margin:0}
+body{overflow:hidden;background:#000513;color:#888;font-family:'Trebuchet MS',Helvetica,sans-serif;margin:0}
 span{display:inline-block}
 p{margin:0}
 a{color:#333;cursor:pointer}
@@ -11,9 +11,10 @@ button{background:#ccccd0 url("twf.png") repeat-x scroll 0 -4px;
   cursor:pointer;display:inline-block;color:#222230;font-size:11px;text-align:center;margin:5px;padding:5px 6px;border:1px solid #888}
 button.selected{background:#bbbbc0 url(wf.png) repeat-x 0 17px;border-color:#445}
 h1{text-shadow: 1px 1px 1px #88a;color:#ccc}
-#playlist-name{position:absolute;top:5px;left:5px;margin:0;z-index:50;font-size:16px}
+#playlist-control{position:absolute;top:5px;left:5px;margin:0;z-index:50;font-size:16px}
 
 .splash-container{background:#1d2030;margin-left:8px;width:200px;text-align:center}
+
 .track{white-space:normal;position:relative;display:inline-block;margin:0 0 0 0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#1d2030;padding:0.5em 0 0.1em;overflow:hidden}
 .track img{width:12em}
 .track a{display:block}
@@ -30,7 +31,7 @@ h1{text-shadow: 1px 1px 1px #88a;color:#ccc}
 #query:focus{background:white}
 #filter{position:fixed;padding:0px;width:100%;bottom:0px;left:0px;}
 
-#splash{text-align:center;z-index:20}
+#splash{text-align:center;z-index:20;overflow:auto;height:100%}
 #splash > div{text-align:left;margin:20px;display:inline-block;font-size:14px;color:#444455;z-index:15;-moz-border-radius:3px;-webkit-border-radius:3px;background:#AAAAAe;padding:10px 15px 20px 25px}
 #splash a { color: #33a;font-size:11px;text-decoration:none}
 #splash h2{margin:5px;padding:0;color:#028;margin-left:-2px}

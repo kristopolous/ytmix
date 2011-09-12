@@ -1,25 +1,17 @@
 var 	
 	sortOrder = 'AGE',
   serverSearched = {},
-  results = {},
-	query = false,
-  splash = true;
+  results = {};
 
 db.constrain('unique', 'ytid');
 
 function addVideo(opts) {
   var 
-    play = $("<a>play</a>").click(function(){
-      loadit(opts.ytid);
-    }),
-    queue = $("<a>queue</a>").click(function(){
-      ev.set('noplay');
-      loadit(opts.ytid);
-      ev.unset('noplay');
-    }),
-    remove = $("<a />").html('remove').click(function(){
-      results.remove(opts.ytid)
-    }),
+    id = opts.ytid,
+    play = $("<a>play</a>").click(function(){ loadit(id); }),
+    queue = $("<a>queue</a>").click(function(){ loadit(id, {noplay: true}); }),
+    remove = $("<a>remove</a>").click(function(){ results.remove(id) }),
+
     hoverControl = $("<span class=hover>")
       .append(play)
       .append(queue);
@@ -29,12 +21,14 @@ function addVideo(opts) {
       function(){ hoverControl.css('display','block') }, 
       function(){ hoverControl.css('display','none') }
     )
-    .append("<img src=http://i4.ytimg.com/vi/" + opts.ytid + "/default.jpg><p>" + opts.title + "</p>")
+    .append("<img src=http://i4.ytimg.com/vi/" + id + "/default.jpg><p>" + opts.title + "</p>")
     .append(hoverControl)
     .appendTo(opts.container);
 }
 
-function gen(){
+function gen(opts){
+  opts = opts || {};
+
 	var emit = db.find({hide: db(' !== true')});
 
 	if(sortOrder == 'HISTORY') {
@@ -54,8 +48,8 @@ function gen(){
     }[sortOrder], 'ASC');
 	}
 
-	if(query) {
-		var qstr = new RegExp('(' + query + ')', 'ig');
+	if(opts.query) {
+		var qstr = new RegExp('(' + opts.query + ')', 'ig');
 
     emit = db.find({
       ytid: db.isin(emit.select('ytid')),
@@ -126,30 +120,30 @@ function login(){
   }
 }
 
-
-function transition(){
-  if(!splash) {
+ev.when('app.state', function(state, meta) {
+  console.log(meta);
+  if(state == meta.oldValue) {
     return;
+  } 
+  if(state == 'splash') {
+    Timeline.flush();
+    $(".main-app").css('display','none');
+    $("#splash").css('display','block');
+  } else if (state == 'main') {
+    $(".main-app").css({
+      opacity: 0,
+      display: 'inline-block'
+    }).animate({
+      opacity:1
+    }, 1000);
+
+    $("#splash").css('display','none');
+
+    if(!ev.isset('playlist.id')) {
+      Remote.create();
+    }
   }
-
-  splash = false;
-
-  $(".main-app").css({
-    opacity: 0,
-    display: 'inline-block'
-  }).animate({
-    opacity:1
-  }, 1000);
-
-  document.body.style.overflow = 'hidden';
-
-  $("#splash").css('display','none');
-  $("#top").animate({opacity: 0.8}, 200);
-
-  if(!ev.isset('playlist.id')) {
-    Remote.create();
-  }
-}
+});
 
 function resize(){
   var 
@@ -181,10 +175,12 @@ function loadHistory(){
     });
 
     play = $("<button>play</butotn>").click(function(){
-      transition();
-      ev.set('noplay');
-      _.each(Local.get(index), loadit);
-      ev.unset('noplay');
+      ev.set('app.state', 'main');
+
+      _.each(Local.get(index), function(field) {
+        loadit(field, {noplay: true});
+      });
+
       Timeline.play(0);
     });
 
@@ -206,4 +202,21 @@ $(function(){
 
   ev.isset('uid', loadHistory);
 
+  var 
+    dom = $("#playlist-name"), 
+    input = $("<input>");
+
+  ev.when('playlist.name', function(name) {
+    dom.html(name);
+  });
+
+  Utils.onEnter(input, function() {
+    ev.set("playlist.name", this.value);
+    $(this).replaceWith(dom);
+  });
+
+  dom.click(function(){
+    $(this).replaceWith(input);
+    input.val(ev.get('playlist.name'));
+  });
 });

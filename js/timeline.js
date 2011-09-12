@@ -1,7 +1,7 @@
 var Timeline = (function(){
   var 
     data = {},
-    maxPlayer = 2,
+    maxPlayer = 1,
     isPlaying = true,
     Loaded = 0,
 
@@ -74,7 +74,7 @@ var Timeline = (function(){
 
   function updateytplayer() {
     // mechanics for moving the centroid
-    if(player.active && player.active.getCurrentTime() > 0) {
+    if(player.active.getCurrentTime && player.active.getCurrentTime() > 0) {
 
       if(! ev.isset('timeline.dragging') ) {
         $("#control").css('left', - 100 * ((player.active.getCurrentTime() + player.current.offset) / Total) + "%");
@@ -95,11 +95,14 @@ var Timeline = (function(){
     player[id] = document.getElementById(playerId);
 
     if(Loaded == maxPlayer) {
-      ev.set('flash.load');
+      setTimeout(function(){
+        ev.set('flash.load');
+      },250);
     }
   }
 
   ev.isset('flash.load', function(){
+    player.active = player[0];
     setInterval(updateytplayer, 100);
   });
 
@@ -164,8 +167,7 @@ var Timeline = (function(){
       ev.isset('flash.load', function(){
         player.current = data[dbid];
         Timeline.update_offset();
-        player[0].loadVideoById(player.current.ytid);
-        player.active = player[0];
+        player.active.loadVideoById(player.current.ytid);
         player.start = $(data[dbid].dom).offset().left - $("#control").offset().left;
       });
     },
@@ -189,6 +191,11 @@ var Timeline = (function(){
       }
     },
 
+    flush: function(){
+      Timeline.stop();
+      data = [];
+    },
+
     init: function() {
       ev.isset('timeline.init', function(){
         $("#control").draggable({
@@ -210,8 +217,9 @@ var Timeline = (function(){
       ev.set('timeline.init');
     },
 
-    add: function(ytid) {
+    add: function(ytid, opts) {
       var myid = UNIQ;
+      opts = opts || {};
 
       Timeline.init();
 
@@ -243,9 +251,10 @@ var Timeline = (function(){
 
       UNIQ ++;
 
-      if(!ev.isset('noplay')) {
+      if(opts.noplay != true) {
         Timeline.play(myid);
       }
+
       return myid;
     },
 

@@ -75,10 +75,6 @@ var Remote = (function(){
     },
 
     update: function(data) {
-      if(id === undefined) {
-        throw new TypeError();
-      } 
-
       return remote(_.extend(
         { func: 'update' },
         data
@@ -86,12 +82,16 @@ var Remote = (function(){
     },
 
     setName: function(name) {
-      return update({
+      return Remote.update({
         name: name
       });
     }
   };
 })();
+
+ev.when('playlist.name', function(name) {
+  Remote.setName(name);
+});
 
 var Local = (function(){
   var 

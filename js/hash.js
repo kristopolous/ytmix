@@ -3,6 +3,10 @@ var Hash = (function(){
     set({id : id});
   });
 
+  ev.when('playlist.name', function(name) {
+    set({name: name});
+  });
+
   function hashCheck() {
     var hash = getHash();
 
@@ -31,12 +35,7 @@ var Hash = (function(){
   }
 
   function setHash(obj) {
-    var 
-      hash = [obj.id, obj.name].join('/'),
-      base = document.location.toString().slice(0, - document.location.hash.length);
-
-    document.location = [base, hash].join('#');
-
+    document.location.hash = [obj.id, obj.name].join('/');
     return hashCheck();
   }
 

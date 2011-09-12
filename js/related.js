@@ -10,7 +10,7 @@ function sort(mode, el) {
 	gen();
 }
 
-function loadit(ytid){
+function loadit(ytid, opts){
   ev.isset('flash.load', function(){
     if(!db.findFirst({ytid: ytid}).serverData) {
 
@@ -41,7 +41,7 @@ function loadit(ytid){
           gen();
         });
     } else {
-      Timeline.add(ytid);
+      Timeline.add(ytid, opts);
     }
   });
 }
