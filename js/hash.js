@@ -1,33 +1,46 @@
 var Hash = (function(){
-  var ev = EvDa();
+  ev.when('playlist.id', function(id) {
+    set({id : id});
+  });
 
-  function tuples(string){
-    var 
-      tuples = string.split(/[&=]/),
-      kv = {},
-      ix;
+  function hashCheck() {
+    var hash = getHash();
 
-    if(tuples.length > 1) {
-      for(ix = 0; ix < tuples.length; ix += 2) {
-        kv[tuples[ix]] = tuples[ix + 1];
-      }
+    if(ev.get('hash').raw != hash.raw){
+      return ev.set('hash', hash);
     }
-
-    return kv;
   }
 
-  setInterval(function(){
-    var hashStr = document.location.hash.substr(1);
+  function getHash(){
+    var 
+      raw = document.location.hash.substr(1),
+      pieces = raw.split('/');
+    
+    return {
+      raw: raw,
+      id: pieces[0] || '',
+      name: pieces[1] || ''
+    };
+  }
 
-    if(ev.get('hash.string') != hashStr){
-      ev.set('hash.string', hashStr);
+  function set(opts) {
+    return setHash(_.extend(
+      getHash(),
+      opts
+    ));
+  }
 
-      each(tuples(hashStr), function(key, value) {
-        if( ev.get(':' + key) != value ) {
-          ev.set(':' + key, value);
-        }
-      });
-    }
-  });
+  function setHash(obj) {
+    var 
+      hash = [obj.id, obj.name].join('/'),
+      base = document.location.toString().slice(0, - document.location.hash.length);
+
+    document.location = [base, hash].join('#');
+
+    return hashCheck();
+  }
+
+  ev.set('hash', getHash());
+  setInterval(hashCheck, 250);
   
 })();

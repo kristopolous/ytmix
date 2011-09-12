@@ -1,7 +1,5 @@
 var Remote = (function(){
-  var 
-    _id,
-    _requestID = 0;
+  var _requestID = 0;
 
   self.remote = function(opts) {
     var 
@@ -54,7 +52,7 @@ var Remote = (function(){
       return remote({
         func: 'createID',
         onSuccess: function(id) {
-          _id = id;
+          ev.set('playlist.id', id);
           if(callback) {
             callback(id);
           }
@@ -67,7 +65,8 @@ var Remote = (function(){
         func: 'get',
         id: id,
         onSuccess: function(data) {
-          _id = data.id;
+          alert(data.toSource());
+          ev.set('playlist.id', data.id);
           if(callback) {
             callback(data);
           }
@@ -98,15 +97,14 @@ var Local = (function(){
   var 
     playlist = [],
     history,
-    index,
-    pub = {};
+    index;
 
   if($.jStorage.get('history') == null) {
     $.jStorage.set('history', []);
   }
   history = $.jStorage.get('history');
       
-  return _.extend(pub, {
+  return {
     create: function(){
       index = history.length;
       history.push([]);
@@ -136,5 +134,5 @@ var Local = (function(){
         return which[0];
       });
     }
-  });
+  };
 })();

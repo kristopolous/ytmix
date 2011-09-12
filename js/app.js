@@ -112,12 +112,12 @@ results.remove = function(ytid){
 }
 
 function login(){
-  var UID = $.jStorage.get('UID');
-  if(!UID) {
+  var uid = $.jStorage.get('uid');
+  if(!uid) {
     remote({
       func: 'createUser',
       onSuccess: function(uid) {
-        $.jStorage.set('UID', uid);
+        $.jStorage.set('uid', uid);
         ev.set('uid', uid);
       }
     });
@@ -141,8 +141,14 @@ function transition(){
     opacity:1
   }, 1000);
 
+  document.body.style.overflow = 'hidden';
+
   $("#splash").css('display','none');
   $("#top").animate({opacity: 0.8}, 200);
+
+  if(!ev.isset('playlist.id')) {
+    Remote.create();
+  }
 }
 
 function resize(){
@@ -199,4 +205,5 @@ $(function(){
   $(window).resize(resize);
 
   ev.isset('uid', loadHistory);
+
 });

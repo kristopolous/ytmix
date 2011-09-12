@@ -5,9 +5,6 @@ var Timeline = (function(){
     isPlaying = true,
     Loaded = 0,
 
-    // The centroid, or currently playing track is floor(maxPlayer / 2)
-    centroid = Math.floor(maxPlayer / 2),
-
     // idsActive is the list of ids, corresponding to the vidContiainers
     // that should be currently loaded.  Trivially, idsActive[centroid]
     // should usually be playing
@@ -75,10 +72,7 @@ var Timeline = (function(){
 
   });
 
-  var updateRunning = false;
   function updateytplayer() {
-    updateRunning = true;
-
     // mechanics for moving the centroid
     if(player.active && player.active.getCurrentTime() > 0) {
 
@@ -98,18 +92,16 @@ var Timeline = (function(){
     var id = parseInt(playerId.substr(-1));
     Loaded ++;
 
+    player[id] = document.getElementById(playerId);
+
     if(Loaded == maxPlayer) {
       ev.set('flash.load');
     }
-    player[id] = document.getElementById(playerId);
-
-    if(!updateRunning) {
-      setInterval(updateytplayer, 100);
-    }
-
-    player[id].playVideo();
-    ev.set('yt.ready');
   }
+
+  ev.isset('flash.load', function(){
+    setInterval(updateytplayer, 100);
+  });
 
   return {
     player: player,
@@ -141,15 +133,17 @@ var Timeline = (function(){
     },
 
     pauseplay: function(){
-      if(isPlaying) {
-        isPlaying = false;
-        player.active.pauseVideo();
-        $("#now").css('background','red');
-      } else {
-        isPlaying = true;
-        player.active.playVideo();
-        $("#now").css('background','lime');
-      }
+      ev.isset('flash.load', function(){
+        if(isPlaying) {
+          isPlaying = false;
+          player.active.pauseVideo();
+          $("#now").css('background','red');
+        } else {
+          isPlaying = true;
+          player.active.playVideo();
+          $("#now").css('background','lime');
+        }
+      });
     },
 
     update_offset: function(){
@@ -167,7 +161,7 @@ var Timeline = (function(){
         return player.active.playVideo();
       }
 
-      ev.isset('yt.ready', function(){
+      ev.isset('flash.load', function(){
         player.current = data[dbid];
         Timeline.update_offset();
         player[0].loadVideoById(player.current.ytid);
