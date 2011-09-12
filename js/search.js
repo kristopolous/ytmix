@@ -35,6 +35,8 @@ $(function(){
 
         $("#search-results").children().remove();
 
+        ev.emit('search.results', res.vidList);
+
         for(var ix = 0; ix < res.vidList.length; ix++) {
           instance = res.vidList[ix];
 
@@ -88,4 +90,12 @@ function search(query) {
         });
     }
   }
+}
+
+function searchInitial() {
+  search($("#initial-search").val());
+
+  ev.isset('search.results', function(results) {
+     loadit(results[0].ytid);
+  });
 }

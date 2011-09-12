@@ -14,7 +14,7 @@ function loadit(ytid, opts){
   ev.isset('flash.load', function(){
     if(!db.findFirst({ytid: ytid}).serverData) {
 
-      var id = Timeline.add(ytid);
+      var id = Timeline.add(ytid, opts);
 
       $.getJSON(
         'api/related.php',
@@ -34,7 +34,7 @@ function loadit(ytid, opts){
             serverData: data
           });
 
-          addVids(data.related);
+          addVids(data.related, opts);
       
           Timeline.update(id);
 

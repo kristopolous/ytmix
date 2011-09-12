@@ -57,7 +57,7 @@ h1{text-shadow: 1px 1px 1px #88a;color:#ccc}
 
 #punch{color:white;font-size:24px}
 
-#history{display:none}
+div#history{display:none}
 #players{position:absolute;top:-1000px;left:-1000px}
 #zoom{position:absolute;right:0;top:0;height:200px;background:#55a;width:20px;z-index:50}
 
