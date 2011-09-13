@@ -10,11 +10,18 @@ function addVideo(opts) {
     id = opts.ytid,
     play = $("<a>play</a>").click(function(){ loadit(id); }),
     queue = $("<a>queue</a>").click(function(){ loadit(id, {noplay: true}); }),
+
+    open = $("<a>open</a>").attr({
+      target: '_blank',
+      href: 'http://youtube.com/watch?v=' + id
+    }).click(Timeline.pause),
+
     remove = $("<a>remove</a>").click(function(){ results.remove(id) }),
 
     hoverControl = $("<span class=hover>")
       .append(play)
-      .append(queue);
+      .append(queue)
+      .append(open);
 
   $("<span class=result/>")
     .hover(
@@ -154,7 +161,7 @@ function resize(){
 
   $("#video-list").css({
     height: (height - 200) + 'px',
-    width: (width - 215) + 'px'
+    width: (width - 165) + 'px'
   });
 }
 

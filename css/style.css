@@ -15,7 +15,7 @@ h1{text-shadow: 1px 1px 1px #88a;color:#ccc}
 
 .splash-container{background:#1d2030;margin-left:8px;width:200px;text-align:center}
 
-.track{white-space:normal;position:relative;display:inline-block;margin:0 0 0 0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#1d2030;padding:0.5em 0 0.1em;overflow:hidden}
+.track{width:0;white-space:normal;position:relative;display:inline-block;margin:0 0 0 0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#1d2030;padding:0.5em 0 0.1em;overflow:hidden}
 .track img{width:12em}
 .track a{display:block}
 
@@ -37,16 +37,16 @@ h1{text-shadow: 1px 1px 1px #88a;color:#ccc}
 #splash h2{margin:5px;padding:0;color:#028;margin-left:-2px}
 #splash button{margin-top:9px;display:inline-block;margin-left:0}
 #splash p{font-size:18px;color:#fff;font-weight:bold;max-width:500px;margin:0.25em}
-#splash .track{cursor:pointer}
+#splash .track{cursor:pointer;width:auto}
 #splash .track p{font-size:12px;font-weight:normal;display:block}
 
 .main-app{display:none}
 
 #video-list {display:inline-block}
-.result{background:#1d2030;display:inline-block;width:180px;text-align:center;padding:5px 3px 3px 3px;margin:3px;vertical-align:top;position:relative}
-.result img{width:120px;height:90px}
-.result .hover{display:none;position:absolute;top:0;left:;width:170px;opacity:0.8}
-.result .hover a{display:block;height:35px;font-size:20px;background:#11111c url('twf.png') repeat-x 0 -6px;margin-bottom:3px;color:#ccc;padding-top:8px}
+.result{background:#1d2030;display:inline-block;width:130px;text-align:center;padding:5px 3px 3px 3px;margin:4px;vertical-align:top;position:relative}
+.result img{width:100px;height:75px}
+.result .hover{display:none;position:absolute;top:0;left:0;width:100%;opacity:0.8}
+.result .hover a{display:block;height:32px;font-size:20px;background:#11111c url('twf.png') repeat-x 0 -6px;margin-bottom:3px;color:#ccc;padding-top:6px;text-decoration:none}
 .result .hover a:hover{color:#fff;background-color:#33333f}
 
 .result p{border-top:1px solid #666676;padding:4px 2px;margin:1px;font-size:11px;color:#888897;height:30px;overflow:hidden;vertical-align:top;display:block;text-align:left;}
@@ -62,11 +62,11 @@ div#history{display:none}
 #zoom{position:absolute;right:0;top:0;height:200px;background:#55a;width:20px;z-index:50}
 
 #tools{background:#aaa;z-index:45;width:100%}
-#search-results{width:210px}
+#search-results{width:160px}
 #playlist-container{float:right}
 
 .coy-button{border-radius:2px;padding:3px 6px;cursor:pointer}
 .coy-button:hover{box-shadow: 0 0 2px 2px #55c}
 
-#normal-search{color:#fff;width:203px;vertical-align:sub}
+#normal-search{color:#fff;width:153px;vertical-align:sub}
 .resize{overflow-y:auto}

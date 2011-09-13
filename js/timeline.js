@@ -10,7 +10,8 @@ var Timeline = (function(){
     // should usually be playing
     idsActive = [],
 
-    player = {},
+    Offset = 0,
+    Player = {},
     Total,
 
     ix,
@@ -70,19 +71,47 @@ var Timeline = (function(){
       zoomsize();
     });
 
+    var keyListen = false;
+    $("#timeline").hover(
+      function(){ keyListen = true },
+      function(){ keyListen = false }
+    );
+
+    $(window).keyup(function(e) {
+      if(!keyListen) { return }
+
+      switch(e.which) {
+        case 32: Timeline.pauseplay(); break;
+        case 37: Timeline.seekTo(Offset - 60); break;
+        case 46: Timeline.remove(Player.current); break;
+        case 39: Timeline.seekTo(Offset + 60); break;
+      }
+    });
   });
 
   function updateytplayer() {
     // mechanics for moving the centroid
-    if(player.active.getCurrentTime && player.active.getCurrentTime() > 0) {
+    if(Player.active.getCurrentTime && Player.active.getCurrentTime() > 0) {
+      var time = Player.active.getCurrentTime();
 
-      if(! ev.isset('timeline.dragging') ) {
-        $("#control").css('left', - 100 * ((player.active.getCurrentTime() + player.current.offset) / Total) + "%");
+      Offset = Player.current.offset + time;
+
+      Player.current.title.attr('href', 
+          'http://www.youtube.com/watch?v=' + Player.current.ytid + 
+          "#at=" + Math.ceil(time) + "s");
+
+      if( Player.active.getPlaybackQuality() != 'large') {
+        Player.active.setPlaybackQuality('large');
       }
 
-      if(player.active.getDuration() - player.active.getCurrentTime() < 2) {
-        if( data[player.current.index + 1] ){
-          Timeline.play(player.current.index + 1);
+      if(! ev.isset('timeline.dragging') ) {
+        $("#control").css('left', - 100 * ((time + Player.current.offset) / Total) + "%");
+      }
+
+      if(Player.active.getDuration() - time < 2) {
+        if( data[Player.current.index + 1] ){
+          Player.current.title.attr('href', 'http://www.youtube.com/watch?v=' + Player.current.ytid);
+          Timeline.play(Player.current.index + 1);
         }
       }
     }
@@ -92,7 +121,7 @@ var Timeline = (function(){
     var id = parseInt(playerId.substr(-1));
     Loaded ++;
 
-    player[id] = document.getElementById(playerId);
+    Player[id] = document.getElementById(playerId);
 
     if(Loaded == maxPlayer) {
       setTimeout(function(){
@@ -102,12 +131,12 @@ var Timeline = (function(){
   }
 
   ev.isset('flash.load', function(){
-    player.active = player[0];
+    Player.active = Player[0];
     setInterval(updateytplayer, 100);
   });
 
   return {
-    player: player,
+    player: Player,
     data: data,
 
     remove: function(index){
@@ -135,15 +164,32 @@ var Timeline = (function(){
       data[index].active = false;
     },
 
+    fadeOut: function(){
+      Player.active.fadeOut(1000, function(){
+        Timeline.pause();
+        Player.active.setVolume(100);
+      });
+    },
+
+    pause: function(){
+      ev.isset('flash.load', function(){
+        if(isPlaying) {
+          isPlaying = false;
+          Player.active.pauseVideo();
+          $("#now").css('background','red');
+        }
+      })
+    },
+
     pauseplay: function(){
       ev.isset('flash.load', function(){
         if(isPlaying) {
           isPlaying = false;
-          player.active.pauseVideo();
+          Player.active.pauseVideo();
           $("#now").css('background','red');
         } else {
           isPlaying = true;
-          player.active.playVideo();
+          Player.active.playVideo();
           $("#now").css('background','lime');
         }
       });
@@ -161,31 +207,40 @@ var Timeline = (function(){
 
     play: function(dbid) {
       if(!arguments.length) {
-        return player.active.playVideo();
+        return Player.active.playVideo();
       }
 
       ev.isset('flash.load', function(){
-        player.current = data[dbid];
-        Timeline.update_offset();
-        player.active.loadVideoById(player.current.ytid);
-        player.start = $(data[dbid].dom).offset().left - $("#control").offset().left;
+        if(Player.current != data[dbid]) {
+          Player.current = data[dbid];
+          Timeline.update_offset();
+          Player.active.loadVideoById(Player.current.ytid);
+          Player.start = $(data[dbid].dom).offset().left - $("#control").offset().left;
+        }
       });
     },
 
     seekTo: function(offset) {
+      if(!offset) {
+        offset = Offset;
+      }
+
       Timeline.update_offset();
 
       var 
-        relative = offset * Total,
+        relative = (offset < 1) ? offset * Total : offset, 
         aggregate = 0,
         index;
 
+      relative = Math.max(0, relative);
+      relative = Math.min(Total, relative);
+
       for(index = 0;;index++) {
         if((! data[index + 1]) || data[index + 1].offset > relative) {
-          if(index != player.current.index) {
+          if(index != Player.current.index) {
             Timeline.play(index);
           }
-          player.active.seekTo(relative - data[index].offset);
+          Player.active.seekTo(relative - data[index].offset);
           break;
         }
       }
@@ -194,6 +249,14 @@ var Timeline = (function(){
     flush: function(){
       Timeline.stop();
       data = [];
+    },
+
+    updatePosition: function() {
+      var 
+        offset = $("#control").offset().left - $("#scale").offset().left,
+        relative = offset / $("#control").width();
+
+      Timeline.seekTo( - relative);
     },
 
     init: function() {
@@ -205,11 +268,7 @@ var Timeline = (function(){
           },
           stop: function() {
             ev.unset('timeline.dragging');
-            var 
-              offset = $("#control").offset().left - $("#scale").offset().left,
-              relative = offset / $("#control").width();
-
-            Timeline.seekTo( - relative);
+            Timeline.updatePosition();
           }
         });
       });
@@ -228,7 +287,7 @@ var Timeline = (function(){
         flash: true,
         ytid: ytid,
         active: true,
-        title: $("<a target=_blank href=http://www.youtube.com/watch?v=" + ytid + "/>")
+        title: $("<a target=_blank href=http://www.youtube.com/watch?v=" + ytid + "/>").click(Timeline.pause)
       };
 
       var handle = $("<div class=handle</div>");
