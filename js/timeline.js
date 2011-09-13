@@ -147,6 +147,31 @@ var Timeline = (function(){
     setInterval(updateytplayer, 100);
   });
 
+  function swap(x, y) {
+    if(data[y]) {
+      var swap = data[y];
+      data[y] = data[x];
+      data[x] = swap; 
+      Timeline.gen();
+      if(player.current.index == x || player.current.index == y) {
+        Timeline.seekTo(Offset);
+      }
+    }
+  }
+
+  function hook(id) {
+    var node = data[id];
+
+    node.left.click(function(){swap(id, id - 1); });
+    node.right.click(function(){swap(id, id + 1); });
+    node.remove.click(function(){Timeline.remove(id); });
+    node.title.click(Timeline.pause);
+    node.dom.hover(
+      function(){ node.hover.css('display','block') }, 
+      function(){ node.hover.css('display','none') }
+    );
+  }
+
   return {
     player: Player,
     data: data,
@@ -277,11 +302,9 @@ var Timeline = (function(){
           axis: 'x',
           start: function(){
             ev.set('timeline.dragging');
-            $("#trashcan").css('display','block');
           },
           stop: function() {
             ev.unset('timeline.dragging');
-            $("#trashcan").css('display','none');
             Timeline.updatePosition();
           }
         });
@@ -290,34 +313,55 @@ var Timeline = (function(){
       ev.set('timeline.init');
     },
 
+    gen: function(){
+      $("#control").children().remove();
+
+      for(var ix = 0; ix < UNIQ; ix++) {
+        if(data[ix]) {
+          $(".hover", data[ix].dom).css('display','none');
+          $("#control").append(data[ix].dom);
+          hook(ix);
+        }
+      }
+    },
+
     add: function(ytid, opts) {
-      var myid = UNIQ;
       opts = opts || {};
+
+      var 
+        myid = UNIQ,
+
+        left = $("<a>&lt;&lt;</a>").addClass('half'),
+        remove = $("<a>X</a>").addClass('half'),
+        right = $("<a>&gt;&gt;</a>").addClass('half'),
+        title = $("<a target=_blank href=http://www.youtube.com/watch?v=" + ytid + "/>"),
+        hoverControl = $("<span class=hover />")
+          .append(left)
+          .append(remove)
+          .append(right);
 
       Timeline.init();
 
       data[myid] = {
+        left: left,
+        right: right,
+        remove: remove,
+        hover: hoverControl,
         index: myid,
         flash: true,
         ytid: ytid,
         active: true,
-        title: $("<a target=_blank href=http://www.youtube.com/watch?v=" + ytid + "/>").click(Timeline.pause)
+        title: title
       };
 
       data[myid].dom = $("<div />")
         .addClass('track')
-        .mousedown(function(){ 
-          NodeSelected = myid; 
-          console.log(myid);
-        })  
-        .mouseup(function(){ 
-          data[NodeSelected].dom.removeClass('deletion');
-          NodeSelected = false; 
-        })
+        .append(hoverControl)
     	  .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
         .append(data[myid].title)
 
       data[myid].dom.appendTo('#control');
+      hook(myid);
 
       if(db.findFirst({ytid: ytid}).related) {
         Timeline.update(myid);
