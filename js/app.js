@@ -76,35 +76,6 @@ function gen(opts){
 	});
 }
 
-//
-// Adds vids in the format
-// [ [ytid, title] ... ]
-//
-function addVids(vidList) {
-
-  // insert each related video into our
-  // db of known videos if needed
-  _.each(vidList, function(video) {
-    db.insert({
-      title: video[0],
-      ytid: video[1]
-    }).update(function(data){
-      try{
-        if(!data.reference) {
-          data.reference = [];
-        }
-      } catch(ex) {
-        console.log("FAILED >> ", video, data);
-      }
-      data.count = data.reference.length;
-
-      if(!data.removed) {
-        data.removed = 0;
-      }
-    });
-  })
-}
-
 results.remove = function(ytid){
   db.find('ytid', ytid).update({
     hide: true
@@ -128,10 +99,10 @@ function login(){
 }
 
 ev.when('app.state', function(state, meta) {
-  console.log(meta);
   if(state == meta.oldValue) {
     return;
   } 
+
   if(state == 'splash') {
     Timeline.flush();
     $(".main-app").css('display','none');
@@ -176,6 +147,7 @@ function loadHistory(){
       forget,
       play;
 
+    which = which[0];
     forget = $("<button>forget</button>").click(function(){
       Local.remove(index);
       container.slideUp();
@@ -191,9 +163,8 @@ function loadHistory(){
       Timeline.play(0);
     });
 
-    container = $("<span class=splash-container>").append(
-      $("<span class=track>")
-        .append("<img src=http://i4.ytimg.com/vi/" + which[0] + "/default.jpg><p>" + which[1] + "</p>")
+    container = $("<span class=splash-container>").append( $("<span class=track>")
+        .append("<img src=http://i4.ytimg.com/vi/" + which.video + "/default.jpg><p>" + which.title + "</p>")
        ).append(
          $("<div />").append(forget).append(play)
        ).appendTo("#splash-history");

@@ -70,3 +70,6 @@ div#history{display:none}
 
 #normal-search{color:#fff;width:153px;vertical-align:sub}
 .resize{overflow-y:auto}
+
+.deletion{background:url('../images/trash_can.png') #422 no-repeat 50% 50%}
+.deletion img{opacity:0.7}

@@ -3,6 +3,7 @@ var Timeline = (function(){
     data = {},
     maxPlayer = 1,
     isPlaying = true,
+    NodeSelected = false,
     Loaded = 0,
 
     // idsActive is the list of ids, corresponding to the vidContiainers
@@ -60,10 +61,22 @@ var Timeline = (function(){
       $("#scale").css('font-size', Zoom + "%");
     }
 
-    $("#timeline").mousewheel(function(e, delta) {
+    var keyListen = false;
+    $("#timeline").hover(
+      function(){ keyListen = true },
+      function(){ keyListen = false }
+    ).mousewheel(function(e, delta) {
       console.log(Zoom);
       Zoom += delta;
       zoomsize();
+    }).mouseleave(function(){
+      if(NodeSelected !== false) {
+        data[NodeSelected].dom.addClass('deletion');
+      }
+    }).mouseenter(function(){
+      if(NodeSelected !== false) {
+        data[NodeSelected].dom.removeClass('deletion');
+      }
     });
 
     $("#zoom").mousemove(function(e){
@@ -71,13 +84,12 @@ var Timeline = (function(){
       zoomsize();
     });
 
-    var keyListen = false;
-    $("#timeline").hover(
-      function(){ keyListen = true },
-      function(){ keyListen = false }
-    );
-
-    $(window).keyup(function(e) {
+    $(document.body).mouseup(function(){
+      if(NodeSelected !== false && data[NodeSelected].dom.hasClass('deletion')) {
+        Timeline.remove(NodeSelected);
+        NodeSelected = false;
+      }
+    }).keyup(function(e) {
       if(!keyListen) { return }
 
       switch(e.which) {
@@ -265,9 +277,11 @@ var Timeline = (function(){
           axis: 'x',
           start: function(){
             ev.set('timeline.dragging');
+            $("#trashcan").css('display','block');
           },
           stop: function() {
             ev.unset('timeline.dragging');
+            $("#trashcan").css('display','none');
             Timeline.updatePosition();
           }
         });
@@ -290,15 +304,16 @@ var Timeline = (function(){
         title: $("<a target=_blank href=http://www.youtube.com/watch?v=" + ytid + "/>").click(Timeline.pause)
       };
 
-      var handle = $("<div class=handle</div>");
-      handle.myid = myid;
-
       data[myid].dom = $("<div />")
         .addClass('track')
-        .hover(
-          function(){handle.css('display','block')},
-          function(){handle.css('display','none')}
-        )
+        .mousedown(function(){ 
+          NodeSelected = myid; 
+          console.log(myid);
+        })  
+        .mouseup(function(){ 
+          data[NodeSelected].dom.removeClass('deletion');
+          NodeSelected = false; 
+        })
     	  .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
         .append(data[myid].title)
 
@@ -322,7 +337,11 @@ var Timeline = (function(){
 
       data[id].title.html(obj.title);
 
-      Local.add(id, [data[id].ytid, obj.title]);
+      Local.add(id, {
+        title: obj.title,
+        video: data[id].ytid, 
+        length: obj.length
+      });
 
       data[id].length = obj.length;
       data[id].dom.css('width', obj.length * scale + 'em');

@@ -114,9 +114,7 @@ var Local = (function(){
     get: function(_index) {
       index = _index;
 
-      return _.map(history[_index], function(which) {
-        return which[0];
-      });
+      return _.pluck(history[_index], 'video');
     },
 
     remove: function(index) {
@@ -130,9 +128,7 @@ var Local = (function(){
     },
 
     recent: function() {
-      return _.map(history.slice(-7), function(which) {
-        return which[0];
-      });
+      return history.slice(-7);
     }
   };
 })();

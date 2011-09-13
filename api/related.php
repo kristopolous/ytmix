@@ -24,9 +24,14 @@ foreach ($nodelist as $node) {
 
 		if(strpos($link, 'watch?')) {
 			
+      list( $minutes, $seconds ) = explode(':', $node->childNodes->item(0)->childNodes->item(1)->textContent);
+      
+      $length = intval($minutes) * 60 + intval($seconds);
+
 			$related_videos[] = Array(
-				$node->childNodes->item(1)->getAttribute('title'),
-				preg_replace('/^.*v=([^&]*).*/', '$1', $link)
+        'length' => $length,
+				'title' => $node->childNodes->item(1)->getAttribute('title'),
+				'ytid' => preg_replace('/^.*v=([^&]*).*/', '$1', $link)
 			);
 
     } else {
