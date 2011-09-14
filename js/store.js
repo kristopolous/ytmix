@@ -111,9 +111,15 @@ var Local = (function(){
       return index;
     },
 
-    get: function(_index) {
-      index = _index;
+    prune: function(_index) {
+      history[_index] = _.without(history[_index], null);
+      $.jStorage.set('history', history);
+      return _index;
+    },
 
+    get: function(_index) {
+      index = Local.prune(_index);
+      
       return _.pluck(history[_index], 'video');
     },
 

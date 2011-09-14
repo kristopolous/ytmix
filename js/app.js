@@ -123,6 +123,16 @@ ev.when('app.state', function(state, meta) {
   }
 });
 
+function runtime(obj) {
+  var total = 0;
+  _.each(obj, function(which) {
+    if(which && which.length) {
+      total += which.length;
+    }
+  });
+  return total;
+}
+
 function resize(){
   var 
     width = window.innerWidth || document.body.offsetWidth,
@@ -138,22 +148,26 @@ function resize(){
 
 function loadHistory(){
   if(Local.recent().length) {
-    $("#history").css('display','inline-block');
+    $("#history").css('display','block');
   }
 
   _.each(Local.recent(), function(which, index) {
     var 
-      container,
-      forget,
-      play;
+      total = runtime(which),
+      container = $("<span class=splash-container>").appendTo("#splash-history"),
+      forget = $("<a>forget</a>"),
+      play = $("<a>play</a>"),
+      hoverControl = $("<span class=hover />")
+        .append(play)
+        .append(forget),
+      track = $("<span class=track />").append(hoverControl);
 
-    which = which[0];
-    forget = $("<button>forget</button>").click(function(){
+    forget.click(function(){
       Local.remove(index);
       container.slideUp();
     });
 
-    play = $("<button>play</butotn>").click(function(){
+    play.click(function(){
       ev.set('app.state', 'main');
 
       _.each(Local.get(index), function(field) {
@@ -163,11 +177,18 @@ function loadHistory(){
       Timeline.play(0);
     });
 
-    container = $("<span class=splash-container>").append( $("<span class=track>")
-        .append("<img src=http://i4.ytimg.com/vi/" + which.video + "/default.jpg><p>" + which.title + "</p>")
-       ).append(
-         $("<div />").append(forget).append(play)
-       ).appendTo("#splash-history");
+    for(var ix = 0; ix < Math.min(which.length, 4); ix++) {
+      track.append("<img src=http://i4.ytimg.com/vi/" + which[ix].video + "/default.jpg>");
+    }
+
+    container
+      .hover(
+        function(){ hoverControl.css('display','block') }, 
+        function(){ hoverControl.css('display','none') }
+      )
+      .append(track)
+      .append("<p>" + which.length + " track" + (which.length != 1 ? 's' : '') + " (" + Math.floor(total / 60) + ":" + ((total % 60 + 100).toString().substr(1)) + ")</p>");
+
   });
 }
 

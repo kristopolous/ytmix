@@ -1,27 +1,24 @@
 var Timeline = (function(){
   var 
-    data = {},
+    Data = DB(),
+    data = Data.view('id'),
     maxPlayer = 1,
     isPlaying = true,
-    NodeSelected = false,
     Loaded = 0,
-
-    // idsActive is the list of ids, corresponding to the vidContiainers
-    // that should be currently loaded.  Trivially, idsActive[centroid]
-    // should usually be playing
-    idsActive = [],
 
     Offset = 0,
     Player = {},
     Total,
 
-    ix,
     Zoom = 85,
-    scale = 0.04, // ems per second
+    Scale = 0.04, // ems per second
     UNIQ = 0;
+  self.Data = Data;
 
   $(function(){
-    var isDragging = false;
+    var 
+      isDragging = false,
+      keyListen = false;
 
     $("#now").click(function(){
       if(isDragging) {
@@ -33,15 +30,9 @@ var Timeline = (function(){
 
     $("#now").css('opacity',0.6).draggable({
       axis: 'x',
-      start:function(){
-        isDragging = true;
-      },
-      drag: function(){
-        $("#scale").css('margin-left', $("#now").offset().left);
-      },
-      stop: function() {
-        $("#scale").css('margin-left', $("#now").offset().left);
-      }
+      start:function(){ isDragging = true; },
+      drag: function(){ $("#scale").css('margin-left', $("#now").offset().left); },
+      stop: function(){ $("#scale").css('margin-left', $("#now").offset().left); }
     });
 
     // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
@@ -61,35 +52,15 @@ var Timeline = (function(){
       $("#scale").css('font-size', Zoom + "%");
     }
 
-    var keyListen = false;
     $("#timeline").hover(
       function(){ keyListen = true },
       function(){ keyListen = false }
     ).mousewheel(function(e, delta) {
-      console.log(Zoom);
       Zoom += delta;
       zoomsize();
-    }).mouseleave(function(){
-      if(NodeSelected !== false) {
-        data[NodeSelected].dom.addClass('deletion');
-      }
-    }).mouseenter(function(){
-      if(NodeSelected !== false) {
-        data[NodeSelected].dom.removeClass('deletion');
-      }
     });
 
-    $("#zoom").mousemove(function(e){
-      Zoom = e.layerY / 2;
-      zoomsize();
-    });
-
-    $(document.body).mouseup(function(){
-      if(NodeSelected !== false && data[NodeSelected].dom.hasClass('deletion')) {
-        Timeline.remove(NodeSelected);
-        NodeSelected = false;
-      }
-    }).keyup(function(e) {
+    $(window).keyup(function(e) {
       if(!keyListen) { return }
 
       switch(e.which) {
@@ -103,27 +74,30 @@ var Timeline = (function(){
 
   function updateytplayer() {
     // mechanics for moving the centroid
-    if(Player.active.getCurrentTime && Player.active.getCurrentTime() > 0) {
+    if(Player.active.getCurrentTime) {
       var time = Player.active.getCurrentTime();
 
-      Offset = Player.current.offset + time;
+      if (time > 0) {
 
-      Player.current.title.attr('href', 
+        Player.current.title.attr('href', 
           'http://www.youtube.com/watch?v=' + Player.current.ytid + 
           "#at=" + Math.ceil(time) + "s");
 
-      if( Player.active.getPlaybackQuality() != 'large') {
-        Player.active.setPlaybackQuality('large');
-      }
+        if( Player.active.getPlaybackQuality() != 'large') {
+          Player.active.setPlaybackQuality('large');
+        }
 
-      if(! ev.isset('timeline.dragging') ) {
-        $("#control").css('left', - 100 * ((time + Player.current.offset) / Total) + "%");
-      }
+        if(! ev.isset('timeline.dragging') ) {
+          $("#control").css('left', - 100 * ((time + Player.current.offset) / Total) + "%");
+        }
 
-      if(Player.active.getDuration() - time < 2) {
-        if( data[Player.current.index + 1] ){
-          Player.current.title.attr('href', 'http://www.youtube.com/watch?v=' + Player.current.ytid);
-          Timeline.play(Player.current.index + 1);
+        if(Player.active.getDuration() - time == 0) {
+          if(Offset == Player.current.offset + time) { 
+            Offset += 4;
+            Timeline.seekTo(Offset);
+          }
+        } else {
+          Offset = Player.current.offset + time;
         }
       }
     }
@@ -134,24 +108,31 @@ var Timeline = (function(){
     Loaded ++;
 
     Player[id] = document.getElementById(playerId);
+    Player[id].addEventListener('onStateChange', function(){
+      console.log(this, arguments);
+    });
 
     if(Loaded == maxPlayer) {
-      setTimeout(function(){
-        ev.set('flash.load');
-      },250);
+      setTimeout(function(){ ev.set('flash.load'); },250);
     }
   }
 
   ev.isset('flash.load', function(){
     Player.active = Player[0];
-    setInterval(updateytplayer, 100);
+    setInterval(updateytplayer, 150);
   });
 
   function swap(x, y) {
     if(data[y]) {
-      var swap = data[y];
-      data[y] = data[x];
-      data[x] = swap; 
+
+      Data.update(function(row) {
+        if(row.id == x) {
+          row.id = y;
+        } else if (row.id == y) {
+          row.id = x;
+        }
+      });
+
       Timeline.gen();
       if(player.current.index == x || player.current.index == y) {
         Timeline.seekTo(Offset);
@@ -177,35 +158,22 @@ var Timeline = (function(){
     data: data,
 
     remove: function(index){
-      // find the yt id at the index to
-      // be removed
-      var 
-        ytid = data[index].ytid,
-
-        // and the corresponding object
-        // in our database
-        obj = db.findFirst({
-          ytid: ytid
+      db.find('ytid', data[index].ytid)
+        .update(function(obj){
+          // increment the announcement that 
+          // this was removed at some point and
+          // may not be liked
+          obj.removed++;
         });
-
-      // increment the announcement that 
-      // this was removed at some point and
-      // may not be liked
-      obj.removed++;
 
       // remove it from the dom
       data[index].dom.remove();
 
       db.find('count', 0).remove();
 
-      data[index].active = false;
-    },
+      Data.remove({id: index});
 
-    fadeOut: function(){
-      Player.active.fadeOut(1000, function(){
-        Timeline.pause();
-        Player.active.setVolume(100);
-      });
+      Timeline.seekTo(Offset);
     },
 
     pause: function(){
@@ -234,7 +202,7 @@ var Timeline = (function(){
 
     update_offset: function(){
       var aggregate = 0;
-      Total = _.reduce(_.pluck(data, 'length'), function(a, b) { return (a || 0) + (b || 0) }, 0);
+      Total = runtime(data);
 
       for(index in data) {
         data[index].offset = aggregate;
@@ -264,28 +232,25 @@ var Timeline = (function(){
 
       Timeline.update_offset();
 
-      var 
-        relative = (offset < 1) ? offset * Total : offset, 
-        aggregate = 0,
-        index;
+      var absolute = (offset < 1) ? offset * Total : offset, 
 
-      relative = Math.max(0, relative);
-      relative = Math.min(Total, relative);
+      absolute = Math.max(0, absolute);
+      absolute = Math.min(Total, absolute);
 
-      for(index = 0;;index++) {
-        if((! data[index + 1]) || data[index + 1].offset > relative) {
-          if(index != Player.current.index) {
-            Timeline.play(index);
-          }
-          Player.active.seekTo(relative - data[index].offset);
-          break;
-        }
+      console.log(absolute, Total);
+      var track = Data.findFirst(function(row) { return (row.offset < absolute && (row.offset + row.length) > absolute) });
+      console.log(track);
+
+      if(track.id != Player.current.id) {
+        Timeline.play(track.id);
       }
+
+      Player.active.seekTo(absolute - track.offset);
     },
 
     flush: function(){
       Timeline.stop();
-      data = [];
+      Data.remove();  
     },
 
     updatePosition: function() {
@@ -342,26 +307,24 @@ var Timeline = (function(){
 
       Timeline.init();
 
-      data[myid] = {
+      Data.insert({
         left: left,
         right: right,
         remove: remove,
         hover: hoverControl,
-        index: myid,
-        flash: true,
+        id: myid,
         ytid: ytid,
         active: true,
-        title: title
-      };
+        title: title,
+        dom: $("<div />")
+          .addClass('track')
+          .append(hoverControl)
+          .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
+          .append(title)
+          .appendTo('#control')
+      });
 
-      data[myid].dom = $("<div />")
-        .addClass('track')
-        .append(hoverControl)
-    	  .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
-        .append(data[myid].title)
-
-      data[myid].dom.appendTo('#control');
-      hook(myid);
+      hook(myid); 
 
       if(db.findFirst({ytid: ytid}).related) {
         Timeline.update(myid);
@@ -380,18 +343,13 @@ var Timeline = (function(){
       var obj = db.findFirst({ytid: data[id].ytid});
 
       data[id].title.html(obj.title);
+      data[id].length = obj.length;
+      data[id].dom.css('width', obj.length * Scale + 'em');
 
       Local.add(id, {
         title: obj.title,
         video: data[id].ytid, 
         length: obj.length
-      });
-
-      data[id].length = obj.length;
-      data[id].dom.css('width', obj.length * scale + 'em');
-
-      db.find({
-        ytid: db.isin(obj.related)
       });
 
       Timeline.update_offset();
