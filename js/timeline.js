@@ -290,11 +290,13 @@ var Timeline = (function(){
       }
     },
 
-    add: function(ytid, opts) {
+    add: function(obj, opts) {
+      var ytid = obj.ytid;
+      console.log(ytid);
       opts = opts || {};
 
       var 
-        myid = UNIQ,
+        myid = UNIQ ++,
 
         left = $("<a>&lt;&lt;</a>").addClass('half'),
         remove = $("<a>X</a>").addClass('half'),
@@ -303,7 +305,14 @@ var Timeline = (function(){
         hoverControl = $("<span class=hover />")
           .append(left)
           .append(remove)
-          .append(right);
+          .append(right),
+
+        dom = $("<div />")
+          .addClass('track')
+          .append(hoverControl)
+          .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
+          .append(title)
+          .appendTo('#control');
 
       Timeline.init();
 
@@ -315,44 +324,29 @@ var Timeline = (function(){
         id: myid,
         ytid: ytid,
         active: true,
+        length: obj.length,
         title: title,
-        dom: $("<div />")
-          .addClass('track')
-          .append(hoverControl)
-          .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
-          .append(title)
-          .appendTo('#control')
+        dom: dom
       });
 
       hook(myid); 
 
-      if(db.findFirst({ytid: ytid}).related) {
-        Timeline.update(myid);
-      }
+      title.html(obj.title);
+      dom.css('width', obj.length * Scale + 'em');
 
-      UNIQ ++;
+      Local.add({
+        title: obj.title,
+        ytid: obj.ytid, 
+        length: obj.length
+      });
+
+      Timeline.update_offset();
 
       if(opts.noplay != true) {
         Timeline.play(myid);
       }
 
       return myid;
-    },
-
-    update: function(id){
-      var obj = db.findFirst({ytid: data[id].ytid});
-
-      data[id].title.html(obj.title);
-      data[id].length = obj.length;
-      data[id].dom.css('width', obj.length * Scale + 'em');
-
-      Local.add(id, {
-        title: obj.title,
-        video: data[id].ytid, 
-        length: obj.length
-      });
-
-      Timeline.update_offset();
     }
   };
 })();

@@ -65,7 +65,6 @@ var Remote = (function(){
         func: 'get',
         id: id,
         onSuccess: function(data) {
-          alert(data.toSource());
           ev.set('playlist.id', data.id);
           if(callback) {
             callback(data);
@@ -93,48 +92,45 @@ ev.when('playlist.name', function(name) {
   Remote.setName(name);
 });
 
-var Local = (function(){
+(function(){
   var 
-    playlist = [],
     history,
-    index;
+    Index;
 
   if($.jStorage.get('history') == null) {
     $.jStorage.set('history', []);
   }
   history = $.jStorage.get('history');
       
-  return {
+  self.Local = {
     create: function(){
-      index = history.length;
+      Index = history.length;
       history.push([]);
-      return index;
     },
 
     prune: function(_index) {
       history[_index] = _.without(history[_index], null);
       $.jStorage.set('history', history);
-      return _index;
     },
 
     get: function(_index) {
-      index = Local.prune(_index);
-      
-      return _.pluck(history[_index], 'video');
+      Index = _index;
+      Local.prune(_index);
+      return history[_index];
     },
 
-    remove: function(index) {
-      history.splice(index, 1); 
+    remove: function(_index) {
+      history.splice(_index, 1); 
       $.jStorage.set('history', history);
     },
 
-    add: function(offset, tuple) {
-      history[index][offset] = tuple;
+    add: function(tuple) {
+      history[Index].push(tuple);
       $.jStorage.set('history', history);
     },
 
     recent: function() {
-      return history.slice(-7);
+      return history.slice(-8);
     }
   };
 })();

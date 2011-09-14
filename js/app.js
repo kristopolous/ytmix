@@ -1,22 +1,19 @@
-var 	
-	sortOrder = 'AGE',
-  serverSearched = {},
-  results = {};
-
-db.constrain('unique', 'ytid');
-
 function addVideo(opts) {
   var 
-    id = opts.ytid,
-    play = $("<a>play</a>").click(function(){ loadit(id); }),
-    queue = $("<a>queue</a>").click(function(){ loadit(id, {noplay: true}); }),
+    play = $("<a>play</a>").click(function(){ loadit(opts); }),
+    queue = $("<a>queue</a>").click(function(){ loadit(opts, {noplay: true}); }),
 
     open = $("<a>open</a>").attr({
       target: '_blank',
-      href: 'http://youtube.com/watch?v=' + id
+      href: 'http://youtube.com/watch?v=' + opts.ytid
     }).click(Timeline.pause),
 
-    remove = $("<a>remove</a>").click(function(){ results.remove(id) }),
+    remove = $("<a>remove</a>").click(function(){ 
+      db
+        .find('ytid', opts.ytid)
+        .update({ hide: true }) 
+      gen();
+    }),
 
     hoverControl = $("<span class=hover>")
       .append(play)
@@ -28,59 +25,20 @@ function addVideo(opts) {
       function(){ hoverControl.css('display','block') }, 
       function(){ hoverControl.css('display','none') }
     )
-    .append("<img src=http://i4.ytimg.com/vi/" + id + "/default.jpg><p>" + opts.title + "</p>")
+    .append("<img src=http://i4.ytimg.com/vi/" + opts.ytid + "/default.jpg><p>" + opts.title + "</p>")
     .append(hoverControl)
     .appendTo(opts.container);
 }
 
-function gen(opts){
-  opts = opts || {};
+function gen(){
+  $("#video-list").children().remove();
 
-	var emit = db.find({hide: db(' !== true')});
-
-	if(sortOrder == 'HISTORY') {
-    var list = DB(_.values(Timeline.data))
-      .sort('index', 'asc')
-      .select('ytid');
-
-    emit = db.find({
-      ytid: db.isin(list)
-    });
-
-	} else {
-    emit = db.sort({
-      ALPHA: 'title',
-      COUNT: 'count',
-      AGE: 'lastseen'
-    }[sortOrder], 'ASC');
-	}
-
-	if(opts.query) {
-		var qstr = new RegExp('(' + opts.query + ')', 'ig');
-
-    emit = db.find({
-      ytid: db.isin(emit.select('ytid')),
-      title: function(test) {
-        return test.search(qstr);
-      }
-    });
-	}
-
-  $("#video-list").html('');
-
-  _.each(emit, function(which) {
+  _.each(db.sort('count', 'desc'), function(which) {
     addVideo(_.extend(
       {container: "#video-list"},
       which
     ));
 	});
-}
-
-results.remove = function(ytid){
-  db.find('ytid', ytid).update({
-    hide: true
-  });
-  gen();
 }
 
 function login(){
@@ -178,7 +136,7 @@ function loadHistory(){
     });
 
     for(var ix = 0; ix < Math.min(which.length, 4); ix++) {
-      track.append("<img src=http://i4.ytimg.com/vi/" + which[ix].video + "/default.jpg>");
+      track.append("<img src=http://i4.ytimg.com/vi/" + which[ix].ytid + "/default.jpg>");
     }
 
     container
@@ -193,6 +151,10 @@ function loadHistory(){
 }
 
 $(function(){
+  var 
+    dom = $("#playlist-name"), 
+    input = $("<input>");
+
   login();
 
   $("#initial-search").focus();
@@ -200,10 +162,6 @@ $(function(){
   $(window).resize(resize);
 
   ev.isset('uid', loadHistory);
-
-  var 
-    dom = $("#playlist-name"), 
-    input = $("<input>");
 
   ev.when('playlist.name', function(name) {
     dom.html(name);

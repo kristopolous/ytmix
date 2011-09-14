@@ -4,3 +4,5 @@ var
     'app.state': 'splash',
     'playlist.name': ''
   });
+
+db.constrain('unique', 'ytid');

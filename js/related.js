@@ -36,19 +36,19 @@ function addVids(vidList) {
   })
 }
 
-function loadit(ytid, opts){
+function loadit(obj, opts){
+  console.log(obj);
   ev.isset('flash.load', function(){
-    if(!db.findFirst({ytid: ytid}).serverData) {
+    if(!db.findFirst({ytid: obj.ytid}).serverData) {
 
-      var id = Timeline.add(ytid, opts);
+      var id = Timeline.add(obj, opts);
 
       $.getJSON(
-        'api/related.php',
-        {v: ytid}, 
+        'api/related.php', {ytid: obj.ytid}, 
 
         function (data){
           db.insert({
-            ytid: ytid
+            ytid: obj.ytid,
           }).update({
             removed: 0,
             count: 0,
@@ -60,8 +60,6 @@ function loadit(ytid, opts){
 
           addVids(data.related, opts);
       
-          Timeline.update(id);
-
           gen();
         });
     } else {

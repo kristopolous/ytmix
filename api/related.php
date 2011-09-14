@@ -1,6 +1,6 @@
 <?
 $related_videos = Array();
-$ytID = $_GET['v'];
+$ytID = $_GET['ytid'];
 $main_doc = new DOMDocument();
 $main_doc->preserveWhiteSpace = FALSE;
 @$raw_data = file_get_contents("http://www.youtube.com/watch?v=$ytID");
@@ -22,7 +22,7 @@ foreach ($nodelist as $node) {
 	if($node->hasAttribute("class") && (trim($node->getAttribute('class')) == 'video-list-item-link')) {
 		$link = $node->getAttribute('href');
 
-		if(strpos($link, 'watch?')) {
+		if(strpos($link, 'watch?') && strpos($link, 'list_related') == false) {
 			
       list( $minutes, $seconds ) = explode(':', $node->childNodes->item(0)->childNodes->item(1)->textContent);
       
@@ -34,15 +34,13 @@ foreach ($nodelist as $node) {
 				'ytid' => preg_replace('/^.*v=([^&]*).*/', '$1', $link)
 			);
 
-    } else {
-      echo 'link failed';
-    }
+    } 
 	}
 }
 
 echo json_encode(Array(
   'length' => intval($matches[1]),
-	'video' => $ytID,
+	'ytid' => $ytID,
 	'title' => trim(preg_replace('/\s+/', ' ', $title)),
 	'related' => $related_videos
 ));
