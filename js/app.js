@@ -85,7 +85,7 @@ function runtime(obj) {
   var total = 0;
   _.each(obj, function(which) {
     if(which && which.length) {
-      total += which.length;
+      total += parseInt(which.length);
     }
   });
   return total;
@@ -105,10 +105,6 @@ function resize(){
 }
 
 function loadHistory(){
-  if(Local.recent().length) {
-    $("#history").css('display','block');
-  }
-
   _.each(Local.recent(), function(which, index) {
     var 
       total = runtime(which),
@@ -146,8 +142,10 @@ function loadHistory(){
       )
       .append(track)
       .append("<p>" + which.length + " track" + (which.length != 1 ? 's' : '') + " (" + Math.floor(total / 60) + ":" + ((total % 60 + 100).toString().substr(1)) + ")</p>");
-
   });
+  if(Local.recent().length) {
+    $("#history").fadeIn();
+  }
 }
 
 $(function(){
@@ -157,11 +155,13 @@ $(function(){
 
   login();
 
-  $("#initial-search").focus();
+  setTimeout( $("#initial-search").focus, 1000);
+
   resize();
   $(window).resize(resize);
 
-  ev.isset('uid', loadHistory);
+  loadHistory();
+//  ev.isset('uid', loadHistory);
 
   ev.when('playlist.name', function(name) {
     dom.html(name);

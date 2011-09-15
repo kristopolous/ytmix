@@ -1,50 +1,51 @@
-body{overflow:hidden;background:#000513;color:#888;font-family:'Trebuchet MS',Helvetica,sans-serif;margin:0}
+body{overflow:hidden;background:#656;color:#888;font-family:'Trebuchet MS',Helvetica,sans-serif;margin:0}
 span{display:inline-block}
 p{margin:0}
 a:hover{text-decoration:none;color:#fff}
 a{color:#ccc}
 input{font-family:'Trebuchet MS',Helvetica,sans-serif;font-size:15px;background:#222;color:#fff;border:1px inset #334444;padding:2px}
-h1{text-shadow: 0px 0px 8px #fff;color:#a0a0a8;margin:0;padding:0.5em 0;font-size:48px}
+h1{text-shadow: 0 0 8px #fff;color:#656;margin:0;padding:0.5em 0;font-size:2.75em}
 #playlist-control{position:absolute;top:5px;left:5px;margin:0;z-index:50;font-size:16px}
 
-.track{width:0;white-space:normal;position:relative;display:inline-block;margin:0 0 0 0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#1d2030;padding:0.5em 0 0.1em;overflow:hidden}
+.track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#212;overflow:hidden}
 .track img{width:12em}
 .track a{display:block}
 
 #timeline{vertical-align:top;z-index:18;white-space:nowrap;overflow-x:hidden;width:100%}
-#timeline .track{ box-shadow:0 0 2px 0 #669 inset;}
+#timeline .track{box-shadow:0 0 2px 0 #669 inset}
 
 #valign{display:inline-block;vertical-align:middle;width:0;height:200px}
 
-.splash-container{background:#1d2030;margin-left:8px;width:12em;text-align:center;vertical-align:top}
-#splash{text-align:center;overflow:auto;padding-bottom:30px;color:#fff;font-size:18px;background:#AAAAAe}
-#splash input{font-size:24px}
+.splash-container{border:2px solid #a9a;background:#212;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em}
+#splash{text-align:center;color:#cbc;text-shadow:0px 0px 2px #212;font-size:1.25em}
+#splash-history{margin-top:0.25em}
+#splash input{font-size:1.5em;box-shadow:0 0 0px 2px #fff;margin:0.5em 0 1em 0}
 #splash .hover{text-align:center;line-height:1.2em}
-#splash .track{height:9em;line-height:0;text-align:left;width:12em}
-#splash .track img{width:6em}
+#splash .track{height:9em;line-height:0;text-align:center;width:100%;margin-top:0.25em}
+#splash .track img{width:5em;margin:0.25em;border:1px solid #878}
 
 .main-app{display:none;width:100%}
 
 #video-list {display:inline-block}
-.result{background:#1d2030;display:inline-block;width:130px;text-align:center;padding:5px 3px 3px 3px;margin:4px;vertical-align:top;position:relative}
-.result img{width:100px;height:75px}
-.result p{border-top:1px solid #666676;padding:4px 2px;margin:1px;font-size:11px;color:#888897;height:30px;overflow:hidden;vertical-align:top;display:block;text-align:left;}
+.result{background:#212;display:inline-block;width:130px;text-align:center;padding:0.5em 0.25em;margin:0.25em;vertical-align:top;position:relative}
+.result img{width:6em;0 0 2px 1px #332233}
+.result p{padding:0 0.25em;font-size:0.6em;line-height:1.25em;color:#888897;height:3em;overflow:hidden;vertical-align:top;display:block;text-align:left}
 
 #scale{margin-left:40%;vertical-align:middle;font-size:85%}
 #control{display:inline-block;position:relative;z-index:40;height:12em}
 #now{width:8px;background:lime;height:12.6em;z-index:45;display:inline-block;vertical-align:bottom;position:absolute}
 
-#history{display:none;margin-top:1em}
 #players{position:absolute;top:-1000px;left:-1000px}
 #search-results{width:160px}
 
 .coy-button{border-radius:2px;padding:3px 6px;cursor:pointer}
 .coy-button:hover{box-shadow: 0 0 2px 2px #55c}
 
-.hover{display:none;position:absolute;top:0;left:0;width:100%;opacity:0.8}
-.hover a{cursor:pointer;display:block;height:1.65em;font-size:1.25em;background:#11111c url('twf.png') repeat-x 0 -6px;margin-bottom:0.03em;padding-top:0.35em;text-decoration:none}
+.hover{display:none;position:absolute;top:5%;left:5%;width:90%;opacity:0.8}
+.hover a{cursor:pointer;display:block;height:1.5em;font-size:1.25em;background:#11111c;box-shadow:0 0 1px #aaa inset;margin-bottom:0.03em;padding-top:0.35em;text-decoration:none}
 .hover a:hover{background-color:#33333f}
 .hover a.half{display:inline-block;width:33%}
 
 #normal-search{color:#fff;width:153px;vertical-align:sub}
 .resize{overflow-y:auto}
+#history{display:none}
