@@ -134,7 +134,7 @@ var Timeline = (function(){
       });
 
       Timeline.gen();
-      if(player.current.index == x || player.current.index == y) {
+      if(Player.current.id == x || Player.current.id == y) {
         Timeline.seekTo(Offset);
       }
     }
@@ -148,8 +148,8 @@ var Timeline = (function(){
     node.$remove.click(function(){Timeline.remove(id); });
     node.$title.click(Timeline.pause);
     node.dom.hover(
-      function(){ node.hover.css('display','block') }, 
-      function(){ node.hover.css('display','none') }
+      function(){ node.hover.fadeIn() }, 
+      function(){ node.hover.fadeOut() }
     );
   }
 
@@ -239,16 +239,18 @@ var Timeline = (function(){
       Local.update( Timeline.toStore() );
     },
 
-    play: function(dbid) {
+    play: function(dbid, offset) {
       if(!arguments.length) {
         return Player.active.playVideo();
       }
+
+      offset = offset || 0;
 
       ev.isset('flash.load', function(){
         if(Player.current != data[dbid]) {
           Player.current = data[dbid];
           Timeline.update_offset();
-          Player.active.loadVideoById(Player.current.ytid);
+          Player.active.loadVideoById(Player.current.ytid, offset);
           Player.start = $(data[dbid].dom).offset().left - $("#control").offset().left;
         }
       });
@@ -266,15 +268,14 @@ var Timeline = (function(){
       absolute = Math.max(0, absolute);
       absolute = Math.min(Total, absolute);
 
-      console.log(absolute, Total);
       var track = TimeDB.findFirst(function(row) { return (row.offset < absolute && (row.offset + row.length) > absolute) });
       console.log(track);
 
       if(track.id != Player.current.id) {
-        Timeline.play(track.id);
+        Timeline.play(track.id, absolute - track.offset);
+      } else {
+        Player.active.seekTo(absolute - track.offset);
       }
-
-      Player.active.seekTo(absolute - track.offset);
     },
 
     flush: function(){

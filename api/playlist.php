@@ -6,6 +6,12 @@ function pl_createUser() {
   result('true', uniqid('', true));
 }
 
+function pl_remove($params) {
+  list($id) = get($params, 'id');
+  $result = run('delete from playlist where id=' . $id);
+  return $result;
+}
+
 function pl_createID() {
   mysql_query('insert into playlist values ()');
   return mysql_insert_id();

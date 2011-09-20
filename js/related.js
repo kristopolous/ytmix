@@ -27,12 +27,13 @@ function loadit(obj, opts){
   var match = {ytid: obj.ytid};
   
   ev.isset('flash.load', function(){
+    db.insert(obj);
     Timeline.add(obj, opts);
 
     if(!db.findFirst(match).serverData) {
       $.getJSON( 'api/related.php', match, function (data){
         db
-          .insert(match)
+          .find(match)
           .update({
             removed: 0,
             related: _.pluck(data.related, 'ytid'),

@@ -1,22 +1,27 @@
-body{overflow:hidden;background:#656;color:#888;font-family:'Trebuchet MS',Helvetica,sans-serif;margin:0}
+@font-face {
+    font-family: Geo;
+    src: url('GeosansLight.ttf');
+}
+body{overflow:hidden;background:#212;color:#888;font-family:Geo,Helvetica,sans-serif;margin:0}
 span{display:inline-block}
 p{margin:0}
 a:hover{text-decoration:none;color:#fff}
 a{color:#ccc}
-input{font-family:'Trebuchet MS',Helvetica,sans-serif;font-size:15px;background:#222;color:#fff;border:1px inset #334444;padding:2px}
-h1{text-shadow: 0 0 8px #fff;color:#656;margin:0;padding:0.5em 0;font-size:2.75em}
-#playlist-control{position:absolute;top:5px;left:5px;margin:0;z-index:50;font-size:16px}
+a.half,.result,input,h1,h2,h3{font-family:'Trebuchet Ms',Helvetica,sans-serif;}
+input{font-size:15px;background:#656;color:#fff;border:2px solid #a9a;padding:3px}
+h1{text-shadow: 0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
+#playlist-control{position:absolute;top:0px;left:3px;margin:0;z-index:50;font-size:16px;color:#fff}
 
-.track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#212;overflow:hidden}
-.track img{width:12em}
-.track a{display:block}
+.track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434;overflow:hidden}
+.track img{width:10.5em;margin-top:1.5em}
+.track a{display:block;text-decoration:none}
 
 #timeline{vertical-align:top;z-index:18;white-space:nowrap;overflow-x:hidden;width:100%}
-#timeline .track{box-shadow:0 0 2px 0 #669 inset}
+#timeline .track{border-left:1px solid #767;margin-left:-1px}
 
 #valign{display:inline-block;vertical-align:middle;width:0;height:200px}
 
-.splash-container{border:2px solid #a9a;background:#212;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em}
+.splash-container{border:2px solid #a9a;background:#434;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em}
 #splash{text-align:center;color:#cbc;text-shadow:0px 0px 2px #212;font-size:1.25em}
 #splash-history{margin-top:0.25em}
 #splash input{font-size:1.5em;box-shadow:0 0 0px 2px #fff;margin:0.5em 0 1em 0}
@@ -27,25 +32,26 @@ h1{text-shadow: 0 0 8px #fff;color:#656;margin:0;padding:0.5em 0;font-size:2.75e
 .main-app{display:none;width:100%}
 
 #video-list {display:inline-block}
-.result{background:#212;display:inline-block;width:130px;text-align:center;padding:0.5em 0.25em;margin:0.25em;vertical-align:top;position:relative}
+.result{background:#323;display:inline-block;width:130px;text-align:center;padding:0.5em 0.25em;margin:0.25em;vertical-align:top;position:relative}
 .result img{width:6em;0 0 2px 1px #332233}
 .result p{padding:0 0.25em;font-size:0.6em;line-height:1.25em;color:#888897;height:3em;overflow:hidden;vertical-align:top;display:block;text-align:left}
 
 #scale{margin-left:40%;vertical-align:middle;font-size:85%}
 #control{display:inline-block;position:relative;z-index:40;height:12em}
-#now{width:8px;background:lime;height:12.6em;z-index:45;display:inline-block;vertical-align:bottom;position:absolute}
+#now{width:8px;background:lime;height:12em;z-index:45;display:inline-block;vertical-align:bottom;position:absolute}
 
 #players{position:absolute;top:-1000px;left:-1000px}
-#search-results{width:160px}
+#search-results{width:162px}
 
 .coy-button{border-radius:2px;padding:3px 6px;cursor:pointer}
 .coy-button:hover{box-shadow: 0 0 2px 2px #55c}
 
 .hover{display:none;position:absolute;top:5%;left:5%;width:90%;opacity:0.8}
-.hover a{cursor:pointer;display:block;height:1.5em;font-size:1.25em;background:#11111c;box-shadow:0 0 1px #aaa inset;margin-bottom:0.03em;padding-top:0.35em;text-decoration:none}
+.hover a{cursor:pointer;display:block;height:1.5em;font-size:1.25em;background:#434;box-shadow:0 0 1px #a9a inset;margin-bottom:0.03em;padding-top:0.35em;text-decoration:none}
 .hover a:hover{background-color:#33333f}
-.hover a.half{display:inline-block;width:33%}
+.hover a.half{display:inline-block;width:33%;font-size:1.5em}
 
-#normal-search{color:#fff;width:153px;vertical-align:sub}
+#normal-search{width:151px}
 .resize{overflow-y:auto}
 #history{display:none}
+#bottom-box{margin-top:-1px;border-top:1px solid #434}

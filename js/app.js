@@ -74,10 +74,6 @@ ev.when('app.state', function(state, meta) {
     }, 1000);
 
     $("#splash").css('display','none');
-
-    if(!ev.isset('playlist.id')) {
-      Remote.create();
-    }
   }
 });
 
@@ -99,15 +95,15 @@ function resize(){
   $(".resize").css('height', (height - 225) + 'px');
 
   $("#video-list").css({
-    height: (height - 200) + 'px',
-    width: (width - 165) + 'px'
+    height: (height - 196) + 'px',
+    width: (width - 167) + 'px'
   });
 }
 
 function loadHistory(){
   _.each(Local.recent(), function(which, index) {
     var 
-      total = runtime(which),
+      total = runtime(which.data),
       container = $("<span class=splash-container>").appendTo("#splash-history"),
       forget = $("<a>forget</a>"),
       play = $("<a>play</a>"),
@@ -134,8 +130,8 @@ function loadHistory(){
       Timeline.play(0);
     });
 
-    for(var ix = 0; ix < Math.min(which.length, 4); ix++) {
-      track.append("<img src=http://i4.ytimg.com/vi/" + which[ix].ytid + "/default.jpg>");
+    for(var ix = 0; ix < Math.min(which.data.length, 4); ix++) {
+      track.append("<img src=http://i4.ytimg.com/vi/" + which.data[ix].ytid + "/default.jpg>");
     }
 
     container
@@ -144,8 +140,12 @@ function loadHistory(){
         function(){ hoverControl.css('display','none') }
       )
       .append(track)
-      .append("<p>" + which.length + " track" + (which.length != 1 ? 's' : '') + " (" + Math.floor(total / 60) + ":" + ((total % 60 + 100).toString().substr(1)) + ")</p>");
+      .append("<p>" + which.name + 
+         " (" + which.data.length + " track" + (which.data.length != 1 ? 's' : '') + " " 
+         + Math.floor(total / 60) + ":" + ((total % 60 + 100).toString().substr(1)) + 
+         ")</p>");
   });
+
   if(Local.recent().length) {
     $("#history").fadeIn();
   }
@@ -164,7 +164,6 @@ $(function(){
   $(window).resize(resize);
 
   loadHistory();
-//  ev.isset('uid', loadHistory);
 
   ev.when('playlist.name', function(name) {
     dom.html(name);
@@ -178,5 +177,6 @@ $(function(){
   dom.click(function(){
     $(this).replaceWith(input);
     input.val(ev.get('playlist.name'));
+    input.focus();
   });
 });

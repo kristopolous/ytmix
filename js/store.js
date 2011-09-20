@@ -73,6 +73,13 @@ var Remote = (function(){
       });
     },
 
+    remove: function(id) {
+      return remote({ 
+        func: 'remove',
+        id: id
+      });
+    },
+
     update: function(data) {
       return remote(_.extend(
         { func: 'update' },
@@ -82,13 +89,15 @@ var Remote = (function(){
 
     setName: function(name) {
       return Remote.update({
-        name: name
+        name: name,
+        id: ev('playlist.id')
       });
     }
   };
 })();
 
 ev.when('playlist.name', function(name) {
+  Local.set('name', name);
   Remote.setName(name);
 });
 
@@ -102,40 +111,64 @@ ev.when('playlist.name', function(name) {
   }
   history = $.jStorage.get('history');
       
+  ev.when('playlist.id', function(id) {
+    if(Index && !history[Index].id) {
+      Local.set('id', id);
+    }
+  });
+
   self.Local = {
     create: function(){
       Index = history.length;
-      history.push([]);
+      history.push({
+        name: 'Untitled',
+        data: []
+      });
+      Remote.create();
     },
 
     prune: function(_index) {
-      history[_index] = _.without(history[_index], null);
+      history[_index].data = _.without(history[_index].data, null);
       $.jStorage.set('history', history);
     },
 
     get: function(_index) {
       Index = _index;
       Local.prune(_index);
-      return history[_index];
+
+      if(history[_index].id) {
+        ev.set('playlist.id', history[_index].id);
+        ev.set("playlist.name", history[_index].name);
+      } else {
+        Remote.create();
+      }
+
+      return history[_index].data;
+    },
+
+    set: function(key, value) {
+      history[Index][key] = value;
+      return $.jStorage.set('history', history);
     },
 
     // Update the table with new data given
     // an assumed index that had been previously
     // set
     update: function(data) {
-      console.log(Index, data);
-      history[Index] = data;
-      $.jStorage.set('history', history);
+      return Local.set('data', data);
     },
 
     // Remove an entire playlist from memory
     remove: function(_index) {
+      if( history[_index].id ) {
+        Remote.remove(history[_index].id);
+      }
       history.splice(_index, 1); 
       $.jStorage.set('history', history);
     },
 
     add: function(tuple) {
-      history[Index].push(tuple);
+      history[Index].data.push(tuple);
       $.jStorage.set('history', history);
     },
 
