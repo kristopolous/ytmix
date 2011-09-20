@@ -1,7 +1,7 @@
 var Timeline = (function(){
   var 
-    Data = DB(),
-    data = Data.view('id'),
+    TimeDB = DB(),
+    data = TimeDB.view('id'),
     maxPlayer = 1,
     isPlaying = true,
     Loaded = 0,
@@ -13,7 +13,7 @@ var Timeline = (function(){
     Zoom = 85,
     Scale = 0.04, // ems per second
     UNIQ = 0;
-  self.Data = Data;
+  self.Data = TimeDB;
 
   $(function(){
     var 
@@ -79,7 +79,7 @@ var Timeline = (function(){
 
       if (time > 0) {
 
-        Player.current.title.attr('href', 
+        Player.current.$title.attr('href', 
           'http://www.youtube.com/watch?v=' + Player.current.ytid + 
           "#at=" + Math.ceil(time) + "s");
 
@@ -125,7 +125,7 @@ var Timeline = (function(){
   function swap(x, y) {
     if(data[y]) {
 
-      Data.update(function(row) {
+      TimeDB.update(function(row) {
         if(row.id == x) {
           row.id = y;
         } else if (row.id == y) {
@@ -143,10 +143,10 @@ var Timeline = (function(){
   function hook(id) {
     var node = data[id];
 
-    node.left.click(function(){swap(id, id - 1); });
-    node.right.click(function(){swap(id, id + 1); });
-    node.remove.click(function(){Timeline.remove(id); });
-    node.title.click(Timeline.pause);
+    node.$left.click(function(){swap(id, id - 1); });
+    node.$right.click(function(){swap(id, id + 1); });
+    node.$remove.click(function(){Timeline.remove(id); });
+    node.$title.click(Timeline.pause);
     node.dom.hover(
       function(){ node.hover.css('display','block') }, 
       function(){ node.hover.css('display','none') }
@@ -157,6 +157,23 @@ var Timeline = (function(){
     player: Player,
     data: data,
 
+    toStore: function(){
+      var store = [];
+
+      TimeDB
+        .find()
+        .sort('id', 'asc')
+        .each(function(which) {
+          store.push({
+            length: which.length,
+            title: which.title,
+            ytid: which.ytid
+          })
+        });
+
+      return store;
+    },
+
     remove: function(index){
       db.find('ytid', data[index].ytid)
         .update(function(obj){
@@ -164,14 +181,22 @@ var Timeline = (function(){
           // this was removed at some point and
           // may not be liked
           obj.removed++;
+
+          db
+            .find('ytid', db.isin(obj.related))
+            .update(function(record){
+              record.reference = _.without(record.reference, data[index].ytid);
+            });
         });
 
       // remove it from the dom
       data[index].dom.remove();
 
-      db.find('count', 0).remove();
+      db.find({reference: function(field) {
+        return field.length == 0;
+      }}).remove();
 
-      Data.remove({id: index});
+      TimeDB.remove({id: index});
 
       Timeline.seekTo(Offset);
     },
@@ -206,8 +231,12 @@ var Timeline = (function(){
 
       for(index in data) {
         data[index].offset = aggregate;
-        aggregate += (data[index].length || 0);
+        aggregate += (parseInt(data[index].length) || 0);
       }
+
+      // This updates the playlist and the offsets
+      // stored in the localStorage engine
+      Local.update( Timeline.toStore() );
     },
 
     play: function(dbid) {
@@ -238,7 +267,7 @@ var Timeline = (function(){
       absolute = Math.min(Total, absolute);
 
       console.log(absolute, Total);
-      var track = Data.findFirst(function(row) { return (row.offset < absolute && (row.offset + row.length) > absolute) });
+      var track = TimeDB.findFirst(function(row) { return (row.offset < absolute && (row.offset + row.length) > absolute) });
       console.log(track);
 
       if(track.id != Player.current.id) {
@@ -250,7 +279,7 @@ var Timeline = (function(){
 
     flush: function(){
       Timeline.stop();
-      Data.remove();  
+      TimeDB.remove();  
     },
 
     updatePosition: function() {
@@ -258,6 +287,7 @@ var Timeline = (function(){
         offset = $("#control").offset().left - $("#scale").offset().left,
         relative = offset / $("#control").width();
 
+      console.log(relative);
       Timeline.seekTo( - relative);
     },
 
@@ -292,53 +322,51 @@ var Timeline = (function(){
 
     add: function(obj, opts) {
       var ytid = obj.ytid;
-      console.log(ytid);
       opts = opts || {};
 
       var 
         myid = UNIQ ++,
 
-        left = $("<a>&lt;&lt;</a>").addClass('half'),
-        remove = $("<a>X</a>").addClass('half'),
-        right = $("<a>&gt;&gt;</a>").addClass('half'),
-        title = $("<a target=_blank href=http://www.youtube.com/watch?v=" + ytid + "/>"),
+        $left = $("<a>&lt;&lt;</a>").addClass('half'),
+        $remove = $("<a>X</a>").addClass('half'),
+        $right = $("<a>&gt;&gt;</a>").addClass('half'),
+        $title = $("<a />").attr({
+          target: '_blank',
+          href: "http://www.youtube.com/watch?v=" + obj.ytid
+        }).html(obj.title);
+        
+      var
         hoverControl = $("<span class=hover />")
-          .append(left)
-          .append(remove)
-          .append(right),
+          .append($left)
+          .append($remove)
+          .append($right),
 
         dom = $("<div />")
           .addClass('track')
           .append(hoverControl)
           .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
-          .append(title)
+          .append($title)
           .appendTo('#control');
 
       Timeline.init();
 
-      Data.insert({
-        left: left,
-        right: right,
-        remove: remove,
+      TimeDB.insert({
+        $left: $left,
+        $right: $right,
+        $title: $title,
+        $remove: $remove,
+        title: obj.title,
         hover: hoverControl,
         id: myid,
         ytid: ytid,
         active: true,
         length: obj.length,
-        title: title,
         dom: dom
       });
 
       hook(myid); 
 
-      title.html(obj.title);
       dom.css('width', obj.length * Scale + 'em');
-
-      Local.add({
-        title: obj.title,
-        ytid: obj.ytid, 
-        length: obj.length
-      });
 
       Timeline.update_offset();
 

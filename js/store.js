@@ -119,6 +119,16 @@ ev.when('playlist.name', function(name) {
       return history[_index];
     },
 
+    // Update the table with new data given
+    // an assumed index that had been previously
+    // set
+    update: function(data) {
+      console.log(Index, data);
+      history[Index] = data;
+      $.jStorage.set('history', history);
+    },
+
+    // Remove an entire playlist from memory
     remove: function(_index) {
       history.splice(_index, 1); 
       $.jStorage.set('history', history);

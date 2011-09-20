@@ -125,7 +125,10 @@ function loadHistory(){
       ev.set('app.state', 'main');
 
       _.each(Local.get(index), function(field) {
-        loadit(field, {noplay: true});
+        loadit(field, {
+          noindex: true,
+          noplay: true
+        });
       });
 
       Timeline.play(0);
@@ -155,7 +158,7 @@ $(function(){
 
   login();
 
-  setTimeout( $("#initial-search").focus, 1000);
+  document.getElementById('initial-search').focus();
 
   resize();
   $(window).resize(resize);

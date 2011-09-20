@@ -39,9 +39,7 @@ foreach ($nodelist as $node) {
 }
 
 echo json_encode(Array(
-  'length' => intval($matches[1]),
 	'ytid' => $ytID,
-	'title' => trim(preg_replace('/\s+/', ' ', $title)),
 	'related' => $related_videos
 ));
 
