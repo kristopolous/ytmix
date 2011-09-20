@@ -132,6 +132,7 @@ var Timeline = (function(){
         }
       });
 
+      Timeline.update_offset();
       Timeline.gen();
       if(Player.current.id == x || Player.current.id == y) {
         Timeline.seekTo(Offset);
@@ -142,8 +143,8 @@ var Timeline = (function(){
   function hook(id) {
     var node = data[id];
 
-    node.$left.click(function(){swap(id, id - 1); });
-    node.$right.click(function(){swap(id, id + 1); });
+    node.$left.click(function(){swap(id, data[id].previous); });
+    node.$right.click(function(){swap(id, data[id].next); });
     node.$remove.click(function(){Timeline.remove(id); });
     node.$title.click(Timeline.pause);
     node.dom.hover(
@@ -225,10 +226,17 @@ var Timeline = (function(){
     },
 
     update_offset: function(){
-      var aggregate = 0;
+      var 
+        aggregate = 0, 
+        lastIndex = false;
       Total = runtime(data);
 
       for(index in data) {
+        if(lastIndex !== false) {
+          data[lastIndex].next = index;
+          data[index].previous = lastIndex;
+        }
+        lastIndex = index;
         data[index].offset = aggregate;
         aggregate += (parseInt(data[index].length) || 0);
       }
