@@ -72,6 +72,7 @@ var Timeline = (function(){
     });
   });
 
+  eval(_inject('timeline'));
   function updateytplayer() {
     // mechanics for moving the centroid
     if(Player.active.getCurrentTime) {
@@ -92,10 +93,8 @@ var Timeline = (function(){
         }
 
         if(Player.active.getDuration() - time == 0) {
-          if(Offset == Player.current.offset + time) { 
-            Offset += 4;
-            Timeline.seekTo(Offset);
-          }
+          Offset += 1;
+          Timeline.seekTo(Offset);
         } else {
           Offset = Player.current.offset + time;
         }
