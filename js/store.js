@@ -10,7 +10,7 @@ ev.setter('playlist.id', function(){
 ev.when('playlist.name', function(name, meta) {
   remote({
     func: 'update',
-    name: 'name',
+    name: name,
     id: ev('playlist.id')
   });
 });
@@ -95,7 +95,6 @@ setInterval(function(){
         func: 'get',
         id: id,
         onSuccess: function(data) {
-          console.log(data);
           ev.set('app.state', 'main');
           ev.set('playlist.name', data.name);
           ev.set('playlist.id', data.id);

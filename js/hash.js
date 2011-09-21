@@ -8,7 +8,9 @@ var Hash = (function(){
   });
   
   ev.when('hash', function(hash) {
-    Store.get(parseInt(hash.id));
+    if(hash.id != ev('playlist.id')) {
+      Store.get(parseInt(hash.id));
+    }
   });
 
   function hashCheck() {
