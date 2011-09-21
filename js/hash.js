@@ -6,6 +6,10 @@ var Hash = (function(){
   ev.when('playlist.name', function(name) {
     set({name: name});
   });
+  
+  ev.when('hash', function(hash) {
+    Remote.getId(parseInt(hash.id));
+  });
 
   function hashCheck() {
     var hash = getHash();

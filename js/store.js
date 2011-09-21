@@ -65,10 +65,9 @@ var Remote = (function(){
         func: 'get',
         id: id,
         onSuccess: function(data) {
+          ev.set('app.state', 'main');
           ev.set('playlist.id', data.id);
-          if(callback) {
-            callback(data);
-          }
+          ev.set('playlist.tracks', JSON.parse(data.tracklist));
         }
       });
     },
@@ -81,10 +80,10 @@ var Remote = (function(){
     },
 
     update: function(data) {
-      return remote(_.extend(
-        { func: 'update' },
-        data
-      ));
+      return remote(_.extend({ 
+        func: 'update' ,
+        id: ev('playlist.id')
+      }, data));
     },
 
     setName: function(name) {
@@ -138,15 +137,21 @@ ev.when('playlist.name', function(name) {
 
       if(history[_index].id) {
         ev.set('playlist.id', history[_index].id);
-        ev.set("playlist.name", history[_index].name);
+        ev.set('playlist.name', history[_index].name);
+        ev.set('playlist.tracks', history[_index].data);
       } else {
         Remote.create();
       }
-
-      return history[_index].data;
     },
 
     set: function(key, value) {
+      if(!Index) {
+        Index = history.length;
+        history.push({
+          name: 'Untitled',
+          data: []
+        });
+      }
       history[Index][key] = value;
       return $.jStorage.set('history', history);
     },
@@ -155,6 +160,7 @@ ev.when('playlist.name', function(name) {
     // an assumed index that had been previously
     // set
     update: function(data) {
+      Remote.update({tracklist: JSON.stringify(data)});
       return Local.set('data', data);
     },
 

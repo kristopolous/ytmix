@@ -100,6 +100,17 @@ function resize(){
   });
 }
 
+ev.when('playlist.tracks', function(trackList) {
+  _.each(trackList, function(track) {
+    loadit(track, {
+      noindex: true,
+      noplay: true
+    });
+  });
+
+  Timeline.play(0);
+});
+
 function loadHistory(){
   _.each(Local.recent(), function(which, index) {
     var 
@@ -120,14 +131,7 @@ function loadHistory(){
     play.click(function(){
       ev.set('app.state', 'main');
 
-      _.each(Local.get(index), function(field) {
-        loadit(field, {
-          noindex: true,
-          noplay: true
-        });
-      });
-
-      Timeline.play(0);
+      Local.get(index);
     });
 
     for(var ix = 0; ix < Math.min(which.data.length, 4); ix++) {

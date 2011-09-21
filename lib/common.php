@@ -15,10 +15,11 @@ function sanitize($opts) {
   foreach ($opts as $k => $v) {
     $opts[$k] = mysql_real_escape_string($v);
   }
+  return $opts;
 }
 
 function get($opts, $fieldList) {
-  sanitize($opts);
+  $opts = sanitize($opts);
   $fieldList = explode(',', $fieldList);
 
   $stack = Array();
