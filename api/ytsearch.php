@@ -15,7 +15,7 @@ foreach($videoList as $video){
   $resList[] = Array(
     'title' => $video['title']['$t'],
     'ytid' => $ytid,
-    'length' => $video['media$group']['yt$duration']['seconds']
+    'length' => intval($video['media$group']['yt$duration']['seconds'])
   );
 }
 

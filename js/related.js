@@ -17,7 +17,12 @@ function addVids(vidList, backref) {
   // db of known videos if needed
   _.each(vidList, function(video) {
     db.insert(video).update(function(data){
-      data.reference = (data.reference || []).push(backref.ytid);
+
+      if(! data.reference) {
+        data.reference = [];
+      }
+
+      data.reference.push(backref.ytid);
       data.removed = data.removed || 0;
     });
   })

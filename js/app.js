@@ -142,7 +142,7 @@ function loadHistory(){
       .append(track)
       .append("<p>" + which.name + 
          " (" + which.data.length + " track" + (which.data.length != 1 ? 's' : '') + " " 
-         + Math.floor(total / 60) + ":" + ((total % 60 + 100).toString().substr(1)) + 
+         + Utils.secondsToTime(total) + 
          ")</p>");
   });
 

@@ -176,12 +176,12 @@
       val,
 
       // The indices
+      end,
+      spliceix,
       ix,
 
-      res = [],
-      len,
       // The dataset to compare against
-      set = _.isArr(this) ? this : filterList.shift();
+      set = simplecopy(_.isArr(this) ? this : filterList.shift());
 
     if( filterList.length == 2 && _.isStr( filterList[0] )) {
       // This permits find(key, value)
@@ -196,42 +196,76 @@
       if(_.isFun(filter)) {
         var callback = filter.single || filter;
 
-        for(ix = 0, len = set.length; ix < len; ix++) {
+        for(end = set.length, ix = end - 1; ix >= 0; ix--) {
           which = set[ix];
           if(!callback(which)) { continue }
-          res.push(which);
+
+          if(end - (ix + 1)) {
+            spliceix = ix + 1;
+            set.splice(spliceix, end - spliceix);
+          }
+          end = ix;
+        }
+
+        spliceix = ix + 1;
+        if(end - spliceix) {
+          set.splice(spliceix, end - spliceix);
         }
       } else {
         each(filter, function(key, value) {
 
           if( _.isFun(value)) {
-            for(ix = 0, len = set.length; ix < len; ix++) {
+            for(end = set.length, ix = end - 1; ix >= 0; ix--) {
               which = set[ix];
 
               // Check for existence
-              if( key in which && value(which[key], which) )  {
-                res.push(which);
+              if( key in which ) {
+                val = which[key];
+
+                // Permit mutator events
+                if( _.isFun(val) ) { val = val(); }
+
+                if( ! value(val, which) ) { continue }
+
+                if(end - (ix + 1)) {
+                  spliceix = ix + 1;
+                  set.splice(spliceix, end - spliceix);
+                }
+
+                end = ix;
               }
             }
 
           } else {
-            for(ix = 0, len = set.length; ix < len; ix++) {
+            for(end = set.length, ix = end - 1; ix >= 0; ix--) {
               which = set[ix];
 
+              val = which[key];
+
+              if( _.isFun(val) ) { val = val(); }
+
               // Check for existence
-              if( ! (key in which && which[key] === value ) ) {
+              if( ! (key in which && val === value ) ) {
                 continue;
               }
 
-              res.push(which);
+              if(end - (ix + 1)) {
+                spliceix = ix + 1;
+                set.splice(spliceix, end - spliceix);
+              }
+              end = ix;
             }
           }
 
+          spliceix = ix + 1;
+          if(end - spliceix) {
+            set.splice(spliceix, end - spliceix);
+          }
         });
       }
     }
 
-    return res;
+    return set;
   }
 
   //
@@ -403,10 +437,22 @@
           // take each item from the filter (filtered results)
           // and then apply the value function to it, storing
           // back the results
-          each(filter, function(which) { which[key] = value(which); });
+          each(filter, function(which) { 
+            if(_.isFun(which[key])) {
+              which[key]( value(which) );
+            } else {
+              which[key] = value(which); 
+            }
+          });
         } else {
           // otherwise, assign the static 
-          each(filter, function(which) { which[key] = value; });
+          each(filter, function(which) { 
+            if(_.isFun(which[key])) {
+              which[key]( value );
+            } else {
+              which[key] = value; 
+            }
+          });
         }
       });
     }
@@ -612,6 +658,7 @@
   self.DB = function(arg0, arg1){
     var 
       constraints = {},
+      constrainCache = {},
       syncList = [],
       bSync = false,
       _template = false,
@@ -847,7 +894,7 @@
     ret.select = function(field) {
       var 
         filter = _.isArr(this) ? this : ret.find(),
-        len,
+        fieldCount,
         resultList = {};
 
       if(arguments.length > 1) {
@@ -856,7 +903,7 @@
         field = [field];
       }
 
-      len = field.length;
+      fieldCount = field.length;
       
       each(field, function(column, iy) {
         if(column == '*') {
@@ -866,7 +913,7 @@
             row = filter[ix];
 
             if(column in row){
-              if(len > 1) {
+              if(fieldCount > 1) {
                 if(!resultList[ix]) {
                   resultList[ix] = [];
                 }

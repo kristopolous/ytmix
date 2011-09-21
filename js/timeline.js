@@ -74,6 +74,8 @@ var Timeline = (function(){
 
   eval(_inject('timeline'));
   function updateytplayer() {
+    ev.emit('tick');
+
     // mechanics for moving the centroid
     if(Player.active.getCurrentTime) {
       var time = Player.active.getCurrentTime();
@@ -107,9 +109,7 @@ var Timeline = (function(){
     Loaded ++;
 
     Player[id] = document.getElementById(playerId);
-    Player[id].addEventListener('onStateChange', function(){
-      console.log(this, arguments);
-    });
+    Player[id].addEventListener('onStateChange', function(){ console.log(this, arguments); });
 
     if(Loaded == maxPlayer) {
       setTimeout(function(){ ev.set('flash.load'); },250);
@@ -190,15 +190,22 @@ var Timeline = (function(){
         });
 
       // remove it from the dom
-      data[index].dom.remove();
+      var dom = data[index].dom;
 
       db.find({reference: function(field) {
         return field.length == 0;
       }}).remove();
 
-      TimeDB.remove({id: index});
+      var removed = TimeDB.remove({id: index});
 
-      Timeline.seekTo(Offset);
+      if(removed[0].offset < Offset) {
+        Offset -= removed[0].length;
+        Timeline.seekTo(Offset);
+      } else {
+        Timeline.update_offset();
+      }
+
+      ev.once('tick', function(){ dom.remove(); });
     },
 
     pause: function(){
@@ -276,7 +283,6 @@ var Timeline = (function(){
       absolute = Math.min(Total, absolute);
 
       var track = TimeDB.findFirst(function(row) { return (row.offset < absolute && (row.offset + row.length) > absolute) });
-      console.log(track);
 
       if(track.id != Player.current.id) {
         Timeline.play(track.id, absolute - track.offset);
@@ -295,7 +301,6 @@ var Timeline = (function(){
         offset = $("#control").offset().left - $("#scale").offset().left,
         relative = offset / $("#control").width();
 
-      console.log(relative);
       Timeline.seekTo( - relative);
     },
 
@@ -329,7 +334,6 @@ var Timeline = (function(){
     },
 
     add: function(obj, opts) {
-      var ytid = obj.ytid;
       opts = opts || {};
 
       var 
@@ -341,24 +345,16 @@ var Timeline = (function(){
         $title = $("<a />").attr({
           target: '_blank',
           href: "http://www.youtube.com/watch?v=" + obj.ytid
-        }).html(obj.title);
+        }).html(obj.title),
         
-      var
         hoverControl = $("<span class=hover />")
           .append($left)
           .append($remove)
-          .append($right),
-
-        dom = $("<div />")
-          .addClass('track')
-          .append(hoverControl)
-          .append("<img src=http://i.ytimg.com/vi/" + ytid + "/hqdefault.jpg?w=188&h=141>")
-          .append($title)
-          .appendTo('#control');
+          .append($right);
 
       Timeline.init();
 
-      TimeDB.insert({
+      var record = TimeDB.insert({
         $left: $left,
         $right: $right,
         $title: $title,
@@ -366,15 +362,21 @@ var Timeline = (function(){
         title: obj.title,
         hover: hoverControl,
         id: myid,
-        ytid: ytid,
+        ytid: obj.ytid,
         active: true,
         length: obj.length,
-        dom: dom
+
+        dom: $("<div />")
+          .css('width', obj.length * Scale + 'em')
+          .addClass('track')
+          .append(hoverControl)
+          .append("<img src=http://i.ytimg.com/vi/" + obj.ytid + "/hqdefault.jpg?w=188&h=141>")
+          .append($title)
       });
 
-      hook(myid); 
+      ev.once('tick', function(){ record[0].dom.appendTo('#control'); });
 
-      dom.css('width', obj.length * Scale + 'em');
+      hook(myid); 
 
       Timeline.update_offset();
 
