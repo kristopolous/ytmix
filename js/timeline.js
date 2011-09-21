@@ -250,7 +250,7 @@ var Timeline = (function(){
 
       // This updates the playlist and the offsets
       // stored in the localStorage engine
-      Local.update( Timeline.toStore() );
+      ev.set('playlist.track', Timeline.toStore() );
     },
 
     play: function(dbid, offset) {

@@ -18,8 +18,11 @@ function pl_createID() {
 }
 
 function pl_recent() {
-  $result = run('select * from playlist order by views desc limit 8');
-  return mysql_fetch_assoc($result);
+  $result = run('select * from playlist where tracklist is not NULL order by id desc limit 8');
+  $ret = Array();
+  while($ret[] = mysql_fetch_assoc($result));
+  
+  return $ret;
 }
 
 function pl_get($params) {

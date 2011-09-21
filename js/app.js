@@ -112,47 +112,45 @@ ev.when('playlist.tracks', function(trackList) {
 });
 
 function loadHistory(){
-  _.each(Local.recent(), function(which, index) {
-    var 
-      total = runtime(which.data),
-      container = $("<span class=splash-container>").appendTo("#splash-history"),
-      forget = $("<a>forget</a>"),
-      play = $("<a>play</a>"),
-      hoverControl = $("<span class=hover />")
-        .append(play)
-        .append(forget),
-      track = $("<span class=track />").append(hoverControl);
+  ev.isset('recent', function(data) {
+    _.each(data, function(which) {
+      var 
+        total = runtime(which.tracklist),
+        container = $("<span class=splash-container>").appendTo("#splash-history"),
+        forget = $("<a>forget</a>"),
+        play = $("<a>play</a>"),
+        hoverControl = $("<span class=hover />")
+          .append(play)
+          .append(forget),
+        track = $("<span class=track />").append(hoverControl);
 
-    forget.click(function(){
-      Local.remove(index);
-      container.slideUp();
+      forget.click(function(){
+        Store.remove(which.id);
+        container.slideUp();
+      });
+
+      play.click(function(){
+        ev.set('app.state', 'main');
+        Store.get(which.id);
+      });
+
+      for(var ix = 0; ix < Math.min(which.tracklist.length, 4); ix++) {
+        track.append("<img src=http://i4.ytimg.com/vi/" + which.tracklist[ix].ytid + "/default.jpg>");
+      }
+
+      container
+        .hover(
+          function(){ hoverControl.css('display','block') }, 
+          function(){ hoverControl.css('display','none') }
+        )
+        .append(track)
+        .append("<p>" + which.name + 
+           " (" + which.tracklist.length + " track" + (which.tracklist.length != 1 ? 's' : '') + " " 
+           + Utils.secondsToTime(total) + 
+           ")</p>");
     });
-
-    play.click(function(){
-      ev.set('app.state', 'main');
-
-      Local.get(index);
-    });
-
-    for(var ix = 0; ix < Math.min(which.data.length, 4); ix++) {
-      track.append("<img src=http://i4.ytimg.com/vi/" + which.data[ix].ytid + "/default.jpg>");
-    }
-
-    container
-      .hover(
-        function(){ hoverControl.css('display','block') }, 
-        function(){ hoverControl.css('display','none') }
-      )
-      .append(track)
-      .append("<p>" + which.name + 
-         " (" + which.data.length + " track" + (which.data.length != 1 ? 's' : '') + " " 
-         + Utils.secondsToTime(total) + 
-         ")</p>");
-  });
-
-  if(Local.recent().length) {
     $("#history").fadeIn();
-  }
+  });
 }
 
 $(function(){

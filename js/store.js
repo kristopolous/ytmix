@@ -7,10 +7,22 @@ ev.setter('playlist.id', function(){
   });
 });
 
+ev.when('playlist.name', function(name, meta) {
+  remote({
+    func: 'update',
+    name: 'name',
+    id: ev('playlist.id')
+  });
+});
+
 ev.setter('recent', function(){
   remote({
     func: 'recent',
     onSuccess: function(data) {
+      data = _.without(data, false);
+      _.each(data, function(which) {
+        which.tracklist = JSON.parse(which.tracklist);
+      });
       ev.set('recent', data);
     }   
   });
@@ -29,7 +41,7 @@ setInterval(function(){
 }, 4000);
 
 (function(){
-  var _requestID = 0,
+  var _requestID = 0;
 
   self.remote = function(opts) {
     var 
@@ -83,6 +95,7 @@ setInterval(function(){
         func: 'get',
         id: id,
         onSuccess: function(data) {
+          console.log(data);
           ev.set('app.state', 'main');
           ev.set('playlist.name', data.name);
           ev.set('playlist.id', data.id);
@@ -96,19 +109,13 @@ setInterval(function(){
         func: 'remove',
         id: id
       });
-    },
-
-    // Update the table with new data given
-    // an assumed index that had been previously
-    // set
-    update: function(data) { ev.set('remote.data', data); },
+    }
   };
 
-  ev.when('playlist.name', function(name, meta) {
-    Remote.update({ name: name, id: ev('playlist.id') });
-  });
-
+  // Update the table with new data given
+  // an assumed index that had been previously
+  // set
   ev.when('playlist.tracks', function(data) {
-    Remote.update(data);
+    ev.set('remote.data', data);
   });
 })();

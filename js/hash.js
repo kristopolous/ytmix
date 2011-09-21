@@ -8,7 +8,7 @@ var Hash = (function(){
   });
   
   ev.when('hash', function(hash) {
-    Remote.getId(parseInt(hash.id));
+    Store.get(parseInt(hash.id));
   });
 
   function hashCheck() {
