@@ -47,7 +47,19 @@ var Remote = (function(){
     return reqID;
   }
 
-  return {
+  setInterval(function(){
+    if(ev.isset('remote.data')) {
+
+      remote(_.extend({ 
+        func: 'update' ,
+        id: ev('playlist.id')
+      }, ev.get('remote.data')));
+
+      ev.unset('remote.data');
+    }
+  }, 4000);
+
+return {
     create: function(callback){
       return remote({
         func: 'createID',
@@ -80,10 +92,7 @@ var Remote = (function(){
     },
 
     update: function(data) {
-      return remote(_.extend({ 
-        func: 'update' ,
-        id: ev('playlist.id')
-      }, data));
+      ev.set('remote.data', data);
     },
 
     setName: function(name) {
