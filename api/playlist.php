@@ -17,6 +17,11 @@ function pl_createID() {
   return mysql_insert_id();
 }
 
+function pl_recent() {
+  $result = run('select * from playlist order by views desc limit 8');
+  return mysql_fetch_assoc($result);
+}
+
 function pl_get($params) {
   list($id) = get($params, 'id');
 

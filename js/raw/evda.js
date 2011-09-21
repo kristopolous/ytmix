@@ -8,6 +8,7 @@ function EvDa () {
 
     // Internals
     data = arguments[0] || {},
+    setterMap = {},
     funHandle = 0,
     funMap = {},
     hook = ['test', /* 'before', */ 'when', 'after' /*, 'finally' */ ],
@@ -256,11 +257,31 @@ function EvDa () {
       return ret;
     },
 
+    setter: function(key, lambda) {
+      if(stageMap.when[key]) {
+        lambda();
+      } else {
+        setterMap[key] = lambda;
+      }
+    },
+
     isset: function ( key, callback ) {
       if ( ! (key in data) ) {
+
         if( callback ) {
-          return pub.once ( key, callback );
+          var handle = pub.once ( key, callback );
         }
+
+        // If I know how to set this key but
+        // I just haven't done it yet, run through
+        // those functions now.
+        if( setterMap[key] ) {
+          setterMap[key]();
+
+          delete setterMap[key];
+        }
+
+        return handle;
       }
 
       if( callback ) {

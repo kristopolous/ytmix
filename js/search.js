@@ -8,8 +8,6 @@ $(function(){
   Utils.onEnter("#initial-search", function(){
     ev.set('app.state', 'main');
 
-    Local.create();
-
     input.val(this.value);
     ev.isset('search.results', function(results) { loadit(results[0]); });
   });
