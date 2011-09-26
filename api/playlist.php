@@ -2,7 +2,7 @@
 
 include ('../lib/common.php');
 
-function pl_createUser() {
+function pl_getUser() {
   result('true', uniqid('', true));
 }
 
@@ -35,7 +35,7 @@ function pl_get($params) {
 }
 
 function pl_update($params) {
-  list($id, $tracklist, $name) = get($params, 'id, tracklist, name');
+  list($id, $tracklist, $name) = get($params, 'id, data, name');
 
 
   if($tracklist) {
@@ -49,11 +49,11 @@ function pl_update($params) {
   return true;
 }
 
-if(function_exists('pl_' . $_GET['func'])) {
-  $toRun = 'pl_' . $_GET['func'];
-  unset($_GET['func']);
+if(function_exists('pl_' . $_REQUEST['func'])) {
+  $toRun = 'pl_' . $_REQUEST['func'];
+  unset($_REQUEST['func']);
 
-  $result = $toRun ( $_GET );
+  $result = $toRun ( $_REQUEST );
   if(is_string($result)) {
     result(false, $result);
   } else { 

@@ -1,25 +1,17 @@
 var Hash = (function(){
-  ev.when('playlist.id', function(id) {
-    set({id : id});
-  });
-
-  ev.when('playlist.name', function(name) {
-    set({name: name});
-  });
-  
-  ev.when('hash', function(hash) {
-    if(hash.id != ev('playlist.id')) {
-      Store.get(parseInt(hash.id));
+  ev({
+    'playlist.id': function(id) { set({id : id}); },
+    'playlist.name': function(name) { set({name: name}) },
+    'hash': function(hash) {
+      if(hash.id) {
+        if(hash.id != ev('playlist.id')) {
+          Store.get(parseInt(hash.id));
+        }
+      } else {
+        ev('app.state','splash');
+      }
     }
   });
-
-  function hashCheck() {
-    var hash = getHash();
-
-    if(ev.get('hash').raw != hash.raw){
-      return ev.set('hash', hash);
-    }
-  }
 
   function getHash(){
     var 
@@ -31,6 +23,13 @@ var Hash = (function(){
       id: pieces[0] || '',
       name: pieces[1] || ''
     };
+  }
+  function hashCheck() {
+    var hash = getHash();
+
+    if(ev('hash') && (ev('hash').raw != hash.raw)){
+      return ev('hash', hash);
+    }
   }
 
   function set(opts) {
@@ -45,7 +44,7 @@ var Hash = (function(){
     return hashCheck();
   }
 
-  ev.set('hash', getHash());
+  ev('hash', getHash());
   setInterval(hashCheck, 250);
   
 })();

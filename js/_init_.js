@@ -6,3 +6,7 @@ var
   });
 
 db.constrain('unique', 'ytid');
+/*
+ev.sniff();
+ev.sniff('tick');
+*/

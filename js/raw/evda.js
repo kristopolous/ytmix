@@ -1,317 +1,167 @@
-function EvDa () {
+function EvDa (map) {
   var 
     // Underscore shortcuts ... pleases the minifier
     each = _.each,
-    keys = _.keys,
     extend = _.extend,
-    flatten = _.flatten,
+    size = _.size,
+
+    // Constants
+    ON = 'on',
+    AFTER = 'after',
+
+    // The one time callback gets a property to
+    // the end of the object to notify our future-selfs
+    // that we ought to remove the function.
+    ONCE = {once:1},
 
     // Internals
-    data = arguments[0] || {},
+    data = map || {},
     setterMap = {},
-    funHandle = 0,
-    funMap = {},
-    hook = ['test', /* 'before', */ 'when', 'after' /*, 'finally' */ ],
-    stageMap = {},
-    keyCheck = {};
+    eventMap = {};
 
-  function Invoke ( key, value, meta ) {
-    var 
-      old = data[key],
-      callback,
-      runList,
-      result = {};
+  function pub ( scope, value, meta ) {
+    // If there was one argument, then this is
+    // either a getter or the object style
+    // invocation.
+    if ( size(arguments) == 1 ) {
 
-    data[key] = value;
+      // The object style invocation will return
+      // handles associated with all the keys that
+      // went in. There *could* be a mix and match
+      // of callbacks and setters, but that would
+      // be fine I guess...
+      if( _.isObject(scope) ) {
 
-    each( hook, function(stage) {
-      runList = stageMap[stage][key];
-
-      // Runlist is an array
-      each(runList, function(callback, index) {
-
-        result[ index ] = callback ( value, {
-          meta: meta,
-          old: old,
-          current: value,
-          key: key,
-          remove: function () {
-            // we just set a flag here to
-            // maintain index integrity
-            callback.rm = true;
-          }
-
+        each( scope, function( _value, _key ) {
+          scope[_key] = pub ( _key, _value, meta );
         });
-      });
 
-      each(runList, function(callback) {
-        if ( callback.rm ) {
-          remove ( callback );
-        }
-      });
-    });
-
-    keyCheck[key] = false;
-    return result;
-  }
-
-  function Test ( key, value, meta ) {
-    var  
-      times = stageMap.test[key].length,
-      failure = 0;
-
-    function check ( ok ) {
-      times --;
-      failure += (ok === false);
-
-      if ( ! times ) {
-        if ( ! failure ) { 
-          Invoke ( key, value, meta );
-        }
-
-        keyCheck[key] = false;
-      }
-    }
-
-    each ( stageMap.test[key], function ( callback ) {
-      callback ( value, {
-        meta: meta,
-        old: data[key],
-        callback: check,
-        key: key,
-        remove: function () {
-          remove ( callback );
-        }
-      });
-    });
-  }
-
-  function register ( callback ) {
-    callback.refs = [];
-    funMap[ callback.ix = ++funHandle ] = callback;
-  }
-
-  function run ( keyList, value, meta ) {
-    var result = {};
-
-    each ( flatten([ keyList ]), function ( key ) {
-      if ( ! keyCheck[key] ) {
-      
-        keyCheck[key] = true;
-
-        result[key] = stageMap.test[key] ?
-          Test ( key, value, meta ) :
-          Invoke ( key, value, meta );
-      }
-    });
-
-    return result;
-  }
-
-  function remove ( handle ) {
-    each ( handle.refs, function ( tuple ) {
-      var
-        stage = tuple[0],
-        key = tuple[1];
-
-      stageMap[stage][key] = 
-        _.without( stageMap[stage][key], handle );
-    });
-
-    delete funMap[handle.ix];
-  }
-
-  function chain ( obj ) {
-    var context = {};
-
-    if ( !obj.scope ) {
-      obj.scope = [];
-    } else {
-      obj.scope = [obj.scope];
-    }
-
-    obj.meta = obj.meta || [];
-
-    each ( keys ( pub ), function ( func ) {
-      context[func] = function () {
-        
-        pub[func].apply ( this, 
-          obj.scope.concat ( 
-            _.toArray ( arguments ), 
-            obj.meta 
-          ) 
-        );
-
-        return context;
-      }
-    });
-
-    return context;
-  }
-
-
-  function pub ( scope, value ) {
-    var 
-      len = arguments.length,
-      context = {};
-
-    if ( len == 0 ) {
-      return [data, stageMap];
-    }
-
-    if ( _.isObject(scope) ) {
-
-      each( scope, function( _value, _key ) {
-        context[_key] = pub ( _key, _value );
-      });
-
-      return context;
-    }
-
-    if ( len == 1 ) {
-      if( scope.search(/[*?]/) + 1 ) {
-        return _.select( keys(data), function(toTest) {
-          return toTest.match(scope);
-        });
+        return scope;
       }
 
       return data[ scope ];
     } 
 
-    context = chain ({ scope: scope });
-     
-    if ( _.isFunction ( value ) ) {
-      context.when ( value );
-    } else if ( len > 1 ){
-      context.run ( value );
-    }
-
-    return context;
+    // If there were two arguments and if one of them was a function, then
+    // this needs to be registered.  Otherwise, we are setting a value.
+    return pub [ _.isFunction ( value ) ? ON : 'set' ] ( scope, value, meta );
   }
 
-  each ( hook, function ( stage ) {
-    stageMap[stage] = {};
+  // Register callbacks for
+  // test, on, and after.
+  each ( [ON, AFTER, 'test'], function ( stage ) {
 
-    pub[stage] = function ( keyList, callback ) {
+    // register the function
+    pub[stage] = function ( key, callback, meta ) {
 
-      register ( callback );
+      // This is the back-reference map to this callback
+      // so that we can unregister it in the future.
+      (callback.$ || (callback.$ = [])).push ( stage + key );
 
-      each ( flatten([ keyList ]), function ( key ) {
+      (eventMap[stage + key] || (eventMap[stage + key] = [])).push ( callback );
 
-        stageMap[stage][key] = 
-          (stageMap[stage][key] || []).concat(callback);
-
-        callback.refs.push ( [stage, key] );
-      });
-
-      return extend ( 
-        pub,
-        { handle: callback }
-      );
+      return extend(callback, meta);
     }
   });
 
-  // remove the test
-  hook.shift();
+  function del ( handle ) {
+    each ( handle.$, function ( stagekey ) {
+      eventMap[ stagekey ] = _.without( eventMap[ stagekey ], handle );
+    });
+  }
 
-  pub.on = pub.when;
+  function isset ( key, callback ) {
+    // If I know how to set this key but
+    // I just haven't done it yet, run through
+    // those functions now.
+    if( setterMap[key] ) {
+      setterMap[key]();
+
+      // This is functionally the same as a delete
+      // for our purposes.  Also, this should not
+      // grow enormous so it's an inexpensive 
+      // optimization.
+      setterMap[key] = 0;
+    }
+
+    if ( callback ) {
+      return key in data ?
+        callback ( data[key] ) :
+        pub ( key, callback, ONCE );
+    }
+
+    return key in data;
+  };
 
   return extend(pub, {
-    // If we are pushing and popping a non-array then
-    // it's better that the browser tosses the error
-    // to the user than we try to be graceful and silent
-    // Therein, we don't try to handle input validation
-    // and just try it anyway
-    push: function ( key, value ) {
-      data[key] = data[key] || [];
-      data[key].current = data[key].push ( value );
-      
-      return run ( key, data[key] );
+    // Exposing the internal variables so that
+    // extensions can be made.
+    db: data,
+    events: eventMap,
+
+    unset: function(key) { delete data[key]; },
+    del: del,
+
+    isset: isset,
+
+    // Unlike much of the reset of the code,
+    // setters have single functions.
+    setter: function ( key, callback ) {
+      setterMap[key] = callback;
+
+      if (eventMap['on' + key]) {
+        isset( key );
+      }
     },
 
-    pop: function ( key ) {
-      data[key].pop ();
-      data[key].current = _.last(data[key]);
+    set: function (key, value, _meta, bypass) {
+      var 
+        Key = 'test' + key,
+        times = size(eventMap[ Key ]),
+        failure,
 
-      return run ( key, data[key] );
-    },
+        // Invoke will also get done
+        // but it will have no semantic
+        // meaning, so it's fine.
+        meta = {
+          meta: _meta || {},
+          old: data[key],
+          key: key,
+          done: function ( ok ) {
+            failure |= (ok === false);
 
-    incr: function ( key ) {
-      // we can't use the same trick here because if we
-      // hit 0, it will auto-increment to 1
-      return run ( key, _.isNumber(data[key]) ? (data[key] + 1) : 1 );
-    },
+            if ( ! --times ) {
+              if ( ! failure ) { 
+                set ( key, value, _meta, 1 );
+              }
+            }
+          }
+        };
 
-    decr: function ( key ) {
-      // if key isn't in data, it returns 0 and sets it
-      // if key is in data but isn't a number, it returns NaN and sets it
-      // if key is 1, then it gets reduced to 0, getting 0,
-      // if key is any other number, than it gets set
-      return run ( key, data[key] - 1 || 0 );
-    },
-
-    once: function ( key, callback ) {
-      var ret = pub.when ( key, callback );
-
-      ret.handle.rm = true;
-      return ret;
-    },
-
-    setter: function(key, lambda) {
-      if(stageMap.when[key]) {
-        lambda();
+      if (times && !bypass) {
+        each ( eventMap[ Key ], function ( callback ) {
+          callback ( value, meta );
+        });
       } else {
-        setterMap[key] = lambda;
-      }
-    },
+        // Set the key to the new value.
+        // The old value is beind passed in
+        // through the meta
+        data[key] = value;
 
-    isset: function ( key, callback ) {
-      if ( ! (key in data) ) {
+        each(
+          (eventMap[ON + key] || []).concat
+          (eventMap[AFTER + key] || []), 
+          function(callback) {
 
-        if( callback ) {
-          var handle = pub.once ( key, callback );
-        }
+            callback ( value, meta );
 
-        // If I know how to set this key but
-        // I just haven't done it yet, run through
-        // those functions now.
-        if( setterMap[key] ) {
-          setterMap[key]();
-
-          delete setterMap[key];
-        }
-
-        return handle;
+            if ( callback.once ) {
+              del ( callback );
+            }
+          });
       }
 
-      if( callback ) {
-        callback ( data[key] );
-      }
-
-      return key in data;
-    },
-
-    firstset: pub.isset,
-
-    /* share: function ( prop ) { return chain ({ meta: prop }); }, */
-
-    run: run,
-    emit: run,
-    get: pub,
-    onset: pub,
-
-    set: function(k, v) {
-      if(arguments.length == 1) { 
-        v = true;
-      } 
-      return pub(k, v);
-    },
-
-    unset: function(key) {
-      // unset doesn't hook
-      delete data[key];
-    },
-
-    remove: remove
+      return value;
+    }
   });
 }

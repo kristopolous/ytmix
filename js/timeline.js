@@ -72,9 +72,8 @@ var Timeline = (function(){
     });
   });
 
-  eval(_inject('timeline'));
   function updateytplayer() {
-    ev.emit('tick');
+    ev.set('tick');
 
     // mechanics for moving the centroid
     if(Player.active.getCurrentTime) {
@@ -205,7 +204,7 @@ var Timeline = (function(){
         Timeline.update_offset();
       }
 
-      ev.once('tick', function(){ dom.remove(); });
+      ev('tick', function(){ dom.remove(); }, {once: true});
     },
 
     pause: function(){
@@ -250,7 +249,7 @@ var Timeline = (function(){
 
       // This updates the playlist and the offsets
       // stored in the localStorage engine
-      ev.set('playlist.track', Timeline.toStore() );
+      ev('playlist.tracks', Timeline.toStore(), {noAdd: true} );
     },
 
     play: function(dbid, offset) {
@@ -263,7 +262,6 @@ var Timeline = (function(){
       ev.isset('flash.load', function(){
         if(Player.current != data[dbid]) {
           Player.current = data[dbid];
-          Timeline.update_offset();
           Player.active.loadVideoById(Player.current.ytid, offset);
           Player.start = $(data[dbid].dom).offset().left - $("#control").offset().left;
         }
@@ -277,22 +275,25 @@ var Timeline = (function(){
 
       Timeline.update_offset();
 
-      var absolute = (offset < 1) ? offset * Total : offset, 
+      var absolute = (offset < 1) ? offset * Total : offset;
 
       absolute = Math.max(0, absolute);
       absolute = Math.min(Total, absolute);
 
       var track = TimeDB.findFirst(function(row) { return (row.offset < absolute && (row.offset + row.length) > absolute) });
 
-      if(track.id != Player.current.id) {
-        Timeline.play(track.id, absolute - track.offset);
-      } else {
-        Player.active.seekTo(absolute - track.offset);
+      eval(_inject('time'));
+      if(track) {
+        if(track.id != Player.current.id) {
+          Timeline.play(track.id, absolute - track.offset);
+        } else {
+          Player.active.seekTo(absolute - track.offset);
+        }
       }
     },
 
     flush: function(){
-      Timeline.stop();
+      Timeline.pause();
       TimeDB.remove();  
     },
 
@@ -374,7 +375,7 @@ var Timeline = (function(){
           .append($title)
       });
 
-      ev.once('tick', function(){ record[0].dom.appendTo('#control'); });
+      ev('tick', function(){ record[0].dom.appendTo('#control'); }, {once: true});
 
       hook(myid); 
 

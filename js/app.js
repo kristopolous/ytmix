@@ -1,3 +1,105 @@
+// Search
+$(function(){
+  var 
+    lastSearch = '', 
+    input = $("#normal-search"),
+    searchID = 0, 
+    lastID = 0;
+
+  Utils.onEnter("#initial-search", function(){
+    ev('app.state', 'main');
+
+    input.val(this.value);
+    ev.isset('search.results', function(results) { loadit(results[0]); });
+  });
+
+  input.focus(function(){ this.select(); });
+
+  setInterval(function(){
+    var query = input.val();
+
+    if(query != lastSearch && query.length) {
+      lastSearch = query;
+
+      $.getJSON('api/ytsearch.php', { 
+          id: ++searchID,
+          query: query
+        }, function(res) {
+
+        if(res.id < lastID) { return; }
+
+        lastID = res.id;
+
+        $("#search-results").children().remove();
+
+        ev('search.results', res.vidList);
+
+        _.each(res.vidList, function(video) {
+          addVideo(_.extend(
+            {container: "#search-results"},
+            video
+          ));
+        });
+      });
+    }
+  }, 650);
+});
+
+// Related videos
+function sort(mode, el) {
+	sortOrder = mode;
+
+	$(el)
+    .addClass('selected')
+    .siblings()
+    .removeClass('selected');
+
+	gen();
+}
+
+// Adds vids in the format 
+// {length: sec, title: text, ytid: youtube id}
+function addVids(vidList, backref) {
+  // insert each related video into our
+  // db of known videos if needed
+  _.each(vidList, function(video) {
+    db.insert(video).update(function(data){
+
+      if(! data.reference) {
+        data.reference = [];
+      }
+
+      data.reference.push(backref.ytid);
+      data.removed = data.removed || 0;
+    });
+  })
+}
+
+function loadit(obj, opts){
+  var match = {ytid: obj.ytid};
+  
+  ev.isset('flash.load', function(){
+    db.insert(obj);
+    Timeline.add(obj, opts);
+
+    if(!db.findFirst(match).serverData) {
+      $.getJSON( 'api/related.php', match, function (data){
+        db
+          .find(match)
+          .update({
+            removed: 0,
+            related: _.pluck(data.related, 'ytid'),
+            serverData: data
+          });
+
+        addVids(data.related, obj);
+    
+        gen();
+      });
+    } 
+  });
+}
+
 function addVideo(opts) {
   var 
     play = $("<a>play</a>").click(function(){ loadit(opts); }),
@@ -41,39 +143,51 @@ function gen(){
 	});
 }
 
-function login(){
-  var uid = $.jStorage.get('uid');
-  if(!uid) {
-    remote({
-      func: 'createUser',
-      onSuccess: function(uid) {
-        $.jStorage.set('uid', uid);
-        ev.set('uid', uid);
-      }
-    });
-  } else {
-    ev.set('uid', uid);
-  }
-}
+ev({
+  'app.state': function(state, meta) {
+    if(state == meta.old) {
+      return;
+    } 
 
-ev.when('app.state', function(state, meta) {
-  if(state == meta.oldValue) {
-    return;
-  } 
+    if(state == 'splash') {
+      Timeline.flush();
+      $(".main-app").css('display','none');
+      $("#splash").css('display','block');
+    } else if (state == 'main') {
+      $(".main-app").css({
+        opacity: 0,
+        display: 'inline-block'
+      }).animate({
+        opacity:1
+      }, 1000);
 
-  if(state == 'splash') {
-    Timeline.flush();
-    $(".main-app").css('display','none');
-    $("#splash").css('display','block');
-  } else if (state == 'main') {
-    $(".main-app").css({
-      opacity: 0,
-      display: 'inline-block'
-    }).animate({
-      opacity:1
-    }, 1000);
+      $("#splash").css('display','none');
+    }
+  },
 
-    $("#splash").css('display','none');
+  'playlist.name': function(name, meta) {
+    if(meta.old) {
+      remote({
+        func: 'update',
+        name: name,
+        id: ev('playlist.id')
+      });
+    }
+  },
+
+  'playlist.tracks': function(trackList, meta) {
+    if(meta.old != trackList) {
+      _.each(trackList, function(track) {
+        if(! meta.meta.noAdd) {
+          loadit(track, {
+            noindex: true,
+            noplay: true
+          });
+        }
+      });
+
+      Timeline.play(0);
+    }
   }
 });
 
@@ -87,6 +201,7 @@ function runtime(obj) {
   return total;
 }
 
+
 function resize(){
   var 
     width = window.innerWidth || document.body.offsetWidth,
@@ -99,17 +214,6 @@ function resize(){
     width: (width - 167) + 'px'
   });
 }
-
-ev.when('playlist.tracks', function(trackList) {
-  _.each(trackList, function(track) {
-    loadit(track, {
-      noindex: true,
-      noplay: true
-    });
-  });
-
-  Timeline.play(0);
-});
 
 function loadHistory(){
   ev.isset('recent', function(data) {
@@ -130,7 +234,7 @@ function loadHistory(){
       });
 
       play.click(function(){
-        ev.set('app.state', 'main');
+        ev('app.state', 'main');
         Store.get(which.id);
       });
 
@@ -158,8 +262,16 @@ $(function(){
     dom = $("#playlist-name"), 
     input = $("<input>");
 
-  login();
-
+  /*
+  if(!ev.isset('uid')) {
+    remote({
+      func: 'getUser',
+      onSuccess: function(uid) {
+        ev('uid', uid);
+      }
+    });
+  }
+*/
   document.getElementById('initial-search').focus();
 
   resize();
@@ -167,18 +279,16 @@ $(function(){
 
   loadHistory();
 
-  ev.when('playlist.name', function(name) {
-    dom.html(name);
-  });
+  ev('playlist.name', function(name) { dom.html(name); });
 
   Utils.onEnter(input, function() {
-    ev.set("playlist.name", this.value);
+    ev("playlist.name", this.value);
     $(this).replaceWith(dom);
   });
 
   dom.click(function(){
     $(this).replaceWith(input);
-    input.val(ev.get('playlist.name'));
+    input.val(ev('playlist.name'));
     input.focus();
   });
 });
