@@ -10,7 +10,7 @@ $(function(){
     ev('app.state', 'main');
 
     input.val(this.value);
-    ev.isset('search.results', function(results) { loadit(results[0]); });
+    ev.isset('search.results', function(results) { ev.push('playlist.tracks', Timeline.add(results[0])); });
   });
 
   input.focus(function(){ this.select(); });
@@ -75,35 +75,30 @@ function addVids(vidList, backref) {
   })
 }
 
-function loadit(obj, opts){
+function loadRelated(obj, opts){
   var match = {ytid: obj.ytid};
   
-  ev.isset('flash.load', function(){
-    db.insert(obj);
-    Timeline.add(obj, opts);
+  if(!db.findFirst(match).serverData) {
+    $.getJSON( 'api/related.php', match, function (data){
+      db
+        .find(match)
+        .update({
+          removed: 0,
+          related: _.pluck(data.related, 'ytid'),
+          serverData: data
+        });
 
-    if(!db.findFirst(match).serverData) {
-      $.getJSON( 'api/related.php', match, function (data){
-        db
-          .find(match)
-          .update({
-            removed: 0,
-            related: _.pluck(data.related, 'ytid'),
-            serverData: data
-          });
-
-        addVids(data.related, obj);
+      addVids(data.related, obj);
     
-        gen();
-      });
-    } 
-  });
+      gen();
+    });
+  } 
 }
 
 function addVideo(opts) {
   var 
-    play = $("<a>play</a>").click(function(){ loadit(opts); }),
-    queue = $("<a>queue</a>").click(function(){ loadit(opts, {noplay: true}); }),
+    play = $("<a>play</a>").click(function(){ Timeline.add(opts); }),
+    queue = $("<a>queue</a>").click(function(){ Timeline.add(opts, {noplay: true}); }),
 
     open = $("<a>open</a>").attr({
       target: '_blank',
@@ -172,21 +167,6 @@ ev({
         name: name,
         id: ev('playlist.id')
       });
-    }
-  },
-
-  'playlist.tracks': function(trackList, meta) {
-    if(meta.old != trackList) {
-      _.each(trackList, function(track) {
-        if(! meta.meta.noAdd) {
-          loadit(track, {
-            noindex: true,
-            noplay: true
-          });
-        }
-      });
-
-      Timeline.play(0);
     }
   }
 });

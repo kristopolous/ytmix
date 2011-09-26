@@ -52,12 +52,15 @@ var Store = {
       func: 'get',
       id: id,
       onSuccess: function(data) {
+      console.log(data);
         ev({
           'app.state': 'main',
           'playlist.id': data.id,
           'playlist.name': data.name,
           'playlist.tracks': JSON.parse(data.tracklist)
         });
+
+        Timeline.play(0);
       }
     });
   },
@@ -83,6 +86,7 @@ ev.setter('playlist.id', function(){
 // an assumed index that had been previously
 // set
 ev('playlist.tracks', function(data, meta) { 
+  console.log(data, meta.old);
   if(meta.old) {
     ev('remote.data', {data: JSON.stringify(data)}); 
   }

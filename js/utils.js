@@ -27,4 +27,5 @@ var Utils = {
     str = str.replace(/^\s+/, '');
     return str.replace(/\s+$/, '');
   }
+
 };
