@@ -326,11 +326,6 @@ var Timeline = (function(){
         aggregate += (parseInt(data[index].length) || 0);
       }
       TimeDB.sync();
-/*
-      // This updates the playlist and the offsets
-      // stored in the localStorage engine
-      ev('playlist.tracks', Timeline.toStore(), {noAdd: true} );
-      */
     },
 
     play: function(dbid, offset) {
