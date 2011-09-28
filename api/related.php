@@ -22,7 +22,11 @@ foreach ($nodelist as $node) {
 	if($node->hasAttribute("class") && (trim($node->getAttribute('class')) == 'video-list-item-link')) {
 		$link = $node->getAttribute('href');
 
-		if(strpos($link, 'watch?') && strpos($link, 'list_related') == false) {
+    if(
+            strpos($link, 'watch?') 
+        &&  strpos($link, 'list_related') == false
+        &&  strpos($link, 'rellist') == false
+      ) {
 			
       list( $minutes, $seconds ) = explode(':', $node->childNodes->item(0)->childNodes->item(1)->textContent);
       

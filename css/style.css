@@ -1,13 +1,8 @@
-@font-face {
-    font-family: Geo;
-    src: url('GeosansLight.ttf');
-}
-body{overflow:hidden;background:#212;color:#888;font-family:Geo,Helvetica,sans-serif;margin:0}
+body{overflow:hidden;background:#212;color:#888;font-family:'Trebuchet Ms',Hevetica,sans-serif;margin:0}
 span{display:inline-block}
 p{margin:0}
 a:hover{text-decoration:none;color:#fff}
 a{color:#ccc}
-a.half,.result,input,h1,h2,h3{font-family:'Trebuchet Ms',Helvetica,sans-serif;}
 input{font-size:15px;background:#656;color:#fff;border:2px solid #a9a;padding:3px}
 h1{text-shadow: 0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
 #playlist-control{position:absolute;top:0px;left:3px;margin:0;z-index:50;font-size:16px;color:#fff}
