@@ -10,7 +10,12 @@ $(function(){
     ev('app.state', 'main');
 
     input.val(this.value);
-    ev.isset('search.results', function(results) { ev.push('playlist.tracks', Timeline.add(results[0])); });
+
+    ev.isset('search.results', function(results) { 
+      ev.isset('playlist.id', function(){
+        ev.push('playlist.tracks', results[0]); 
+      });
+    });
   });
 
   input.focus(function(){ this.select(); });

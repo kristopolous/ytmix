@@ -1,7 +1,21 @@
 var Hash = (function(){
   ev({
-    'playlist.id': function(id) { set({id : id}); },
-    'playlist.name': function(name) { set({name: name}) },
+    'playlist.id': function(id) { 
+      if(ev('playlist.name')) {
+        set({
+          name: ev('playlist.name'),
+          id: id
+        }); 
+      }
+    },
+    'playlist.name': function(name) { 
+      if(ev('playlist.id')) {
+        set({
+          id: ev('playlist.id'),
+          name: name
+        }); 
+      }
+    },
     'hash': function(hash) {
       if(hash.id) {
         if(hash.id != ev('playlist.id')) {

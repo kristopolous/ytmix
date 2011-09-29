@@ -20,7 +20,7 @@ foreach($videoList as $video){
 }
 
 echo json_encode(Array(
-    'query' => $_GET['query'],
-    'id' => intval($_GET['id']),
-    'vidList' => $resList
-  ));
+  'query' => $_GET['query'],
+  'id' => intval($_GET['id']),
+  'vidList' => $resList
+));

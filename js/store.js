@@ -77,7 +77,10 @@ ev.setter('playlist.id', function(){
   remote({
     func: 'createID',
     onSuccess: function(id) {
-      ev('playlist.id', id);
+      ev({
+        'playlist.id': id,
+        'playlist.name': 'no name'
+      });
     }
   });
 });
