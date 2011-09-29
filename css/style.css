@@ -4,7 +4,7 @@ p{margin:0}
 a:hover{text-decoration:none;color:#fff}
 a{color:#ccc}
 input{font-size:15px;background:#656;color:#fff;border:2px solid #a9a;padding:3px}
-h1{text-shadow: 0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
+h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
 #playlist-control{position:absolute;top:0px;left:3px;margin:0;z-index:50;font-size:16px;color:#fff}
 
 .track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434;overflow:hidden}
@@ -28,7 +28,7 @@ h1{text-shadow: 0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75e
 
 #video-list {display:inline-block}
 .result{background:#323;display:inline-block;width:130px;text-align:center;padding:0.5em 0.25em;margin:0.25em;vertical-align:top;position:relative}
-.result img{width:6em;0 0 2px 1px #332233}
+.result img{width:6em}
 .result p{padding:0 0.25em;font-size:0.6em;line-height:1.25em;color:#888897;height:3em;overflow:hidden;vertical-align:top;display:block;text-align:left}
 
 #scale{margin-left:40%;vertical-align:middle;font-size:85%}
@@ -39,7 +39,7 @@ h1{text-shadow: 0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75e
 #search-results{width:162px}
 
 .coy-button{border-radius:2px;padding:3px 6px;cursor:pointer}
-.coy-button:hover{box-shadow: 0 0 2px 2px #55c}
+.coy-button:hover{box-shadow:0 0 2px 2px #55c}
 
 .hover{display:none;position:absolute;top:5%;left:5%;width:90%;opacity:0.8}
 .hover a{cursor:pointer;display:block;height:1.5em;font-size:1.25em;background:#434;box-shadow:0 0 1px #a9a inset;margin-bottom:0.03em;padding-top:0.35em;text-decoration:none}

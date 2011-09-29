@@ -50,18 +50,6 @@ $(function(){
   }, 650);
 });
 
-// Related videos
-function sort(mode, el) {
-	sortOrder = mode;
-
-	$(el)
-    .addClass('selected')
-    .siblings()
-    .removeClass('selected');
-
-	gen();
-}
-
 // Adds vids in the format 
 // {length: sec, title: text, ytid: youtube id}
 function addVids(vidList, backref) {
@@ -140,7 +128,7 @@ function gen(){
       {container: "#video-list"},
       which
     ));
-	});
+  });
 }
 
 ev({
