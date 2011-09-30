@@ -15,23 +15,8 @@ var Timeline = (function(){
     Scale = 0.04, // ems per second
     UNIQ = 0;
   self.Data = TimeDB;
+  self.Order= Order;
 
-
-  ev('playlist.tracks', function(trackList, meta) {
-    var dirty = false;
-    _.each(trackList, function(track, index) {
-      if(Order[index] && track.ytid != Order[index].ytid) {
-        console.log('removing ', index, Order[index].title);
-        remove(index);
-        dirty = true;
-      }
-      if(!Order[index] || track.ytid != Order[index].ytid) {
-        console.log('adding ', index, track.title);
-        add(track);
-        dirty = true;
-      }
-    });
-  });
 
   $(function(){
     var 
@@ -150,7 +135,7 @@ var Timeline = (function(){
       });
 
       Timeline.updateOffset();
-      Timeline.gen();
+      gen();
       if(Player.current.id == x || Player.current.id == y) {
         Timeline.seekTo(Offset);
       }
@@ -169,6 +154,40 @@ var Timeline = (function(){
       function(){ node.hover.fadeOut() }
     );
   }
+
+  function gen(){
+    var trackList = ev('playlist.tracks') || [];
+    each(trackList, function(track, index) {
+      if(Order[index] && track.ytid != Order[index].ytid) {
+        console.log('removing ', index, Order[index].title);
+        remove(index);
+      }
+      if(!Order[index] || track.ytid != Order[index].ytid) {
+        console.log('adding ', index, track.title);
+        add(track);
+      }
+    });
+    each(Order, function(value, index) {
+      console.log(index, trackList.length, trackList);
+      if(index >= trackList.length) {
+        remove(index);
+      } else if(value.ytid != trackList[index].ytid) {
+        remove(index);
+        add(value);
+      }
+    });
+
+    /*$("#control").children().remove();
+
+    for(var ix = 0; ix < UNIQ; ix++) {
+      if(data[ix]) {
+        $(".hover", data[ix].dom).css('display','none');
+        $("#control").append(data[ix].dom);
+        hook(ix);
+      }
+    }*/
+  }
+
 
   function add(obj, opts) {
     opts = opts || {};
@@ -256,9 +275,12 @@ var Timeline = (function(){
     ev('tick', function(){ dom.remove(); }, {once: true});
   };
 
+  ev('playlist.tracks', gen);
+
   return {
     player: Player,
     data: data,
+    gen: gen,
 
     toStore: function(){
       var store = [];
@@ -368,11 +390,6 @@ var Timeline = (function(){
       }
     },
 
-    flush: function(){
-      Timeline.pause();
-      TimeDB.remove();  
-    },
-
     updatePosition: function() {
       var 
         offset = $("#control").offset().left - $("#scale").offset().left,
@@ -396,18 +413,6 @@ var Timeline = (function(){
       });
 
       ev.set('timeline.init');
-    },
-
-    gen: function(){
-      $("#control").children().remove();
-
-      for(var ix = 0; ix < UNIQ; ix++) {
-        if(data[ix]) {
-          $(".hover", data[ix].dom).css('display','none');
-          $("#control").append(data[ix].dom);
-          hook(ix);
-        }
-      }
     },
 
     add: function(obj, opts) {

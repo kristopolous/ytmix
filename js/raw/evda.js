@@ -65,7 +65,7 @@ function EvDa (map) {
   });
 
   function del ( handle ) {
-    each ( handle.$, function ( stagekey ) {
+    each ( handle.$, function( stagekey ) {
       eventMap[ stagekey ] = _.without( eventMap[ stagekey ], handle );
     });
   }
@@ -98,10 +98,8 @@ function EvDa (map) {
     // extensions can be made.
     db: data,
     events: eventMap,
-
     unset: function(key) { delete data[key]; },
     del: del,
-
     isset: isset,
 
     // Unlike much of the reset of the code,
@@ -132,7 +130,7 @@ function EvDa (map) {
 
             if ( ! --times ) {
               if ( ! failure ) { 
-                set ( key, value, _meta, 1 );
+                pub.set ( key, value, _meta, 1 );
               }
             }
           }

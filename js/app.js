@@ -39,8 +39,8 @@ $(function(){
 
         ev('search.results', res.vidList);
 
-        _.each(res.vidList, function(video) {
-          addVideo(_.extend(
+        each(res.vidList, function(video) {
+          addVideo(extend(
             {container: "#search-results"},
             video
           ));
@@ -55,7 +55,7 @@ $(function(){
 function addVids(vidList, backref) {
   // insert each related video into our
   // db of known videos if needed
-  _.each(vidList, function(video) {
+  each(vidList, function(video) {
     db.insert(video).update(function(data){
 
       if(! data.reference) {
@@ -123,8 +123,8 @@ function addVideo(opts) {
 function gen(){
   $("#video-list").children().remove();
 
-  _.each(db.sort('count', 'desc'), function(which) {
-    addVideo(_.extend(
+  each(db.sort('count', 'desc'), function(which) {
+    addVideo(extend(
       {container: "#video-list"},
       which
     ));
@@ -138,7 +138,8 @@ ev({
     } 
 
     if(state == 'splash') {
-      Timeline.flush();
+      ev.unset('playlist.id','playlist.tracks','playlist.id');
+      Timeline.gen();
       $(".main-app").css('display','none');
       $("#splash").css('display','block');
     } else if (state == 'main') {
@@ -166,7 +167,7 @@ ev({
 
 function runtime(obj) {
   var total = 0;
-  _.each(obj, function(which) {
+  each(obj, function(which) {
     if(which && which.length) {
       total += parseInt(which.length);
     }
@@ -190,7 +191,7 @@ function resize(){
 
 function loadHistory(){
   ev.isset('recent', function(data) {
-    _.each(data, function(which) {
+    each(data, function(which) {
       var 
         total = runtime(which.tracklist),
         container = $("<span class=splash-container>").appendTo("#splash-history"),

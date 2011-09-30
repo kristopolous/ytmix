@@ -90,7 +90,7 @@ ev.setter('playlist.id', function(){
 // set
 ev('playlist.tracks', function(data, meta) { 
   console.log(data, meta.old);
-  if(meta.old) {
+  if(meta.old && ev('playlist.id')) {
     ev('remote.data', {data: JSON.stringify(data)}); 
   }
 });
@@ -100,7 +100,7 @@ ev.setter('recent', function(){
     func: 'recent',
     onSuccess: function(data) {
       data = _.without(data, false);
-      _.each(data, function(which) {
+      each(data, function(which) {
         which.tracklist = JSON.parse(which.tracklist);
       });
       ev('recent', data);
@@ -111,7 +111,7 @@ ev.setter('recent', function(){
 setInterval(function(){
   if(ev.isset('remote.data')) {
 
-    remote(_.extend({ 
+    remote(extend({ 
       func: 'update' ,
       id: ev('playlist.id')
     }, ev('remote.data')));

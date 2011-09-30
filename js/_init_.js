@@ -1,5 +1,7 @@
 var 
   db = DB(), 
+  each = _.each,
+  extend = _.extend,
   ev = EvDa({
     'app.state': 'splash',
     'playlist.name': ''

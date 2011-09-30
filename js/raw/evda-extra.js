@@ -2,7 +2,11 @@ var Evda_ = EvDa;
 EvDa = function(){
   var E = Evda_.apply(0, _.toArray(arguments));
 
+  E.unset_ = E.unset;
+
   return _.extend(E, {
+    unset: function () { for(var i = 0; i < arguments.length; E.unset_(arguments[i++])); },
+
     incr: function ( key ) {
       // we can't use the same trick here because if we
       // hit 0, it will auto-increment to 1

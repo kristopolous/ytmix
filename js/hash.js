@@ -38,6 +38,7 @@ var Hash = (function(){
       name: pieces[1] || ''
     };
   }
+
   function hashCheck() {
     var hash = getHash();
 
@@ -47,7 +48,7 @@ var Hash = (function(){
   }
 
   function set(opts) {
-    return setHash(_.extend(
+    return setHash(extend(
       getHash(),
       opts
     ));
