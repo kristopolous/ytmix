@@ -82,7 +82,7 @@ var Timeline = (function(){
     if(Player.active.getCurrentTime) {
       var time = Player.active.getCurrentTime();
 
-      if (time > 0) {
+      if (time > 0 && Player.current) {
 
         Player.current.$title.attr('href', 
           'http://www.youtube.com/watch?v=' + Player.current.ytid + 
@@ -159,16 +159,13 @@ var Timeline = (function(){
     var trackList = ev('playlist.tracks') || [];
     each(trackList, function(track, index) {
       if(Order[index] && track.ytid != Order[index].ytid) {
-        console.log('removing ', index, Order[index].title);
         remove(index);
       }
       if(!Order[index] || track.ytid != Order[index].ytid) {
-        console.log('adding ', index, track.title);
         add(track);
       }
     });
     each(Order, function(value, index) {
-      console.log(index, trackList.length, trackList);
       if(index >= trackList.length) {
         remove(index);
       } else if(value.ytid != trackList[index].ytid) {
@@ -265,11 +262,13 @@ var Timeline = (function(){
 
     var removed = TimeDB.remove({id: index});
 
-    if(removed[0].offset < Offset) {
-      Offset -= removed[0].length;
-      Timeline.seekTo(Offset);
-    } else {
-      Timeline.updateOffset();
+    if(removed.length) {
+      if(removed[0].offset < Offset) {
+        Offset -= removed[0].length;
+        Timeline.seekTo(Offset);
+      } else {
+        Timeline.updateOffset();
+      }
     }
 
     ev('tick', function(){ dom.remove(); }, {once: true});

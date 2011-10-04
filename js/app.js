@@ -138,7 +138,8 @@ ev({
     } 
 
     if(state == 'splash') {
-      ev.unset('playlist.id','playlist.tracks','playlist.id');
+      ev.unset('playlist.id','playlist.tracks','playlist.name');
+      Timeline.pause();
       Timeline.gen();
       $(".main-app").css('display','none');
       $("#splash").css('display','block');
@@ -223,9 +224,9 @@ function loadHistory(){
         )
         .append(track)
         .append("<p>" + which.name + 
-           " (" + which.tracklist.length + " track" + (which.tracklist.length != 1 ? 's' : '') + " " 
+           " <br><small>(" + which.tracklist.length + " track" + (which.tracklist.length != 1 ? 's' : '') + " " 
            + Utils.secondsToTime(total) + 
-           ")</p>");
+           ")</small></p>");
     });
     $("#history").fadeIn();
   });
@@ -264,5 +265,9 @@ $(function(){
     $(this).replaceWith(input);
     input.val(ev('playlist.name'));
     input.focus();
+  });
+
+  $("#main-menu").click(function(){
+    location.href = document.location.toString().split('#')[0];
   });
 });
