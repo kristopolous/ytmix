@@ -68,10 +68,25 @@ function addVids(vidList, backref) {
   })
 }
 
+var _remote = {
+  active: false,
+  queue: []
+};
+
 function loadRelated(obj, opts){
+  if(_remote.active) {
+    _remote.queue.push(function(){
+      loadRelated(obj, opts);
+    });
+    return;
+  }
+
+  _remote.active = true;
+
   var match = {ytid: obj.ytid};
   
   if(!db.findFirst(match).serverData) {
+
     $.getJSON( 'api/related.php', match, function (data){
       db
         .find(match)
@@ -83,7 +98,14 @@ function loadRelated(obj, opts){
 
       addVids(data.related, obj);
     
-      gen();
+      ev.set('request-gen');
+
+      setTimeout(function(){
+        _remote.active = false;
+        if(_remote.queue.length) {
+          (_remote.queue.pop())();
+        }
+      }, 1000);
     });
   } 
 }
@@ -120,15 +142,42 @@ function addVideo(opts) {
     .appendTo(opts.container);
 }
 
-function gen(){
-  $("#video-list").children().remove();
+var _video = {
+  width: 130 + 4 * 2 + 4 * 2,
+  height: 106 + 8 * 2 + 4 * 2,
+  old: {start: 0, stop: 0}
+};
 
-  each(db.sort('count', 'desc'), function(which) {
+function gen(){
+  var 
+    width = $("#video-list").width(),
+    height = $("#video-list").height(),
+    top = $("#video-list").scrollTop(),
+    bottom = $("#video-list").height() + top,
+    total = db.find().length,
+    perline = Math.floor(width / _video.width),
+    start = Math.floor(top / _video.height) * perline,
+    stop = Math.floor(bottom / _video.height) * perline,
+    topmodoffset = top % _video.height;
+
+  $("#top-buffer").css('height', top + "px");
+  $("#bottom-buffer").css('height', (total - stop) / perline * _video.height - topmodoffset + "px");
+
+  if(_video.old.start == start && _video.old.stop == stop) {
+    return;
+  }
+  _video.old = { start : start, stop : stop };
+
+  $("#video-viewport").children().remove();
+
+  each(db.sort('count', 'desc').slice(start, stop), function(which) {
     addVideo(extend(
-      {container: "#video-list"},
+      {container: "#video-viewport"},
       which
     ));
   });
+
+  $("#video-list").get(0).scrollTop = top;
 }
 
 ev({
@@ -266,6 +315,32 @@ $(function(){
     input.val(ev('playlist.name'));
     input.focus();
   });
+
+  (function(){
+    var 
+      top = $("#video-list").scrollTop(),
+      timeout;
+
+    function gencheck(force){
+      var newtop = $("#video-list").scrollTop();
+
+      if(newtop != top || (force === true)) {
+        newtop = top;
+        gen();
+      }
+
+      if(timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout( gencheck, 200);
+    }
+
+    ev.on('request-gen', function(){
+      gencheck(true);
+    });
+    gencheck();
+  })();
+    
 
   $("#main-menu").click(function(){
     location.href = document.location.toString().split('#')[0];

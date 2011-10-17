@@ -157,6 +157,7 @@ var Timeline = (function(){
 
   function gen(){
     var trackList = ev('playlist.tracks') || [];
+
     each(trackList, function(track, index) {
       if(Order[index] && track.ytid != Order[index].ytid) {
         remove(index);
@@ -165,6 +166,7 @@ var Timeline = (function(){
         add(track);
       }
     });
+
     each(Order, function(value, index) {
       if(index >= trackList.length) {
         remove(index);
@@ -184,7 +186,6 @@ var Timeline = (function(){
       }
     }*/
   }
-
 
   function add(obj, opts) {
     opts = opts || {};
@@ -357,7 +358,9 @@ var Timeline = (function(){
       offset = offset || 0;
 
       ev.isset('flash.load', function(){
-        if(Player.current != data[dbid]) {
+        if(!data[dbid]) {
+          Timeline.pause();
+        } else if(Player.current != data[dbid]) {
           Player.current = data[dbid];
           Player.active.loadVideoById(Player.current.ytid, offset);
           Player.start = $(data[dbid].dom).offset().left - $("#control").offset().left;
