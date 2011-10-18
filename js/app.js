@@ -278,6 +278,11 @@ function loadHistory(){
   });
 }
 
+ev.test('playlist.tracks', function(data, meta) {
+  db.insert(data);
+  meta.done(true);
+});
+
 $(function(){
   var 
     dom = $("#playlist-name"), 

@@ -40,7 +40,3 @@ var Utils = {
   }
 };
 
-self._scrollwidth = 0;
-$(function(){
-  self._scrollwidth = Utils.scrollbarWidth();
-})();

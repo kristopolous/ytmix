@@ -14,9 +14,9 @@ var Timeline = (function(){
     Zoom = 85,
     Scale = 0.04, // ems per second
     UNIQ = 0;
+
   self.Data = TimeDB;
   self.Order= Order;
-
 
   $(function(){
     var 
@@ -150,8 +150,8 @@ var Timeline = (function(){
     node.$remove.click(function(){Timeline.remove(id); });
     node.$title.click(Timeline.pause);
     node.dom.hover(
-      function(){ node.hover.fadeIn() }, 
-      function(){ node.hover.fadeOut() }
+      function(){ node.hover.css('display','block'); }, 
+      function(){ node.hover.css('display','none'); }
     );
   }
 
@@ -238,6 +238,10 @@ var Timeline = (function(){
   }
 
   function remove(index) {
+    // This track was just removed from the timeline.
+    // This means that we need to removed it from the
+    // data view of the timeline and reflect the fact
+    // that it was removed in the larger database.
     db.find('ytid', data[index].ytid)
       .update(function(obj){
         // increment the announcement that 

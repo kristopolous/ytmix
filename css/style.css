@@ -5,7 +5,7 @@ a:hover{text-decoration:none;color:#fff}
 a{color:#ccc}
 input{font-size:15px;background:#656;color:#fff;border:2px solid #a9a;padding:3px}
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
-#playlist-control{position:absolute;top:0px;left:3px;margin:0;z-index:50;font-size:16px;color:#fff}
+#playlist-control{position:top:0px;left:3px;margin:0;z-index:50;font-size:16px;color:#fff}
 
 .track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434;overflow:hidden}
 .track img{width:10.5em;margin-top:1.5em}
@@ -55,3 +55,4 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 #bottom-box{margin-top:-1px;border-top:1px solid #434}
 
 #main-menu{position:fixed;top:0;right:0}
+#header{z-index:90;background:#323;height:30px;position:absolute;top:0;left:0;width:100%}
