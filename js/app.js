@@ -23,29 +23,29 @@ $(function(){
   setInterval(function(){
     var query = input.val();
 
-    if(query != lastSearch && query.length) {
-      lastSearch = query;
+    if(query != lastSearch) {
 
-      $.getJSON('api/ytsearch.php', { 
-          id: ++searchID,
-          query: query
-        }, function(res) {
+      ev('search.query', query);
 
-        if(res.id < lastID) { return; }
+      if( query.length ) {
+        lastSearch = query;
 
-        lastID = res.id;
+        $.getJSON('api/ytsearch.php', { 
+            id: ++searchID,
+            query: query
+          }, function(res) {
 
-        $("#search-results").children().remove();
+          if(res.id < lastID) { return; }
 
-        ev('search.results', res.vidList);
+          lastID = res.id;
 
-        each(res.vidList, function(video) {
-          addVideo(extend(
-            {container: "#search-results"},
-            video
-          ));
+          ev('search.results', res.vidList);
+          gen();
         });
-      });
+      } else {
+        ev('search.results', []);
+        gen();
+      }
     }
   }, 650);
 });
@@ -67,11 +67,6 @@ function addVids(vidList, backref) {
     });
   })
 }
-
-var _remote = {
-  active: false,
-  queue: []
-};
 
 function loadRelated(obj, opts){
   if(_remote.active) {
@@ -103,7 +98,7 @@ function loadRelated(obj, opts){
       setTimeout(function(){
         _remote.active = false;
         if(_remote.queue.length) {
-          (_remote.queue.pop())();
+          (_remote.queue.shift())();
         }
       }, 1000);
     });
@@ -144,36 +139,47 @@ function addVideo(opts) {
 
 function gen(){
   var 
-    width = $("#video-list").width(),
+    width = $("#video-list").width() - _scrollwidth,
     height = $("#video-list").height(),
     top = $("#video-list").scrollTop(),
     bottom = $("#video-list").height() + top,
-    total = db.find().length,
+    set,
+    total,
+    query = ev('search.query'),
     perline = Math.floor(width / _video.width),
     start = (Math.floor(top / _video.height) - 1) * perline,
     stop = Math.ceil(bottom / _video.height) * perline,
     topmodoffset = top % _video.height;
 
-    start = Math.max(start, 0);
-    stop = Math.min(stop, total);
+  if(query.length) {
+    set = db.find({title: db.like(query)});
+  } else {
+    set = db.find();
+  }
+  set = ev('search.results').concat(set.sort('count','desc'));
 
-    $("#bottom-buffer").css('height', (total - stop) / perline * _video.height + "px");
-    $("#top-buffer").css('height', top - topmodoffset + "px");
+  total = set.length;
 
-    if(_video.old.start != start || _video.old.stop != stop) {
-      _video.old = { start : start, stop : stop };
+  start = Math.max(start, 0);
+  stop = Math.min(stop, total);
 
-      $("#video-viewport").children().remove();
+  $("#bottom-buffer").css('height', (total - stop) / perline * _video.height + "px");
+  $("#top-buffer").css('height', top - topmodoffset + "px");
 
-      each(db.sort('count', 'desc').slice(start, stop), function(which) {
-        addVideo(extend(
-          {container: "#video-viewport"},
-          which
-        ));
-      });
-    }
+  if(_video.old.start != start || _video.old.stop != stop || _video.old.query != query) {
+    _video.old = { start : start, stop : stop, query : query };
 
-    $("#video-list").get(0).scrollTop = top;
+    $("#video-viewport").children().remove();
+
+    each(set.slice(start, stop), function(which) {
+      addVideo(extend(
+        {container: "#video-viewport"},
+        which
+      ));
+    });
+  }
+
+  $("#video-list").get(0).scrollTop = top;
 }
 
 ev({
@@ -221,18 +227,13 @@ function runtime(obj) {
   return total;
 }
 
-
 function resize(){
   var 
     width = window.innerWidth || document.body.offsetWidth,
     height = window.innerHeight || document.body.offsetHeight;
 
-  $(".resize").css('height', (height - 225) + 'px');
-
-  $("#video-list").css({
-    height: (height - 196) + 'px',
-    width: (width - 167) + 'px'
-  });
+  $(".resize").css('height', (height - 235) + 'px');
+  $("#video-list").css('height', (height - 206) + 'px');
 }
 
 function loadHistory(){
@@ -294,6 +295,7 @@ $(function(){
 */
   document.getElementById('initial-search').focus();
 
+  self._scrollwidth = Utils.scrollbarWidth();
   resize();
   $(window).resize(resize);
 
@@ -328,7 +330,9 @@ $(function(){
     
   ev.on('request-gen', gen);
 
+  /*
   $("#main-menu").click(function(){
     location.href = document.location.toString().split('#')[0];
   });
+  */
 });

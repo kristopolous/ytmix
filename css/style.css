@@ -26,7 +26,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 
 .main-app{display:none;width:100%}
 
-#video-list {display:inline-block}
+#video-list {display:block}
 #video-viewport .result{height:106px;}
 #video-viewport .result img{background:#000;width:96px;height:72px}
 .result{background:#323;display:inline-block;width:130px;text-align:center;padding:0.5em 0.25em;margin:0.25em;vertical-align:top;position:relative}
@@ -50,7 +50,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 
 .resize{overflow-y:auto}
 
-#normal-search{width:151px}
+#normal-search{width:151px;position:absolute;top:0;right:0;z-index:100}
 #history{display:none}
 #bottom-box{margin-top:-1px;border-top:1px solid #434}
 
