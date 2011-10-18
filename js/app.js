@@ -142,12 +142,6 @@ function addVideo(opts) {
     .appendTo(opts.container);
 }
 
-var _video = {
-  width: 130 + 4 * 2 + 4 * 2,
-  height: 106 + 8 * 2 + 4 * 2,
-  old: {start: 0, stop: 0}
-};
-
 function gen(){
   var 
     width = $("#video-list").width(),
@@ -156,28 +150,30 @@ function gen(){
     bottom = $("#video-list").height() + top,
     total = db.find().length,
     perline = Math.floor(width / _video.width),
-    start = Math.floor(top / _video.height) * perline,
-    stop = Math.floor(bottom / _video.height) * perline,
+    start = (Math.floor(top / _video.height) - 1) * perline,
+    stop = Math.ceil(bottom / _video.height) * perline,
     topmodoffset = top % _video.height;
 
-  $("#top-buffer").css('height', top + "px");
-  $("#bottom-buffer").css('height', (total - stop) / perline * _video.height - topmodoffset + "px");
+    start = Math.max(start, 0);
+    stop = Math.min(stop, total);
 
-  if(_video.old.start == start && _video.old.stop == stop) {
-    return;
-  }
-  _video.old = { start : start, stop : stop };
+    $("#bottom-buffer").css('height', (total - stop) / perline * _video.height + "px");
+    $("#top-buffer").css('height', top - topmodoffset + "px");
 
-  $("#video-viewport").children().remove();
+    if(_video.old.start != start || _video.old.stop != stop) {
+      _video.old = { start : start, stop : stop };
 
-  each(db.sort('count', 'desc').slice(start, stop), function(which) {
-    addVideo(extend(
-      {container: "#video-viewport"},
-      which
-    ));
-  });
+      $("#video-viewport").children().remove();
 
-  $("#video-list").get(0).scrollTop = top;
+      each(db.sort('count', 'desc').slice(start, stop), function(which) {
+        addVideo(extend(
+          {container: "#video-viewport"},
+          which
+        ));
+      });
+    }
+
+    $("#video-list").get(0).scrollTop = top;
 }
 
 ev({
@@ -317,30 +313,20 @@ $(function(){
   });
 
   (function(){
-    var 
-      top = $("#video-list").scrollTop(),
-      timeout;
 
-    function gencheck(force){
-      var newtop = $("#video-list").scrollTop();
-
-      if(newtop != top || (force === true)) {
-        newtop = top;
-        gen();
-      }
-
+    var timeout;
+    function gencheck(){ 
       if(timeout) {
         clearTimeout(timeout);
       }
-      timeout = setTimeout( gencheck, 200);
+      timeout = setTimeout(gen, 75);
+      return true;
     }
-
-    ev.on('request-gen', function(){
-      gencheck(true);
-    });
-    gencheck();
+    $("#video-list").scroll(gencheck);
+    $("#video-list").keydown(gencheck);
   })();
     
+  ev.on('request-gen', gen);
 
   $("#main-menu").click(function(){
     location.href = document.location.toString().split('#')[0];
