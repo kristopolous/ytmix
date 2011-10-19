@@ -50,7 +50,8 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 
 .resize{overflow-y:auto}
 
-#normal-search{width:151px;position:absolute;top:0;right:0;z-index:100}
+#normal-search{width:151px;}
+#search{position:absolute;top:0;right:0}
 #history{display:none}
 #bottom-box{margin-top:-1px;border-top:1px solid #434}
 

@@ -235,6 +235,9 @@ var Timeline = (function(){
     hook(myid); 
 
     Timeline.updateOffset();
+
+    db.find('ytid', obj.ytid)
+      .update({playlistid: myid});
   }
 
   function remove(index) {
@@ -248,6 +251,7 @@ var Timeline = (function(){
         // this was removed at some point and
         // may not be liked
         obj.removed++;
+        delete obj.playlistid;
 
         if(obj.related) {
           db

@@ -106,6 +106,7 @@ function loadRelated(obj, opts){
 }
 
 function addVideo(opts) {
+  console.log(opts.playlistid);
   var 
     play = $("<a>play</a>").click(function(){ Timeline.add(opts); }),
     queue = $("<a>queue</a>").click(function(){ Timeline.add(opts, {noplay: true}); }),
@@ -156,7 +157,7 @@ function gen(){
   } else {
     set = db.find();
   }
-  set = ev('search.results').concat(set.sort('count','desc'));
+  set = ev('search.results').concat(set);
 
   total = set.length;
 
@@ -306,7 +307,10 @@ $(function(){
 
   loadHistory();
 
-  ev('playlist.name', function(name) { dom.html(name); });
+  ev('playlist.name', function(name) { 
+    document.title = name + " on Audisco";
+    dom.html(name); 
+  });
 
   Utils.onEnter(input, function() {
     ev("playlist.name", this.value);
