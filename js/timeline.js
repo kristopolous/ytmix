@@ -206,6 +206,7 @@ var Timeline = (function(){
         .append("<img class=thumb src=http://i.ytimg.com/vi/" + obj.ytid + "/hqdefault.jpg?w=188&h=141>")
         .append($remove)
         .append($control)
+        .append("<p><em>" + obj.title + "</em> " + Utils.secondsToTime(obj.length) + "</p>");
 
     Timeline.init();
 

@@ -7,8 +7,8 @@ input{font-size:15px;background:#656;color:#fff;border:2px solid #a9a;padding:3p
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
 #playlist-control{margin:0;font-size:1.25em;color:#fff;display:inline-block}
 
-.track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434}
-.track img.thumb{width:6.5em}
+.track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434;box-shadow:0 0 6px 8px #212}
+.track img.thumb{width:75px;vertical-align:bottom}
 .track a{display:block;text-decoration:none}
 
 #timeline{vertical-align:top;z-index:18;white-space:nowrap;overflow:hidden;width:100%;background:#180018;height:9em;padding-top:0.5em}
@@ -57,11 +57,13 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 #main-menu{position:fixed;top:0;right:0}
 #header{background:#323;padding:0.5em 0.25em}
 
-.timeline-hover{width:12em;display:none;position:absolute;top:2em;left:0;background:#212;padding:0.25em;box-shadow: 
+.timeline-hover{color:#AAAAb5;width:150px;display:none;position:absolute;top:2.5em;left:0;background:#212;padding:10px;box-shadow: 
   0 0 1px 1px #434 inset,
-  0 2px 2px 2px #101;border-radius:1px}
-#timeline .timeline-hover span a{cursor:pointer;margin:0.25em;font-size:1em;box-shadow:1px 1px 1px #a9a inset;padding:0.24em;text-decoration:none}
+  0 2px 2px 2px #101;border-radius:1px;font-size:12px}
+#timeline .timeline-hover span a{cursor:pointer;margin:0.25em;box-shadow:1px 1px 1px #a9a inset;padding:3px;text-decoration:none}
 #timeline .timeline-hover span a:active{box-shadow:-1px -1px 1px #a9a inset}
 #timeline .timeline-hover a.close{position:absolute;top:0;right:0}
 .timeline-hover span a:hover{background-color:#656}
-.timeline-hover span{width:5.25em}
+.timeline-hover span{width:75px}
+.timeline-hover p{text-align:left;margin-top:6px;text-align:left;font-size:11px;color:#888897}
+.timeline-hover em{font-weight:bold;font-style:normal;color:#aaaab5}
