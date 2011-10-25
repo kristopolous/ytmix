@@ -27,11 +27,11 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 .main-app{display:none;width:100%}
 
 #video-list {display:block}
-#video-viewport .result{height:106px;}
 #video-viewport .result img{background:#000;width:96px;height:72px}
-.result{background:#323;display:inline-block;width:130px;text-align:center;padding:0.5em 0.25em;margin:0.25em;vertical-align:top;position:relative}
+.result{background:#101;display:inline-block;width:260px;padding:0.5em;margin:0.25em;vertical-align:top;position:relative}
 .result img{width:6em}
-.result p{padding:0 0.25em;font-size:0.6em;line-height:1.25em;color:#888897;height:3em;overflow:hidden;vertical-align:top;display:block;text-align:left}
+.result span{width:150px;padding-left:0.5em;font-size:0.8em;color:#888897;overflow:hidden;vertical-align:top;display:inline-block}
+.result span em{display:block;color:#aaaab5;font-style:normal;font-weight:bold;font-size:1em}
 
 #scale{margin-left:40%;vertical-align:middle;font-size:85%}
 #control{display:inline-block;position:relative;z-index:40;height:12em}
@@ -43,10 +43,10 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 .coy-button{border-radius:2px;padding:3px 6px;cursor:pointer}
 .coy-button:hover{box-shadow:0 0 2px 2px #55c}
 
-.hover{display:none;position:absolute;top:5%;left:5%;width:90%;opacity:0.8}
-.hover a{cursor:pointer;display:block;height:1.5em;font-size:1.25em;background:#434;box-shadow:0 0 1px #a9a inset;margin-bottom:0.03em;padding-top:0.35em;text-decoration:none}
-.hover a:hover{background-color:#33333f}
-.hover a.half{display:inline-block;width:33%;font-size:1.5em}
+.hover{display:none;position:absolute;bottom:0.5em;left:1%;width:98%;opacity:0.9;text-align:center}
+.hover a{cursor:pointer;display:inline-block;height:1.75em;font-size:1em;background:#434;box-shadow:1px 1px 1px #a9a inset;margin-bottom:0.03em;margin-left:1%;padding-top:0.20em;text-decoration:none;width:32%}
+.hover a:active{box-shadow:-1px -1px 1px #a9a inset}
+.hover a:hover{background-color:#656}
 
 .resize{overflow-y:auto}
 

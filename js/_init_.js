@@ -19,6 +19,10 @@ var
   };
 
 db.constrain('unique', 'ytid');
+db.template.create({
+  reference: []
+});
+
 /*
 ev.sniff();
 ev.sniff('tick');

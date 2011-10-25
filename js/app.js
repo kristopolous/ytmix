@@ -57,11 +57,6 @@ function addVids(vidList, backref) {
   // db of known videos if needed
   each(vidList, function(video) {
     db.insert(video).update(function(data){
-
-      if(! data.reference) {
-        data.reference = [];
-      }
-
       data.reference.push(backref.ytid);
       data.removed = data.removed || 0;
     });
@@ -123,7 +118,7 @@ function addVideo(opts) {
       gen();
     }),
 
-    hoverControl = $("<span class=hover>")
+    hoverControl = $("<div class=hover>")
       .append(play)
       .append(queue)
       .append(open);
@@ -133,7 +128,7 @@ function addVideo(opts) {
       function(){ hoverControl.css('display','block') }, 
       function(){ hoverControl.css('display','none') }
     )
-    .append("<img src=http://i4.ytimg.com/vi/" + opts.ytid + "/default.jpg><p>" + opts.title + "</p>")
+    .append("<img src=http://i4.ytimg.com/vi/" + opts.ytid + "/default.jpg><span><p><em>" + opts.title + "</em>" + Utils.secondsToTime(opts.length) + "</p></span>")
     .append(hoverControl)
     .appendTo(opts.container);
 }
