@@ -9,8 +9,8 @@ var
     'search.query': ''
   }),
   _video = {
-    width: 130 + 4 * 2 + 4 * 2,
-    height: 106 + 8 * 2 + 4 * 2,
+    width: 260 + 8 * 2 + 4 * 2,
+    height: 77 + 8 * 2 + 4 * 2,
     old: {start: 0, stop: 0, query: ''}
   },
   _remote = {

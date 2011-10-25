@@ -229,7 +229,7 @@ function resize(){
     height = window.innerHeight || document.body.offsetHeight;
 
   $(".resize").css('height', (height - 235) + 'px');
-  $("#video-list").css('height', (height - 206) + 'px');
+  $("#video-list").css('height', (height - 242) + 'px');
 }
 
 function loadHistory(){
