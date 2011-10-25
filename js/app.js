@@ -101,7 +101,6 @@ function loadRelated(obj, opts){
 }
 
 function addVideo(opts) {
-  console.log(opts.playlistid);
   var 
     play = $("<a>play</a>").click(function(){ Timeline.add(opts); }),
     queue = $("<a>queue</a>").click(function(){ Timeline.add(opts, {noplay: true}); }),
@@ -162,8 +161,9 @@ function gen(){
   $("#bottom-buffer").css('height', (total - stop) / perline * _video.height + "px");
   $("#top-buffer").css('height', top - topmodoffset + "px");
 
-  if(_video.old.start != start || _video.old.stop != stop || _video.old.query != query) {
-    _video.old = { start : start, stop : stop, query : query };
+  if(_video.old.start != start || _video.old.stop != stop || _video.old.query != query || total != _video.old.length) {
+    _video.old = { start : start, stop : stop, query : query, length : set.length };
+    console.log(_video.old, set);
 
     $("#video-viewport").children().remove();
 
@@ -224,12 +224,9 @@ function runtime(obj) {
 }
 
 function resize(){
-  var 
-    width = window.innerWidth || document.body.offsetWidth,
-    height = window.innerHeight || document.body.offsetHeight;
+  var height = window.innerHeight || document.body.offsetHeight;
 
-  $(".resize").css('height', (height - 235) + 'px');
-  $("#video-list").css('height', (height - 242) + 'px');
+  $("#video-list").css('height', (height - $("#bottom-box").offset().top) + 'px');
 }
 
 function loadHistory(){

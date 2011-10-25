@@ -145,8 +145,6 @@ var Timeline = (function(){
   function hook(id) {
     var node = data[id];
 
-    node.$left.click(function(){swap(id, data[id].previous); });
-    node.$right.click(function(){swap(id, data[id].next); });
     node.$remove.click(function(){Timeline.remove(id); });
     node.$title.click(Timeline.pause);
     node.dom.hover(
@@ -195,24 +193,23 @@ var Timeline = (function(){
     var 
       myid = UNIQ ++,
 
-      $left = $("<a>&lt;&lt;</a>").addClass('half'),
-      $remove = $("<a>X</a>").addClass('half'),
-      $right = $("<a>&gt;&gt;</a>").addClass('half'),
+      $remove = $("<a>X</a>").addClass('close'),
+      $control = $("<span />"),
+      $move = $("<a>move</a>").appendTo($control),
+      $related = $("<a>related</a>").appendTo($control),
       $title = $("<a />").attr({
         target: '_blank',
         href: "http://www.youtube.com/watch?v=" + obj.ytid
       }).html(obj.title),
       
-      hoverControl = $("<span class=hover />")
-        .append($left)
+      hoverControl = $("<span class=timeline-hover />")
+        .append("<img class=thumb src=http://i.ytimg.com/vi/" + obj.ytid + "/hqdefault.jpg?w=188&h=141>")
         .append($remove)
-        .append($right);
+        .append($control)
 
     Timeline.init();
 
     var record = TimeDB.insert({
-      $left: $left,
-      $right: $right,
       $title: $title,
       $remove: $remove,
       title: obj.title,
@@ -226,7 +223,6 @@ var Timeline = (function(){
         .css('width', obj.length * Scale + 'em')
         .addClass('track')
         .append(hoverControl)
-        .append("<img src=http://i.ytimg.com/vi/" + obj.ytid + "/hqdefault.jpg?w=188&h=141>")
         .append($title)
     });
 

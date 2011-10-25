@@ -89,6 +89,14 @@ ev.setter('playlist.id', function(){
 // set
 ev('playlist.tracks', function(data, meta) { 
   if(meta.old && ev('playlist.id')) {
+
+    data = _.map(data, function(m) {
+      var copy = _.clone(m);
+      delete copy.container;
+      copy.reference = [];
+      return copy;
+    });
+
     ev('remote.data', {data: JSON.stringify(data)}); 
   }
 });
