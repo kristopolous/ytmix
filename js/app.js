@@ -306,13 +306,25 @@ $(function(){
 
   Utils.onEnter(input, function() {
     ev("playlist.name", this.value);
-    $(this).replaceWith(dom);
+    input.replaceWith(dom);
   });
 
-  dom.click(function(){
-    $(this).replaceWith(input);
-    input.val(ev('playlist.name'));
-    input.focus();
+  $("#edit-name").click(function(){
+    if(!this.editing) {
+      this.editing = true;
+    } else {
+      this.editing = false;
+    } 
+    if(this.editing) {
+      this.innerHTML = "save";
+      dom.replaceWith(input);
+      input.val(ev('playlist.name'));
+      input.focus();
+    } else {
+      ev("playlist.name", input.val());
+      input.replaceWith(dom);
+      this.innerHTML = "edit";
+    }
   });
 
   (function(){
