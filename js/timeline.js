@@ -206,7 +206,9 @@ var Timeline = (function(){
         .append("<img class=thumb src=http://i.ytimg.com/vi/" + obj.ytid + "/hqdefault.jpg?w=188&h=141>")
         .append($remove)
         .append($control)
-        .append("<p><em>" + obj.title + "</em> " + Utils.secondsToTime(obj.length) + "</p>");
+        .append("<p><em>" + obj.title + "</em> " + Utils.secondsToTime(obj.length) + "</p>"),
+
+      wrap = $("<span class=timeline-hover-wrap />").append(hoverControl);
 
     Timeline.init();
 
@@ -214,7 +216,7 @@ var Timeline = (function(){
       $title: $title,
       $remove: $remove,
       title: obj.title,
-      hover: hoverControl,
+      hover: wrap,
       id: myid,
       ytid: obj.ytid,
       active: true,
@@ -223,7 +225,7 @@ var Timeline = (function(){
       dom: $("<div />")
         .css('width', obj.length * Scale + 'em')
         .addClass('track')
-        .append(hoverControl)
+        .append(wrap)
         .append($title)
     });
 

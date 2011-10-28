@@ -3,15 +3,15 @@ span{display:inline-block}
 p{margin:0}
 a:hover{text-decoration:none;color:#fff}
 a{color:#ccc}
-input{font-size:15px;background:#656;color:#fff;border:2px solid #a9a;padding:3px}
+input{font-size:15px;background:#545;color:#fff;border:2px solid;padding:3px;border-color:#434 #989 #989 #434}
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
-#playlist-control{margin:0;font-size:1.25em;color:#fff;display:inline-block}
+#playlist-control{margin:0;font-size:1.25em;color:#fff;display:inline-block;padding:0 15px}
 
 .track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434;box-shadow:0 0 6px 8px #212}
 .track img.thumb{width:75px;vertical-align:bottom}
 .track a{display:block;text-decoration:none}
 
-#timeline{vertical-align:top;z-index:18;white-space:nowrap;overflow:hidden;width:100%;background:#180018;height:9em;padding-top:0.5em}
+#timeline{vertical-align:top;z-index:18;white-space:nowrap;overflow:hidden;width:100%;background:#180018;height:170px;padding-top:0.5em}
 #timeline .track{height:24px}
 #timeline .track a{white-space:nowrap;margin:3px;font-size:12px}
 
@@ -40,7 +40,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 #players{position:absolute;top:-1000px;left:-1000px}
 #search-results{width:162px}
 
-button{border:0;cursor:pointer;display:inline-block;font-size:17px;color:#aaaab5;background:#434;box-shadow:1px 1px 1px #a9a inset;padding: 2px 5px;margin-left:15px;text-decoration:none}
+button{border:0;cursor:pointer;display:inline-block;font-size:17px;color:#aaaab5;background:#434;box-shadow:1px 1px 1px #a9a inset;padding: 2px 5px;text-decoration:none}
 button:active{box-shadow:-1px -1px 1px #a9a inset}
 button:hover{background-color:#656}
 
@@ -58,15 +58,16 @@ button:hover{background-color:#656}
 #main-menu{position:fixed;top:0;right:0}
 #header{background:#323;padding:0.5em 0.25em}
 
-.timeline-hover{color:#AAAAb5;width:150px;display:none;position:absolute;top:2.25em;left:0;background:#212;padding:10px;box-shadow: 
+.timeline-hover{color:#AAAAb5;width:150px;background:#212;padding:10px;box-shadow: 
   0 0 1px 1px #434 inset,
   0 2px 2px 2px #101;border-radius:1px;font-size:12px}
 #timeline .timeline-hover span a{cursor:pointer;margin:0.25em;box-shadow:1px 1px 1px #a9a inset;padding:3px;text-decoration:none}
 #timeline .timeline-hover span a:active{box-shadow:-1px -1px 1px #a9a inset}
-#timeline .timeline-hover a.close{position:absolute;top:-5px;right:-2px;cursor:pointer;background:#101;width:15px;line-height:19px}
+#timeline .timeline-hover a.close{position:absolute;top:4px;right:-2px;cursor:pointer;background:#101;width:15px;line-height:19px}
 .timeline-hover span a:hover{background-color:#656}
 .timeline-hover span{width:75px}
 .timeline-hover p{text-align:left;margin-top:6px;text-align:left;font-size:11px;color:#888897}
 .timeline-hover em{font-weight:bold;font-style:normal;color:#aaaab5}
+.timeline-hover-wrap{padding:5px 0 0 0;position:absolute;display:none;top:24px;left:0}
 
-.control-wrapper{background:#504450;padding:1px 2px 1px 15px;display:inline-block;border-radius:5px;box-shadow: 0 0 2px 1px #737 inset}
+.control-wrapper{background:#504450;padding:1px 2px;display:inline-block;border-radius:5px;box-shadow: 0 0 2px 1px #767 inset}
