@@ -307,15 +307,11 @@ $(function(){
   Utils.onEnter(input, function() {
     ev("playlist.name", this.value);
     input.replaceWith(dom);
+    $("#edit-name").html("edit");
   });
 
   $("#edit-name").click(function(){
-    if(!this.editing) {
-      this.editing = true;
-    } else {
-      this.editing = false;
-    } 
-    if(this.editing) {
+    if(this.innerHTML == 'edit') {
       this.innerHTML = "save";
       dom.replaceWith(input);
       input.val(ev('playlist.name'));

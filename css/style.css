@@ -1,11 +1,12 @@
-body{overflow:hidden;background:#212;color:#888;font-family:'Trebuchet Ms',Hevetica,sans-serif;margin:0}
+body{overflow:hidden;background:#212;color:#888;margin:0}
+*{font-family:'Trebuchet Ms',Helvetica,sans-serif}
 span{display:inline-block}
 p{margin:0}
 a:hover{text-decoration:none;color:#fff}
 a{color:#ccc}
-input{font-size:15px;background:#545;color:#fff;border:2px solid;padding:3px;border-color:#434 #989 #989 #434}
+input{font-size:17px;background:#545;color:#fff;border:2px solid;padding:0 2px;border-color:#434 #989 #989 #434}
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
-#playlist-control{margin:0;font-size:1.25em;color:#fff;display:inline-block;padding:0 15px}
+#playlist-name{margin:0;font-size:1.25em;color:#fff;display:inline-block;padding:0 15px}
 
 .track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434;box-shadow:0 0 6px 8px #212}
 .track img.thumb{width:75px;vertical-align:bottom}
@@ -40,9 +41,9 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 #players{position:absolute;top:-1000px;left:-1000px}
 #search-results{width:162px}
 
-button{border:0;cursor:pointer;display:inline-block;font-size:17px;color:#aaaab5;background:#434;box-shadow:1px 1px 1px #a9a inset;padding: 2px 5px;text-decoration:none}
-button:active{box-shadow:-1px -1px 1px #a9a inset}
-button:hover{background-color:#656}
+.button{border:0;cursor:pointer;display:inline-block;font-size:13px;color:#ccc;background:transparent;padding:7px 9px}
+.button:hover{text-shadow:0 0 1px white;color:#fff;box-shadow:0 0 5px -4px #888 inset, 0 0 10px -3px #888;border-radius:3px}
+.button:active{color:#aaa}
 
 .hover{display:none;position:absolute;bottom:0.5em;left:1%;width:98%;opacity:0.9;text-align:center}
 .hover a{cursor:pointer;display:inline-block;height:1.75em;font-size:1em;background:#434;box-shadow:1px 1px 1px #a9a inset;margin-bottom:0.03em;margin-left:1%;padding-top:0.20em;text-decoration:none;width:32%}
@@ -56,7 +57,7 @@ button:hover{background-color:#656}
 #history{display:none}
 
 #main-menu{position:fixed;top:0;right:0}
-#header{background:#323;padding:0.5em 0.25em}
+#header{background:#323;padding:6px}
 
 .timeline-hover{color:#AAAAb5;width:150px;background:#212;padding:10px;box-shadow: 
   0 0 1px 1px #434 inset,
@@ -70,4 +71,4 @@ button:hover{background-color:#656}
 .timeline-hover em{font-weight:bold;font-style:normal;color:#aaaab5}
 .timeline-hover-wrap{padding:5px 0 0 0;position:absolute;display:none;top:24px;left:0}
 
-.control-wrapper{background:#504450;padding:1px 2px;display:inline-block;border-radius:5px;box-shadow: 0 0 2px 1px #767 inset}
+.control-wrapper{background:#434;padding:2px;display:inline-block;border-radius:3px;box-shadow: 0 0 8px 1px #656 inset;height:30px}
