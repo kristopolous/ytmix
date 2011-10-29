@@ -2,10 +2,49 @@ var Evda_ = EvDa;
 EvDa = function(){
   var E = Evda_.apply(0, _.toArray(arguments));
 
+  E.list = {};
   E.unset_ = E.unset;
 
   return _.extend(E, {
     unset: function () { for(var i = 0; i < arguments.length; E.unset_(arguments[i++])); },
+
+    disable: function ( listName ) {
+      _.each(E.list[listName], function(callback) {
+        ( callback.S || (callback.S = {}) ) [ listName ] = true;
+      });
+    },
+
+    enable: function ( listName ) {
+      _.each(E.list[listName], function(callback) {
+        if ( callback.S && callback.S[listName] ) {
+          delete callback.S[listName];
+        }
+
+        if(_.size(callback.S) == 0) {
+          delete callback.S;
+        }
+      });
+    },
+
+    group: function ( list ) {
+      var 
+        opts = _.toArray(arguments),
+        list = opts.shift(),
+        ret = E.apply(0, opts);
+
+      ( E.list[list] || (E.list[list] = []) );
+
+      if(_.isFunction(ret)) {
+        E.list[list].push(ret);
+      } else {
+        _.each(ret, function(value, key) {
+          E.list[list].push(value);
+        });
+      } 
+      return function() {
+        return E.group.apply(0, [list].concat(_.toArray(arguments)));
+      }
+    },
 
     incr: function ( key ) {
       // we can't use the same trick here because if we
@@ -66,6 +105,14 @@ EvDa = function(){
 
     once: function ( key, lambda ) {
       return E ( key, lambda, { once: true } );
+    },
+
+    setadd: function ( key, value ) {
+      return E ( key, _.uniq(( E.db[key] || [] ).concat([value])) );
+    },
+
+    setdel: function ( key, value ) {
+      return E ( key, _.without(( E.db[key] || [] ), value) );
     },
 
     find: function ( regex ) {

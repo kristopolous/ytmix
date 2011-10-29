@@ -3,6 +3,7 @@ function EvDa (map) {
     // Underscore shortcuts ... pleases the minifier
     each = _.each,
     extend = _.extend,
+    isObject = _.isObject,
     size = _.size,
 
     // Constants
@@ -30,13 +31,27 @@ function EvDa (map) {
       // went in. There *could* be a mix and match
       // of callbacks and setters, but that would
       // be fine I guess...
-      if( _.isObject(scope) ) {
+      if( isObject(scope) ) {
+        var ret = {};
 
+        // Object style should be executed as a transaction
+        // to avoid ordinals of the keys making a substantial
+        // difference in the existence of the values
         each( scope, function( _value, _key ) {
-          scope[_key] = pub ( _key, _value, meta );
+          ret[_key] = pub ( _key, _value, meta, 0, 1 );
+        });
+
+        each( ret, function( _value, _key ) {
+          if(_.isFunction(ret[_key]) && !_.isFunction(scope[_key])) {
+            scope[_key] = ret[_key]();
+          }
         });
 
         return scope;
+      } else if (_.isArray(scope)) {
+        return _.map(scope, function(which) {
+          return pub(which, value, meta);
+        });
       }
 
       return data[ scope ];
@@ -44,7 +59,7 @@ function EvDa (map) {
 
     // If there were two arguments and if one of them was a function, then
     // this needs to be registered.  Otherwise, we are setting a value.
-    return pub [ _.isFunction ( value ) ? ON : 'set' ] ( scope, value, meta );
+    return pub [ _.isFunction ( value ) ? ON : 'set' ].apply(this, arguments);
   }
 
   // Register callbacks for
@@ -71,9 +86,19 @@ function EvDa (map) {
   }
 
   function isset ( key, callback ) {
+    if( isObject(key) ) {
+
+      each( key, function( _value, _key ) {
+        key[_key] = isset( _key, _value );
+      });
+
+      return key;
+    }
+
     // If I know how to set this key but
     // I just haven't done it yet, run through
     // those functions now.
+
     if( setterMap[key] ) {
       setterMap[key]();
 
@@ -112,10 +137,10 @@ function EvDa (map) {
       }
     },
 
-    set: function (key, value, _meta, bypass) {
+    set: function (key, value, _meta, bypass, _noexecute) {
       var 
-        Key = 'test' + key,
-        times = size(eventMap[ Key ]),
+        testKey = 'test' + key,
+        times = size(eventMap[ testKey ]),
         failure,
 
         // Invoke will also get done
@@ -137,7 +162,7 @@ function EvDa (map) {
         };
 
       if (times && !bypass) {
-        each ( eventMap[ Key ], function ( callback ) {
+        each ( eventMap[ testKey ], function ( callback ) {
           callback ( value, meta );
         });
       } else {
@@ -146,17 +171,28 @@ function EvDa (map) {
         // through the meta
         data[key] = value;
 
-        each(
-          (eventMap[ON + key] || []).concat
-          (eventMap[AFTER + key] || []), 
-          function(callback) {
+        var cback = function(){
+          each(
+            (eventMap[ON + key] || []).concat
+            (eventMap[AFTER + key] || []), 
+            function(callback) {
 
-            callback ( value, meta );
+              if(!callback.S) {
+                callback ( value, meta );
 
-            if ( callback.once ) {
-              del ( callback );
-            }
-          });
+                if ( callback.once ) {
+                  del ( callback );
+                }
+              }
+            });
+          return value;
+        }
+
+        if(!_noexecute) {
+          return cback();
+        } else {
+          return cback;
+        }
       }
 
       return value;

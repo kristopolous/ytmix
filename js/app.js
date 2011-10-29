@@ -27,7 +27,7 @@ $(function(){
 
       ev('search.query', query);
 
-      if( query.length ) {
+      if( query.length && ev('search.related').length == 0) {
         lastSearch = query;
 
         $.getJSON('api/ytsearch.php', { 
@@ -63,6 +63,21 @@ function addVids(vidList, backref) {
   })
 }
 
+function status(message) {
+  $("#status .message")
+    .html(message)
+    .css({
+      display: 'block',
+      opacity: 1,
+      top: "-30px"
+    })
+    .animate({top: "10px"}, 1000, function(){
+        setTimeout(function(){
+          $("#status .message").fadeOut(1000);
+        }, 1500);
+    });
+}
+  
 function loadRelated(obj, opts){
   if(_remote.active) {
     _remote.queue.push(function(){
@@ -151,7 +166,18 @@ function gen(){
   } else {
     set = db.find();
   }
-  set = ev('search.results').concat(set);
+
+  if(ev('search.related').length) {
+    var 
+      allrelated = db.find('ytid', db.isin(ev('search.related'))).select('related'),
+      unique = _.uniq(_.flatten(allrelated));
+
+    set = set.find({ytid: db.isin(unique)});
+    $("#search-context").html("related");
+
+  } else {
+    set = ev('search.results').concat(set);
+  }
 
   total = set.length;
 

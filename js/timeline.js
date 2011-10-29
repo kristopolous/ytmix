@@ -146,6 +146,18 @@ var Timeline = (function(){
     var node = data[id];
 
     node.$remove.click(function(){Timeline.remove(id); });
+    node.$related.click(function(){
+      if(!node.filter) {
+        node.$related.addClass('on');
+        ev.setadd('search.related', node.ytid);
+        node.filter = true;
+      } else {
+        node.$related.removeClass('on');
+        ev.setdel('search.related', node.ytid);
+        node.filter = false;
+      }
+      ev.set('request-gen');
+    });
     node.$title.click(Timeline.pause);
     node.dom.hover(
       function(){ node.hover.css('display','block'); }, 
@@ -215,6 +227,9 @@ var Timeline = (function(){
     var record = TimeDB.insert({
       $title: $title,
       $remove: $remove,
+      $related: $related,
+      $move: $move,
+      filter: false,
       title: obj.title,
       hover: wrap,
       id: myid,
@@ -427,6 +442,7 @@ var Timeline = (function(){
     add: function(obj, opts) {
       opts = opts || {};
 
+      status("Added " + obj.title);
       ev.push('playlist.tracks', obj);
 
       if(opts.noplay != true) {

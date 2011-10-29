@@ -5,6 +5,7 @@ var
   ev = EvDa({
     'app.state': 'splash',
     'playlist.name': '',
+    'search.related': [],
     'search.results': [],
     'search.query': ''
   }),
