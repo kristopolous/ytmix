@@ -33,6 +33,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 .result img{width:6em}
 .result span{width:150px;padding-left:0.5em;font-size:0.8em;color:#888897;overflow:hidden;vertical-align:top;display:inline-block;text-align:left}
 .result span em{display:block;color:#aaaab5;font-style:normal;font-weight:bold;font-size:1em;max-height:4em;overflow:hidden}
+.result.playing{background:#323}
 
 #scale{margin-left:40%;vertical-align:middle;font-size:85%}
 #control{display:inline-block;position:relative}

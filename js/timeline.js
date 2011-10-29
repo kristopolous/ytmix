@@ -3,7 +3,7 @@ var Timeline = (function(){
     TimeDB = DB(),
     data = TimeDB.view('id'),
     Order = TimeDB.view('order'),
-    maxPlayer = 1,
+    maxPlayer = 2,
     isPlaying = true,
     Loaded = 0,
 
@@ -11,6 +11,7 @@ var Timeline = (function(){
     Player = {},
     Total,
 
+    _sampleTimeout,
     Zoom = 85,
     Scale = 0.04, // ems per second
     UNIQ = 0;
@@ -26,9 +27,7 @@ var Timeline = (function(){
     $("#now").click(function(){
       if(isDragging) {
         isDragging = false;
-      } else { 
-        Timeline.pauseplay();
-      }
+      } 
     });
 
     $("#now").css('opacity',0.6).draggable({
@@ -114,6 +113,7 @@ var Timeline = (function(){
     Player[id].addEventListener('onStateChange', function(){ console.log(this, arguments); });
 
     if(Loaded == maxPlayer) {
+      Player.sample = Player[1];
       setTimeout(function(){ ev.set('flash.load'); },250);
     }
   }
@@ -158,6 +158,7 @@ var Timeline = (function(){
       }
       ev.set('request-gen');
     });
+
     node.$title.click(Timeline.pause);
     node.dom.hover(
       function(){ node.hover.css('display','block'); }, 
@@ -323,6 +324,8 @@ var Timeline = (function(){
 
     remove: function(index){
       var playlist = ev('playlist.tracks');
+      status("Removed " + Order[index].title);
+
       playlist.splice(index, 1);
       ev('playlist.tracks', playlist);
     },
@@ -331,7 +334,10 @@ var Timeline = (function(){
       ev.isset('flash.load', function(){
         if(isPlaying) {
           isPlaying = false;
-          Player.active.pauseVideo();
+
+          Player[0].pauseVideo();
+          Player[1].pauseVideo();
+
           $("#now").css('background','red');
         }
       })
@@ -385,6 +391,7 @@ var Timeline = (function(){
         } else if(Player.current != data[dbid]) {
           Player.current = data[dbid];
           Player.active.loadVideoById(Player.current.ytid, offset);
+          ev('active.track', Player.current);
           Player.start = $(data[dbid].dom).offset().left - $("#control").offset().left;
         }
       });
@@ -404,7 +411,6 @@ var Timeline = (function(){
 
       var track = TimeDB.findFirst(function(row) { return (row.offset < absolute && (row.offset + row.length) > absolute) });
 
-      eval(_inject('time'));
       if(track) {
         if(track.id != Player.current.id) {
           Timeline.play(track.id, absolute - track.offset);
@@ -437,6 +443,41 @@ var Timeline = (function(){
       });
 
       ev.set('timeline.init');
+    },
+
+    sample: function(obj) {
+      ev.isset('flash.load', function(){
+        if(obj.playlistid) {
+          console.log(obj);
+          Timeline.seekTo(Order[obj.playlistid].offset + 2);
+          return;
+        }
+
+        if(_sampleTimeout) {
+          clearTimeout(_sampleTimeout);
+        }
+
+        Player.active.pauseVideo();
+
+        ev('active.track', obj);
+
+        Player.sample.loadVideoById(obj.ytid, 10);
+        Player.sample.playVideo();
+
+        setTimeout(function(){
+          if( Player.sample.getPlaybackQuality() != 'large') {
+            Player.sample.setPlaybackQuality('large');
+          }
+        }, 100);
+
+        _sampleTimeout = setTimeout(function(){
+          Player.sample.pauseVideo();
+          Player.active.playVideo();
+
+          ev('active.track', Player.current);
+          _sampleTimeout = 0;
+        }, 45 * 1000);
+      });
     },
 
     add: function(obj, opts) {

@@ -115,36 +115,54 @@ function loadRelated(obj, opts){
   } 
 }
 
-function addVideo(opts) {
+function addVideo(obj) {
+
   var 
-    play = $("<a>play</a>").click(function(){ Timeline.add(opts); }),
-    queue = $("<a>queue</a>").click(function(){ Timeline.add(opts, {noplay: true}); }),
+    isPlaying = ev('active.track').ytid == obj.ytid,
+    play = $("<a />"),
+    queue = $("<a />"),
 
     open = $("<a>open</a>").attr({
       target: '_blank',
-      href: 'http://youtube.com/watch?v=' + opts.ytid
+      href: 'http://youtube.com/watch?v=' + obj.ytid
     }).click(Timeline.pause),
 
-    remove = $("<a>remove</a>").click(function(){ 
-      db
-        .find('ytid', opts.ytid)
-        .update({ hide: true }) 
-      gen();
-    }),
+    hoverControl = $("<div class=hover>");
 
-    hoverControl = $("<div class=hover>")
-      .append(play)
-      .append(queue)
-      .append(open);
+  if(isPlaying) {
+    play.html('stop').click(function(){ Timeline.pause() });
+  } else {
+    play.html('play').click(function(){ Timeline.sample(obj); });
+  }
 
-  $("<span class=result/>")
+  if('playlistid' in obj) {
+    queue.html("remove").click(function(){ Timeline.remove(obj.playlistid); });
+  } else {
+    queue.html("add").click(function(){ Timeline.add(obj, {noplay: true}); });
+  }  
+
+  hoverControl
+    .append(play)
+    .append(queue)
+    .append(open);
+
+  var result = $("<span class=result/>")
     .hover(
       function(){ hoverControl.css('display','block') }, 
       function(){ hoverControl.css('display','none') }
     )
-    .append("<img src=http://i4.ytimg.com/vi/" + opts.ytid + "/default.jpg><span><p><em>" + opts.title + "</em>" + Utils.secondsToTime(opts.length) + "</p></span>")
+    .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
     .append(hoverControl)
-    .appendTo(opts.container);
+    .appendTo(obj.container);
+
+  if(isPlaying) {
+    result.click(Timeline.pause);
+    result.addClass('playing');
+  } else {
+    result.click(function(){
+      Timeline.sample(obj);
+    });
+  }
 }
 
 function gen(){
@@ -157,7 +175,7 @@ function gen(){
     total,
     query = ev('search.query'),
     perline = Math.floor(width / _video.width),
-    start = (Math.floor(top / _video.height) - 1) * perline,
+    start = Math.floor(top / _video.height) * perline,
     stop = Math.ceil(bottom / _video.height) * perline,
     topmodoffset = top % _video.height;
 
@@ -187,9 +205,21 @@ function gen(){
   $("#bottom-buffer").css('height', (total - stop) / perline * _video.height + "px");
   $("#top-buffer").css('height', top - topmodoffset + "px");
 
-  if(_video.old.start != start || _video.old.stop != stop || _video.old.query != query || total != _video.old.length) {
-    _video.old = { start : start, stop : stop, query : query, length : set.length };
-    console.log(_video.old, set);
+  if(
+      _video.old.start != start || 
+      _video.old.stop != stop   || 
+      _video.old.query != query  || 
+      _video.old.length != total ||
+      _video.old.current != ev('active.track').ytid
+    ) {
+
+    _video.old = { 
+      start : start, 
+      stop : stop, 
+      query : query, 
+      length : set.length, 
+      current: ev('active.track').ytid 
+    };
 
     $("#video-viewport").children().remove();
 
@@ -320,7 +350,8 @@ $(function(){
   document.getElementById('initial-search').focus();
 
   self._scrollwidth = Utils.scrollbarWidth();
-  resize();
+
+  setTimeout(resize, 1000);
   $(window).resize(resize);
 
   loadHistory();
@@ -370,4 +401,9 @@ $(function(){
     location.href = document.location.toString().split('#')[0];
   });
   */
+});
+
+ev.on('active.track', function(obj){
+  status("Playing " + obj.title);
+  ev.set('request-gen');
 });

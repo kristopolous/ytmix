@@ -7,6 +7,7 @@ var
     'playlist.name': '',
     'search.related': [],
     'search.results': [],
+    'active.track': {},
     'search.query': ''
   }),
   _video = {
