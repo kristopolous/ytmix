@@ -130,7 +130,16 @@ function addVideo(obj) {
     hoverControl = $("<div class=hover>");
 
   if(isPlaying) {
-    play.html('stop').click(function(){ Timeline.pause() });
+    play.html('stop').click(function(){ 
+      var isPlaying = Timeline.pauseplay(); 
+
+      if(isPlaying == true) { 
+        this.innerHTML = 'stop';
+      } else {
+        this.innerHTML = 'resume';
+      }
+
+    });
   } else {
     play.html('play').click(function(){ Timeline.sample(obj); });
   }
@@ -396,11 +405,19 @@ $(function(){
     
   ev.on('request-gen', gen);
 
-  /*
-  $("#main-menu").click(function(){
-    location.href = document.location.toString().split('#')[0];
+  $("#previous-track").click(function(){
+    if (Timeline.player.current.id) {
+      Timeline.seekTo(Order[Timeline.player.current.previous].offset + 1);
+    }
   });
-  */
+  $("#next-track").click(function(){
+    if (Timeline.player.current.next) {
+      Timeline.seekTo(Order[Timeline.player.current.next].offset + 1);
+    }
+  });
+
+  $("#pause-play").click(Timeline.pauseplay);
+  $("#now").click(Timeline.pauseplay);
 });
 
 ev.on('active.track', function(obj){

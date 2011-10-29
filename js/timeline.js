@@ -66,7 +66,6 @@ var Timeline = (function(){
       if(!keyListen) { return }
 
       switch(e.which) {
-        case 32: Timeline.pauseplay(); break;
         case 37: Timeline.seekTo(Offset - 60); break;
         case 46: Timeline.remove(Player.current); break;
         case 39: Timeline.seekTo(Offset + 60); break;
@@ -83,9 +82,10 @@ var Timeline = (function(){
 
       if (time > 0 && Player.current) {
 
-        Player.current.$title.attr('href', 
-          'http://www.youtube.com/watch?v=' + Player.current.ytid + 
-          "#at=" + Math.ceil(time) + "s");
+        Player.current.$title.attr({
+          href : 'http://www.youtube.com/watch?v=' + Player.current.ytid + "#at=" + Math.ceil(time) + "s",
+          onclick: 'Timeline.pause()'
+        });
 
         if( Player.active.getPlaybackQuality() != 'large') {
           Player.active.setPlaybackQuality('large');
@@ -159,7 +159,6 @@ var Timeline = (function(){
       ev.set('request-gen');
     });
 
-    node.$title.click(Timeline.pause);
     node.dom.hover(
       function(){ node.hover.css('display','block'); }, 
       function(){ node.hover.css('display','none'); }
@@ -355,6 +354,7 @@ var Timeline = (function(){
           $("#now").css('background','lime');
         }
       });
+      return isPlaying;
     },
 
     updateOffset: function(){
