@@ -327,6 +327,8 @@ var Timeline = (function(){
 
       playlist.splice(index, 1);
       ev('playlist.tracks', playlist);
+
+      ev.set('request-gen');
     },
 
     pause: function(){
@@ -402,6 +404,7 @@ var Timeline = (function(){
         offset = Offset;
       }
 
+      Player.sample.pauseVideo();
       Timeline.updateOffset();
 
       var absolute = (offset < 1) ? offset * Total : offset;
@@ -448,7 +451,6 @@ var Timeline = (function(){
     sample: function(obj) {
       ev.isset('flash.load', function(){
         if(obj.playlistid) {
-          console.log(obj);
           Timeline.seekTo(Order[obj.playlistid].offset + 2);
           return;
         }
@@ -460,6 +462,7 @@ var Timeline = (function(){
         Player.active.pauseVideo();
 
         ev('active.track', obj);
+        ev('preview.track', obj);
 
         Player.sample.loadVideoById(obj.ytid, 10);
         Player.sample.playVideo();
