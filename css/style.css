@@ -8,13 +8,14 @@ input{font-size:17px;background:#545;color:#fff;border:2px solid;padding:0 2px;b
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
 #playlist-name{margin:0;font-size:1.25em;color:#fff;display:inline-block;padding:0 15px}
 
-.track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434;box-shadow:0 0 6px 8px #212}
+.track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434;box-shadow:0 0 15px 5px #212}
 .track img.thumb{width:75px;vertical-align:bottom}
 .track a{display:block;text-decoration:none}
+.track a.image{display:inline-block}
 
 #timeline{position:relative;vertical-align:top;z-index:18;white-space:nowrap;overflow:hidden;width:100%;background:#180018;height:170px;padding-top:0.5em}
-#timeline .track{height:24px}
-#timeline .title{font-size:12px;white-space:nowrap;cursor:default}
+#timeline .track{height:20px}
+#timeline .title{font-size:12px;white-space:nowrap;cursor:default;width:90%;overflow:hidden}
 
 .splash-container{border:2px solid #a9a;background:#434;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em}
 #splash{text-align:center;color:#cbc;text-shadow:0px 0px 2px #212;font-size:1.25em}
@@ -37,7 +38,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 
 #scale{margin-left:40%;vertical-align:middle;font-size:85%}
 #control{display:inline-block;position:relative}
-#now{width:8px;background:lime;height:30px;z-index:45;display:inline-block;vertical-align:bottom;position:absolute;margin-top:-3px}
+#now{width:6px;background:#99a;height:26px;z-index:45;display:inline-block;vertical-align:bottom;position:absolute;margin-top:-3px}
 
 #players{position:absolute;top:-1000px;left:-1000px}
 #search-results{width:162px}
@@ -70,7 +71,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 .timeline-hover span{width:75px}
 .timeline-hover p{text-align:left;margin-top:6px;text-align:left;font-size:11px;color:#888897}
 .timeline-hover em{font-weight:bold;font-style:normal;color:#aaaab5}
-.timeline-hover-wrap{padding:5px 0 0 0;position:absolute;display:none;top:24px;left:0}
+.timeline-hover-wrap{padding:5px 0 0 0;position:absolute;display:none;top:20px;left:0}
 
 .control-wrapper{background:#434;padding:2px;display:inline-block;border-radius:3px;box-shadow: 0 0 8px 1px #656 inset;height:30px;vertical-align:top}
 

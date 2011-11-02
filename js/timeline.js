@@ -82,9 +82,11 @@ var Timeline = (function(){
 
       if (time > 0 && Player.current) {
 
-        Player.current.$link.attr({
-          href : 'http://www.youtube.com/watch?v=' + Player.current.ytid + "#at=" + Math.ceil(time) + "s",
-          onclick: 'Timeline.pause()'
+        _.each(_.values(Player.current.$link), function(which) {
+          which.attr({
+            href : 'http://www.youtube.com/watch?v=' + Player.current.ytid + "#at=" + Math.ceil(time) + "s",
+            onclick: 'Timeline.pause()'
+          });
         });
 
         if( Player.active.getPlaybackQuality() != 'large') {
@@ -209,17 +211,26 @@ var Timeline = (function(){
       $control = $("<span />"),
       $move = $("<a>move</a>").appendTo($control),
       $related = $("<a>related</a>").appendTo($control),
-      $link = $("<a />").attr({
-        target: '_blank',
-        href: "http://www.youtube.com/watch?v=" + obj.ytid
-      }).html(obj.title),
+      $link = {
+        text: $("<a />").attr({
+            target: '_blank',
+            href: "http://www.youtube.com/watch?v=" + obj.ytid
+          }).html(obj.title),
+
+        image: $("<a />")
+          .addClass('image')
+          .attr({
+            target: '_blank',
+            href: "http://www.youtube.com/watch?v=" + obj.ytid
+          }).html("<img class=thumb src=http://i.ytimg.com/vi/" + obj.ytid + "/hqdefault.jpg?w=188&h=141>")
+      },
       
       hoverControl = $("<span class=timeline-hover />")
-        .append("<img class=thumb src=http://i.ytimg.com/vi/" + obj.ytid + "/hqdefault.jpg?w=188&h=141>")
+        .append($link.image)
         .append($remove)
         .append($control)
         .append($("<p />")
-          .append($link)
+          .append($link.text)
           .append(Utils.secondsToTime(obj.length))
         ),
 
