@@ -367,7 +367,7 @@ var Timeline = (function(){
         } else {
           isPlaying = true;
           Player.active.playVideo();
-          $("#now").css('background','lime');
+          $("#now").css('background','#99a');
         }
       });
       return isPlaying;
