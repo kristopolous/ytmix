@@ -190,6 +190,7 @@ function gen(){
     bottom = $("#video-list").height() + top,
     set,
     total,
+    constraints = {removed: 0},
     query = ev('search.query'),
     perline = Math.floor(width / _video.width),
     start = Math.floor(top / _video.height) * perline,
@@ -197,10 +198,12 @@ function gen(){
     topmodoffset = top % _video.height;
 
   if(query.length) {
-    set = db.find({title: db.like(query)});
-  } else {
-    set = db.find();
+    constraints.title = db.like(query);
   }
+
+  set = db.find(constraints).sort(function(a,b){ 
+    return b.reference.length - a.reference.length
+  });
 
   if(ev('search.related').length) {
     var 
