@@ -430,6 +430,7 @@ $(function(){
 
   $("#pause-play").click(Timeline.pauseplay);
   $("#now").click(Timeline.pauseplay);
+  /*
   $("#video-viewport").sortable({
     stop: function(){
       var ordinal = _.map(
@@ -442,6 +443,7 @@ $(function(){
       );
     }
   });
+  */
 });
 
 ev.on({
