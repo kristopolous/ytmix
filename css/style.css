@@ -80,3 +80,4 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 #status .message{position:relative;color:white;font-weight:bold;z-index:35}
 
 #deck-control{position:absolute;bottom:0}
+#search-context{box-shadow:-1px -1px 3px 0px #212 inset,1px 1px 3px 0px #bab inset;padding:4px 9px;cursor:pointer;color:#dcd;display:none}

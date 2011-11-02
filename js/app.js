@@ -211,7 +211,9 @@ function gen(){
       unique = _.uniq(_.flatten(allrelated));
 
     set = set.find({ytid: db.isin(unique)});
-    $("#search-context").html("related");
+    $("#search-context")
+      .css('display','inline-block')
+      .html("related&#9660;");
 
   } else {
     set = ev('search.results').concat(set);
