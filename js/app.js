@@ -162,7 +162,7 @@ function addVideo(obj) {
     )
     .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
     .append(hoverControl)
-    .appendTo(obj.container);
+    .appendTo($("#video-viewport"));
 
   if(isPlaying) {
     result.click(Timeline.pause);
@@ -240,12 +240,7 @@ function gen(){
 
     $("#video-viewport").children().remove();
 
-    each(set.slice(start, stop), function(which) {
-      addVideo(extend(
-        {container: "#video-viewport"},
-        which
-      ));
-    });
+    each(set.slice(start, stop), addVideo);
   }
 
   $("#video-list").get(0).scrollTop = top;
