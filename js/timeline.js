@@ -82,7 +82,7 @@ var Timeline = (function(){
 
       if (time > 0 && Player.current) {
 
-        Player.current.$title.attr({
+        Player.current.$link.attr({
           href : 'http://www.youtube.com/watch?v=' + Player.current.ytid + "#at=" + Math.ceil(time) + "s",
           onclick: 'Timeline.pause()'
         });
@@ -209,7 +209,7 @@ var Timeline = (function(){
       $control = $("<span />"),
       $move = $("<a>move</a>").appendTo($control),
       $related = $("<a>related</a>").appendTo($control),
-      $title = $("<a />").attr({
+      $link = $("<a />").attr({
         target: '_blank',
         href: "http://www.youtube.com/watch?v=" + obj.ytid
       }).html(obj.title),
@@ -218,17 +218,20 @@ var Timeline = (function(){
         .append("<img class=thumb src=http://i.ytimg.com/vi/" + obj.ytid + "/hqdefault.jpg?w=188&h=141>")
         .append($remove)
         .append($control)
-        .append("<p><em>" + obj.title + "</em> " + Utils.secondsToTime(obj.length) + "</p>"),
+        .append($("<p />")
+          .append($link)
+          .append(Utils.secondsToTime(obj.length))
+        ),
 
       wrap = $("<span class=timeline-hover-wrap />").append(hoverControl);
 
     Timeline.init();
 
     var record = TimeDB.insert({
-      $title: $title,
       $remove: $remove,
       $related: $related,
       $move: $move,
+      $link: $link,
       filter: false,
       title: obj.title,
       hover: wrap,
@@ -241,7 +244,7 @@ var Timeline = (function(){
         .css('width', obj.length * Scale + 'em')
         .addClass('track')
         .append(wrap)
-        .append($title)
+        .append("<span class=title>" + obj.title + "</span>")
     });
 
     ev('tick', function(){ record[0].dom.appendTo('#control'); }, {once: true});

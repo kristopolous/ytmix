@@ -422,6 +422,10 @@ $(function(){
     }
   });
 
+  $("#clear-search").click(function(){
+    $("#normal-search").val('');
+  });
+
   $("#pause-play").click(Timeline.pauseplay);
   $("#now").click(Timeline.pauseplay);
   $("#video-viewport").sortable({
