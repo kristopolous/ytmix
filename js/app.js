@@ -250,14 +250,14 @@ var Results = {
     // Look to see if we have generated this before.
     var dbReference = db.find({ytid: obj.ytid});
     if(dbReference.length) {
-      if(dbReference[0].dom) {
+      if(dbReference[0].jqueryObject) {
         // If so, then just take the old dom entry and
         // append it to the video viewport, returning
         // the object that was previously created.
 
-        dbReference[0].dom.hoverControl.css('display','none');
+        dbReference[0].jqueryObject.hoverControl.css('display','none');
 
-        $("#video-viewport").append(dbReference[0].dom);
+        $("#video-viewport").append(dbReference[0].jqueryObject);
         return dbReference[0].dom;
       }
     }
@@ -301,7 +301,7 @@ var Results = {
     result.ytid = obj.ytid;
     result.hoverControl = hoverControl;
 
-    db.find({ytid: obj.ytid}).update({dom: result});
+    db.find({ytid: obj.ytid}).update({jqueryOjbect: result});
 
     return result;
   },
@@ -444,6 +444,7 @@ ev({
       $(".main-app").css('display','none');
       $("#splash").css('display','block');
       loadHistory();
+      document.body.style.overflow = 'auto';
     } else if (state == 'main') {
       $(".main-app").css({
         opacity: 0,
@@ -453,6 +454,7 @@ ev({
       }, 1000);
 
       $("#splash").css('display','none');
+      document.body.style.overflow = 'hidden';
     }
   },
 
