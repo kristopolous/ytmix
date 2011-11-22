@@ -4,7 +4,7 @@ var
   map = _.map,
   extend = _.extend,
   ev = EvDa({
-    'app.state': 'splash',
+    'app.state': '',
     'playlist.name': '',
     'search.related': [],
     'search.results': [],

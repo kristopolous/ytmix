@@ -1,70 +1,3 @@
-// Search
-var Search = {
-  init: function(){
-    var 
-      lastSearch = '', 
-      input = $("#normal-search"),
-      searchID = 0, 
-      lastID = 0;
-
-    $("#clear-search").click(function(){ $("#normal-search").val(''); });
-
-    $("#search-context").hover(
-      function(){
-        $("#search-context-dropdown").css('display','block');
-      },
-      function(){
-        $("#search-context-dropdown").css('display','none');
-      }
-    );
-
-    Utils.onEnter("#initial-search", function(){
-      ev('app.state', 'main');
-
-      input.val(this.value);
-
-      ev.isset('search.results', function(results) { 
-        ev.isset('playlist.id', function(){
-          ev.push('playlist.tracks', results[0]); 
-        });
-      });
-    });
-
-    input.focus(function(){ this.select(); });
-
-    setInterval(function(){
-      var query = input.val();
-
-      if(query != lastSearch) {
-
-        ev('search.query', query);
-
-        if( query.length && ev('search.related').length == 0) {
-          lastSearch = query;
-
-          $.getJSON('api/ytsearch.php', { 
-              id: ++searchID,
-              query: query
-            }, function(res) {
-
-            if(res.id < lastID) { return; }
-
-            lastID = res.id;
-
-            ev('search.results', res.vidList);
-            Results.gen();
-          });
-        } else {
-          ev('search.results', []);
-          Results.gen();
-        }
-      }
-    }, 650);
-  
-    _get('initial-search').focus();
-  }
-};
-
 // Adds vids in the format 
 // {length: sec, title: text, ytid: youtube id}
 function addVids(vidList, backref) {
@@ -130,78 +63,249 @@ function loadRelated(obj, opts){
   } 
 }
 
-function addVideo(obj) {
+function loadHistory(){
+  ev.isset('recent', function(data) {
+    each(data, function(which) {
+      var 
+        total = Utils.runtime(which.tracklist),
+        container = $("<span class=splash-container>").appendTo("#splash-history"),
+        forget = $("<a>forget</a>"),
+        play = $("<a>play</a>"),
+        hoverControl = $("<span class=hover />")
+          .append(play)
+          .append(forget),
+        track = $("<span class=track />").append(hoverControl);
 
-  // Look to see if we have generated this before.
-  var dbReference = db.find({ytid: obj.ytid});
-  if(dbReference.length) {
-    if(dbReference[0].dom) {
-      // If so, then just take the old dom entry and
-      // append it to the video viewport, returning
-      // the object that was previously created.
+      forget.click(function(){
+        Store.remove(which.id);
+        container.slideUp();
+      });
 
-      dbReference[0].dom.hoverControl.css('display','none');
+      play.click(function(){
+        ev('app.state', 'main');
+        Store.get(which.id);
+      });
 
-      $("#video-viewport").append(dbReference[0].dom);
-      return dbReference[0].dom;
-    }
-  }
+      for(var ix = 0; ix < Math.min(which.tracklist.length, 4); ix++) {
+        track.append("<img src=http://i4.ytimg.com/vi/" + which.tracklist[ix].ytid + "/default.jpg>");
+      }
 
-  var 
-    play = $("<a />"),
-    queue = $("<a />"),
-
-    open = $("<a>open</a>").attr({
-      target: '_blank',
-      href: 'http://youtube.com/watch?v=' + obj.ytid
-    }).click(Timeline.pause),
-
-    hoverControl = $("<div class=hover>");
-
-  hoverControl
-    .append(play)
-    .append(queue)
-    .append(open);
-
-  var result = $("<span class=result/>")
-    .hover(
-      function(){ hoverControl.css('display','block') }, 
-      function(){ hoverControl.css('display','none') }
-    )
-    .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
-    .append(hoverControl)
-    .appendTo($("#video-viewport"));
-
-  play.html('play').click(function(){
-    Timeline.sample(obj);
+      container
+        .hover(
+          function(){ hoverControl.css('display','block') }, 
+          function(){ hoverControl.css('display','none') }
+        )
+        .append(track)
+        .append("<p>" + which.name + 
+           " <br><small>(" + which.tracklist.length + " track" + (which.tracklist.length != 1 ? 's' : '') + " " 
+           + Utils.secondsToTime(total) + 
+           ")</small></p>");
+    });
+    $("#history").fadeIn();
   });
-
-  if('playlistid' in obj) {
-    queue.html("remove").click(function(){ Timeline.remove(obj.playlistid); });
-  } else {
-    queue.html("add").click(function(){ Timeline.add(obj, {noplay: true}); });
-  }  
-
-  // back reference of what we are generating
-  result.ytid = obj.ytid;
-  result.hoverControl = hoverControl;
-
-  addVideo.bind(result, obj);
-  db.find({ytid: obj.ytid}).update({dom: result});
-
-  return result;
 }
 
-/* 
- db
-  .missing('playlistid')
-  .find({removed: 0})
-  .sort(function(a,b){ 
-    return b.reference.length - a.reference.length
-  }).select('ytid')
-*/
+ev.test('playlist.tracks', function(data, meta) {
+  db.insert(data);
+  meta.done(true);
+});
+
+function makePlaylistNameEditable() {
+  var 
+    dom = $("#playlist-name"), 
+    input = $("<input>");
+
+  Utils.onEnter(input, function() {
+    ev("playlist.name", this.value);
+    input.replaceWith(dom);
+    $("#edit-name").html("edit");
+  });
+
+  $("#edit-name").click(function(){
+    if(this.innerHTML == 'edit') {
+      this.innerHTML = "save";
+      dom.replaceWith(input);
+      input.val(ev('playlist.name'));
+      input.focus();
+    } else {
+      ev("playlist.name", input.val());
+      input.replaceWith(dom);
+      this.innerHTML = "edit";
+    }
+  });
+}
+
+var Search = {
+  init: function(){
+    var 
+      lastSearch = '', 
+      input = $("#normal-search"),
+
+      // These indexes make sure that we don't generate old search results
+      // that may have asynchronously came in later than newer ones
+      searchID = 0, 
+      lastID = 0;
+
+    $("#clear-search").click(function(){ $("#normal-search").val(''); });
+
+    $("#search-context").hover(
+      function(){
+        $("#search-context-dropdown").css('display','block');
+      },
+      function(){
+        $("#search-context-dropdown").css('display','none');
+      }
+    );
+
+    Utils.onEnter("#initial-search", function(){
+      ev('app.state', 'main');
+
+      input.val(this.value);
+
+      ev.isset('search.results', function(results) { 
+        ev.isset('playlist.id', function(){
+          ev.push('playlist.tracks', results[0]); 
+        });
+      });
+    });
+
+    input.focus(function(){ this.select(); });
+
+    // We probe to see if the search query has changed.
+    // And if so we instantiate an image based on that
+    // Similar to google instant and ytinstant.
+    setInterval(function(){
+      var query = input.val();
+
+      if(query != lastSearch) {
+
+        ev('search.query', query);
+
+        if( query.length && ev('search.related').length == 0) {
+          lastSearch = query;
+
+          $.getJSON('api/ytsearch.php', { 
+              id: ++searchID,
+              query: query
+            }, function(res) {
+
+            if(res.id < lastID) { return; }
+
+            lastID = res.id;
+
+            ev('search.results', res.vidList);
+            Results.gen();
+          });
+        } else {
+          ev('search.results', []);
+          Results.gen();
+        }
+      }
+    }, 650);
+  
+    _get('initial-search').focus();
+  }
+};
+
 var Results = {
   viewable: {},
+
+  init: function(){
+    var timeout;
+
+    self._scrollwidth = Utils.scrollbarWidth();
+    setTimeout(Results.resize, 1000);
+
+    $(window).resize(Results.resize);
+    // The gencheck function just makes sure
+    // that we don't call the generator too
+    // frequently, less the system gets hosed
+    // because it's perpetually trying to redraw
+    // everything when it doesn't need to.
+    function gencheck(){ 
+      if(timeout) {
+        clearTimeout(timeout);
+      }
+
+      timeout = setTimeout(Results.gen, 75);
+      return true;
+    }
+
+    $("#video-list")
+      .scroll(gencheck)
+      .keydown(gencheck);
+
+    ev.on('request-gen', Results.gen);
+  
+  },
+
+  resize: function(){
+    var height = window.innerHeight || document.body.offsetHeight;
+
+    $("#video-list").css('height', (height - $("#bottom-box").offset().top) + 'px');
+  },
+
+  draw: function(obj) {
+
+    // Look to see if we have generated this before.
+    var dbReference = db.find({ytid: obj.ytid});
+    if(dbReference.length) {
+      if(dbReference[0].dom) {
+        // If so, then just take the old dom entry and
+        // append it to the video viewport, returning
+        // the object that was previously created.
+
+        dbReference[0].dom.hoverControl.css('display','none');
+
+        $("#video-viewport").append(dbReference[0].dom);
+        return dbReference[0].dom;
+      }
+    }
+
+    var 
+      play = $("<a />"),
+      queue = $("<a />"),
+
+      open = $("<a>open</a>").attr({
+        target: '_blank',
+        href: 'http://youtube.com/watch?v=' + obj.ytid
+      }).click(Timeline.pause),
+
+      hoverControl = $("<div class=hover>");
+
+    hoverControl
+      .append(play)
+      .append(queue)
+      .append(open);
+
+    var result = $("<span class=result/>")
+      .hover(
+        function(){ hoverControl.css('display','block') }, 
+        function(){ hoverControl.css('display','none') }
+      )
+      .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
+      .append(hoverControl)
+      .appendTo($("#video-viewport"));
+
+    play.html('play').click(function(){
+      Timeline.sample(obj);
+    });
+
+    if('playlistid' in obj) {
+      queue.html("remove").click(function(){ Timeline.remove(obj.playlistid); });
+    } else {
+      queue.html("add").click(function(){ Timeline.add(obj, {noplay: true}); });
+    }  
+
+    // back reference of what we are generating
+    result.ytid = obj.ytid;
+    result.hoverControl = hoverControl;
+
+    db.find({ytid: obj.ytid}).update({dom: result});
+
+    return result;
+  },
+
   gen: function(){
     var 
       width = $("#video-list").width() - _scrollwidth,
@@ -299,7 +403,7 @@ var Results = {
       // We take the results from all the things that we
       // display on the screen (it returns a jquery element
       // with a back reference to the ytid).
-      each(map(set.slice(start,stop), addVideo), function(which) {
+      each(map(set.slice(start,stop), Results.draw), function(which) {
 
         // And then we create our map based on ytid
         // of the jquery and the dom reference. This
@@ -324,84 +428,6 @@ var Results = {
   }
 };
 
-function resize(){
-  var height = window.innerHeight || document.body.offsetHeight;
-
-  $("#video-list").css('height', (height - $("#bottom-box").offset().top) + 'px');
-}
-
-function loadHistory(){
-  ev.isset('recent', function(data) {
-    each(data, function(which) {
-      var 
-        total = Utils.runtime(which.tracklist),
-        container = $("<span class=splash-container>").appendTo("#splash-history"),
-        forget = $("<a>forget</a>"),
-        play = $("<a>play</a>"),
-        hoverControl = $("<span class=hover />")
-          .append(play)
-          .append(forget),
-        track = $("<span class=track />").append(hoverControl);
-
-      forget.click(function(){
-        Store.remove(which.id);
-        container.slideUp();
-      });
-
-      play.click(function(){
-        ev('app.state', 'main');
-        Store.get(which.id);
-      });
-
-      for(var ix = 0; ix < Math.min(which.tracklist.length, 4); ix++) {
-        track.append("<img src=http://i4.ytimg.com/vi/" + which.tracklist[ix].ytid + "/default.jpg>");
-      }
-
-      container
-        .hover(
-          function(){ hoverControl.css('display','block') }, 
-          function(){ hoverControl.css('display','none') }
-        )
-        .append(track)
-        .append("<p>" + which.name + 
-           " <br><small>(" + which.tracklist.length + " track" + (which.tracklist.length != 1 ? 's' : '') + " " 
-           + Utils.secondsToTime(total) + 
-           ")</small></p>");
-    });
-    $("#history").fadeIn();
-  });
-}
-
-ev.test('playlist.tracks', function(data, meta) {
-  db.insert(data);
-  meta.done(true);
-});
-
-function makePlaylistNameEditable() {
-  var 
-    dom = $("#playlist-name"), 
-    input = $("<input>");
-
-  Utils.onEnter(input, function() {
-    ev("playlist.name", this.value);
-    input.replaceWith(dom);
-    $("#edit-name").html("edit");
-  });
-
-  $("#edit-name").click(function(){
-    if(this.innerHTML == 'edit') {
-      this.innerHTML = "save";
-      dom.replaceWith(input);
-      input.val(ev('playlist.name'));
-      input.focus();
-    } else {
-      ev("playlist.name", input.val());
-      input.replaceWith(dom);
-      this.innerHTML = "edit";
-    }
-  });
-}
-
 ev({
   // The app.state variable maintains whether the application is
   // at the splash screen or at a specific playlist.  We can check
@@ -417,6 +443,7 @@ ev({
       Timeline.gen();
       $(".main-app").css('display','none');
       $("#splash").css('display','block');
+      loadHistory();
     } else if (state == 'main') {
       $(".main-app").css({
         opacity: 0,
@@ -467,54 +494,11 @@ ev({
 });
 
 $(function(){
-
-  /*
-  if(!ev.isset('uid')) {
-    remote({
-      func: 'getUser',
-      onSuccess: function(uid) {
-        ev('uid', uid);
-      }
-    });
-  }
-*/
-
-  self._scrollwidth = Utils.scrollbarWidth();
-
-  setTimeout(resize, 1000);
-  $(window).resize(resize);
-
-  loadHistory();
-
+  Results.init();
   makePlaylistNameEditable();
 
-  // The gencheck function just makes sure
-  // that we don't call the generator too
-  // frequently, less the system gets hosed
-  // because it's perpetually trying to redraw
-  // everything when it doesn't need to.
-  (function(){
-
-    var timeout;
-
-    function gencheck(){ 
-      if(timeout) {
-        clearTimeout(timeout);
-      }
-
-      timeout = setTimeout(Results.gen, 75);
-      return true;
-    }
-
-    $("#video-list")
-      .scroll(gencheck)
-      .keydown(gencheck);
-
-  })();
-    
   Timeline.init();
   Search.init();
-  ev.on('request-gen', Results.gen);
 
   $(".now").click(Timeline.pauseplay);
 });
