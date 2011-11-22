@@ -1,4 +1,17 @@
 var Utils = {
+  // This is an aggregate function that can probably
+  // be refactored into a reduction
+  runtime: function(obj) {
+    var total = 0;
+
+    each(obj, function(which) {
+      if(which && which.length) {
+        total += parseInt(which.length);
+      }
+    });
+    return total;
+  },
+
   secondsToTime: function(count) {
     var stack = [];
     for(

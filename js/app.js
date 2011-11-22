@@ -1,54 +1,69 @@
 // Search
-$(function(){
-  var 
-    lastSearch = '', 
-    input = $("#normal-search"),
-    searchID = 0, 
-    lastID = 0;
+var Search = {
+  init: function(){
+    var 
+      lastSearch = '', 
+      input = $("#normal-search"),
+      searchID = 0, 
+      lastID = 0;
 
-  Utils.onEnter("#initial-search", function(){
-    ev('app.state', 'main');
+    $("#clear-search").click(function(){ $("#normal-search").val(''); });
 
-    input.val(this.value);
+    $("#search-context").hover(
+      function(){
+        $("#search-context-dropdown").css('display','block');
+      },
+      function(){
+        $("#search-context-dropdown").css('display','none');
+      }
+    );
 
-    ev.isset('search.results', function(results) { 
-      ev.isset('playlist.id', function(){
-        ev.push('playlist.tracks', results[0]); 
+    Utils.onEnter("#initial-search", function(){
+      ev('app.state', 'main');
+
+      input.val(this.value);
+
+      ev.isset('search.results', function(results) { 
+        ev.isset('playlist.id', function(){
+          ev.push('playlist.tracks', results[0]); 
+        });
       });
     });
-  });
 
-  input.focus(function(){ this.select(); });
+    input.focus(function(){ this.select(); });
 
-  setInterval(function(){
-    var query = input.val();
+    setInterval(function(){
+      var query = input.val();
 
-    if(query != lastSearch) {
+      if(query != lastSearch) {
 
-      ev('search.query', query);
+        ev('search.query', query);
 
-      if( query.length && ev('search.related').length == 0) {
-        lastSearch = query;
+        if( query.length && ev('search.related').length == 0) {
+          lastSearch = query;
 
-        $.getJSON('api/ytsearch.php', { 
-            id: ++searchID,
-            query: query
-          }, function(res) {
+          $.getJSON('api/ytsearch.php', { 
+              id: ++searchID,
+              query: query
+            }, function(res) {
 
-          if(res.id < lastID) { return; }
+            if(res.id < lastID) { return; }
 
-          lastID = res.id;
+            lastID = res.id;
 
-          ev('search.results', res.vidList);
-          gen();
-        });
-      } else {
-        ev('search.results', []);
-        gen();
+            ev('search.results', res.vidList);
+            Results.gen();
+          });
+        } else {
+          ev('search.results', []);
+          Results.gen();
+        }
       }
-    }
-  }, 650);
-});
+    }, 650);
+  
+    _get('initial-search').focus();
+  }
+};
 
 // Adds vids in the format 
 // {length: sec, title: text, ytid: youtube id}
@@ -72,9 +87,9 @@ function status(message) {
       top: "-30px"
     })
     .animate({top: "10px"}, 1000, function(){
-        setTimeout(function(){
-          $("#status .message").fadeOut(1000);
-        }, 1500);
+      setTimeout(function(){
+        $("#status .message").fadeOut(1000);
+      }, 1500);
     });
 }
   
@@ -117,8 +132,22 @@ function loadRelated(obj, opts){
 
 function addVideo(obj) {
 
+  // Look to see if we have generated this before.
+  var dbReference = db.find({ytid: obj.ytid});
+  if(dbReference.length) {
+    if(dbReference[0].dom) {
+      // If so, then just take the old dom entry and
+      // append it to the video viewport, returning
+      // the object that was previously created.
+
+      dbReference[0].dom.hoverControl.css('display','none');
+
+      $("#video-viewport").append(dbReference[0].dom);
+      return dbReference[0].dom;
+    }
+  }
+
   var 
-    isPlaying = ev('active.track').ytid == obj.ytid,
     play = $("<a />"),
     queue = $("<a />"),
 
@@ -128,27 +157,6 @@ function addVideo(obj) {
     }).click(Timeline.pause),
 
     hoverControl = $("<div class=hover>");
-
-  if(isPlaying) {
-    play.html('stop').click(function(){ 
-      var isPlaying = Timeline.pauseplay(); 
-
-      if(isPlaying == true) { 
-        this.innerHTML = 'stop';
-      } else {
-        this.innerHTML = 'resume';
-      }
-
-    });
-  } else {
-    play.html('play').click(function(){ Timeline.sample(obj); });
-  }
-
-  if('playlistid' in obj) {
-    queue.html("remove").click(function(){ Timeline.remove(obj.playlistid); });
-  } else {
-    queue.html("add").click(function(){ Timeline.add(obj, {noplay: true}); });
-  }  
 
   hoverControl
     .append(play)
@@ -164,14 +172,24 @@ function addVideo(obj) {
     .append(hoverControl)
     .appendTo($("#video-viewport"));
 
-  if(isPlaying) {
-    result.click(Timeline.pause);
-    result.addClass('playing');
+  play.html('play').click(function(){
+    Timeline.sample(obj);
+  });
+
+  if('playlistid' in obj) {
+    queue.html("remove").click(function(){ Timeline.remove(obj.playlistid); });
   } else {
-    result.click(function(){
-      Timeline.sample(obj);
-    });
-  }
+    queue.html("add").click(function(){ Timeline.add(obj, {noplay: true}); });
+  }  
+
+  // back reference of what we are generating
+  result.ytid = obj.ytid;
+  result.hoverControl = hoverControl;
+
+  addVideo.bind(result, obj);
+  db.find({ytid: obj.ytid}).update({dom: result});
+
+  return result;
 }
 
 /* 
@@ -182,119 +200,129 @@ function addVideo(obj) {
     return b.reference.length - a.reference.length
   }).select('ytid')
 */
-function gen(){
-  var 
-    width = $("#video-list").width() - _scrollwidth,
-    height = $("#video-list").height(),
-    top = $("#video-list").scrollTop(),
-    bottom = $("#video-list").height() + top,
-    set,
-    total,
-    constraints = {removed: 0},
-    query = ev('search.query'),
-    perline = Math.floor(width / _video.width),
-    start = Math.floor(top / _video.height) * perline,
-    stop = Math.ceil(bottom / _video.height) * perline,
-    topmodoffset = top % _video.height;
-
-  if(query.length) {
-    constraints.title = db.like(query);
-  }
-
-  set = db.find(constraints).sort(function(a,b){ 
-    return b.reference.length - a.reference.length
-  });
-
-  if(ev('search.related').length) {
+var Results = {
+  viewable: {},
+  gen: function(){
     var 
-      allrelated = db.find('ytid', db.isin(ev('search.related'))).select('related'),
-      unique = _.uniq(_.flatten(allrelated));
+      width = $("#video-list").width() - _scrollwidth,
+      height = $("#video-list").height(),
+      top = $("#video-list").scrollTop(),
+      bottom = $("#video-list").height() + top,
+      set,
+      total,
+      constraints = {removed: 0},
+      query = ev('search.query'),
+      perline = Math.floor(width / _video.width),
+      start = Math.floor(top / _video.height) * perline,
+      stop = Math.ceil(bottom / _video.height) * perline,
+      topmodoffset = top % _video.height;
 
-    set = set.find({ytid: db.isin(unique)});
-    $("#search-context")
-      .css('display','inline-block')
-      .html("related&#9660;");
-
-  } else {
-    set = ev('search.results').concat(set);
-  }
-
-  total = set.length;
-
-  start = Math.max(start, 0);
-  stop = Math.min(stop, total);
-
-  $("#bottom-buffer").css('height', (total - stop) / perline * _video.height + "px");
-  $("#top-buffer").css('height', top - topmodoffset + "px");
-
-  if(
-      _video.old.start != start || 
-      _video.old.stop != stop   || 
-      _video.old.query != query  || 
-      _video.old.length != total ||
-      _video.old.current != ev('active.track').ytid
-    ) {
-
-    _video.old = { 
-      start : start, 
-      stop : stop, 
-      query : query, 
-      length : set.length, 
-      current: ev('active.track').ytid 
-    };
-
-    $("#video-viewport").children().remove();
-
-    each(set.slice(start, stop), addVideo);
-  }
-
-  $("#video-list").get(0).scrollTop = top;
-}
-
-ev({
-  'app.state': function(state, meta) {
-    if(state == meta.old) {
-      return;
-    } 
-
-    if(state == 'splash') {
-      ev.unset('playlist.id','playlist.tracks','playlist.name');
-      Timeline.pause();
-      Timeline.gen();
-      $(".main-app").css('display','none');
-      $("#splash").css('display','block');
-    } else if (state == 'main') {
-      $(".main-app").css({
-        opacity: 0,
-        display: 'inline-block'
-      }).animate({
-        opacity:1
-      }, 1000);
-
-      $("#splash").css('display','none');
+    if(query.length) {
+      constraints.title = db.like(query);
     }
-  },
 
-  'playlist.name': function(name, meta) {
-    if(meta.old) {
-      remote({
-        func: 'update',
-        name: name,
-        id: ev('playlist.id')
+    var 
+      tracks = Timeline.db.find().length,
+      bBoost, aBoost;
+
+    // There's a function that permits one to just display the related results
+    // This not only show the isolated related results, but then modifies the
+    // drop down menu near the related results to say as much.  This second
+    // part should probably be removed and abstracted to somewhere else.
+    if(ev('search.related').length) {
+      var 
+        allrelated = db.find('ytid', db.isin(ev('search.related'))).select('related'),
+        unique = _.uniq(_.flatten(allrelated));
+
+      set = db.find(constraints, {ytid: db.isin(unique)});
+    } else {
+      // To make sure that our playlist gets to the front of the line,
+      // I create booster functions for sorting.  I should probably
+      // permit multi-tiered sorting based on various parameters in my
+      // sorting function, but I don't think I do that ... there's probably
+      // some tricky ordinal stuff I'd have to pull.
+      set = db.find(constraints).sort(function(a,b){ 
+        bBoost = isNaN(b.playlistid) ? 0 : (tracks - b.playlistId) * 1000;
+        aBoost = isNaN(a.playlistid) ? 0 : (tracks - a.playlistId) * 1000;
+        return (bBoost + b.reference.length) - (aBoost + a.reference.length);
+      });
+
+      set = ev('search.results').concat(set);
+    }
+
+    // We find out some statistics about what we should be
+    // generating the viewport to know whether we need
+    // to clear everything and try again.
+    total = set.length;
+
+    start = Math.max(start, 0);
+    stop = Math.min(stop, total);
+
+    // These are the two buffers of non-generation that are kept
+    // at the top and the bottom of the query results. These
+    // help preserve the scroll bar order.
+    $("#bottom-buffer").css('height', (total - stop) / perline * _video.height + "px");
+    $("#top-buffer").css('height', top - topmodoffset + "px");
+
+    // These are sanity checks to see if we need to regenerate
+    // the viewport based on say, a user scrolling something,
+    // new results coming in, old results being deleted, etc.
+    //
+    // It's worth noting that we key the range not based on
+    // ordinals but on the ytid at the ordinals.  This is to
+    // try to thwart results changing with a bunch of other
+    // things not.
+    if(
+        _video.old.start != start || 
+        _video.old.stop != stop  || 
+        _video.old.query != query  || 
+        _video.old.length != total ||
+        _video.old.current != ev('active.track').ytid
+      ) {
+
+      _video.old = { 
+        start : start, 
+        stop : stop, 
+        query : query, 
+        length : set.length, 
+        current: ev('active.track').ytid 
+      };
+
+      $("#video-viewport").children().detach();
+
+      // Make a viewable reference available so
+      // that other functions can hook inside here
+      // if they want to know if something is active
+      // or not
+      Results.viewable = {};
+
+      // We take the results from all the things that we
+      // display on the screen (it returns a jquery element
+      // with a back reference to the ytid).
+      each(map(set.slice(start,stop), addVideo), function(which) {
+
+        // And then we create our map based on ytid
+        // of the jquery and the dom reference. This
+        // is used in the updateytplayer function of
+        // timeline.js in order to generate and update
+        // the result based scrubber.
+        Results.viewable[which.ytid] = {
+          jquery: which,
+          dom: which.get(0)
+        };
+
       });
     }
-  }
-});
 
-function runtime(obj) {
-  var total = 0;
-  each(obj, function(which) {
-    if(which && which.length) {
-      total += parseInt(which.length);
-    }
-  });
-  return total;
-}
+    // This is used to make sure that our regeneration efforts
+    // don't confuse the browser an cause a scrolling problem.
+    // 
+    // Based on when things generate in the DOM, a race condition
+    // can occur that will make the results slowly scroll by in
+    // Chrome.
+    $("#video-list").get(0).scrollTop = top;
+  }
+};
 
 function resize(){
   var height = window.innerHeight || document.body.offsetHeight;
@@ -306,7 +334,7 @@ function loadHistory(){
   ev.isset('recent', function(data) {
     each(data, function(which) {
       var 
-        total = runtime(which.tracklist),
+        total = Utils.runtime(which.tracklist),
         container = $("<span class=splash-container>").appendTo("#splash-history"),
         forget = $("<a>forget</a>"),
         play = $("<a>play</a>"),
@@ -349,34 +377,10 @@ ev.test('playlist.tracks', function(data, meta) {
   meta.done(true);
 });
 
-$(function(){
+function makePlaylistNameEditable() {
   var 
     dom = $("#playlist-name"), 
     input = $("<input>");
-
-  /*
-  if(!ev.isset('uid')) {
-    remote({
-      func: 'getUser',
-      onSuccess: function(uid) {
-        ev('uid', uid);
-      }
-    });
-  }
-*/
-  document.getElementById('initial-search').focus();
-
-  self._scrollwidth = Utils.scrollbarWidth();
-
-  setTimeout(resize, 1000);
-  $(window).resize(resize);
-
-  loadHistory();
-
-  ev('playlist.name', function(name) { 
-    document.title = name + " on Audisco";
-    dom.html(name); 
-  });
 
   Utils.onEnter(input, function() {
     ev("playlist.name", this.value);
@@ -396,57 +400,58 @@ $(function(){
       this.innerHTML = "edit";
     }
   });
+}
 
-  (function(){
+ev({
+  // The app.state variable maintains whether the application is
+  // at the splash screen or at a specific playlist.  We can check
+  // for double fires with the meta.old functions (see evda.js)
+  'app.state': function(state, meta) {
+    if(state == meta.old) {
+      return;
+    } 
 
-    var timeout;
-    function gencheck(){ 
-      if(timeout) {
-        clearTimeout(timeout);
-      }
-      timeout = setTimeout(gen, 75);
-      return true;
+    if(state == 'splash') {
+      ev.unset('playlist.id','playlist.tracks','playlist.name');
+      Timeline.pause();
+      Timeline.gen();
+      $(".main-app").css('display','none');
+      $("#splash").css('display','block');
+    } else if (state == 'main') {
+      $(".main-app").css({
+        opacity: 0,
+        display: 'inline-block'
+      }).animate({
+        opacity:1
+      }, 1000);
+
+      $("#splash").css('display','none');
     }
-    $("#video-list").scroll(gencheck);
-    $("#video-list").keydown(gencheck);
-  })();
-    
-  ev.on('request-gen', gen);
+  },
 
-  $("#previous-track").click(function(){
-    if (Timeline.player.current.id) {
-      Timeline.seekTo(Order[Timeline.player.current.previous].offset + 1);
+  'search.related': function(list) {
+    if(list.length) {
+      $("#search-context-title")
+        .css('display','inline-block')
+        .html("related&#9660;");
+    } else {
+      $("#search-context-title").css('display','none');
     }
-  });
-  $("#next-track").click(function(){
-    if (Timeline.player.current.next) {
-      Timeline.seekTo(Order[Timeline.player.current.next].offset + 1);
+  },
+
+  'playlist.name': function(name, meta) { 
+    document.title = name + " on Audisco";
+    $("#playlist-name").html(name);
+
+    if(meta.old) {
+      remote({
+        func: 'update',
+        name: name,
+        id: ev('playlist.id')
+      });
     }
-  });
+  },
 
-  $("#clear-search").click(function(){
-    $("#normal-search").val('');
-  });
-
-  $("#pause-play").click(Timeline.pauseplay);
-  $("#now").click(Timeline.pauseplay);
-  /*
-  $("#video-viewport").sortable({
-    stop: function(){
-      var ordinal = _.map(
-        $("#video-viewport img"),
-        function(n){
-          n = n.getAttribute('src').split('/'); 
-          n.pop(); 
-          return n.pop();
-        }
-      );
-    }
-  });
-  */
-});
-
-ev.on({
   'active.track': function(obj){
     status("Playing " + obj.title);
     ev.set('request-gen');
@@ -454,11 +459,63 @@ ev.on({
 
   'preview.track': function(obj) {
     if(obj) {
-      console.log(obj);
       $("#preview-track").html(obj.title);
     } else {
       $("#preview-track").css('display','none');
     }
   }
+});
+
+$(function(){
+
+  /*
+  if(!ev.isset('uid')) {
+    remote({
+      func: 'getUser',
+      onSuccess: function(uid) {
+        ev('uid', uid);
+      }
+    });
+  }
+*/
+
+  self._scrollwidth = Utils.scrollbarWidth();
+
+  setTimeout(resize, 1000);
+  $(window).resize(resize);
+
+  loadHistory();
+
+  makePlaylistNameEditable();
+
+  // The gencheck function just makes sure
+  // that we don't call the generator too
+  // frequently, less the system gets hosed
+  // because it's perpetually trying to redraw
+  // everything when it doesn't need to.
+  (function(){
+
+    var timeout;
+
+    function gencheck(){ 
+      if(timeout) {
+        clearTimeout(timeout);
+      }
+
+      timeout = setTimeout(Results.gen, 75);
+      return true;
+    }
+
+    $("#video-list")
+      .scroll(gencheck)
+      .keydown(gencheck);
+
+  })();
+    
+  Timeline.init();
+  Search.init();
+  ev.on('request-gen', Results.gen);
+
+  $(".now").click(Timeline.pauseplay);
 });
 

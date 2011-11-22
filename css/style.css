@@ -22,7 +22,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 #splash-history{margin-top:0.25em}
 #splash input{font-size:1.5em;box-shadow:0 0 0px 2px #fff;margin:0.5em 0 1em 0}
 #splash .hover{text-align:center;line-height:1.2em}
-#splash .track{height:9em;line-height:0;text-align:center;width:100%;margin-top:0.25em}
+#splash .track{height:9em;line-height:0;text-align:center;width:100%;margin-top:0.25em;box-shadow:none}
 #splash .track img{width:5em;margin:0.25em;border:1px solid #878}
 
 .main-app{display:none;width:100%}
@@ -38,7 +38,13 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 
 #scale{margin-left:40%;vertical-align:middle;font-size:85%}
 #control{display:inline-block;position:relative}
-#now{width:6px;background:#99a;height:26px;z-index:45;display:inline-block;vertical-align:bottom;position:absolute;margin-top:-3px}
+
+/* The scrubbers */
+.now{width:6px;background:#99a;z-index:45;display:inline-block;vertical-align:bottom;position:absolute}
+#timeline-now{height:26px;margin-top:-3px}
+
+/* This is based on the result height */
+#result-now{height:93px;display:none;top:0}
 
 #players{position:absolute;top:-1000px;left:-1000px}
 #search-results{width:162px}
@@ -61,9 +67,8 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 #main-menu{position:fixed;top:0;right:0}
 #header{background:#323;padding:6px}
 
-.timeline-hover{color:#AAAAb5;width:150px;background:#212;padding:10px;box-shadow: 
-  0 0 1px 1px #434 inset,
-  0 2px 2px 2px #101;border-radius:1px;font-size:12px}
+.timeline-hover{color:#AAAAb5;width:150px;background:#212;padding:10px;box-shadow: 0 0 1px 1px #434 inset, 0 2px 2px 2px #101;border-radius:1px;font-size:12px }
+
 #timeline .timeline-hover span a{cursor:pointer;margin:0.25em;box-shadow:1px 1px 1px #a9a inset;padding:3px;text-decoration:none}
 #timeline .timeline-hover span a:active{box-shadow:-1px -1px 1px #a9a inset}
 #timeline .timeline-hover a.close{position:absolute;top:4px;right:-2px;cursor:pointer;background:#101;width:15px;line-height:19px}

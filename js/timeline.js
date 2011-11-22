@@ -24,17 +24,17 @@ var Timeline = (function(){
       isDragging = false,
       keyListen = false;
 
-    $("#now").click(function(){
+    $("#timeline-now").click(function(){
       if(isDragging) {
         isDragging = false;
       } 
     });
 
-    $("#now").css('opacity',0.6).draggable({
+    $("#timeline-now").css('opacity',0.6).draggable({
       axis: 'x',
       start:function(){ isDragging = true; },
-      drag: function(){ $("#scale").css('margin-left', $("#now").offset().left); },
-      stop: function(){ $("#scale").css('margin-left', $("#now").offset().left); }
+      drag: function(){ $("#scale").css('margin-left', $("#timeline-now").offset().left); },
+      stop: function(){ $("#scale").css('margin-left', $("#timeline-now").offset().left); }
     });
 
     // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
@@ -67,7 +67,7 @@ var Timeline = (function(){
 
       switch(e.which) {
         case 37: Timeline.seekTo(Offset - 60); break;
-        case 46: Timeline.remove(Player.current); break;
+        case 46: Timeline.remove(Player.activeData); break;
         case 39: Timeline.seekTo(Offset + 60); break;
       }
     });
@@ -80,11 +80,57 @@ var Timeline = (function(){
     if(Player.active.getCurrentTime) {
       var time = Player.active.getCurrentTime();
 
-      if (time > 0 && Player.current) {
+      if (time > 0 && Player.activeData) {
 
-        _.each(_.values(Player.current.$link), function(which) {
+        // This generates the scrubber in the results tab below.
+        // We first check to see if the video is in the viewport window
+        if(Results.viewable[Player.activeData.ytid]) {
+          // And if so we get its dom and other necessary things.
+          var container = Results.viewable[Player.activeData.ytid];
+
+          // If we are in the purview of the track, then we can move on.
+          // Otherwise, place ourselves underneath it so that the percentage
+          // calculations will work out.
+          if(_get("result-now").parentNode != container.dom) {
+
+/*
+  if(isPlaying) {
+    result.click(Timeline.pause);
+  } else {
+    result.click(function(){
+      Timeline.sample(obj);
+    });
+  }
+
+  if(isPlaying) {
+    play.html('stop').click(function(){ 
+      var isPlaying = Timeline.pauseplay(); 
+
+      if(isPlaying == true) { 
+        this.innerHTML = 'stop';
+      } else {
+        this.innerHTML = 'resume';
+      }
+
+    });
+  } else {
+    play.html('play').click(function(){ Timeline.sample(obj); });
+  }
+*/
+            $("#result-now")
+              .remove()
+              .css('display', 'block')
+              .appendTo(container.jquery);
+          }
+
+          $("#result-now").css({ left: (time * 100 / Player.active.getDuration()) + '%'});
+        } else {
+          $("#result-now").css('display','none');
+        }
+
+        _.each(_.values(Player.activeData.$link), function(which) {
           which.attr({
-            href : 'http://www.youtube.com/watch?v=' + Player.current.ytid + "#at=" + Math.ceil(time) + "s",
+            href : 'http://www.youtube.com/watch?v=' + Player.activeData.ytid + "#at=" + Math.ceil(time) + "s",
             onclick: 'Timeline.pause()'
           });
         });
@@ -94,14 +140,14 @@ var Timeline = (function(){
         }
 
         if(! ev.isset('timeline.dragging') ) {
-          $("#control").css('left', - 100 * ((time + Player.current.offset) / Total) + "%");
+          $("#control").css('left', - 100 * ((time + Player.activeData.offset) / Total) + "%");
         }
 
         if(Player.active.getDuration() - time == 0) {
           Offset += 1;
           Timeline.seekTo(Offset);
         } else {
-          Offset = Player.current.offset + time;
+          Offset = Player.activeData.offset + time;
         }
       }
     }
@@ -138,7 +184,7 @@ var Timeline = (function(){
 
       Timeline.updateOffset();
       gen();
-      if(Player.current.id == x || Player.current.id == y) {
+      if(Player.activeData.id == x || Player.activeData.id == y) {
         Timeline.seekTo(Offset);
       }
     }
@@ -236,8 +282,6 @@ var Timeline = (function(){
 
       wrap = $("<span class=timeline-hover-wrap />").append(hoverControl);
 
-    Timeline.init();
-
     var record = TimeDB.insert({
       $remove: $remove,
       $related: $related,
@@ -314,6 +358,7 @@ var Timeline = (function(){
   ev('playlist.tracks', gen);
 
   return {
+    db: TimeDB,
     player: Player,
     data: data,
     gen: gen,
@@ -353,7 +398,7 @@ var Timeline = (function(){
           Player[0].pauseVideo();
           Player[1].pauseVideo();
 
-          $("#now").css('background','red');
+          $("#timeline-now").css('background','red');
         }
       })
     },
@@ -363,11 +408,11 @@ var Timeline = (function(){
         if(isPlaying) {
           isPlaying = false;
           Player.active.pauseVideo();
-          $("#now").css('background','red');
+          $(".now").css('background','red');
         } else {
           isPlaying = true;
           Player.active.playVideo();
-          $("#now").css('background','#99a');
+          $(".now").css('background','#99a');
         }
       });
       return isPlaying;
@@ -378,7 +423,7 @@ var Timeline = (function(){
         aggregate = 0, 
         order = 0,
         lastIndex = false;
-      Total = runtime(data);
+      Total = Utils.runtime(data);
 
       for(index in data) {
         data[index].order = order;
@@ -404,10 +449,10 @@ var Timeline = (function(){
       ev.isset('flash.load', function(){
         if(!data[dbid]) {
           Timeline.pause();
-        } else if(Player.current != data[dbid]) {
-          Player.current = data[dbid];
-          Player.active.loadVideoById(Player.current.ytid, offset);
-          ev('active.track', Player.current);
+        } else if(Player.activeData != data[dbid]) {
+          Player.activeData = data[dbid];
+          Player.active.loadVideoById(Player.activeData.ytid, offset);
+          ev('active.track', Player.activeData);
           Player.start = $(data[dbid].dom).offset().left - $("#control").offset().left;
         }
       });
@@ -429,7 +474,7 @@ var Timeline = (function(){
       var track = TimeDB.findFirst(function(row) { return (row.offset < absolute && (row.offset + row.length) > absolute) });
 
       if(track) {
-        if(track.id != Player.current.id) {
+        if(track.id != Player.activeData.id) {
           Timeline.play(track.id, absolute - track.offset);
         } else {
           Player.active.seekTo(absolute - track.offset);
@@ -446,20 +491,30 @@ var Timeline = (function(){
     },
 
     init: function() {
-      ev.isset('timeline.init', function(){
-        $("#control").draggable({
-          axis: 'x',
-          start: function(){
-            ev.set('timeline.dragging');
-          },
-          stop: function() {
-            ev.unset('timeline.dragging');
-            Timeline.updatePosition();
-          }
-        });
+      // The controls in the lower left of the timeline
+      $("#previous-track").click(function(){
+        if (Timeline.player.activeData.id) {
+          Timeline.seekTo(Order[Timeline.player.activeData.previous].offset + 1);
+        }
       });
 
-      ev.set('timeline.init');
+      $("#pause-play").click(Timeline.pauseplay);
+
+      $("#next-track").click(function(){
+        if (Timeline.player.activeData.next) {
+          Timeline.seekTo(Order[Timeline.player.activeData.next].offset + 1);
+        }
+      });
+      $("#control").draggable({
+        axis: 'x',
+        start: function(){
+          ev.set('timeline.dragging');
+        },
+        stop: function() {
+          ev.unset('timeline.dragging');
+          Timeline.updatePosition();
+        }
+      });
     },
 
     sample: function(obj) {
@@ -491,7 +546,7 @@ var Timeline = (function(){
           Player.sample.pauseVideo();
           Player.active.playVideo();
 
-          ev('active.track', Player.current);
+          ev('active.track', Player.activeData);
           _sampleTimeout = 0;
         }, 45 * 1000);
       });

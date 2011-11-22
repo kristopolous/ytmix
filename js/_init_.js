@@ -1,6 +1,7 @@
 var 
   db = DB(), 
   each = _.each,
+  map = _.map,
   extend = _.extend,
   ev = EvDa({
     'app.state': 'splash',
@@ -10,6 +11,7 @@ var
     'active.track': {},
     'search.query': ''
   }),
+  _get = function(a){ return document.getElementById(a) },
   _video = {
     width: 260 + 8 * 2 + 4 * 2,
     height: 77 + 8 * 2 + 4 * 2,

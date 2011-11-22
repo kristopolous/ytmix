@@ -14,11 +14,11 @@
         <div class=message></div>
         <div class=mask></div>
       </span>
-      <div id=search class=control-wrapper><span id=search-context></span><a class=button id=clear-search>X</a><input id=normal-search class=search><a class=button id=do-search>find</a></div>
+      <div id=search class=control-wrapper><span id=search-context><span id=search-context-title></span><span id=search-context-dropdown></span></span><a class=button id=clear-search>X</a><input id=normal-search class=search><a class=button id=do-search>find</a></div>
     </div>
     <div id=timeline>
       <span id=scale>
-        <div id=now></div>
+        <div id=timeline-now class=now></div>
         <div id=control></div>
         <div id=zoom></div>
       </span>
@@ -26,6 +26,7 @@
     </div>
     <div id=bottom-box>
       <span class=resize id=video-list>
+      <div id=result-now class=now></div>
       <div id=top-buffer></div>
       <div id=video-viewport></div>
       <div id=bottom-buffer></div>
