@@ -308,6 +308,11 @@ var Timeline = (function(){
 
     db.find('ytid', obj.ytid)
       .update({playlistid: myid});
+
+    console.log(obj);
+    // Add the related videos and then
+    // back reference them to this video
+    addVids(obj.related, obj);
   }
 
   function remove(index) {
@@ -315,7 +320,7 @@ var Timeline = (function(){
     // This means that we need to removed it from the
     // data view of the timeline and reflect the fact
     // that it was removed in the larger database.
-    db.find('ytid', Data[index].ytid)
+    db.find('ytid', _data[index].ytid)
       .update(function(obj){
         // increment the announcement that 
         // this was removed at some point and
@@ -327,7 +332,7 @@ var Timeline = (function(){
           db
             .find('ytid', db.isin(obj.related))
             .update(function(record){
-              record.reference = _.without(record.reference, Data[index].ytid);
+              record.reference = _.without(record.reference, _data[index].ytid);
             });
         }
       });
@@ -381,6 +386,7 @@ var Timeline = (function(){
     remove: function(index){
       var playlist = ev('playlist.tracks');
       status("Removed " + _order[index].title);
+      $("#result-now").remove().appendTo(document.body);
 
       playlist.splice(index, 1);
       ev('playlist.tracks', playlist);
@@ -413,7 +419,8 @@ var Timeline = (function(){
           $(".now").css('background','#99a');
         }
       });
-      return isPlaying;
+
+      return _isPlaying;
     },
 
     updateOffset: function(){

@@ -11,20 +11,28 @@ var
     'active.track': {},
     'search.query': ''
   }),
-  _get = function(a){ return document.getElementById(a) },
+  _get = function(a){ 
+    try {
+      return document.getElementById(a) 
+    } catch (ex) {
+      var div = document.body.appendChild(document.createElement('div'));
+      div.setAttribute('id', a);
+      return div;
+    }
+  },
   _video = {
     width: 260 + 8 * 2 + 4 * 2,
     height: 77 + 8 * 2 + 4 * 2,
     old: {start: 0, stop: 0, query: ''}
   },
   _remote = {
-    active: false,
-    queue: []
+    active: false
   };
 
 db.constrain('unique', 'ytid');
 db.template.create({
-  reference: []
+  reference: [],
+  removed: 0
 });
 
 /*

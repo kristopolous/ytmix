@@ -1,3 +1,48 @@
+function Queue() { }
+Queue.prototype = new Array();
+each(['Push', 'Pop', 'Shift', 'Unshift'], function(which) {
+  var 
+    protoName = which.toLowerCase(),
+    stackName = protoName + 'Stack';
+
+  Queue.prototype['on' + which] = function(callback) {
+    (this[stackName] || (this[stackName] = [])).push(callback);
+  }
+  Queue.prototype[protoName] = function() {
+    if(this[stackName]) {
+      for(var i = 0; i < this[stackName].length; i++) {
+        this[stackName][i].apply(this, arguments);
+      }
+    }
+    return Array.prototype[protoName].apply(this, arguments);
+  }
+});
+
+Queue.prototype.doshift = function(){
+  if(this.length) {
+    (this.shift())();
+    if(this.length == 0) {
+      // This means that we have satisfied all
+      // the requests to get remote data. We 
+      // should probably update the playlist
+      // if it needs to be updated.
+      //
+      // This finds all the authorative references
+      // to the playlist track list in the database
+      //
+      // And then sets those objects as the playlist.tracks
+      // which will fire off a remote request to do 
+      // an update
+      ev('playlist.tracks',
+        db
+          .hasKey('playlistid')
+          .order('playlistid', 'asc')
+      );
+    }
+  }
+};
+_remote.queue = new Queue();
+
 // Adds vids in the format 
 // {length: sec, title: text, ytid: youtube id}
 function addVids(vidList, backref) {
@@ -25,7 +70,7 @@ function status(message) {
       }, 1500);
     });
 }
-  
+
 function loadRelated(obj, opts){
   if(_remote.active) {
     _remote.queue.push(function(){
@@ -34,33 +79,39 @@ function loadRelated(obj, opts){
     return;
   }
 
-  _remote.active = true;
-
   var match = {ytid: obj.ytid};
   
-  if(!db.findFirst(match).serverData) {
+  // The related entry will be null (see the template in
+  // _init_.js for more info) unless this call is made
+  if(!db.findFirst(match).related) {
+    // This "mutex like" object is to
+    // make sure that we don't request
+    // more then one related at a time.
+    _remote.active = true;
 
+    // The match happens to be the same as the server
+    // query in this case
     $.getJSON( 'api/related.php', match, function (data){
+      addVids(data.related, obj);
+
       db
         .find(match)
         .update({
-          removed: 0,
-          related: _.pluck(data.related, 'ytid'),
-          serverData: data
+           related: db.find({ytid: db.isin(_.pluck(data.related, 'ytid'))})
         });
 
-      addVids(data.related, obj);
-    
       ev.set('request-gen');
 
+      // This makes sure that we don't hammer
+      // the server to get related videos
       setTimeout(function(){
         _remote.active = false;
-        if(_remote.queue.length) {
-          (_remote.queue.shift())();
-        }
+        _remote.queue.doshift();
       }, 1000);
     });
-  } 
+  } else { 
+    _remote.queue.doshift();
+  }
 }
 
 function loadHistory(){
@@ -392,6 +443,7 @@ var Results = {
         current: ev('active.track').ytid 
       };
 
+      $("#result-now").remove().appendTo($("#players"));
       $("#video-viewport").children().detach();
 
       // Make a viewable reference available so

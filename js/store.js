@@ -84,30 +84,44 @@ ev.setter('playlist.id', function(){
   });
 });
 
+remote.keys = [
+  'length',     // Duration of the track
+  'title',      // YT title
+  'ytid',       // YT id after watch?
+  'playlistid', // Playlist position
+  'related'     // The related videos
+];
+
 // Update the table with new data given
 // an assumed index that had been previously
 // set
-ev('playlist.tracks', function(data, meta) { 
-  if(meta.old && ev('playlist.id')) {
+ev({
+  'playlist.tracks': function(data, meta) { 
+    if(meta.old && ev('playlist.id')) {
 
-    data = _.map(data, function(m) {
-      var copy = _.clone(m);
-      delete copy.container;
-      copy.reference = [];
-      return copy;
-    });
+      data = _.map(data, function(original) {
+        var copy = {};
 
-    ev('remote.data', {data: JSON.stringify(data)}); 
-  }
-});
+        each(remote.keys, function(key) {
+          copy[key] = original[key];
+        });
+        copy.reference = [];
 
-ev('playlist.name', function(data, meta) {
-  if(ev('playlist.id')) {
-    remote({
-      func: 'update',
-      id: ev('playlist.id'),
-      name: data
-    });
+        return copy;
+      });
+
+      ev('remote.data', {data: JSON.stringify(data)}); 
+    }
+  },
+
+  'playlist.name': function(data, meta) {
+    if(ev('playlist.id')) {
+      remote({
+        func: 'update',
+        id: ev('playlist.id'),
+        name: data
+      });
+    }
   }
 });
 
