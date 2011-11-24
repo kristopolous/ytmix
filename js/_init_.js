@@ -4,12 +4,12 @@ var
   map = _.map,
   extend = _.extend,
   ev = EvDa({
-    'app.state': '',
-    'playlist.name': '',
-    'search.related': [],
-    'search.results': [],
-    'active.track': {},
-    'search.query': ''
+    'app_state': '',
+    'playlist_name': '',
+    'search_related': [],
+    'search_results': [],
+    'active_track': {},
+    'search_query': ''
   }),
   _get = function(a){ 
     try {

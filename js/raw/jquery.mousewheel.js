@@ -5,7 +5,7 @@
  * Thanks to: Mathias Bank(http://www.mathias-bank.de) for a scope bug fix.
  * Thanks to: Seamus Leahy for adding deltaX and deltaY
  *
- * Version: 3.0.5
+ * Version: 3.0.6
  * 
  * Requires: 1.2.2+
  */
@@ -59,8 +59,8 @@ function handler(event) {
     event.type = "mousewheel";
     
     // Old school scrollwheel delta
-    if ( event.wheelDelta ) { delta = event.wheelDelta/120; }
-    if ( event.detail     ) { delta = -event.detail/3; }
+    if ( orgEvent.wheelDelta ) { delta = orgEvent.wheelDelta/120; }
+    if ( orgEvent.detail     ) { delta = -orgEvent.detail/3; }
     
     // New school multidimensional scroll (touchpads) deltas
     deltaY = delta;

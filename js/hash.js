@@ -1,28 +1,28 @@
 var Hash = (function(){
   ev({
-    'playlist.id': function(id) { 
-      if(ev('playlist.name')) {
+    'playlist_id': function(id) { 
+      if(ev('playlist_name')) {
         set({
-          name: ev('playlist.name'),
+          name: ev('playlist_name'),
           id: id
         }); 
       }
     },
-    'playlist.name': function(name) { 
-      if(ev('playlist.id')) {
+    'playlist_name': function(name) { 
+      if(ev('playlist_id')) {
         set({
-          id: ev('playlist.id'),
+          id: ev('playlist_id'),
           name: name
         }); 
       }
     },
     'hash': function(hash) {
       if(hash.id) {
-        if(hash.id != ev('playlist.id')) {
+        if(hash.id != ev('playlist_id')) {
           Store.get(parseInt(hash.id));
         }
       } else {
-        ev('app.state','splash');
+        ev('app_state','splash');
       }
     }
   });

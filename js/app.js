@@ -30,10 +30,10 @@ Queue.prototype.doshift = function(){
       // This finds all the authorative references
       // to the playlist track list in the database
       //
-      // And then sets those objects as the playlist.tracks
+      // And then sets those objects as the playlist_tracks
       // which will fire off a remote request to do 
       // an update
-      ev('playlist.tracks',
+      ev('playlist_tracks',
         db
           .hasKey('playlistid')
           .order('playlistid', 'asc')
@@ -100,7 +100,7 @@ function loadRelated(obj, opts){
            related: db.find({ytid: db.isin(_.pluck(data.related, 'ytid'))})
         });
 
-      ev.set('request-gen');
+      ev.set('request_gen');
 
       // This makes sure that we don't hammer
       // the server to get related videos
@@ -133,7 +133,7 @@ function loadHistory(){
       });
 
       play.click(function(){
-        ev('app.state', 'main');
+        ev('app_state', 'main');
         Store.get(which.id);
       });
 
@@ -156,7 +156,7 @@ function loadHistory(){
   });
 }
 
-ev.test('playlist.tracks', function(data, meta) {
+ev.test('playlist_tracks', function(data, meta) {
   db.insert(data);
   meta.done(true);
 });
@@ -167,7 +167,7 @@ function makePlaylistNameEditable() {
     input = $("<input>");
 
   Utils.onEnter(input, function() {
-    ev("playlist.name", this.value);
+    ev("playlist_name", this.value);
     input.replaceWith(dom);
     $("#edit-name").html("edit");
   });
@@ -176,10 +176,10 @@ function makePlaylistNameEditable() {
     if(this.innerHTML == 'edit') {
       this.innerHTML = "save";
       dom.replaceWith(input);
-      input.val(ev('playlist.name'));
+      input.val(ev('playlist_name'));
       input.focus();
     } else {
-      ev("playlist.name", input.val());
+      ev("playlist_name", input.val());
       input.replaceWith(dom);
       this.innerHTML = "edit";
     }
@@ -209,13 +209,13 @@ var Search = {
     );
 
     Utils.onEnter("#initial-search", function(){
-      ev('app.state', 'main');
+      ev('app_state', 'main');
 
       input.val(this.value);
 
       ev.isset('search.results', function(results) { 
-        ev.isset('playlist.id', function(){
-          ev.push('playlist.tracks', results[0]); 
+        ev.isset('playlist_id', function(){
+          ev.push('playlist_tracks', results[0]); 
         });
       });
     });
@@ -230,9 +230,9 @@ var Search = {
 
       if(query != lastSearch) {
 
-        ev('search.query', query);
+        ev('search_query', query);
 
-        if( query.length && ev('search.related').length == 0) {
+        if( query.length && ev('search_related').length == 0) {
           lastSearch = query;
 
           $.getJSON('api/ytsearch.php', { 
@@ -244,11 +244,11 @@ var Search = {
 
             lastID = res.id;
 
-            ev('search.results', res.vidList);
+            ev('search_results', res.vidList);
             Results.gen();
           });
         } else {
-          ev('search.results', []);
+          ev('search_results', []);
           Results.gen();
         }
       }
@@ -286,7 +286,7 @@ var Results = {
       .scroll(gencheck)
       .keydown(gencheck);
 
-    ev.on('request-gen', Results.gen);
+    ev.on('request_gen', Results.gen);
   
   },
 
@@ -366,7 +366,7 @@ var Results = {
       set,
       total,
       constraints = {removed: 0},
-      query = ev('search.query'),
+      query = ev('search_query'),
       perline = Math.floor(width / _video.width),
       start = Math.floor(top / _video.height) * perline,
       stop = Math.ceil(bottom / _video.height) * perline,
@@ -384,9 +384,9 @@ var Results = {
     // This not only show the isolated related results, but then modifies the
     // drop down menu near the related results to say as much.  This second
     // part should probably be removed and abstracted to somewhere else.
-    if(ev('search.related').length) {
+    if(ev('search_related').length) {
       var 
-        allrelated = db.find('ytid', db.isin(ev('search.related'))).select('related'),
+        allrelated = db.find('ytid', db.isin(ev('search_related'))).select('related'),
         unique = _.uniq(_.flatten(allrelated));
 
       set = db.find(constraints, {ytid: db.isin(unique)});
@@ -402,7 +402,7 @@ var Results = {
         return (bBoost + b.reference.length) - (aBoost + a.reference.length);
       });
 
-      set = ev('search.results').concat(set);
+      set = ev('search_results').concat(set);
     }
 
     // We find out some statistics about what we should be
@@ -432,7 +432,7 @@ var Results = {
         _video.old.stop != stop  || 
         _video.old.query != query  || 
         _video.old.length != total ||
-        _video.old.current != ev('active.track').ytid
+        _video.old.current != ev('active_track').ytid
       ) {
 
       _video.old = { 
@@ -440,7 +440,7 @@ var Results = {
         stop : stop, 
         query : query, 
         length : set.length, 
-        current: ev('active.track').ytid 
+        current: ev('active_track').ytid 
       };
 
       $("#result-now").remove().appendTo($("#players"));
@@ -481,16 +481,16 @@ var Results = {
 };
 
 ev({
-  // The app.state variable maintains whether the application is
+  // The app_state variable maintains whether the application is
   // at the splash screen or at a specific playlist.  We can check
   // for double fires with the meta.old functions (see evda.js)
-  'app.state': function(state, meta) {
+  'app_state': function(state, meta) {
     if(state == meta.old) {
       return;
     } 
 
     if(state == 'splash') {
-      ev.unset('playlist.id','playlist.tracks','playlist.name');
+      ev.unset('playlist_id','playlist_tracks','playlist_name');
       Timeline.pause();
       Timeline.gen();
       $(".main-app").css('display','none');
@@ -510,7 +510,7 @@ ev({
     }
   },
 
-  'search.related': function(list) {
+  'search_related': function(list) {
     if(list.length) {
       $("#search-context-title")
         .css('display','inline-block')
@@ -520,7 +520,7 @@ ev({
     }
   },
 
-  'playlist.name': function(name, meta) { 
+  'playlist_name': function(name, meta) { 
     document.title = name + " on Audisco";
     $("#playlist-name").html(name);
 
@@ -528,17 +528,17 @@ ev({
       remote({
         func: 'update',
         name: name,
-        id: ev('playlist.id')
+        id: ev('playlist_id')
       });
     }
   },
 
-  'active.track': function(obj){
+  'active_track': function(obj){
     status("Playing " + obj.title);
-    ev.set('request-gen');
+    ev.set('request_gen');
   },
 
-  'preview.track': function(obj) {
+  'preview_track': function(obj) {
     if(obj) {
       $("#preview-track").html(obj.title);
     } else {

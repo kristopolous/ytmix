@@ -75,8 +75,8 @@ var Timeline = (function(){
     ev.set('tick');
 
     // mechanics for moving the centroid
-    if(Player.active.getCurrentTime) {
-      var time = Player.active.getCurrentTime();
+    if(Player.active_getCurrentTime) {
+      var time = Player.active_getCurrentTime();
 
       if (time > 0 && Player.activeData) {
 
@@ -121,7 +121,7 @@ var Timeline = (function(){
               .appendTo(container.jquery);
           }
 
-          $("#result-now").css({ left: (time * 100 / Player.active.getDuration()) + '%'});
+          $("#result-now").css({ left: (time * 100 / Player.active_getDuration()) + '%'});
         } else {
           $("#result-now").css('display','none');
         }
@@ -133,15 +133,15 @@ var Timeline = (function(){
           });
         });
 
-        if( Player.active.getPlaybackQuality() != 'large') {
-          Player.active.setPlaybackQuality('large');
+        if( Player.active_getPlaybackQuality() != 'large') {
+          Player.active_setPlaybackQuality('large');
         }
 
         if(! ev.isset('timeline.dragging') ) {
           $("#control").css('left', - 100 * ((time + Player.activeData.offset) / _totalRuntime) + "%");
         }
 
-        if(Player.active.getDuration() - time == 0) {
+        if(Player.active_getDuration() - time == 0) {
           Offset += 1;
           Timeline.seekTo(Offset);
         } else {
@@ -160,11 +160,11 @@ var Timeline = (function(){
 
     if(_loaded == _maxPlayer) {
       Player.sample = Player[1];
-      setTimeout(function(){ ev.set('flash.load'); },250);
+      setTimeout(function(){ ev.set('flash_load'); },250);
     }
   }
 
-  ev.isset('flash.load', function(){
+  ev.isset('flash_load', function(){
     Player.active = Player[0];
     setInterval(updateytplayer, 150);
   });
@@ -202,7 +202,7 @@ var Timeline = (function(){
         ev.setdel('search.related', node.ytid);
         node.filter = false;
       }
-      ev.set('request-gen');
+      ev.set('request_gen');
     });
 
     node.dom.hover(
@@ -212,7 +212,7 @@ var Timeline = (function(){
   }
 
   function gen(){
-    var trackList = ev('playlist.tracks') || [];
+    var trackList = ev('playlist_tracks') || [];
 
     each(trackList, function(track, index) {
       if(_order[index] && track.ytid != _order[index].ytid) {
@@ -309,7 +309,6 @@ var Timeline = (function(){
     db.find('ytid', obj.ytid)
       .update({playlistid: myid});
 
-    console.log(obj);
     // Add the related videos and then
     // back reference them to this video
     addVids(obj.related, obj);
@@ -358,7 +357,7 @@ var Timeline = (function(){
     ev('tick', function(){ dom.remove(); }, {once: true});
   };
 
-  ev('playlist.tracks', gen);
+  ev('playlist_tracks', gen);
 
   return {
     db: TimeDB,
@@ -384,18 +383,18 @@ var Timeline = (function(){
     },
 
     remove: function(index){
-      var playlist = ev('playlist.tracks');
+      var playlist = ev('playlist_tracks');
       status("Removed " + _order[index].title);
       $("#result-now").remove().appendTo(document.body);
 
-      playlist.splice(index, 1);
-      ev('playlist.tracks', playlist);
+      playlist_splice(index, 1);
+      ev('playlist_tracks', playlist);
 
-      ev.set('request-gen');
+      ev.set('request_gen');
     },
 
     pause: function(){
-      ev.isset('flash.load', function(){
+      ev.isset('flash_load', function(){
         if(_isPlaying) {
           _isPlaying = false;
 
@@ -408,14 +407,14 @@ var Timeline = (function(){
     },
 
     pauseplay: function(){
-      ev.isset('flash.load', function(){
+      ev.isset('flash_load', function(){
         if(_isPlaying) {
           _isPlaying = false;
-          Player.active.pauseVideo();
+          Player.active_pauseVideo();
           $(".now").css('background','red');
         } else {
           _isPlaying = true;
-          Player.active.playVideo();
+          Player.active_playVideo();
           $(".now").css('background','#99a');
         }
       });
@@ -449,18 +448,18 @@ var Timeline = (function(){
 
     play: function(dbid, offset) {
       if(!arguments.length) {
-        return Player.active.playVideo();
+        return Player.active_playVideo();
       }
 
       offset = offset || 0;
 
-      ev.isset('flash.load', function(){
+      ev.isset('flash_load', function(){
         if(!_data[dbid]) {
           Timeline.pause();
         } else if(Player.activeData != _data[dbid]) {
           Player.activeData = _data[dbid];
-          Player.active.loadVideoById(Player.activeData.ytid, offset);
-          ev('active.track', Player.activeData);
+          Player.active_loadVideoById(Player.activeData.ytid, offset);
+          ev('active_track', Player.activeData);
           Player.start = $(_data[dbid].dom).offset().left - $("#control").offset().left;
         }
       });
@@ -485,7 +484,7 @@ var Timeline = (function(){
         if(track.id != Player.activeData.id) {
           Timeline.play(track.id, absolute - track.offset);
         } else {
-          Player.active.seekTo(absolute - track.offset);
+          Player.active_seekTo(absolute - track.offset);
         }
       }
     },
@@ -526,7 +525,7 @@ var Timeline = (function(){
     },
 
     sample: function(obj) {
-      ev.isset('flash.load', function(){
+      ev.isset('flash_load', function(){
         if(obj.playlistid) {
           Timeline.seekTo(_order[obj.playlistid].offset + 2);
           return;
@@ -536,10 +535,10 @@ var Timeline = (function(){
           clearTimeout(_sampleTimeout);
         }
 
-        Player.active.pauseVideo();
+        Player.active_pauseVideo();
 
-        ev('active.track', obj);
-        ev('preview.track', obj);
+        ev('active_track', obj);
+        ev('preview_track', obj);
 
         Player.sample.loadVideoById(obj.ytid, 10);
         Player.sample.playVideo();
@@ -552,9 +551,9 @@ var Timeline = (function(){
 
         _sampleTimeout = setTimeout(function(){
           Player.sample.pauseVideo();
-          Player.active.playVideo();
+          Player.active_playVideo();
 
-          ev('active.track', Player.activeData);
+          ev('active_track', Player.activeData);
           _sampleTimeout = 0;
         }, 45 * 1000);
       });
@@ -564,7 +563,7 @@ var Timeline = (function(){
       opts = opts || {};
 
       status("Added " + obj.title);
-      ev.push('playlist.tracks', obj);
+      ev.push('playlist_tracks', obj);
 
       if(opts.noplay != true) {
         Timeline.play(UNIQ - 1);

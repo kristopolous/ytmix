@@ -53,10 +53,10 @@ var Store = {
       id: id,
       onSuccess: function(data) {
         ev({
-          'app.state': 'main',
-          'playlist.name': data.name,
-          'playlist.id': data.id,
-          'playlist.tracks': JSON.parse(data.tracklist)
+          'app_state': 'main',
+          'playlist_name': data.name,
+          'playlist_id': data.id,
+          'playlist_tracks': JSON.parse(data.tracklist)
         });
 
         Timeline.play(0);
@@ -72,19 +72,19 @@ var Store = {
   }
 };
 
-ev.setter('playlist.id', function(){
+ev.setter('playlist_id', function(){
   remote({
     func: 'createID',
     onSuccess: function(id) {
       ev({
-        'playlist.id': id,
-        'playlist.name': 'no name'
+        'playlist_id': id,
+        'playlist_name': 'no name'
       });
     }
   });
 });
 
-remote.keys = [
+remote_keys = [
   'length',     // Duration of the track
   'title',      // YT title
   'ytid',       // YT id after watch?
@@ -96,13 +96,13 @@ remote.keys = [
 // an assumed index that had been previously
 // set
 ev({
-  'playlist.tracks': function(data, meta) { 
-    if(meta.old && ev('playlist.id')) {
+  'playlist_tracks': function(data, meta) { 
+    if(meta.old && ev('playlist_id')) {
 
       data = _.map(data, function(original) {
         var copy = {};
 
-        each(remote.keys, function(key) {
+        each(remote_keys, function(key) {
           copy[key] = original[key];
         });
         copy.reference = [];
@@ -110,15 +110,15 @@ ev({
         return copy;
       });
 
-      ev('remote.data', {data: JSON.stringify(data)}); 
+      ev('remote_data', {data: JSON.stringify(data)}); 
     }
   },
 
-  'playlist.name': function(data, meta) {
-    if(ev('playlist.id')) {
+  'playlist_name': function(data, meta) {
+    if(ev('playlist_id')) {
       remote({
         func: 'update',
-        id: ev('playlist.id'),
+        id: ev('playlist_id'),
         name: data
       });
     }
@@ -139,14 +139,14 @@ ev.setter('recent', function(){
 });
 
 setInterval(function(){
-  if(ev.isset('remote.data')) {
+  if(ev.isset('remote_data')) {
 
     remote(extend({ 
       func: 'update' ,
-      id: ev('playlist.id')
-    }, ev('remote.data')));
+      id: ev('playlist_id')
+    }, ev('remote_data')));
 
-    ev.unset('remote.data');
+    ev.unset('remote_data');
   }
 }, 4000);
 
