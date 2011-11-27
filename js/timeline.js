@@ -478,7 +478,7 @@ var Timeline = (function(){
 
     play: function(dbid, offset) {
       if(!arguments.length) {
-        return Player.active.playVideo();
+        return Player.Play();
       }
 
       offset = offset || 0;
@@ -491,6 +491,7 @@ var Timeline = (function(){
           Player.active.loadVideoById(Player.activeData.ytid, offset);
           ev('active_track', Player.activeData);
           Player.start = $(_data[dbid].dom).offset().left - $("#control").offset().left;
+          Player.Play();
         }
       });
     },
@@ -500,7 +501,6 @@ var Timeline = (function(){
         offset = Offset;
       }
 
-      Player.pause();
       Timeline.updateOffset();
 
       var absolute = (offset < 1) ? offset * _totalRuntime : offset;
