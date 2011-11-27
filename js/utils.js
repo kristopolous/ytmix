@@ -53,3 +53,46 @@ var Utils = {
   }
 };
 
+function Queue() { }
+Queue.prototype = new Array();
+each(['Push', 'Pop', 'Shift', 'Unshift'], function(which) {
+  var 
+    protoName = which.toLowerCase(),
+    stackName = protoName + 'Stack';
+
+  Queue.prototype['on' + which] = function(callback) {
+    (this[stackName] || (this[stackName] = [])).push(callback);
+  }
+  Queue.prototype[protoName] = function() {
+    if(this[stackName]) {
+      for(var i = 0; i < this[stackName].length; i++) {
+        this[stackName][i].apply(this, arguments);
+      }
+    }
+    return Array.prototype[protoName].apply(this, arguments);
+  }
+});
+
+Queue.prototype.doshift = function(){
+  if(this.length) {
+    (this.shift())();
+    if(this.length == 0) {
+      // This means that we have satisfied all
+      // the requests to get remote data. We 
+      // should probably update the playlist
+      // if it needs to be updated.
+      //
+      // This finds all the authorative references
+      // to the playlist track list in the database
+      //
+      // And then sets those objects as the playlist_tracks
+      // which will fire off a remote request to do 
+      // an update
+      ev('playlist_tracks',
+        db
+          .hasKey('playlistid')
+          .order('playlistid', 'asc')
+      );
+    }
+  }
+};

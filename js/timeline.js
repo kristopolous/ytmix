@@ -434,7 +434,8 @@ var Timeline = (function(){
 
     remove: function(index){
       var playlist = ev('playlist_tracks');
-      status("Removed " + _order[index].title);
+
+      Toolbar.status("Removed " + _order[index].title);
       $("#result-now").remove().appendTo(document.body);
 
       playlist_splice(index, 1);
@@ -593,7 +594,7 @@ var Timeline = (function(){
     add: function(obj, opts) {
       opts = opts || {};
 
-      status("Added " + obj.title);
+      Toolbar.status("Added " + obj.title);
       ev.push('playlist_tracks', obj);
 
       if(opts.noplay != true) {
