@@ -151,6 +151,9 @@ function EvDa (imported) {
     setterMap = {},
     eventMap = {};
 
+  // This is the main invocation function. After
+  // you declare an instance and call that instance
+  // as a function, this is what gets run.
   function pub ( scope, value, meta ) {
     // If there was one argument, then this is
     // either a getter or the object style
@@ -172,7 +175,11 @@ function EvDa (imported) {
           ret[_key] = pub ( _key, _value, meta, 0, 1 );
         });
 
-        each( ret, function( _value, _key ) {
+        // After the callbacks has been bypassed, then we
+        // run all of them a second time, this time the
+        // dependency graphs from the object style transactional
+        // invocation should be satisfied
+        each( ret, function( _key, _value ) {
           if(isFunction(ret[_key]) && !isFunction(scope[_key])) {
             scope[_key] = ret[_key]();
           }

@@ -3,7 +3,7 @@ var Timeline = (function(){
     TimeDB = DB(),
 
     Offset = 0,
-    Player = {},
+    Player = undefined,
     _totalRuntime,
 
     _data = TimeDB.view('id'),
@@ -16,6 +16,39 @@ var Timeline = (function(){
     _scale = 0.04, // ems per second
 
     UNIQ = 0;
+
+  Player = {
+    controls: [],
+
+    Pauseplay: function(){
+      if(_isPlaying) {
+        Player.Pause();
+      } else {
+        Player.Play();
+      }
+      return _isPlaying;
+    },
+
+    Pause: function(){
+      ev.isset('flash_load', function(){
+        _isPlaying = false;
+        each(Player.controls, function (which) {
+          which.pauseVideo();
+        });
+        $(".now").css('background','red');
+      });
+    },
+
+    Play: function(){
+      ev.isset('flash_load', function(){
+        if(!_isPlaying) {
+          _isPlaying = true;
+          Player.active.playVideo();
+          $(".now").css('background','#99a');
+        }
+      });
+    }
+  };
 
   $(function(){
     var 
@@ -75,8 +108,8 @@ var Timeline = (function(){
     ev.set('tick');
 
     // mechanics for moving the centroid
-    if(Player.active_getCurrentTime) {
-      var time = Player.active_getCurrentTime();
+    if(Player.active.getCurrentTime) {
+      var time = Player.active.getCurrentTime();
 
       if (time > 0 && Player.activeData) {
 
@@ -121,7 +154,7 @@ var Timeline = (function(){
               .appendTo(container.jquery);
           }
 
-          $("#result-now").css({ left: (time * 100 / Player.active_getDuration()) + '%'});
+          $("#result-now").css({ left: (time * 100 / Player.active.getDuration()) + '%'});
         } else {
           $("#result-now").css('display','none');
         }
@@ -133,15 +166,15 @@ var Timeline = (function(){
           });
         });
 
-        if( Player.active_getPlaybackQuality() != 'large') {
-          Player.active_setPlaybackQuality('large');
+        if( Player.active.getPlaybackQuality() != 'large') {
+          Player.active.setPlaybackQuality('large');
         }
 
         if(! ev.isset('timeline.dragging') ) {
           $("#control").css('left', - 100 * ((time + Player.activeData.offset) / _totalRuntime) + "%");
         }
 
-        if(Player.active_getDuration() - time == 0) {
+        if(Player.active.getDuration() - time == 0) {
           Offset += 1;
           Timeline.seekTo(Offset);
         } else {
@@ -153,19 +186,36 @@ var Timeline = (function(){
 
   self.onYouTubePlayerReady = function(playerId) {
     var id = parseInt(playerId.substr(-1));
-    _loaded ++;
 
-    Player[id] = document.getElementById(playerId);
-    Player[id].addEventListener('onStateChange', function(){ console.log(this, arguments); });
+    if(_loaded < _maxPlayer) {
+      _loaded ++;
 
-    if(_loaded == _maxPlayer) {
-      Player.sample = Player[1];
-      setTimeout(function(){ ev.set('flash_load'); },250);
+      Player.controls[id] = document.getElementById(playerId);
+
+      // I don't think this actually gets run, regardless of
+      // what YT's official documentation says.
+      Player.controls[id].addEventListener('onStateChange', function(){ 
+        console.log(this, arguments); 
+      });
+
+      if(_loaded == _maxPlayer) {
+        Player.sample = Player.controls[1];
+        setTimeout(function(){ ev.set('flash_load'); },250);
+      }
     }
   }
 
+  // When the flash player is loaded all the way
+  // then we can set the first player to be called
+  // the active player, which is the one that we will
+  // use for the most part.
+  //
+  // This is also when we start our polling function
+  // that updates the scrubber and the status of
+  // where we currently are.
   ev.isset('flash_load', function(){
-    Player.active = Player[0];
+    console.log(Player);
+    Player.active = Player.controls[0];
     setInterval(updateytplayer, 150);
   });
 
@@ -394,32 +444,11 @@ var Timeline = (function(){
     },
 
     pause: function(){
-      ev.isset('flash_load', function(){
-        if(_isPlaying) {
-          _isPlaying = false;
-
-          Player[0].pauseVideo();
-          Player[1].pauseVideo();
-
-          $("#timeline-now").css('background','red');
-        }
-      })
+      return Player.Pause();
     },
 
     pauseplay: function(){
-      ev.isset('flash_load', function(){
-        if(_isPlaying) {
-          _isPlaying = false;
-          Player.active_pauseVideo();
-          $(".now").css('background','red');
-        } else {
-          _isPlaying = true;
-          Player.active_playVideo();
-          $(".now").css('background','#99a');
-        }
-      });
-
-      return _isPlaying;
+      return Player.Pauseplay();
     },
 
     updateOffset: function(){
@@ -448,7 +477,7 @@ var Timeline = (function(){
 
     play: function(dbid, offset) {
       if(!arguments.length) {
-        return Player.active_playVideo();
+        return Player.active.playVideo();
       }
 
       offset = offset || 0;
@@ -458,7 +487,7 @@ var Timeline = (function(){
           Timeline.pause();
         } else if(Player.activeData != _data[dbid]) {
           Player.activeData = _data[dbid];
-          Player.active_loadVideoById(Player.activeData.ytid, offset);
+          Player.active.loadVideoById(Player.activeData.ytid, offset);
           ev('active_track', Player.activeData);
           Player.start = $(_data[dbid].dom).offset().left - $("#control").offset().left;
         }
@@ -470,7 +499,7 @@ var Timeline = (function(){
         offset = Offset;
       }
 
-      Player.sample.pauseVideo();
+      Player.pause();
       Timeline.updateOffset();
 
       var absolute = (offset < 1) ? offset * _totalRuntime : offset;
@@ -478,13 +507,15 @@ var Timeline = (function(){
       absolute = Math.max(0, absolute);
       absolute = Math.min(_totalRuntime, absolute);
 
-      var track = TimeDB.findFirst(function(row) { return (row.offset < absolute && (row.offset + row.length) > absolute) });
+      var track = TimeDB.findFirst(function(row) { 
+        return (row.offset < absolute && (row.offset + row.length) > absolute) 
+      });
 
       if(track) {
         if(track.id != Player.activeData.id) {
           Timeline.play(track.id, absolute - track.offset);
         } else {
-          Player.active_seekTo(absolute - track.offset);
+          Player.active.seekTo(absolute - track.offset);
         }
       }
     },
@@ -535,7 +566,7 @@ var Timeline = (function(){
           clearTimeout(_sampleTimeout);
         }
 
-        Player.active_pauseVideo();
+        Player.Pause();
 
         ev('active_track', obj);
         ev('preview_track', obj);
@@ -551,7 +582,7 @@ var Timeline = (function(){
 
         _sampleTimeout = setTimeout(function(){
           Player.sample.pauseVideo();
-          Player.active_playVideo();
+          Player.active.playVideo();
 
           ev('active_track', Player.activeData);
           _sampleTimeout = 0;
