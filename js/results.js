@@ -26,6 +26,15 @@ var Results = {
       .scroll(gencheck)
       .keydown(gencheck);
 
+    $("#video-viewport").sortable({
+      start: function(event, ui) {
+        ui.item.dragging = true;
+      },
+      stop: function(event, ui) {
+        ui.item.dragging = false;
+      }
+    });
+
     ev.on('request_gen', Results.gen);
   
   },
@@ -184,7 +193,9 @@ var Results = {
       };
 
       $("#result-now").remove().appendTo($("#players"));
-      $("#video-viewport").children().detach();
+      $("#video-viewport").children().filter(function(index, which) {
+        return this.className == 'result';
+      }).detach();
 
       // Make a viewable reference available so
       // that other functions can hook inside here
