@@ -1,3 +1,6 @@
+// See utils.js for how a queue could ostensibly work.
+// At the time of the comment's authorship, it's being
+// used just like an array.
 _remote.queue = new Queue();
 
 // Adds vids in the format 
@@ -13,6 +16,25 @@ function addVids(vidList, backref) {
   })
 }
 
+// Loads the videos related to a db object that
+// should have ytid defined.  It is also designed
+// so it doesn't hose the serve with a bunch of
+// requests but instead tries to space them out
+// so that one finishes, some time lapses, then
+// another one starts.
+//
+// The related videos for the playlist are stored
+// as the database object which has the problem
+// of related videos becoming stale and delisted,
+// as of now (2011/11/27) unsolved, but it avoids
+// the problem of having to have this stagnant
+// request cycle every time a user tries to load
+// the playlist for his or her own use.
+//
+// Stale links should be taken care of OOB and not
+// be a deferred problem that justifies funky looking
+// incremental loads.
+//
 function loadRelated(obj, opts){
   if(_remote.active) {
     _remote.queue.push(function(){
@@ -26,6 +48,7 @@ function loadRelated(obj, opts){
   // The related entry will be null (see the template in
   // _init_.js for more info) unless this call is made
   if(!db.findFirst(match).related) {
+
     // This "mutex like" object is to
     // make sure that we don't request
     // more then one related at a time.
@@ -56,8 +79,12 @@ function loadRelated(obj, opts){
   }
 }
 
+// This is on the splash page. It loads
+// the recent history of tracks that have
+// been previously played.
 function loadHistory(){
   ev.isset('recent', function(data) {
+
     each(data, function(which) {
       var 
         total = Utils.runtime(which.tracklist),
@@ -94,6 +121,7 @@ function loadHistory(){
            + Utils.secondsToTime(total) + 
            ")</small></p>");
     });
+
     $("#history").fadeIn();
   });
 }
@@ -102,7 +130,6 @@ ev.test('playlist_tracks', function(data, meta) {
   db.insert(data);
   meta.done(true);
 });
-
 
 var Search = {
   init: function(){
@@ -188,7 +215,7 @@ ev({
     if(state == 'splash') {
       ev.unset('playlist_id','playlist_tracks','playlist_name');
       Timeline.pause();
-      Timeline.gen();
+      Timeline.build();
       $(".main-app").css('display','none');
       $("#splash").css('display','block');
       loadHistory();

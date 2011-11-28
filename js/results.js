@@ -26,12 +26,29 @@ var Results = {
       .scroll(gencheck)
       .keydown(gencheck);
 
+    var compare = {pre: {}, post: {}};
     $("#video-viewport").sortable({
       start: function(event, ui) {
-        ui.item.dragging = true;
+        $("#video-viewport > *").each(function(index, dom) {
+          compare.pre[dom.ytid] = index;
+        });
       },
       stop: function(event, ui) {
-        ui.item.dragging = false;
+        $("#video-viewport > *").each(function(index, dom) {
+          compare.post[dom.ytid] = index;
+        });
+
+        db.find({
+          ytid: db.isin(_.keys(compare.post))
+        }).update(function(which) {
+          if('playlistid' in which) {
+            which.playlistid += compare.post[which.ytid] - compare.pre[which.ytid];
+          }
+        });
+
+        var playlistOrder = db.hasKey('playlistid').sort('playlistid', 'asc');
+
+        Timeline.build(playlistOrder);
       }
     });
 
@@ -49,6 +66,7 @@ var Results = {
 
     // Look to see if we have generated this before.
     var dbReference = db.find({ytid: obj.ytid});
+
     if(dbReference.length) {
       if(dbReference[0].jqueryObject) {
         // If so, then just take the old dom entry and
@@ -98,7 +116,7 @@ var Results = {
     }  
 
     // back reference of what we are generating
-    result.ytid = obj.ytid;
+    result.get(0).ytid = obj.ytid;
     result.hoverControl = hoverControl;
 
     db.find({ytid: obj.ytid}).update({jqueryOjbect: result});

@@ -214,7 +214,6 @@ var Timeline = (function(){
   // that updates the scrubber and the status of
   // where we currently are.
   ev.isset('flash_load', function(){
-    console.log(Player);
     Player.active = Player.controls[0];
     setInterval(updateytplayer, 150);
   });
@@ -231,7 +230,7 @@ var Timeline = (function(){
       });
 
       Timeline.updateOffset();
-      gen();
+      Timeline.build();
       if(Player.activeData.id == x || Player.activeData.id == y) {
         Timeline.seekTo(Offset);
       }
@@ -259,38 +258,6 @@ var Timeline = (function(){
       function(){ node.hover.css('display','block'); }, 
       function(){ node.hover.css('display','none'); }
     );
-  }
-
-  function gen(){
-    var trackList = ev('playlist_tracks') || [];
-
-    each(trackList, function(track, index) {
-      if(_order[index] && track.ytid != _order[index].ytid) {
-        remove(index);
-      }
-      if(!_order[index] || track.ytid != _order[index].ytid) {
-        add(track);
-      }
-    });
-
-    each(_order, function(value, index) {
-      if(index >= trackList.length) {
-        remove(index);
-      } else if(value.ytid != trackList[index].ytid) {
-        remove(index);
-        add(value);
-      }
-    });
-
-    /*$("#control").children().detach();
-
-    for(var ix = 0; ix < UNIQ; ix++) {
-      if(_data[ix]) {
-        $(".hover", _data[ix].dom).css('display','none');
-        $("#control").append(_data[ix].dom);
-        hook(ix);
-      }
-    }*/
   }
 
   function add(obj, opts) {
@@ -407,13 +374,57 @@ var Timeline = (function(){
     ev('tick', function(){ dom.remove(); }, {once: true});
   };
 
-  ev('playlist_tracks', gen);
+  function build(){
+    if(arguments.length) {
+      var 
+        trackList = arguments[0],
+        timelineMap = TimeDB.keyBy('ytid');
+
+      each(trackList, function(which) {
+        TimeDB.find('ytid', which.ytid).update({order: which.playlistid});
+      });
+
+      Timeline.updateOffset();
+      return;
+    }
+
+    var trackList = arguments[0] || ev('playlist_tracks') || [];
+
+    each(trackList, function(track, index) {
+      if(_order[index] && track.ytid != _order[index].ytid) {
+        remove(index);
+      }
+      if(!_order[index] || track.ytid != _order[index].ytid) {
+        add(track);
+      }
+    });
+
+    each(_order, function(value, index) {
+      if(index >= trackList.length) {
+        remove(index);
+      } else if(value.ytid != trackList[index].ytid) {
+        remove(index);
+        add(value);
+      }
+    });
+
+    /*$("#control").children().detach();
+
+    for(var ix = 0; ix < UNIQ; ix++) {
+      if(_data[ix]) {
+        $(".hover", _data[ix].dom).css('display','none');
+        $("#control").append(_data[ix].dom);
+        hook(ix);
+      }
+    }*/
+  }
+
+  ev('playlist_tracks', function(){build();});
 
   return {
     db: TimeDB,
     player: Player,
     data: _data,
-    gen: gen,
 
     toStore: function(){
       var store = [];
@@ -520,6 +531,8 @@ var Timeline = (function(){
         }
       }
     },
+
+    build: build,
 
     updatePosition: function() {
       var 
