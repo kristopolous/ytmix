@@ -94,6 +94,7 @@ function loadHistory(){
         hoverControl = $("<span class=hover />")
           .append(play)
           .append(forget),
+
         track = $("<span class=track />").append(hoverControl);
 
       forget.click(function(){
