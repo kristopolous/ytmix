@@ -1,9 +1,17 @@
 var Timeline = (function(){
   var 
+    // The internal database of what is
+    // being played and its order
     TimeDB = DB(),
 
-    Offset = 0,
     Player = undefined,
+
+    // The current offset into the total
+    // playlist, in seconds
+    _offset = 0,
+
+    // The total duration of all the tracks
+    // to be played.
     _totalRuntime,
 
     _data = TimeDB.view('id'),
@@ -97,9 +105,9 @@ var Timeline = (function(){
       if(!keyListen) { return }
 
       switch(e.which) {
-        case 37: Timeline.seekTo(Offset - 60); break;
+        case 37: Timeline.seekTo(_offset - 60); break;
         case 46: Timeline.remove(Player.activeData); break;
-        case 39: Timeline.seekTo(Offset + 60); break;
+        case 39: Timeline.seekTo(_offset + 60); break;
       }
     });
   });
@@ -159,13 +167,16 @@ var Timeline = (function(){
           $("#result-now").css('display','none');
         }
 
-        _.each(_.values(Player.activeData.$link), function(which) {
+        each(_.values(Player.activeData.$link), function(which) {
           which.attr({
             href : 'http://www.youtube.com/watch?v=' + Player.activeData.ytid + "#at=" + Math.ceil(time) + "s",
             onclick: 'Timeline.pause()'
           });
         });
 
+        // For some reason is appears that this value can
+        // toggle back to non-high quality sometimes. So 
+        // we check to see where it's at
         if( Player.active.getPlaybackQuality() != 'large') {
           Player.active.setPlaybackQuality('large');
         }
@@ -175,10 +186,10 @@ var Timeline = (function(){
         }
 
         if(Player.active.getDuration() - time == 0) {
-          Offset += 1;
-          Timeline.seekTo(Offset);
+          _offset += 1;
+          Timeline.seekTo(_offset);
         } else {
-          Offset = Player.activeData.offset + time;
+          _offset = Player.activeData.offset + time;
         }
       }
     }
@@ -232,7 +243,7 @@ var Timeline = (function(){
       Timeline.updateOffset();
       Timeline.build();
       if(Player.activeData.id == x || Player.activeData.id == y) {
-        Timeline.seekTo(Offset);
+        Timeline.seekTo(_offset);
       }
     }
   }
@@ -363,9 +374,9 @@ var Timeline = (function(){
     var removed = TimeDB.remove({id: index});
 
     if(removed.length) {
-      if(removed[0].offset < Offset) {
-        Offset -= removed[0].length;
-        Timeline.seekTo(Offset);
+      if(removed[0].offset < _offset) {
+        _offset -= removed[0].length;
+        Timeline.seekTo(_offset);
       } else {
         Timeline.updateOffset();
       }
@@ -509,7 +520,7 @@ var Timeline = (function(){
 
     seekTo: function(offset) {
       if(!offset) {
-        offset = Offset;
+        offset = _offset;
       }
 
       Timeline.updateOffset();

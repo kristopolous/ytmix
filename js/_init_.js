@@ -11,12 +11,12 @@ var
     'active_track': {},
     'search_query': ''
   }),
-  _get = function(a){ 
+  _get = function(id){ 
     try {
-      return document.getElementById(a) 
+      return document.getElementById(id);
     } catch (ex) {
       var div = document.body.appendChild(document.createElement('div'));
-      div.setAttribute('id', a);
+      div.setAttribute('id', id);
       return div;
     }
   },

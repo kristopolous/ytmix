@@ -4,10 +4,14 @@ var Results = {
   init: function(){
     var timeout;
 
+    // The scrollbar is consumed improperly and
+    // so it must be accounted for in the width 
+    // calculations.
     self._scrollwidth = Utils.scrollbarWidth();
-    setTimeout(Results.resize, 1000);
 
+    setTimeout(Results.resize, 1000);
     $(window).resize(Results.resize);
+
     // The gencheck function just makes sure
     // that we don't call the generator too
     // frequently, less the system gets hosed
@@ -27,6 +31,7 @@ var Results = {
       .keydown(gencheck);
 
     var compare = {pre: {}, post: {}};
+
     $("#video-viewport").sortable({
       start: function(event, ui) {
         $("#video-viewport > *").each(function(index, dom) {

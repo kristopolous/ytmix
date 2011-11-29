@@ -226,7 +226,7 @@ ev({
         opacity: 0,
         display: 'inline-block'
       }).animate({
-        opacity:1
+        opacity: 1
       }, 1000);
 
       $("#splash").css('display','none');
