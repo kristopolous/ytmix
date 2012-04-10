@@ -1,0 +1,1481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns:media="http://search.yahoo.com/mrss/" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:gd="http://schemas.google.com/g/2005" xmlns:yt="http://gdata.youtube.com/schemas/2007" gd:etag="W/&quot;DkQFRX47eCp7I2A9WhRXGEw.&quot;">
+  <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9</id>
+  <updated>2011-12-25T11:58:34.000Z</updated>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+  <category scheme="http://gdata.youtube.com/schemas/2007/tags.cat" term="Classic"/>
+  <category scheme="http://gdata.youtube.com/schemas/2007/tags.cat" term="House"/>
+  <title>Classic House Early 90's ♥ Part 5</title>
+  <subtitle>Classic House</subtitle>
+  <logo>http://www.youtube.com/img/pic_youtubelogo_123x63.gif</logo>
+  <link rel="alternate" type="text/html" href="https://www.youtube.com/view_play_list?p=C2E0BCBBF3C334B9"/>
+  <link rel="http://schemas.google.com/g/2005#feed" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9?v=2"/>
+  <link rel="http://schemas.google.com/g/2005#batch" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/batch?v=2"/>
+  <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9?start-index=1&amp;max-results=25&amp;v=2"/>
+  <link rel="service" type="application/atomsvc+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9?alt=atom-service&amp;v=2"/>
+  <link rel="next" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9?start-index=26&amp;max-results=25&amp;v=2"/>
+  <author>
+    <name>Engeltjeuit1970</name>
+    <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+    <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+  </author>
+  <generator version="2.1" uri="http://gdata.youtube.com">YouTube data API</generator>
+  <openSearch:totalResults>171</openSearch:totalResults>
+  <openSearch:startIndex>1</openSearch:startIndex>
+  <openSearch:itemsPerPage>25</openSearch:itemsPerPage>
+  <media:group>
+    <media:content url="http://www.youtube.com/p/C2E0BCBBF3C334B9" type="application/x-shockwave-flash" yt:format="5"/>
+    <media:description type="plain">Classic House</media:description>
+    <media:thumbnail url="http://i.ytimg.com/vi/ffSptGrUTMo/default.jpg" height="90" width="120" yt:name="default"/>
+    <media:thumbnail url="http://i.ytimg.com/vi/ffSptGrUTMo/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+    <media:title type="plain">Classic House Early 90's ♥ Part 5</media:title>
+    <yt:duration seconds="0"/>
+  </media:group>
+  <yt:playlistId>C2E0BCBBF3C334B9</yt:playlistId>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mZQ8Ddzq_UlcVa4jTrTEv4_</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="The"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Oval"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Project"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Vertigo"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Sasha"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Rennaissance"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Tune"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>The Oval 5 Project - Vertigo (Sasha Rennaissance Tune)</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=ffSptGrUTMo&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/ffSptGrUTMo/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/ffSptGrUTMo/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=ffSptGrUTMo"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/ffSptGrUTMo?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mZQ8Ddzq_UlcVa4jTrTEv4_?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/ffSptGrUTMo/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/ffSptGrUTMo?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="413" yt:format="5"/>
+      <media:content url="rtsp://v7.cache7.c.youtube.com/CiULENy73wIaHAnKTNRqtKn0fRMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="413" yt:format="1"/>
+      <media:content url="rtsp://v7.cache2.c.youtube.com/CiULENy73wIaHAnKTNRqtKn0fRMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="413" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>The, Oval, Project, Vertigo, Sasha, Rennaissance, Tune, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=ffSptGrUTMo&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ffSptGrUTMo/default.jpg" height="90" width="120" time="00:03:26.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ffSptGrUTMo/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ffSptGrUTMo/1.jpg" height="90" width="120" time="00:01:43.250" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ffSptGrUTMo/2.jpg" height="90" width="120" time="00:03:26.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ffSptGrUTMo/3.jpg" height="90" width="120" time="00:05:09.750" yt:name="end"/>
+      <media:title type="plain">The Oval 5 Project - Vertigo (Sasha Rennaissance Tune)</media:title>
+      <yt:duration seconds="413"/>
+      <yt:uploaded>2011-07-02T06:40:40.000Z</yt:uploaded>
+      <yt:videoid>ffSptGrUTMo</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="2" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="3" viewCount="1281"/>
+    <yt:rating numDislikes="0" numLikes="2"/>
+    <yt:position>1</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mbFx_LcyiYQZjyyGnO-z9eX</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="René"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Et"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Gaston"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Coupe"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Brésil"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>René Et Gaston - Coupe Brésil</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=CXyZuj22iQ0&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/CXyZuj22iQ0/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/CXyZuj22iQ0/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=CXyZuj22iQ0"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/CXyZuj22iQ0?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mbFx_LcyiYQZjyyGnO-z9eX?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/CXyZuj22iQ0/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/CXyZuj22iQ0?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="303" yt:format="5"/>
+      <media:content url="rtsp://v8.cache7.c.youtube.com/CiULENy73wIaHAkNibY9upl8CRMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="303" yt:format="1"/>
+      <media:content url="rtsp://v6.cache6.c.youtube.com/CiULENy73wIaHAkNibY9upl8CRMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="303" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>René, Et, Gaston, Coupe, Brésil, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=CXyZuj22iQ0&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/CXyZuj22iQ0/default.jpg" height="90" width="120" time="00:02:31.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/CXyZuj22iQ0/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/CXyZuj22iQ0/1.jpg" height="90" width="120" time="00:01:15.750" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/CXyZuj22iQ0/2.jpg" height="90" width="120" time="00:02:31.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/CXyZuj22iQ0/3.jpg" height="90" width="120" time="00:03:47.250" yt:name="end"/>
+      <media:title type="plain">René Et Gaston - Coupe Brésil</media:title>
+      <yt:duration seconds="303"/>
+      <yt:uploaded>2011-07-02T06:32:13.000Z</yt:uploaded>
+      <yt:videoid>CXyZuj22iQ0</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="4" viewCount="582"/>
+    <yt:rating numDislikes="0" numLikes="1"/>
+    <yt:position>2</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mayrHemUGK2iWSuZzKeTeoW</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Rejuvenation"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Work"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="In"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Progress"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>Rejuvenation - Work In Progress EP</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=j0LA5fAtB38&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/j0LA5fAtB38/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/j0LA5fAtB38/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=j0LA5fAtB38"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/j0LA5fAtB38?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mayrHemUGK2iWSuZzKeTeoW?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/j0LA5fAtB38/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/j0LA5fAtB38?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="352" yt:format="5"/>
+      <media:content url="rtsp://v7.cache7.c.youtube.com/CiULENy73wIaHAl_By3w5cBCjxMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="352" yt:format="1"/>
+      <media:content url="rtsp://v1.cache4.c.youtube.com/CiULENy73wIaHAl_By3w5cBCjxMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="352" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Rejuvenation, Work, In, Progress, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=j0LA5fAtB38&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/j0LA5fAtB38/default.jpg" height="90" width="120" time="00:02:56" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/j0LA5fAtB38/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/j0LA5fAtB38/1.jpg" height="90" width="120" time="00:01:28" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/j0LA5fAtB38/2.jpg" height="90" width="120" time="00:02:56" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/j0LA5fAtB38/3.jpg" height="90" width="120" time="00:04:24" yt:name="end"/>
+      <media:title type="plain">Rejuvenation - Work In Progress EP</media:title>
+      <yt:duration seconds="352"/>
+      <yt:uploaded>2011-07-02T06:28:59.000Z</yt:uploaded>
+      <yt:videoid>j0LA5fAtB38</yt:videoid>
+    </media:group>
+    <gd:rating average="3.0" max="5" min="1" numRaters="2" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="0" viewCount="511"/>
+    <yt:rating numDislikes="1" numLikes="1"/>
+    <yt:position>3</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mYFf-4Xjae5M9Bn2E_ycIzu</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="The"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Misfits"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Dum"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Girl"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>The Misfits - Dum Dum Girl (Original Mix)</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=AsAHXQt0SYs&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/AsAHXQt0SYs/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/AsAHXQt0SYs/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=AsAHXQt0SYs"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/AsAHXQt0SYs?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mYFf-4Xjae5M9Bn2E_ycIzu?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/AsAHXQt0SYs/comments?v=2" countHint="3"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/AsAHXQt0SYs?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="438" yt:format="5"/>
+      <media:content url="rtsp://v4.cache5.c.youtube.com/CiULENy73wIaHAmLSXQLXQfAAhMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="438" yt:format="1"/>
+      <media:content url="rtsp://v8.cache6.c.youtube.com/CiULENy73wIaHAmLSXQLXQfAAhMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="438" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>The, Misfits, Dum, Girl, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=AsAHXQt0SYs&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/AsAHXQt0SYs/default.jpg" height="90" width="120" time="00:03:39" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/AsAHXQt0SYs/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/AsAHXQt0SYs/1.jpg" height="90" width="120" time="00:01:49.500" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/AsAHXQt0SYs/2.jpg" height="90" width="120" time="00:03:39" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/AsAHXQt0SYs/3.jpg" height="90" width="120" time="00:05:28.500" yt:name="end"/>
+      <media:title type="plain">The Misfits - Dum Dum Girl (Original Mix)</media:title>
+      <yt:duration seconds="438"/>
+      <yt:uploaded>2011-07-02T06:22:12.000Z</yt:uploaded>
+      <yt:videoid>AsAHXQt0SYs</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="5" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="1" viewCount="415"/>
+    <yt:rating numDislikes="0" numLikes="5"/>
+    <yt:position>4</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4malRaoU6wBZrXMPFpTFRtNL</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Hidden"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Agenda"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Ft."/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Kim"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Payton"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Story"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="of"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="my"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="life"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>Hidden Agenda Ft. Kim Payton - Story of my life (Philadelphia Underground Mix)</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=q8bRR0-7JmA&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/q8bRR0-7JmA/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/q8bRR0-7JmA/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=q8bRR0-7JmA"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/q8bRR0-7JmA?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4malRaoU6wBZrXMPFpTFRtNL?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/q8bRR0-7JmA/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/q8bRR0-7JmA?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="370" yt:format="5"/>
+      <media:content url="rtsp://v4.cache4.c.youtube.com/CiULENy73wIaHAlgJrtPR9HGqxMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="370" yt:format="1"/>
+      <media:content url="rtsp://v7.cache4.c.youtube.com/CiULENy73wIaHAlgJrtPR9HGqxMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="370" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Hidden, Agenda, Ft., Kim, Payton, Story, of, my, life, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=q8bRR0-7JmA&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/q8bRR0-7JmA/default.jpg" height="90" width="120" time="00:03:05" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/q8bRR0-7JmA/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/q8bRR0-7JmA/1.jpg" height="90" width="120" time="00:01:32.500" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/q8bRR0-7JmA/2.jpg" height="90" width="120" time="00:03:05" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/q8bRR0-7JmA/3.jpg" height="90" width="120" time="00:04:37.500" yt:name="end"/>
+      <media:title type="plain">Hidden Agenda Ft. Kim Payton - Story of my life (Philadelphia Underground Mix)</media:title>
+      <yt:duration seconds="370"/>
+      <yt:uploaded>2011-07-02T06:19:21.000Z</yt:uploaded>
+      <yt:videoid>q8bRR0-7JmA</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="7" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="5" viewCount="474"/>
+    <yt:rating numDislikes="0" numLikes="7"/>
+    <yt:position>5</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mb2yan6ExmaWA-7p_MUB_ym</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Puro"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Sesso"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Bump"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Grind"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>Puro Sesso - Bump &amp; Grind (Rock 2 House Mix)</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=9IBsKIWwHFI&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/9IBsKIWwHFI/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/9IBsKIWwHFI/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=9IBsKIWwHFI"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/9IBsKIWwHFI?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mb2yan6ExmaWA-7p_MUB_ym?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/9IBsKIWwHFI/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/9IBsKIWwHFI?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="359" yt:format="5"/>
+      <media:content url="rtsp://v2.cache8.c.youtube.com/CiULENy73wIaHAlSHLCFKGyA9BMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="359" yt:format="1"/>
+      <media:content url="rtsp://v4.cache3.c.youtube.com/CiULENy73wIaHAlSHLCFKGyA9BMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="359" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Puro, Sesso, Bump, Grind, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=9IBsKIWwHFI&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/9IBsKIWwHFI/default.jpg" height="90" width="120" time="00:02:59.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/9IBsKIWwHFI/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/9IBsKIWwHFI/1.jpg" height="90" width="120" time="00:01:29.750" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/9IBsKIWwHFI/2.jpg" height="90" width="120" time="00:02:59.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/9IBsKIWwHFI/3.jpg" height="90" width="120" time="00:04:29.250" yt:name="end"/>
+      <media:title type="plain">Puro Sesso - Bump &amp; Grind (Rock 2 House Mix)</media:title>
+      <yt:duration seconds="359"/>
+      <yt:uploaded>2011-07-02T06:06:45.000Z</yt:uploaded>
+      <yt:videoid>9IBsKIWwHFI</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="2" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="0" viewCount="188"/>
+    <yt:rating numDislikes="0" numLikes="2"/>
+    <yt:position>6</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mZoWYVtVz3Xnmi3NulAUPbf</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <app:control>
+      <yt:state name="restricted" reasonCode="limitedSyndication">Syndication of this video was restricted by its owner.</yt:state>
+    </app:control>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Kamar"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="In"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Every"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Way"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>Kamar - In Every Way</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=3t4Y0G87poc&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/3t4Y0G87poc/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/3t4Y0G87poc/related?v=2"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/3t4Y0G87poc?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mZoWYVtVz3Xnmi3NulAUPbf?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="denied"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/3t4Y0G87poc/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/3t4Y0G87poc?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="220" yt:format="5"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Kamar, In, Every, Way, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=3t4Y0G87poc&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/3t4Y0G87poc/default.jpg" height="90" width="120" time="00:01:50" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/3t4Y0G87poc/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/3t4Y0G87poc/1.jpg" height="90" width="120" time="00:00:55" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/3t4Y0G87poc/2.jpg" height="90" width="120" time="00:01:50" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/3t4Y0G87poc/3.jpg" height="90" width="120" time="00:02:45" yt:name="end"/>
+      <media:title type="plain">Kamar - In Every Way</media:title>
+      <yt:duration seconds="220"/>
+      <yt:uploaded>2011-07-02T06:05:17.000Z</yt:uploaded>
+      <yt:videoid>3t4Y0G87poc</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="3" viewCount="359"/>
+    <yt:rating numDislikes="0" numLikes="1"/>
+    <yt:position>7</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mbAslepYZycBCAtTIakY0-R</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <app:control>
+      <yt:state name="restricted" reasonCode="limitedSyndication">Syndication of this video was restricted by its owner.</yt:state>
+    </app:control>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Black"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Riot"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Warlock"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>Black Riot - Warlock (Rubber Dub)</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=PzkRpm8chRc&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/PzkRpm8chRc/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/PzkRpm8chRc/related?v=2"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/PzkRpm8chRc?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mbAslepYZycBCAtTIakY0-R?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="denied"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/PzkRpm8chRc/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/PzkRpm8chRc?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="242" yt:format="5"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Black, Riot, Warlock, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=PzkRpm8chRc&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/PzkRpm8chRc/default.jpg" height="90" width="120" time="00:02:01" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/PzkRpm8chRc/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/PzkRpm8chRc/1.jpg" height="90" width="120" time="00:01:00.500" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/PzkRpm8chRc/2.jpg" height="90" width="120" time="00:02:01" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/PzkRpm8chRc/3.jpg" height="90" width="120" time="00:03:01.500" yt:name="end"/>
+      <media:title type="plain">Black Riot - Warlock (Rubber Dub)</media:title>
+      <yt:duration seconds="242"/>
+      <yt:uploaded>2011-07-02T05:59:19.000Z</yt:uploaded>
+      <yt:videoid>PzkRpm8chRc</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="1" viewCount="318"/>
+    <yt:rating numDislikes="0" numLikes="1"/>
+    <yt:position>8</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4ma050bTnU3WaQF96ZM16b8t</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Exposure"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Love"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Quest"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>Exposure - Love Quest</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=qKl6grJigFY&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/qKl6grJigFY/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/qKl6grJigFY/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=qKl6grJigFY"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/qKl6grJigFY?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4ma050bTnU3WaQF96ZM16b8t?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/qKl6grJigFY/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/qKl6grJigFY?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="269" yt:format="5"/>
+      <media:content url="rtsp://v2.cache2.c.youtube.com/CiULENy73wIaHAlWgGKygnqpqBMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="269" yt:format="1"/>
+      <media:content url="rtsp://v4.cache2.c.youtube.com/CiULENy73wIaHAlWgGKygnqpqBMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="269" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Exposure, Love, Quest, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=qKl6grJigFY&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/qKl6grJigFY/default.jpg" height="90" width="120" time="00:02:14.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/qKl6grJigFY/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/qKl6grJigFY/1.jpg" height="90" width="120" time="00:01:07.250" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/qKl6grJigFY/2.jpg" height="90" width="120" time="00:02:14.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/qKl6grJigFY/3.jpg" height="90" width="120" time="00:03:21.750" yt:name="end"/>
+      <media:title type="plain">Exposure - Love Quest</media:title>
+      <yt:duration seconds="269"/>
+      <yt:uploaded>2011-07-02T05:57:51.000Z</yt:uploaded>
+      <yt:videoid>qKl6grJigFY</yt:videoid>
+    </media:group>
+    <yt:statistics favoriteCount="0" viewCount="251"/>
+    <yt:position>9</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mZ3HYFI3luwyMGMgHmC7u0n</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <app:control>
+      <yt:state name="restricted" reasonCode="limitedSyndication">Syndication of this video was restricted by its owner.</yt:state>
+    </app:control>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="sub-urban"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="soul"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="domything"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>Sub-Urban Soul - Domything</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=Suu2jIdH5cU&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/Suu2jIdH5cU/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/Suu2jIdH5cU/related?v=2"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/Suu2jIdH5cU?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mZ3HYFI3luwyMGMgHmC7u0n?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="denied"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/Suu2jIdH5cU/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/Suu2jIdH5cU?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="396" yt:format="5"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>sub-urban, soul, domything, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=Suu2jIdH5cU&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/Suu2jIdH5cU/default.jpg" height="90" width="120" time="00:03:18" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/Suu2jIdH5cU/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/Suu2jIdH5cU/1.jpg" height="90" width="120" time="00:01:39" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/Suu2jIdH5cU/2.jpg" height="90" width="120" time="00:03:18" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/Suu2jIdH5cU/3.jpg" height="90" width="120" time="00:04:57" yt:name="end"/>
+      <media:title type="plain">Sub-Urban Soul - Domything</media:title>
+      <yt:duration seconds="396"/>
+      <yt:uploaded>2011-07-02T05:50:34.000Z</yt:uploaded>
+      <yt:videoid>Suu2jIdH5cU</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="0" viewCount="242"/>
+    <yt:rating numDislikes="0" numLikes="1"/>
+    <yt:position>10</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mZvb5462EtoKfqAI_XF1GYy</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Bott-ee"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Rider"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>Bott-ee - Rider</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=hW20s6fMYno&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/hW20s6fMYno/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/hW20s6fMYno/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=hW20s6fMYno"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/hW20s6fMYno?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mZvb5462EtoKfqAI_XF1GYy?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/hW20s6fMYno/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/hW20s6fMYno?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="340" yt:format="5"/>
+      <media:content url="rtsp://v8.cache8.c.youtube.com/CiULENy73wIaHAl6Ysyns7RthRMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="340" yt:format="1"/>
+      <media:content url="rtsp://v8.cache5.c.youtube.com/CiULENy73wIaHAl6Ysyns7RthRMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="340" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Bott-ee, Rider, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=hW20s6fMYno&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/hW20s6fMYno/default.jpg" height="90" width="120" time="00:02:50" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/hW20s6fMYno/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/hW20s6fMYno/1.jpg" height="90" width="120" time="00:01:25" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/hW20s6fMYno/2.jpg" height="90" width="120" time="00:02:50" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/hW20s6fMYno/3.jpg" height="90" width="120" time="00:04:15" yt:name="end"/>
+      <media:title type="plain">Bott-ee - Rider</media:title>
+      <yt:duration seconds="340"/>
+      <yt:uploaded>2011-07-02T05:47:51.000Z</yt:uploaded>
+      <yt:videoid>hW20s6fMYno</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="2" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="1" viewCount="276"/>
+    <yt:rating numDislikes="0" numLikes="2"/>
+    <yt:position>11</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4maMZW8btkKwnXyVsQzoZCPi</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Ultramarine"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Hooter"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="classic"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="house"/>
+    <title>Ultramarine - Hooter</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=ANZiuzOWXTo&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/ANZiuzOWXTo/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/ANZiuzOWXTo/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=ANZiuzOWXTo"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/ANZiuzOWXTo?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4maMZW8btkKwnXyVsQzoZCPi?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/ANZiuzOWXTo/comments?v=2" countHint="2"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/ANZiuzOWXTo?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="364" yt:format="5"/>
+      <media:content url="rtsp://v3.cache4.c.youtube.com/CiULENy73wIaHAk6XZYzu2LWABMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="364" yt:format="1"/>
+      <media:content url="rtsp://v7.cache5.c.youtube.com/CiULENy73wIaHAk6XZYzu2LWABMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="364" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Ultramarine, Hooter, classic, house</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=ANZiuzOWXTo&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ANZiuzOWXTo/default.jpg" height="90" width="120" time="00:03:02" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ANZiuzOWXTo/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ANZiuzOWXTo/1.jpg" height="90" width="120" time="00:01:31" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ANZiuzOWXTo/2.jpg" height="90" width="120" time="00:03:02" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ANZiuzOWXTo/3.jpg" height="90" width="120" time="00:04:33" yt:name="end"/>
+      <media:title type="plain">Ultramarine - Hooter</media:title>
+      <yt:duration seconds="364"/>
+      <yt:uploaded>2011-07-02T05:45:59.000Z</yt:uploaded>
+      <yt:videoid>ANZiuzOWXTo</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="2" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="0" viewCount="328"/>
+    <yt:rating numDislikes="0" numLikes="2"/>
+    <yt:position>12</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mbjHUSSKahxF1J1H3FC2UeL</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="The"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="cotton"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Club"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="feat."/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Bowa"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Wool"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="E.P."/>
+    <title>The cotton Club feat. Bowa - Cotton Wool E.P.</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=VFh7KKIS9MU&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/VFh7KKIS9MU/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/VFh7KKIS9MU/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=VFh7KKIS9MU"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/VFh7KKIS9MU?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mbjHUSSKahxF1J1H3FC2UeL?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/VFh7KKIS9MU/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/VFh7KKIS9MU?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="361" yt:format="5"/>
+      <media:content url="rtsp://v8.cache4.c.youtube.com/CiULENy73wIaHAnF9BKiKHtYVBMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="361" yt:format="1"/>
+      <media:content url="rtsp://v4.cache5.c.youtube.com/CiULENy73wIaHAnF9BKiKHtYVBMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="361" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>The, cotton, Club, feat., Bowa, Wool, E.P.</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=VFh7KKIS9MU&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/VFh7KKIS9MU/default.jpg" height="90" width="120" time="00:03:00.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/VFh7KKIS9MU/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/VFh7KKIS9MU/1.jpg" height="90" width="120" time="00:01:30.250" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/VFh7KKIS9MU/2.jpg" height="90" width="120" time="00:03:00.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/VFh7KKIS9MU/3.jpg" height="90" width="120" time="00:04:30.750" yt:name="end"/>
+      <media:title type="plain">The cotton Club feat. Bowa - Cotton Wool E.P.</media:title>
+      <yt:duration seconds="361"/>
+      <yt:uploaded>2011-07-01T21:48:28.000Z</yt:uploaded>
+      <yt:videoid>VFh7KKIS9MU</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="2" viewCount="206"/>
+    <yt:rating numDislikes="0" numLikes="1"/>
+    <yt:position>13</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mZXCykc4mF6Bwgle8oZnynT</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Kingdom"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Come"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Groovy"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Baby"/>
+    <title>Kingdom Come - Groovy Baby</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=whvIkQ2LZqw&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/whvIkQ2LZqw/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/whvIkQ2LZqw/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=whvIkQ2LZqw"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/whvIkQ2LZqw?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mZXCykc4mF6Bwgle8oZnynT?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/whvIkQ2LZqw/comments?v=2" countHint="1"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/whvIkQ2LZqw?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="359" yt:format="5"/>
+      <media:content url="rtsp://v8.cache5.c.youtube.com/CiULENy73wIaHAmsZosNkcgbwhMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="359" yt:format="1"/>
+      <media:content url="rtsp://v3.cache5.c.youtube.com/CiULENy73wIaHAmsZosNkcgbwhMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="359" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Kingdom, Come, Groovy, Baby</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=whvIkQ2LZqw&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/whvIkQ2LZqw/default.jpg" height="90" width="120" time="00:02:59.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/whvIkQ2LZqw/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/whvIkQ2LZqw/1.jpg" height="90" width="120" time="00:01:29.750" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/whvIkQ2LZqw/2.jpg" height="90" width="120" time="00:02:59.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/whvIkQ2LZqw/3.jpg" height="90" width="120" time="00:04:29.250" yt:name="end"/>
+      <media:title type="plain">Kingdom Come - Groovy Baby</media:title>
+      <yt:duration seconds="359"/>
+      <yt:uploaded>2011-07-01T21:42:46.000Z</yt:uploaded>
+      <yt:videoid>whvIkQ2LZqw</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="3" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="2" viewCount="331"/>
+    <yt:rating numDislikes="0" numLikes="3"/>
+    <yt:position>14</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eSp7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mYqtEF0tRNSeKOYydeVEq15</id>
+    <updated>2012-04-10T20:12:31.011Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Stayshon"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="To"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="My"/>
+    <title>Stayshon To Stayshon - My, My, My (Chancletas 2 The Bank)</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=E0jfltfhmpE&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/E0jfltfhmpE/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/E0jfltfhmpE/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=E0jfltfhmpE"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/E0jfltfhmpE?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mYqtEF0tRNSeKOYydeVEq15?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/E0jfltfhmpE/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/E0jfltfhmpE?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="253" yt:format="5"/>
+      <media:content url="rtsp://v5.cache5.c.youtube.com/CiULENy73wIaHAmRmuHXlt9IExMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="253" yt:format="1"/>
+      <media:content url="rtsp://v3.cache8.c.youtube.com/CiULENy73wIaHAmRmuHXlt9IExMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="253" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Stayshon, To, My</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=E0jfltfhmpE&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/E0jfltfhmpE/default.jpg" height="90" width="120" time="00:02:06.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/E0jfltfhmpE/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/E0jfltfhmpE/1.jpg" height="90" width="120" time="00:01:03.250" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/E0jfltfhmpE/2.jpg" height="90" width="120" time="00:02:06.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/E0jfltfhmpE/3.jpg" height="90" width="120" time="00:03:09.750" yt:name="end"/>
+      <media:title type="plain">Stayshon To Stayshon - My, My, My (Chancletas 2 The Bank)</media:title>
+      <yt:duration seconds="253"/>
+      <yt:uploaded>2011-07-01T21:40:56.000Z</yt:uploaded>
+      <yt:videoid>E0jfltfhmpE</yt:videoid>
+    </media:group>
+    <yt:statistics favoriteCount="0" viewCount="171"/>
+    <yt:position>15</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eip7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mb542RK-HBDIqPR6gd3yG-8</id>
+    <updated>2012-04-10T20:12:31.012Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="staccato!"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="please"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="concerto"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="in"/>
+    <title>Staccato! please - Concerto in e</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=sMPCTvw48xM&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/sMPCTvw48xM/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/sMPCTvw48xM/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=sMPCTvw48xM"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/sMPCTvw48xM?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mb542RK-HBDIqPR6gd3yG-8?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/sMPCTvw48xM/comments?v=2" countHint="1"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/sMPCTvw48xM?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="303" yt:format="5"/>
+      <media:content url="rtsp://v6.cache3.c.youtube.com/CiULENy73wIaHAkT8zj8TsLDsBMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="303" yt:format="1"/>
+      <media:content url="rtsp://v7.cache1.c.youtube.com/CiULENy73wIaHAkT8zj8TsLDsBMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="303" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>staccato!, please, concerto, in</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=sMPCTvw48xM&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/sMPCTvw48xM/default.jpg" height="90" width="120" time="00:02:31.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/sMPCTvw48xM/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/sMPCTvw48xM/1.jpg" height="90" width="120" time="00:01:15.750" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/sMPCTvw48xM/2.jpg" height="90" width="120" time="00:02:31.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/sMPCTvw48xM/3.jpg" height="90" width="120" time="00:03:47.250" yt:name="end"/>
+      <media:title type="plain">Staccato! please - Concerto in e</media:title>
+      <yt:duration seconds="303"/>
+      <yt:uploaded>2011-07-01T21:32:46.000Z</yt:uploaded>
+      <yt:videoid>sMPCTvw48xM</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="1" viewCount="166"/>
+    <yt:rating numDislikes="0" numLikes="1"/>
+    <yt:position>16</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eip7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mYt52znMnLNPzWD30f41gUz</id>
+    <updated>2012-04-10T20:12:31.012Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Semi"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Real"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="People"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Living"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="For"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Today"/>
+    <title>Semi Real - People Living For Today</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=jymatuG1rPA&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/jymatuG1rPA/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/jymatuG1rPA/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=jymatuG1rPA"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/jymatuG1rPA?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mYt52znMnLNPzWD30f41gUz?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/jymatuG1rPA/comments?v=2" countHint="2"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/jymatuG1rPA?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="303" yt:format="5"/>
+      <media:content url="rtsp://v8.cache3.c.youtube.com/CiULENy73wIaHAnwrLXhtpopjxMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="303" yt:format="1"/>
+      <media:content url="rtsp://v2.cache6.c.youtube.com/CiULENy73wIaHAnwrLXhtpopjxMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="303" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Semi, Real, People, Living, For, Today</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=jymatuG1rPA&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/jymatuG1rPA/default.jpg" height="90" width="120" time="00:02:31.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/jymatuG1rPA/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/jymatuG1rPA/1.jpg" height="90" width="120" time="00:01:15.750" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/jymatuG1rPA/2.jpg" height="90" width="120" time="00:02:31.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/jymatuG1rPA/3.jpg" height="90" width="120" time="00:03:47.250" yt:name="end"/>
+      <media:title type="plain">Semi Real - People Living For Today</media:title>
+      <yt:duration seconds="303"/>
+      <yt:uploaded>2011-07-01T21:31:10.000Z</yt:uploaded>
+      <yt:videoid>jymatuG1rPA</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="4" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="2" viewCount="412"/>
+    <yt:rating numDislikes="0" numLikes="4"/>
+    <yt:position>17</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eip7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4maZmebP-JhTS608OhQ4dl0o</id>
+    <updated>2012-04-10T20:12:31.012Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Tyme"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Use"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Me"/>
+    <title>R Tyme - Use Me (MK Dub)</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=_i1Fffejbag&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/_i1Fffejbag/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/_i1Fffejbag/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=_i1Fffejbag"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/_i1Fffejbag?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4maZmebP-JhTS608OhQ4dl0o?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/_i1Fffejbag/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/_i1Fffejbag?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="407" yt:format="5"/>
+      <media:content url="rtsp://v5.cache8.c.youtube.com/CiULENy73wIaHAmobaP3fUUt_hMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="407" yt:format="1"/>
+      <media:content url="rtsp://v4.cache7.c.youtube.com/CiULENy73wIaHAmobaP3fUUt_hMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="407" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Tyme, Use, Me</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=_i1Fffejbag&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/_i1Fffejbag/default.jpg" height="90" width="120" time="00:03:23.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/_i1Fffejbag/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/_i1Fffejbag/1.jpg" height="90" width="120" time="00:01:41.750" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/_i1Fffejbag/2.jpg" height="90" width="120" time="00:03:23.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/_i1Fffejbag/3.jpg" height="90" width="120" time="00:05:05.250" yt:name="end"/>
+      <media:title type="plain">R Tyme - Use Me (MK Dub)</media:title>
+      <yt:duration seconds="407"/>
+      <yt:uploaded>2011-07-01T21:24:22.000Z</yt:uploaded>
+      <yt:videoid>_i1Fffejbag</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="5" viewCount="464"/>
+    <yt:rating numDislikes="0" numLikes="1"/>
+    <yt:position>18</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eip7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mZZyioS-mLBVkMgoTO1ppAR</id>
+    <updated>2012-04-10T20:12:31.012Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Jaimy"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Con-am"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Funky"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="love"/>
+    <title>Jaimy &amp; Con-am - Funky love</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=HmwFHIdK2Oo&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/HmwFHIdK2Oo/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/HmwFHIdK2Oo/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=HmwFHIdK2Oo"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/HmwFHIdK2Oo?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mZZyioS-mLBVkMgoTO1ppAR?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/HmwFHIdK2Oo/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/HmwFHIdK2Oo?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="247" yt:format="5"/>
+      <media:content url="rtsp://v8.cache7.c.youtube.com/CiULENy73wIaHAnq2EqHHAVsHhMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="247" yt:format="1"/>
+      <media:content url="rtsp://v3.cache7.c.youtube.com/CiULENy73wIaHAnq2EqHHAVsHhMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="247" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Jaimy, Con-am, Funky, love</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=HmwFHIdK2Oo&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/HmwFHIdK2Oo/default.jpg" height="90" width="120" time="00:02:03.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/HmwFHIdK2Oo/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/HmwFHIdK2Oo/1.jpg" height="90" width="120" time="00:01:01.750" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/HmwFHIdK2Oo/2.jpg" height="90" width="120" time="00:02:03.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/HmwFHIdK2Oo/3.jpg" height="90" width="120" time="00:03:05.250" yt:name="end"/>
+      <media:title type="plain">Jaimy &amp; Con-am - Funky love</media:title>
+      <yt:duration seconds="247"/>
+      <yt:uploaded>2011-07-01T21:21:18.000Z</yt:uploaded>
+      <yt:videoid>HmwFHIdK2Oo</yt:videoid>
+    </media:group>
+    <yt:statistics favoriteCount="0" viewCount="156"/>
+    <yt:position>19</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eip7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mZzrpFyYtlVbEVLM5OZE6wL</id>
+    <updated>2012-04-10T20:12:31.012Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="X-Sample"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Dreamin'"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="In"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Buristead"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Road"/>
+    <title>X-Sample - Dreamin' In Buristead Road</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=DIC1t1eEoIk&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/DIC1t1eEoIk/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/DIC1t1eEoIk/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=DIC1t1eEoIk"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/DIC1t1eEoIk?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mZzrpFyYtlVbEVLM5OZE6wL?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/DIC1t1eEoIk/comments?v=2" countHint="2"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/DIC1t1eEoIk?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="328" yt:format="5"/>
+      <media:content url="rtsp://v6.cache1.c.youtube.com/CiULENy73wIaHAmJoIRXt7WADBMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="328" yt:format="1"/>
+      <media:content url="rtsp://v1.cache5.c.youtube.com/CiULENy73wIaHAmJoIRXt7WADBMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="328" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>X-Sample, Dreamin', In, Buristead, Road</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=DIC1t1eEoIk&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/DIC1t1eEoIk/default.jpg" height="90" width="120" time="00:02:44" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/DIC1t1eEoIk/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/DIC1t1eEoIk/1.jpg" height="90" width="120" time="00:01:22" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/DIC1t1eEoIk/2.jpg" height="90" width="120" time="00:02:44" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/DIC1t1eEoIk/3.jpg" height="90" width="120" time="00:04:06" yt:name="end"/>
+      <media:title type="plain">X-Sample - Dreamin' In Buristead Road</media:title>
+      <yt:duration seconds="328"/>
+      <yt:uploaded>2011-07-01T21:13:29.000Z</yt:uploaded>
+      <yt:videoid>DIC1t1eEoIk</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="4" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="7" viewCount="895"/>
+    <yt:rating numDislikes="0" numLikes="4"/>
+    <yt:position>20</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eip7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mZKWBTv-XAl9FUOWQqdZpIA</id>
+    <updated>2012-04-10T20:12:31.012Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Raven"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Maize"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Forever"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Together"/>
+    <title>Raven Maize - Forever Together</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=87bgq5xwgrg&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/87bgq5xwgrg/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/87bgq5xwgrg/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=87bgq5xwgrg"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/87bgq5xwgrg?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mZKWBTv-XAl9FUOWQqdZpIA?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/87bgq5xwgrg/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/87bgq5xwgrg?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="342" yt:format="5"/>
+      <media:content url="rtsp://v4.cache8.c.youtube.com/CiULENy73wIaHAm4gnCcq-C28xMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="342" yt:format="1"/>
+      <media:content url="rtsp://v3.cache1.c.youtube.com/CiULENy73wIaHAm4gnCcq-C28xMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="342" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Raven, Maize, Forever, Together</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=87bgq5xwgrg&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/87bgq5xwgrg/default.jpg" height="90" width="120" time="00:02:51" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/87bgq5xwgrg/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/87bgq5xwgrg/1.jpg" height="90" width="120" time="00:01:25.500" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/87bgq5xwgrg/2.jpg" height="90" width="120" time="00:02:51" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/87bgq5xwgrg/3.jpg" height="90" width="120" time="00:04:16.500" yt:name="end"/>
+      <media:title type="plain">Raven Maize - Forever Together</media:title>
+      <yt:duration seconds="342"/>
+      <yt:uploaded>2011-07-01T21:11:58.000Z</yt:uploaded>
+      <yt:videoid>87bgq5xwgrg</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="3" viewCount="206"/>
+    <yt:rating numDislikes="0" numLikes="1"/>
+    <yt:position>21</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eip7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mbIKxN8soad1d0MTNlYJN1b</id>
+    <updated>2012-04-10T20:12:31.012Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="las"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="america's"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="worship"/>
+    <title>Las America's - Worship (Que Divina!</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=SZ3_xVcgUSI&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/SZ3_xVcgUSI/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/SZ3_xVcgUSI/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=SZ3_xVcgUSI"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/SZ3_xVcgUSI?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mbIKxN8soad1d0MTNlYJN1b?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/SZ3_xVcgUSI/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/SZ3_xVcgUSI?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="301" yt:format="5"/>
+      <media:content url="rtsp://v8.cache4.c.youtube.com/CiULENy73wIaHAkiUSBXxf-dSRMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="301" yt:format="1"/>
+      <media:content url="rtsp://v3.cache3.c.youtube.com/CiULENy73wIaHAkiUSBXxf-dSRMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="301" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>las, america's, worship</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=SZ3_xVcgUSI&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/SZ3_xVcgUSI/default.jpg" height="90" width="120" time="00:02:30.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/SZ3_xVcgUSI/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/SZ3_xVcgUSI/1.jpg" height="90" width="120" time="00:01:15.250" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/SZ3_xVcgUSI/2.jpg" height="90" width="120" time="00:02:30.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/SZ3_xVcgUSI/3.jpg" height="90" width="120" time="00:03:45.750" yt:name="end"/>
+      <media:title type="plain">Las America's - Worship (Que Divina!</media:title>
+      <yt:duration seconds="301"/>
+      <yt:uploaded>2011-07-01T21:03:03.000Z</yt:uploaded>
+      <yt:videoid>SZ3_xVcgUSI</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="2" viewCount="252"/>
+    <yt:rating numDislikes="0" numLikes="1"/>
+    <yt:position>22</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eip7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mZzArMf4FNjd5L7WHGOER_N</id>
+    <updated>2012-04-10T20:12:31.012Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Kenny"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Dope"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Gonzalez"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="All"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="I'm"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Askin'"/>
+    <title>Kenny 'Dope' Gonzalez - All I'm Askin' (Roger Sanchez Mix)</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=whBsGM6ZhtA&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/whBsGM6ZhtA/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/whBsGM6ZhtA/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=whBsGM6ZhtA"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/whBsGM6ZhtA?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mZzArMf4FNjd5L7WHGOER_N?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/whBsGM6ZhtA/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/whBsGM6ZhtA?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="363" yt:format="5"/>
+      <media:content url="rtsp://v5.cache7.c.youtube.com/CiULENy73wIaHAnQhpnOGGwQwhMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="363" yt:format="1"/>
+      <media:content url="rtsp://v4.cache3.c.youtube.com/CiULENy73wIaHAnQhpnOGGwQwhMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="363" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Kenny, Dope, Gonzalez, All, I'm, Askin'</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=whBsGM6ZhtA&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/whBsGM6ZhtA/default.jpg" height="90" width="120" time="00:03:01.500" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/whBsGM6ZhtA/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/whBsGM6ZhtA/1.jpg" height="90" width="120" time="00:01:30.750" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/whBsGM6ZhtA/2.jpg" height="90" width="120" time="00:03:01.500" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/whBsGM6ZhtA/3.jpg" height="90" width="120" time="00:04:32.250" yt:name="end"/>
+      <media:title type="plain">Kenny 'Dope' Gonzalez - All I'm Askin' (Roger Sanchez Mix)</media:title>
+      <yt:duration seconds="363"/>
+      <yt:uploaded>2011-07-01T21:01:34.000Z</yt:uploaded>
+      <yt:videoid>whBsGM6ZhtA</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="1" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="2" viewCount="374"/>
+    <yt:rating numDislikes="0" numLikes="1"/>
+    <yt:position>23</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eip7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mbUTLFkNAgm7reOZhwnBxh1</id>
+    <updated>2012-04-10T20:12:31.012Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Nathaniel"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Station"/>
+    <title>Nathaniel X - Station X</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=P4CLIkK2QAk&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/P4CLIkK2QAk/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/P4CLIkK2QAk/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=P4CLIkK2QAk"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/P4CLIkK2QAk?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mbUTLFkNAgm7reOZhwnBxh1?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/P4CLIkK2QAk/comments?v=2" countHint="3"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/P4CLIkK2QAk?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="334" yt:format="5"/>
+      <media:content url="rtsp://v2.cache2.c.youtube.com/CiULENy73wIaHAkJQLZCIouAPxMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="334" yt:format="1"/>
+      <media:content url="rtsp://v6.cache8.c.youtube.com/CiULENy73wIaHAkJQLZCIouAPxMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="334" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Nathaniel, Station</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=P4CLIkK2QAk&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/P4CLIkK2QAk/default.jpg" height="90" width="120" time="00:02:47" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/P4CLIkK2QAk/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/P4CLIkK2QAk/1.jpg" height="90" width="120" time="00:01:23.500" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/P4CLIkK2QAk/2.jpg" height="90" width="120" time="00:02:47" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/P4CLIkK2QAk/3.jpg" height="90" width="120" time="00:04:10.500" yt:name="end"/>
+      <media:title type="plain">Nathaniel X - Station X</media:title>
+      <yt:duration seconds="334"/>
+      <yt:uploaded>2011-07-01T20:53:14.000Z</yt:uploaded>
+      <yt:videoid>P4CLIkK2QAk</yt:videoid>
+    </media:group>
+    <gd:rating average="5.0" max="5" min="1" numRaters="11" rel="http://schemas.google.com/g/2005#overall"/>
+    <yt:statistics favoriteCount="16" viewCount="540"/>
+    <yt:rating numDislikes="0" numLikes="11"/>
+    <yt:position>24</yt:position>
+  </entry>
+  <entry gd:etag="W/&quot;AkABQH46eip7I2A9WhVXEEU.&quot;">
+    <id>tag:youtube.com,2008:playlist:C2E0BCBBF3C334B9:PLxVQDWexV4mbRr8eCeJ1hSXpayBp7tlTo</id>
+    <updated>2012-04-10T20:12:31.012Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#playlist"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="Music" label="Music"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Jimi"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Polo"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Express"/>
+    <category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Yourself"/>
+    <title>Jimi Polo - Express Yourself (Ministry Mix)</title>
+    <link rel="alternate" type="text/html" href="https://www.youtube.com/watch?v=ooTHvO6PLa8&amp;feature=youtube_gdata"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/ooTHvO6PLa8/responses?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/ooTHvO6PLa8/related?v=2"/>
+    <link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="https://m.youtube.com/details?v=ooTHvO6PLa8"/>
+    <link rel="related" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/videos/ooTHvO6PLa8?v=2"/>
+    <link rel="self" type="application/atom+xml" href="https://gdata.youtube.com/feeds/api/playlists/C2E0BCBBF3C334B9/PLxVQDWexV4mbRr8eCeJ1hSXpayBp7tlTo?v=2"/>
+    <author>
+      <name>Engeltjeuit1970</name>
+      <uri>https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970</uri>
+      <yt:userId>GJpV44Fq-V32dTbyAs-ryw</yt:userId>
+    </author>
+    <yt:accessControl action="comment" permission="allowed"/>
+    <yt:accessControl action="commentVote" permission="allowed"/>
+    <yt:accessControl action="videoRespond" permission="moderated"/>
+    <yt:accessControl action="rate" permission="allowed"/>
+    <yt:accessControl action="embed" permission="allowed"/>
+    <yt:accessControl action="list" permission="allowed"/>
+    <yt:accessControl action="autoPlay" permission="allowed"/>
+    <yt:accessControl action="syndicate" permission="allowed"/>
+    <gd:comments>
+      <gd:feedLink rel="http://gdata.youtube.com/schemas/2007#comments" href="https://gdata.youtube.com/feeds/api/videos/ooTHvO6PLa8/comments?v=2" countHint="0"/>
+    </gd:comments>
+    <media:group>
+      <media:category label="Music" scheme="http://gdata.youtube.com/schemas/2007/categories.cat">Music</media:category>
+      <media:content url="https://www.youtube.com/v/ooTHvO6PLa8?version=3&amp;f=playlists&amp;app=youtube_gdata" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" duration="348" yt:format="5"/>
+      <media:content url="rtsp://v1.cache8.c.youtube.com/CiULENy73wIaHAmvLY_uvMeEohMYDSANFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="348" yt:format="1"/>
+      <media:content url="rtsp://v1.cache6.c.youtube.com/CiULENy73wIaHAmvLY_uvMeEohMYESARFEgGUglwbGF5bGlzdHMM/0/0/0/video.3gp" type="video/3gpp" medium="video" expression="full" duration="348" yt:format="6"/>
+      <media:credit role="uploader" scheme="urn:youtube" yt:display="Engeltjeuit1970">engeltjeuit1970</media:credit>
+      <media:description type="plain"/>
+      <media:keywords>Jimi, Polo, Express, Yourself</media:keywords>
+      <media:license type="text/html" href="http://www.youtube.com/t/terms">youtube</media:license>
+      <media:player url="https://www.youtube.com/watch?v=ooTHvO6PLa8&amp;feature=youtube_gdata_player"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ooTHvO6PLa8/default.jpg" height="90" width="120" time="00:02:54" yt:name="default"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ooTHvO6PLa8/hqdefault.jpg" height="360" width="480" yt:name="hqdefault"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ooTHvO6PLa8/1.jpg" height="90" width="120" time="00:01:27" yt:name="start"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ooTHvO6PLa8/2.jpg" height="90" width="120" time="00:02:54" yt:name="middle"/>
+      <media:thumbnail url="http://i.ytimg.com/vi/ooTHvO6PLa8/3.jpg" height="90" width="120" time="00:04:21" yt:name="end"/>
+      <media:title type="plain">Jimi Polo - Express Yourself (Ministry Mix)</media:title>
+      <yt:duration seconds="348"/>
+      <yt:uploaded>2011-07-01T20:51:31.000Z</yt:uploaded>
+      <yt:videoid>ooTHvO6PLa8</yt:videoid>
+    </media:group>
+    <yt:statistics favoriteCount="3" viewCount="253"/>
+    <yt:position>25</yt:position>
+  </entry>
+</feed>

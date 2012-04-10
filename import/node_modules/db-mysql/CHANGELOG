@@ -1,0 +1,94 @@
+For more in depth changelog, check the Github Commits:
+
+https://github.com/mariano/node-db-mysql/commits/master
+
+0.7.6
+-----
+* Fixing issue where NODE_PSYMBOL throws compilation errors on node <= 0.4.9
+
+0.7.5
+-----
+* Fixing issue where error message would be lost when multiple queries errored out
+* Adding tests to show chained JOINs usage
+
+0.7.4
+-----
+* Fixing issue where when on error event handler was attached, node-db fails horribly
+
+0.7.3
+-----
+* Fixing issue when using the three-argument call on Query::execute()
+
+0.7.2
+-----
+* Fixing issue where numbers that are part of a string could be treated as pure numbers
+
+0.7.1
+-----
+* Fixing issue with number conversions possibly failing (thanks @tojocky)
+
+0.7.0
+-----
+* Fixing issue where ints were treated as floating point numbers
+* Allowing user to change precision of floating point numbers
+* Fixing unit tests (they require a valid DB connection now. Check the tests-settings.json file)
+
+0.6.9
+-----
+* Fixing precision with big numbers
+
+0.6.8
+-----
+* Adding support for both node 0.4.x and 0.5.x
+
+0.6.7
+-----
+* Throwing exception if Query.execute() is issued without an active connection
+
+0.6.6
+-----
+* Fixed issue where new connections would throw SEGFAULT on some OSs
+
+0.6.5
+-----
+* Fixed issue where conversion of result fields to JS Date object could be truncated on some systems
+
+0.6.4
+-----
+* Fixed issue where Database.setReconnect() and Database.setSslVerifyServer() were causing fatal errors
+
+0.6.3
+-----
+* Exporting Query so its prototype can be extended from JS
+* Query.execute() callback now is issued in the Query instance scope
+
+0.6.2
+-----
+* Reconnection is enabled by default
+* Database.isConnected() properly pings the server to check status of connection
+
+0.6.1
+-----
+* Fixing issue where Query.execute(callback, options) was not easily doable
+
+0.6.0
+-----
+* Fixing issue where Database.name() was escaping star chars
+
+0.5.9
+-----
+* Fixing compilation warnings on some 32 bit systems (CentOS)
+
+0.5.8
+-----
+* Database.connect() now takes an error-first callback
+* Fixing compilation issues in CentOS
+
+0.5.7
+-----
+* [API CHANGE] Query.execute() callback now takes error as its first argument
+* Added new optional connection options: charset, compress, initCommand, readTimeout, reconnect, sslVerifyServer, timeout, writeTimeout
+
+0.5.6
+-----
+First public release

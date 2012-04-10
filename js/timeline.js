@@ -25,6 +25,7 @@ var Timeline = (function(){
 
     UNIQ = 0;
 
+  eval(_inject('timeline'));
   Player = {
     controls: [],
 
