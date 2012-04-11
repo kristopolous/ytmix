@@ -1,4 +1,17 @@
 var Utils = {
+  stack: function(ex) {
+    try { throw new Error(); }
+    catch (e) { return(
+      e.stack
+        .split('\n')
+        .slice(2,7)
+        .join('\n')
+        .replace(/^[^@]*/mg, '')
+        .replace(/\n[^@]*/mg, '\n   ')
+      || e.stack);
+    }
+  },
+
   // This is an aggregate function that can probably
   // be refactored into a reduction
   runtime: function(obj) {

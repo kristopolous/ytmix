@@ -32,6 +32,7 @@ var Results = {
 
     var compare = {pre: {}, post: {}};
 
+    /*
     $("#video-viewport").sortable({
       start: function(event, ui) {
         $("#video-viewport > *").each(function(index, dom) {
@@ -56,6 +57,7 @@ var Results = {
         Timeline.build(playlistOrder);
       }
     });
+    */
 
     ev.on('request_gen', Results.gen);
   

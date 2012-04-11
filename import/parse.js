@@ -24,7 +24,7 @@ function addEntries(xml) {
     }
     result.entry.forEach(function(entry) {
       playlist.push({
-        length: entry['media:group']['yt:duration']['@']['seconds'],
+        length: parseInt(entry['media:group']['yt:duration']['@']['seconds']),
         title: entry.title,
         ytid: entry['media:group']['yt:videoid'],
         related: [],

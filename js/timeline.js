@@ -186,7 +186,7 @@ var Timeline = (function(){
           $("#control").css('left', - 100 * ((time + Player.activeData.offset) / _totalRuntime) + "%");
         }
 
-        if(Player.active.getDuration() - time == 0) {
+        if(time > 0 && Player.active.getDuration() > 0 && (Player.active.getDuration() - time == 0)) {
           _offset += 1;
           Timeline.seekTo(_offset);
         } else {
