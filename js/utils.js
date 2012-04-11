@@ -27,14 +27,27 @@ var Utils = {
 
   secondsToTime: function(count) {
     var stack = [];
-    for(
-      count = Math.floor(count);
-      count > 0;
-      count = Math.floor(count / 60)
-    ) {
-      stack.push(((count % 60) + 100).toString().substr(1)); 
+
+    // seconds
+    count = Math.floor(count / 60);
+
+    // minutes
+    if (count > 1) {
+      stack.push((count % 60) + " min");
+      count = Math.floor(count / 60);
     }
-    return stack.reverse().join(':').replace(/^0/,'');
+
+    // hours
+    if (count > 1) {
+      stack.push((count % 24) + " hours");
+      count = Math.floor(count / 24);
+    }
+
+    // days
+    if (count > 1) {
+      stack.push(count.toFixed(0) + " days");
+    }
+    return stack.reverse().join(' ').replace(/^0/,'');
   },
 
   onEnter: function(div, callback) {

@@ -429,6 +429,12 @@ var Timeline = (function(){
         hook(ix);
       }
     }*/
+
+    setTimeout(function(){
+      if(Player.activeData) {
+        Timeline.seekTo((0.001 * (-_epoch + (+new Date()))) % _totalRuntime);
+      }
+    }, 3000);
   }
 
   ev('playlist_tracks', function(){build();});

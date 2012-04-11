@@ -15,6 +15,8 @@ function remote(opts) {
   }
 
   $.post('api/playlist.php', opts, function(ret) {
+    ret = JSON.parse(ret);
+
     var meta = {  
       reqID: reqID,
       opts: opts,
@@ -41,7 +43,7 @@ function remote(opts) {
     }
 
     ev('remote', meta);
-  }, 'json');
+  }, 'text');
 
   return reqID;
 }
@@ -129,9 +131,12 @@ ev.setter('recent', function(){
   remote({
     func: 'recent',
     onSuccess: function(data) {
+      console.log(data);
       data = _.without(data, false);
       each(data, function(which) {
-        which.tracklist = JSON.parse(which.tracklist);
+        if(which.tracklist.constructor == String) {
+          which.tracklist = JSON.parse(which.tracklist);
+        }
       });
       ev('recent', data);
     }   

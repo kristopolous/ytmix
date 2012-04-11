@@ -11,6 +11,7 @@ var
     'active_track': {},
     'search_query': ''
   }),
+  _epoch = 1334106009061,
   _get = function(id){ 
     try {
       return document.getElementById(id);
