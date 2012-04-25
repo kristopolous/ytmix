@@ -30,7 +30,10 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 #video-list {display:block}
 #video-viewport{text-align:center}
 #video-viewport .result img{background:#000;width:96px;height:72px}
-.result{background:#101;display:inline-block;width:260px;padding:0.5em;margin:0.25em;vertical-align:top;position:relative}
+.result{
+  border:0.15em solid #101;
+  background:#101;display:inline-block;width:260px;padding:0.4em;margin:0.25em;vertical-align:top;position:relative}
+.result.new{border-color:#535}
 .result img{width:6em}
 .result span{width:150px;padding-left:0.5em;font-size:0.8em;color:#888897;overflow:hidden;vertical-align:top;display:inline-block;text-align:left}
 .result span em{display:block;color:#aaaab5;font-style:normal;font-weight:bold;font-size:1em;max-height:4em;overflow:hidden}

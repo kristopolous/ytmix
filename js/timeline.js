@@ -1,3 +1,23 @@
+var UserHistory = (function(){
+  function init(){
+    if(!localStorage["viewed"]) {
+      localStorage["viewed"] = {};
+    }
+  }
+
+  return {
+    isViewed: function(id) {
+      init();
+      return localStorage["viewed"][id];
+    },
+    load: function (object, id, offset) {
+      init();
+      localStorage["viewed"][id] = true;
+
+      object.loadVideoById(id, offset);
+    }
+  }
+})();
 var Timeline = (function(){
   var 
     // The internal database of what is
@@ -517,7 +537,7 @@ var Timeline = (function(){
           Timeline.pause();
         } else if(Player.activeData != _data[dbid]) {
           Player.activeData = _data[dbid];
-          Player.active.loadVideoById(Player.activeData.ytid, offset);
+          UserHistory.load(Player.active, Player.activeData.ytid, offset);
           ev('active_track', Player.activeData);
           Player.start = $(_data[dbid].dom).offset().left - $("#control").offset().left;
           Player.Play();
@@ -603,7 +623,7 @@ var Timeline = (function(){
         ev('active_track', obj);
         ev('preview_track', obj);
 
-        Player.sample.loadVideoById(obj.ytid, 10);
+        UserHistory.load(Player.sample, obj.ytid, 10);
         Player.sample.playVideo();
 
         setTimeout(function(){

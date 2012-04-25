@@ -32,7 +32,14 @@ function addEntries(xml) {
       }
       ytid = entry['media:group']['yt:videoid'];
       if (ytid == undefined) {
-        ytid = entry.link[0]['@'].href.match(/v=([\w-_]*)&/)[1];
+        switch(entry.link[0]['@'].type) {
+          case 'text/html':
+            ytid = entry.link[0]['@'].href.match(/v=([\w-_]*)&/)[1];
+            break;
+          case 'application/atom+xml':
+            ytid = entry.link[0]['@'].href.split('/').pop();
+            break;
+        }
       }
       playlist.push({
         length: parseInt(entry['media:group']['yt:duration']['@']['seconds']),
@@ -91,5 +98,5 @@ function finish(){
   });
 }
 
-readUrl('https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970/uploads');
+readUrl('https://gdata.youtube.com/feeds/api/users/TheTodd1977/uploads');
 

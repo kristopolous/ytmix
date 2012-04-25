@@ -72,63 +72,68 @@ var Results = {
   draw: function(obj) {
 
     // Look to see if we have generated this before.
-    var dbReference = db.find({ytid: obj.ytid});
-
-    if(dbReference.length) {
-      if(dbReference[0].jqueryObject) {
-        // If so, then just take the old dom entry and
-        // append it to the video viewport, returning
-        // the object that was previously created.
-
-        dbReference[0].jqueryObject.hoverControl.css('display','none');
-
-        $("#video-viewport").append(dbReference[0].jqueryObject);
-        return dbReference[0].dom;
-      }
-    }
-
     var 
-      play = $("<a />"),
-      queue = $("<a />"),
+      dom,
+      dbReference = db.find({ytid: obj.ytid});
 
-      open = $("<a>open</a>").attr({
-        target: '_blank',
-        href: 'http://youtube.com/watch?v=' + obj.ytid
-      }).click(Timeline.pause),
+    if(dbReference.length && dbReference[0].jqueryObject) {
+      // If so, then just take the old dom entry and
+      // append it to the video viewport, returning
+      // the object that was previously created.
 
-      hoverControl = $("<div class=hover>");
+      dbReference[0].jqueryObject.hoverControl.css('display','none');
 
-    hoverControl
-      .append(play)
-      .append(queue)
-      .append(open);
-
-    var result = $("<span class=result/>")
-      .hover(
-        function(){ hoverControl.css('display','block') }, 
-        function(){ hoverControl.css('display','none') }
-      )
-      .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
-      .append(hoverControl)
-      .appendTo($("#video-viewport"));
-
-    play.html('play').click(function(){
-      Timeline.sample(obj);
-    });
-
-    if('playlistid' in obj) {
-      queue.html("remove").click(function(){ Timeline.remove(obj.playlistid); });
+      $("#video-viewport").append(dbReference[0].jqueryObject);
+      dom = dbReference[0].dom;
     } else {
-      queue.html("add").click(function(){ Timeline.add(obj, {noplay: true}); });
-    }  
 
-    // back reference of what we are generating
-    result.get(0).ytid = obj.ytid;
-    result.hoverControl = hoverControl;
+      var 
+        play = $("<a />"),
+        queue = $("<a />"),
 
-    db.find({ytid: obj.ytid}).update({jqueryOjbect: result});
+        open = $("<a>open</a>").attr({
+          target: '_blank',
+          href: 'http://youtube.com/watch?v=' + obj.ytid
+        }).click(Timeline.pause),
 
-    return result;
+        hoverControl = $("<div class=hover>");
+
+      hoverControl
+        .append(play)
+        .append(queue)
+        .append(open);
+
+      var result = $("<span class=result/>")
+        .hover(
+          function(){ hoverControl.css('display','block') }, 
+          function(){ hoverControl.css('display','none') }
+        )
+        .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
+        .append(hoverControl)
+        .appendTo($("#video-viewport"));
+
+      play.html('play').click(function(){
+        Timeline.sample(obj);
+      });
+
+      if('playlistid' in obj) {
+        queue.html("remove").click(function(){ Timeline.remove(obj.playlistid); });
+      } else {
+        queue.html("add").click(function(){ Timeline.add(obj, {noplay: true}); });
+      }  
+
+      // back reference of what we are generating
+      result.get(0).ytid = obj.ytid;
+      result.hoverControl = hoverControl;
+
+      db.find({ytid: obj.ytid}).update({jqueryOjbect: result});
+
+      dom = result;
+    }
+    if (!UserHistory.isViewed(obj.ytid)) {
+      $(dom).addClass('new');
+    }
+    return dom;
   },
 
   gen: function(){
