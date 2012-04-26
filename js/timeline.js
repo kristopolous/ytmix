@@ -17,8 +17,6 @@ var UserHistory = (function(){
     },
     view: function (object, id, offset) {
       localStorage["v" + id] = true;
-      console.log(localStorage);
-
       object.loadVideoById(id, offset);
     }
   }
@@ -41,10 +39,9 @@ var Timeline = (function(){
 
     _data = TimeDB.view('id'),
     _order = TimeDB.view('order'),
-    _maxPlayer = 2,
+    _maxPlayer = 1,
     _isPlaying = true,
     _loaded = 0,
-    _sampleTimeout,
     _zoom = 85,
     _scale = 0.04, // ems per second
 
@@ -158,30 +155,6 @@ var Timeline = (function(){
           // calculations will work out.
           if(_get("result-now").parentNode != container.dom) {
 
-/*
-  if(isPlaying) {
-    result.click(Timeline.pause);
-  } else {
-    result.click(function(){
-      Timeline.sample(obj);
-    });
-  }
-
-  if(isPlaying) {
-    play.html('stop').click(function(){ 
-      var isPlaying = Timeline.pauseplay(); 
-
-      if(isPlaying == true) { 
-        this.innerHTML = 'stop';
-      } else {
-        this.innerHTML = 'resume';
-      }
-
-    });
-  } else {
-    play.html('play').click(function(){ Timeline.sample(obj); });
-  }
-*/
             $("#result-now")
               .remove()
               .css('display', 'block')
@@ -236,7 +209,6 @@ var Timeline = (function(){
       });
 
       if(_loaded == _maxPlayer) {
-        Player.sample = Player.controls[1];
         setTimeout(function(){ ev.set('flash_load'); },250);
       }
     }
@@ -531,6 +503,9 @@ var Timeline = (function(){
     },
 
     play: function(dbid, offset) {
+      if(_.isString(dbid)) {
+        dbid = TimeDB.findFirst({ytid: dbid}).id;
+      }
       if(!arguments.length) {
         return Player.Play();
       }
@@ -543,7 +518,6 @@ var Timeline = (function(){
         } else if(Player.activeData != _data[dbid]) {
           Player.activeData = _data[dbid];
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
-          ev('active_track', Player.activeData);
           Player.start = $(_data[dbid].dom).offset().left - $("#control").offset().left;
           Player.Play();
         }
@@ -609,41 +583,6 @@ var Timeline = (function(){
           ev.unset('timeline.dragging');
           Timeline.updatePosition();
         }
-      });
-    },
-
-    sample: function(obj) {
-      ev.isset('flash_load', function(){
-        if(obj.playlistid) {
-          Timeline.seekTo(_order[obj.playlistid].offset + 2);
-          return;
-        }
-
-        if(_sampleTimeout) {
-          clearTimeout(_sampleTimeout);
-        }
-
-        Player.Pause();
-
-        ev('active_track', obj);
-        ev('preview_track', obj);
-
-        UserHistory.view(Player.sample, obj.ytid, 10);
-        Player.sample.playVideo();
-
-        setTimeout(function(){
-          if( Player.sample.getPlaybackQuality() != 'large') {
-            Player.sample.setPlaybackQuality('large');
-          }
-        }, 100);
-
-        _sampleTimeout = setTimeout(function(){
-          Player.sample.pauseVideo();
-          Player.active.playVideo();
-
-          ev('active_track', Player.activeData);
-          _sampleTimeout = 0;
-        }, 45 * 1000);
       });
     },
 

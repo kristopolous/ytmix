@@ -81,61 +81,48 @@ var Results = {
       // append it to the video viewport, returning
       // the object that was previously created.
 
-      dbReference[0].jqueryObject.hoverControl.css('display','none');
+      dbReference[0].jqueryObject.timeline.css('display','none');
 
       $("#video-viewport").append(dbReference[0].jqueryObject);
       dom = dbReference[0].dom;
     } else {
 
       var 
-        play = $("<a />"),
         star = $("<a>&#9733;</a>").addClass("star").click(function(){
           UserHistory.star(obj.ytid);
           $(this).toggleClass('active');
         }),
-        timeline = $("<div class=timeline-container />").append(
+        timeline = $("<div class=timeline-container />").addClass('hover').append(
           $("<div class=timeline-outer />").css('opacity', 0.5).append( 
             $("<div class=timeline-inner />")
           )
-        ),
-        queue = $("<a />"),
-
-        open = $("<a>open</a>").attr({
-          target: '_blank',
-          href: 'http://youtube.com/watch?v=' + obj.ytid
-        }).click(Timeline.pause),
-
-        hoverControl = $("<div class=hover>");
-
-      hoverControl
-        .append(play)
-        .append(queue)
-        .append(open);
+        );
 
       var result = $("<span class=result/>")
         .hover(
-          function(){ hoverControl.css('display','block') }, 
-          function(){ hoverControl.css('display','none') }
+          function(){ 
+            Scrubber.phantom.detach().appendTo(timeline);
+            Scrubber.id = obj.ytid;
+            Scrubber.container = timeline;
+            timeline.css('display','block') 
+          }, 
+          function(){ timeline.css('display','none') }
         )
+        .mousemove(function(e) {
+          var point = (e.clientX - 8) - result.offset().left;
+          point = Math.max(5, point);
+          point = Math.min(255, point);
+          Scrubber.offset = ((point - 5) / 255);
+          Scrubber.phantom.css("left", point + "px");
+        })
         .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
         .append(timeline)
         .append(star)
-        .append(hoverControl)
         .appendTo($("#video-viewport"));
-
-      play.html('play').click(function(){
-        Timeline.sample(obj);
-      });
-
-      if('playlistid' in obj) {
-        queue.html("remove").click(function(){ Timeline.remove(obj.playlistid); });
-      } else {
-        queue.html("add").click(function(){ Timeline.add(obj, {noplay: true}); });
-      }  
 
       // back reference of what we are generating
       result.get(0).ytid = obj.ytid;
-      result.hoverControl = hoverControl;
+      result.timeline = timeline;
 
       db.find({ytid: obj.ytid}).update({jqueryOjbect: result});
 

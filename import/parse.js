@@ -98,5 +98,5 @@ function finish(){
   });
 }
 
-readUrl('https://gdata.youtube.com/feeds/api/users/TheTodd1977/uploads');
+readUrl('https://gdata.youtube.com/feeds/api/users/articalone/uploads');
 

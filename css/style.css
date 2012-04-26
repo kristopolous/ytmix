@@ -17,11 +17,14 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 #timeline .track{height:20px}
 #timeline .title{font-size:12px;white-space:nowrap;cursor:default;width:90%;overflow:hidden}
 
-.splash-container{border:2px solid #a9a;background:#434;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em}
+.splash-container{cursor:pointer;border:2px solid #a9a;background:#434;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em;position:relative}
+.splash-container .play{position:absolute;top:8px;left:4px;display:none}
+.splash-container p{font-size:0.85em}
+.splash-container small{font-size:0.7em}
+
 #splash{text-align:center;color:#cbc;text-shadow:0px 0px 2px #212;font-size:1.25em}
 #splash-history{margin-top:0.25em}
 #splash input{font-size:1.5em;box-shadow:0 0 0px 2px #fff;margin:0.5em 0 1em 0}
-#splash .hover{text-align:center;line-height:1.2em}
 #splash .track{height:9em;line-height:0;text-align:center;width:100%;margin-top:0.25em;box-shadow:none}
 #splash .track img{width:5em;margin:0.25em;border:1px solid #878}
 
@@ -41,7 +44,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 .result .timeline-container,
   .result .timeline-outer,
   .result .timeline-inner
-  {position:absolute;bottom:0;left:0;width:260px;height:10px}
+  {position:absolute;bottom:0;left:0;width:260px}
 
 .result .timeline-container {bottom:2px; left: 2px}
 .result .timeline-inner {border: 9px solid #535;width:251px; height:9px}
@@ -59,7 +62,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 /* This is based on the result height */
 #result-now{height:93px;display:none;top:0}
 
-#players{position:absolute;top:-1000px;left:-1000px}
+#offscreen{position:absolute;top:-1000px;left:-1000px}
 #search-results{width:162px}
 
 .button{border:0;cursor:pointer;display:inline-block;font-size:13px;color:#ccc;background:transparent;padding:7px 9px}
@@ -99,3 +102,12 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 
 #deck-control{position:absolute;bottom:0}
 #search-context{box-shadow:-1px -1px 3px 0px #212 inset,1px 1px 3px 0px #bab inset;padding:4px 9px;cursor:pointer;color:#dcd;display:none}
+
+.scrubber{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:8px;
+  height:27px;
+  background:#99a;
+}

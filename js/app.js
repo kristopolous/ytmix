@@ -89,34 +89,20 @@ function loadHistory(){
       var 
         total = Utils.runtime(which.tracklist),
         container = $("<span class=splash-container>").appendTo("#splash-history"),
-        forget = $("<a>forget</a>"),
-        play = $("<a>play</a>"),
-        hoverControl = $("<span class=hover />")
-          .append(play)
-          .append(forget),
-
-        track = $("<span class=track />").append(hoverControl);
-
-      forget.click(function(){
-        Store.remove(which.id);
-        container.slideUp();
-      });
-
-      play.click(function(){
-        ev('app_state', 'main');
-        Store.get(which.id);
-      });
+        play = $("<img class=play src=css/play.png />").click(function(){
+          ev('app_state', 'main');
+          Store.get(which.id);
+        }),
+        track = $("<span class=track />");
 
       for(var ix = 0; ix < Math.min(which.tracklist.length, 4); ix++) {
         track.append("<img src=http://i4.ytimg.com/vi/" + which.tracklist[ix].ytid + "/default.jpg>");
       }
 
       container
-        .hover(
-          function(){ hoverControl.css('display','block') }, 
-          function(){ hoverControl.css('display','none') }
-        )
+        .hover(function(){play.fadeIn()}, function(){play.fadeOut()})
         .append(track)
+        .append(play)
         .append("<p>" + which.name + 
            " <br><small>(" + which.tracklist.length + " track" + (which.tracklist.length != 1 ? 's' : '') + " " 
            + Utils.secondsToTime(total) + 
@@ -279,5 +265,14 @@ $(function(){
   Search.init();
 
   $(".now").click(Timeline.pauseplay);
+  window.Scrubber = {
+    real: $("#real-scrubber"),
+    phantom: $("#phantom-scrubber")
+  };
+  
+  Scrubber.phantom.click(function() {
+    var entry = db.findFirst({ ytid: Scrubber.id });
+    Timeline.play(Scrubber.id, entry.length * Scrubber.offset);
+  });
 });
 
