@@ -1,18 +1,23 @@
 var UserHistory = (function(){
-  function init(){
-    if(!localStorage["viewed"]) {
-      localStorage["viewed"] = {};
-    }
-  }
 
   return {
     isViewed: function(id) {
-      init();
-      return localStorage["viewed"][id];
+      return localStorage["v" + id];
     },
-    load: function (object, id, offset) {
-      init();
-      localStorage["viewed"][id] = true;
+    isStarred: function(id) {
+      return localStorage["s" + id];
+    },
+    star: function(id) {
+      if(UserHistory.isStarred(id)) {
+        delete localStorage["s" + id];
+      } else {
+        localStorage["s" + id] = true;
+      }
+      return localStorage["s" + id]; 
+    },
+    view: function (object, id, offset) {
+      localStorage["v" + id] = true;
+      console.log(localStorage);
 
       object.loadVideoById(id, offset);
     }
@@ -537,7 +542,7 @@ var Timeline = (function(){
           Timeline.pause();
         } else if(Player.activeData != _data[dbid]) {
           Player.activeData = _data[dbid];
-          UserHistory.load(Player.active, Player.activeData.ytid, offset);
+          UserHistory.view(Player.active, Player.activeData.ytid, offset);
           ev('active_track', Player.activeData);
           Player.start = $(_data[dbid].dom).offset().left - $("#control").offset().left;
           Player.Play();
@@ -623,7 +628,7 @@ var Timeline = (function(){
         ev('active_track', obj);
         ev('preview_track', obj);
 
-        UserHistory.load(Player.sample, obj.ytid, 10);
+        UserHistory.view(Player.sample, obj.ytid, 10);
         Player.sample.playVideo();
 
         setTimeout(function(){

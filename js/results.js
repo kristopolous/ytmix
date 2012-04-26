@@ -89,6 +89,15 @@ var Results = {
 
       var 
         play = $("<a />"),
+        star = $("<a>&#9733;</a>").addClass("star").click(function(){
+          UserHistory.star(obj.ytid);
+          $(this).toggleClass('active');
+        }),
+        timeline = $("<div class=timeline-container />").append(
+          $("<div class=timeline-outer />").css('opacity', 0.5).append( 
+            $("<div class=timeline-inner />")
+          )
+        ),
         queue = $("<a />"),
 
         open = $("<a>open</a>").attr({
@@ -109,6 +118,8 @@ var Results = {
           function(){ hoverControl.css('display','none') }
         )
         .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
+        .append(timeline)
+        .append(star)
         .append(hoverControl)
         .appendTo($("#video-viewport"));
 
@@ -130,9 +141,14 @@ var Results = {
 
       dom = result;
     }
+
+    if (UserHistory.isStarred(obj.ytid)) {
+      star.addClass('active');
+    }
     if (!UserHistory.isViewed(obj.ytid)) {
       $(dom).addClass('new');
     }
+
     return dom;
   },
 
