@@ -259,20 +259,6 @@ var Timeline = (function(){
   function hook(id) {
     var node = _data[id];
 
-    node.$remove.click(function(){Timeline.remove(id); });
-    node.$related.click(function(){
-      if(!node.filter) {
-        node.$related.addClass('on');
-        ev.setadd('search.related', node.ytid);
-        node.filter = true;
-      } else {
-        node.$related.removeClass('on');
-        ev.setdel('search.related', node.ytid);
-        node.filter = false;
-      }
-      ev.set('request_gen');
-    });
-
     node.dom.hover(
       function(){ node.hover.css('display','block'); }, 
       function(){ node.hover.css('display','none'); }
@@ -287,10 +273,8 @@ var Timeline = (function(){
     var 
       myid = UNIQ ++,
 
-      $remove = $("<a>X</a>").addClass('close'),
       $control = $("<span />"),
       $move = $("<a>move</a>").appendTo($control),
-      $related = $("<a>related</a>").appendTo($control),
       $link = {
         text: $("<a />").attr({
             target: '_blank',
@@ -307,7 +291,6 @@ var Timeline = (function(){
       
       hoverControl = $("<span class=timeline-hover />")
         .append($link.image)
-        .append($remove)
         .append($control)
         .append($("<p />")
           .append($link.text)
@@ -317,8 +300,6 @@ var Timeline = (function(){
       wrap = $("<span class=timeline-hover-wrap />").append(hoverControl);
 
     var record = TimeDB.insert({
-      $remove: $remove,
-      $related: $related,
       $move: $move,
       $link: $link,
       filter: false,

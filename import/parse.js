@@ -12,6 +12,31 @@ var
   title = "(no title)",
   subtitle;
 
+function newentry(entry) {
+  if (entry.title.constructor != String) {
+    entry.title = entry.title['#'];
+  }
+  ytid = entry['media:group']['yt:videoid'];
+  if (ytid == undefined) {
+    switch(entry.link[0]['@'].type) {
+      case 'text/html':
+        ytid = entry.link[0]['@'].href.match(/v=([\w-_]*)&/)[1];
+        break;
+      case 'application/atom+xml':
+        ytid = entry.link[0]['@'].href.split('/').pop();
+        break;
+    }
+  }
+  playlist.push({
+    length: parseInt(entry['media:group']['yt:duration']['@']['seconds']),
+    title: entry.title,
+    ytid: ytid,
+    related: [],
+    reference: [],
+    playlistid: id++
+  });
+}
+
 function addEntries(xml) {
   var parser = new xml2js.Parser(), ytid;
   parser.parseString(xml, function (err, result) {
@@ -26,30 +51,11 @@ function addEntries(xml) {
       }
       subtitle = result.subtitle;
     }
-    result.entry.forEach(function(entry) {
-      if (entry.title.constructor != String) {
-        entry.title = entry.title['#'];
-      }
-      ytid = entry['media:group']['yt:videoid'];
-      if (ytid == undefined) {
-        switch(entry.link[0]['@'].type) {
-          case 'text/html':
-            ytid = entry.link[0]['@'].href.match(/v=([\w-_]*)&/)[1];
-            break;
-          case 'application/atom+xml':
-            ytid = entry.link[0]['@'].href.split('/').pop();
-            break;
-        }
-      }
-      playlist.push({
-        length: parseInt(entry['media:group']['yt:duration']['@']['seconds']),
-        title: entry.title,
-        ytid: ytid,
-        related: [],
-        reference: [],
-        playlistid: id++
-      });
-    });
+    if ("forEach" in result.entry) {
+      result.entry.forEach(newentry)
+    } else {
+      newentry(result.entry);
+    }
     next = result.link.filter(function(entry) {
       return entry['@']['rel'] == 'next';
     });
@@ -98,5 +104,5 @@ function finish(){
   });
 }
 
-readUrl('https://gdata.youtube.com/feeds/api/users/articalone/uploads');
+readUrl('https://gdata.youtube.com/feeds/api/users/ProcessRecordings/uploads');
 
