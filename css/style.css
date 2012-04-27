@@ -34,9 +34,8 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 #video-viewport{text-align:center}
 #video-viewport .result img{background:#000;width:96px;height:72px}
 .result{
-  border:0.15em solid #101;
+  opacity:0.7;
   background:#101;display:inline-block;width:260px;padding:0.4em;margin:0.25em;vertical-align:top;position:relative}
-.result.new{border-color:#535}
 .result img{width:6em}
 .result span{width:150px;padding-left:0.5em;font-size:0.8em;color:#888897;overflow:hidden;vertical-align:top;display:inline-block;text-align:left}
 .result span em{display:block;color:#aaaab5;font-style:normal;font-weight:bold;font-size:1em;max-height:4em;overflow:hidden}
@@ -48,6 +47,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 
 .result .timeline-container {bottom:2px; left: 2px}
 .result .timeline-inner {border: 9px solid #535;width:251px; height:9px}
+.result .timeline-container.active{display:block}
 
 .result .star{position:absolute;top:3px;right:8px;font-size:1.25em;color:#323;cursor:pointer}
 .result .star.active{color:yellow}

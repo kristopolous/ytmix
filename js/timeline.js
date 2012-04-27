@@ -148,22 +148,24 @@ var Timeline = (function(){
         // We first check to see if the video is in the viewport window
         if(Results.viewable[Player.activeData.ytid]) {
           // And if so we get its dom and other necessary things.
-          var container = Results.viewable[Player.activeData.ytid];
+          var entry = Results.viewable[Player.activeData.ytid];
 
           // If we are in the purview of the track, then we can move on.
           // Otherwise, place ourselves underneath it so that the percentage
           // calculations will work out.
-          if(_get("result-now").parentNode != container.dom) {
-
-            $("#result-now")
-              .remove()
-              .css('display', 'block')
-              .appendTo(container.jquery);
+          if(Scrubber.real.container != entry.jquery.timeline) {
+            Scrubber.real.remove();
+            Scrubber.real.dom.appendTo(entry.jquery.timeline);
+            if(Scrubber.real.container) {
+              Scrubber.real.container.removeClass("active");
+            }
+            Scrubber.real.container = entry.jquery.timeline;
+            Scrubber.real.container.addClass("active");
           }
 
-          $("#result-now").css({ left: (time * 100 / Player.active.getDuration()) + '%'});
+          Scrubber.real.dom.css({ left: (time * 100 / Player.active.getDuration()) + '%'});
         } else {
-          $("#result-now").css('display','none');
+          Scrubber.real.dom.detach().appendTo("#offscreen");
         }
 
         each(_.values(Player.activeData.$link), function(which) {
@@ -462,7 +464,7 @@ var Timeline = (function(){
       var playlist = ev('playlist_tracks');
 
       Toolbar.status("Removed " + _order[index].title);
-      $("#result-now").remove().appendTo(document.body);
+      Scrubber.real.remove();
 
       playlist_splice(index, 1);
       ev('playlist_tracks', playlist);
@@ -518,6 +520,7 @@ var Timeline = (function(){
         } else if(Player.activeData != _data[dbid]) {
           Player.activeData = _data[dbid];
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
+          ev('active_track', Player.activeData);
           Player.start = $(_data[dbid].dom).offset().left - $("#control").offset().left;
           Player.Play();
         }

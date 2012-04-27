@@ -84,7 +84,7 @@ var Results = {
       dbReference[0].jqueryObject.timeline.css('display','none');
 
       $("#video-viewport").append(dbReference[0].jqueryObject);
-      dom = dbReference[0].dom;
+      dom = dbReference[0].jqueryObject;
     } else {
 
       var 
@@ -101,19 +101,24 @@ var Results = {
       var result = $("<span class=result/>")
         .hover(
           function(){ 
-            Scrubber.phantom.detach().appendTo(timeline);
-            Scrubber.id = obj.ytid;
-            Scrubber.container = timeline;
+            Scrubber.phantom.dom.detach().appendTo(timeline);
+            Scrubber.phantom.id = obj.ytid;
+            Scrubber.phantom.container = timeline;
             timeline.css('display','block') 
           }, 
-          function(){ timeline.css('display','none') }
+          function(){ 
+            if (timeline.hasClass('active')) {
+              return;
+            }
+            timeline.css('display','none') 
+          }
         )
         .mousemove(function(e) {
           var point = (e.clientX - 8) - result.offset().left;
           point = Math.max(5, point);
           point = Math.min(255, point);
-          Scrubber.offset = ((point - 5) / 255);
-          Scrubber.phantom.css("left", point + "px");
+          Scrubber.phantom.offset = ((point - 5) / 255);
+          Scrubber.phantom.dom.css("left", point + "px");
         })
         .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
         .append(timeline)
@@ -123,6 +128,7 @@ var Results = {
       // back reference of what we are generating
       result.get(0).ytid = obj.ytid;
       result.timeline = timeline;
+      result.star = star;
 
       db.find({ytid: obj.ytid}).update({jqueryOjbect: result});
 
@@ -130,13 +136,17 @@ var Results = {
     }
 
     if (UserHistory.isStarred(obj.ytid)) {
-      star.addClass('active');
+      dom.star.addClass('active');
     }
     if (!UserHistory.isViewed(obj.ytid)) {
-      $(dom).addClass('new');
+      dom.addClass('new');
     }
 
-    return dom;
+    // This is important. There's a mapper in
+    // the generator that relies on the output
+    // being the same as the in
+    obj.jqueryObject = dom;
+    return obj;
   },
 
   gen: function(){
@@ -201,6 +211,7 @@ var Results = {
     $("#bottom-buffer").css('height', (total - stop) / perline * _video.height + "px");
     $("#top-buffer").css('height', top - topmodoffset + "px");
 
+    console.log(_video);
     // These are sanity checks to see if we need to regenerate
     // the viewport based on say, a user scrolling something,
     // new results coming in, old results being deleted, etc.
@@ -225,7 +236,7 @@ var Results = {
         current: ev('active_track').ytid 
       };
 
-      $("#result-now").remove().appendTo($("#players"));
+      Scrubber.real.remove();
       $("#video-viewport").children().filter(function(index, which) {
         return this.className == 'result';
       }).detach();
@@ -236,6 +247,7 @@ var Results = {
       // or not
       Results.viewable = {};
 
+      var output = [];
       // We take the results from all the things that we
       // display on the screen (it returns a jquery element
       // with a back reference to the ytid).
@@ -247,11 +259,13 @@ var Results = {
         // timeline.js in order to generate and update
         // the result based scrubber.
         Results.viewable[which.ytid] = {
-          jquery: which,
-          dom: which.get(0)
+          jquery: which.jqueryObject,
+          dom: which.jqueryObject.get(0)
         };
+        output.push(which.ytid);
 
       });
+      console.log(output);
     }
 
     // This is used to make sure that our regeneration efforts

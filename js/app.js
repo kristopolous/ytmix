@@ -264,15 +264,17 @@ $(function(){
   Timeline.init();
   Search.init();
 
-  $(".now").click(Timeline.pauseplay);
   window.Scrubber = {
-    real: $("#real-scrubber"),
-    phantom: $("#phantom-scrubber")
+    real: { dom: $("#real-scrubber"),
+      remove: function() {
+        Scrubber.real.dom.detach();
+      } },
+    phantom: { dom: $("#phantom-scrubber") }
   };
   
-  Scrubber.phantom.click(function() {
-    var entry = db.findFirst({ ytid: Scrubber.id });
-    Timeline.play(Scrubber.id, entry.length * Scrubber.offset);
+  Scrubber.phantom.dom.click(function() {
+    var entry = db.findFirst({ ytid: Scrubber.phantom.id });
+    Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
   });
 });
 
