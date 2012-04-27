@@ -13,10 +13,18 @@ var UserHistory = (function(){
       } else {
         localStorage["s" + id] = true;
       }
+      ev.set('request_gen', {force: true});
       return localStorage["s" + id]; 
     },
     view: function (object, id, offset) {
       localStorage["v" + id] = true;
+
+      if(UserHistory.isStarred(id)) {
+        $("#is-starred").addClass('active');
+      } else {
+        $("#is-starred").removeClass('active');
+      }
+
       object.loadVideoById(id, offset);
     }
   }
@@ -66,7 +74,7 @@ var Timeline = (function(){
         each(Player.controls, function (which) {
           which.pauseVideo();
         });
-        $(".now").css('background','red');
+        $("#pause-play").html("&#9659;");
       });
     },
 
@@ -75,7 +83,7 @@ var Timeline = (function(){
         if(!_isPlaying) {
           _isPlaying = true;
           Player.active.playVideo();
-          $(".now").css('background','#99a');
+          $("#pause-play").html("&#9726;");
         }
       });
     }
@@ -160,7 +168,7 @@ var Timeline = (function(){
               Scrubber.real.container.removeClass("active");
             }
             Scrubber.real.container = entry.jquery.timeline;
-            Scrubber.real.container.addClass("active");
+            Scrubber.real.container.addClass("active").css('display','block');
           }
 
           Scrubber.real.dom.css({ left: (time * 100 / Player.active.getDuration()) + '%'});
@@ -523,13 +531,18 @@ var Timeline = (function(){
           ev('active_track', Player.activeData);
           Player.start = $(_data[dbid].dom).offset().left - $("#control").offset().left;
           Player.Play();
+        } else {
+          Timeline.seekTo(offset, "relative");
         }
       });
     },
 
-    seekTo: function(offset) {
+    seekTo: function(offset, isRelative) {
       if(!offset) {
         offset = _offset;
+      }
+      if (isRelative) {
+        offset += Player.activeData.offset;
       }
 
       Timeline.updateOffset();
@@ -577,6 +590,11 @@ var Timeline = (function(){
           Timeline.seekTo(_order[Timeline.player.activeData.next].offset + 1);
         }
       });
+
+      $("#is-starred").click(function(){
+        UserHistory.star(Player.activeData.ytid);
+        $(this).toggleClass('active');
+      })
       $("#control").draggable({
         axis: 'x',
         start: function(){

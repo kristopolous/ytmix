@@ -101,9 +101,6 @@ var Results = {
       var result = $("<span class=result/>")
         .hover(
           function(){ 
-            Scrubber.phantom.dom.detach().appendTo(timeline);
-            Scrubber.phantom.id = obj.ytid;
-            Scrubber.phantom.container = timeline;
             timeline.css('display','block') 
           }, 
           function(){ 
@@ -113,17 +110,26 @@ var Results = {
             timeline.css('display','none') 
           }
         )
-        .mousemove(function(e) {
-          var point = (e.clientX - 8) - result.offset().left;
-          point = Math.max(5, point);
-          point = Math.min(255, point);
-          Scrubber.phantom.offset = ((point - 5) / 255);
-          Scrubber.phantom.dom.css("left", point + "px");
-        })
         .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
         .append(timeline)
         .append(star)
         .appendTo($("#video-viewport"));
+
+        timeline
+          .hover(function(){
+            Scrubber.phantom.dom.detach().appendTo(timeline);
+            Scrubber.phantom.id = obj.ytid;
+            Scrubber.phantom.container = timeline;
+          }, function(){
+            Scrubber.phantom.dom.detach().appendTo("#offscreen");
+          })
+          .mousemove(function(e) {
+            var point = (e.clientX - 8) - result.offset().left;
+            point = Math.max(5, point);
+            point = Math.min(255, point);
+            Scrubber.phantom.offset = ((point - 5) / 255);
+            Scrubber.phantom.dom.css("left", point + "px");
+          });
 
       // back reference of what we are generating
       result.get(0).ytid = obj.ytid;
@@ -133,13 +139,14 @@ var Results = {
       db.find({ytid: obj.ytid}).update({jqueryOjbect: result});
 
       dom = result;
+      if (!UserHistory.isViewed(obj.ytid)) {
+        dom.addClass('new');
+      }
     }
-
     if (UserHistory.isStarred(obj.ytid)) {
       dom.star.addClass('active');
-    }
-    if (!UserHistory.isViewed(obj.ytid)) {
-      dom.addClass('new');
+    } else {
+      dom.star.removeClass('active');
     }
 
     // This is important. There's a mapper in
@@ -149,7 +156,7 @@ var Results = {
     return obj;
   },
 
-  gen: function(){
+  gen: function(opts){
     var 
       width = $("#video-list").width() - _scrollwidth,
       height = $("#video-list").height(),
@@ -167,6 +174,8 @@ var Results = {
     if(query.length) {
       constraints.title = db.like(query);
     }
+
+    opts = opts || {};
 
     var 
       tracks = Timeline.db.find().length,
@@ -211,7 +220,6 @@ var Results = {
     $("#bottom-buffer").css('height', (total - stop) / perline * _video.height + "px");
     $("#top-buffer").css('height', top - topmodoffset + "px");
 
-    console.log(_video);
     // These are sanity checks to see if we need to regenerate
     // the viewport based on say, a user scrolling something,
     // new results coming in, old results being deleted, etc.
@@ -221,6 +229,7 @@ var Results = {
     // try to thwart results changing with a bunch of other
     // things not.
     if(
+        opts.force || 
         _video.old.start != start || 
         _video.old.stop != stop  || 
         _video.old.query != query  || 
@@ -237,9 +246,9 @@ var Results = {
       };
 
       Scrubber.real.remove();
-      $("#video-viewport").children().filter(function(index, which) {
-        return this.className == 'result';
-      }).detach();
+      _.each(_.values(Results.viewable), function(which) {
+        which.jquery.detach();
+      });
 
       // Make a viewable reference available so
       // that other functions can hook inside here
@@ -262,10 +271,8 @@ var Results = {
           jquery: which.jqueryObject,
           dom: which.jqueryObject.get(0)
         };
-        output.push(which.ytid);
 
       });
-      console.log(output);
     }
 
     // This is used to make sure that our regeneration efforts

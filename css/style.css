@@ -8,6 +8,9 @@ input{font-size:17px;background:#545;color:#fff;border:2px solid;padding:0 2px;b
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
 #playlist-name{margin:0;font-size:1.25em;color:#fff;display:inline-block;padding:0 15px}
 
+.star{color:#434 !important;cursor:pointer}
+.star.active{color:#a89 !important}
+
 .track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434;box-shadow:0 0 15px 5px #212}
 .track img.thumb{width:75px;vertical-align:bottom}
 .track a{display:block;text-decoration:none}
@@ -50,7 +53,6 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 .result .timeline-container.active{display:block}
 
 .result .star{position:absolute;top:3px;right:8px;font-size:1.25em;color:#323;cursor:pointer}
-.result .star.active{color:yellow}
 
 #scale{margin-left:40%;vertical-align:middle;font-size:85%}
 #control{display:inline-block;position:relative}
@@ -110,4 +112,9 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
   width:8px;
   height:27px;
   background:#99a;
+}
+
+#phantom-scrubber{
+  background:transparent;
+  box-shadow: 0 0 3px 2px #889
 }
