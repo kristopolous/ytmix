@@ -90,22 +90,9 @@ var Timeline = (function(){
   };
 
   $(function(){
-    var 
-      isDragging = false,
-      keyListen = false;
+    var keyListen = false;
 
-    $("#timeline-now").click(function(){
-      if(isDragging) {
-        isDragging = false;
-      } 
-    });
-
-    $("#timeline-now").css('opacity',0.6).draggable({
-      axis: 'x',
-      start:function(){ isDragging = true; },
-      drag: function(){ $("#scale").css('margin-left', $("#timeline-now").offset().left); },
-      stop: function(){ $("#scale").css('margin-left', $("#timeline-now").offset().left); }
-    });
+    $("#timeline-now").css('opacity',0.6);
 
     // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
     // videos we which to play.
@@ -274,7 +261,6 @@ var Timeline = (function(){
       myid = UNIQ ++,
 
       $control = $("<span />"),
-      $move = $("<a>move</a>").appendTo($control),
       $link = {
         text: $("<a />").attr({
             target: '_blank',
@@ -300,7 +286,6 @@ var Timeline = (function(){
       wrap = $("<span class=timeline-hover-wrap />").append(hoverControl);
 
     var record = TimeDB.insert({
-      $move: $move,
       $link: $link,
       filter: false,
       title: obj.title,
@@ -407,16 +392,6 @@ var Timeline = (function(){
         add(value);
       }
     });
-
-    /*$("#control").children().detach();
-
-    for(var ix = 0; ix < UNIQ; ix++) {
-      if(_data[ix]) {
-        $(".hover", _data[ix].dom).css('display','none');
-        $("#control").append(_data[ix].dom);
-        hook(ix);
-      }
-    }*/
 
     setTimeout(function(){
       if(Player.activeData) {

@@ -87,7 +87,8 @@ function loadHistory(){
 
     each(data, function(which) {
       var 
-        total = Utils.runtime(which.tracklist),
+        total = which.preview.length,
+        tracks = which.preview.tracks,
         container = $("<span class=splash-container>").appendTo("#splash-history"),
         play = $("<img class=play src=css/play.png />").click(function(){
           ev('app_state', 'main');
@@ -95,8 +96,8 @@ function loadHistory(){
         }),
         track = $("<span class=track />");
 
-      for(var ix = 0; ix < Math.min(which.tracklist.length, 4); ix++) {
-        track.append("<img src=http://i4.ytimg.com/vi/" + which.tracklist[ix].ytid + "/default.jpg>");
+      for(var ix = 0; ix < Math.min(tracks.length, 4); ix++) {
+        track.append("<img src=http://i4.ytimg.com/vi/" + tracks[ix].ytid + "/default.jpg>");
       }
 
       container
@@ -104,7 +105,7 @@ function loadHistory(){
         .append(track)
         .append(play)
         .append("<p>" + which.name + 
-           " <br><small>(" + which.tracklist.length + " track" + (which.tracklist.length != 1 ? 's' : '') + " " 
+           " <br><small>(" + which.count + " track" + (which.count != 1 ? 's' : '') + " " 
            + Utils.secondsToTime(total) + 
            ")</small></p>");
     });

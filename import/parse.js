@@ -2,6 +2,7 @@ var
   https = require('https'),
   xml2js = require('xml2js'),
   url = require('url'),
+  source = 'https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970/uploads',
   mysql = require('db-mysql'),
   fs = require('fs');
 
@@ -41,8 +42,11 @@ function addEntries(xml) {
   var parser = new xml2js.Parser(), ytid;
   parser.parseString(xml, function (err, result) {
     if(err) {
-      console.log(xml.toString());
-      console.log(err);
+      console.log({
+        error: err,
+        action: "parsing", 
+        data: xml.toString()
+      });
     }
     if('title' in result) {
       title = result.title;
@@ -56,16 +60,19 @@ function addEntries(xml) {
     } else {
       newentry(result.entry);
     }
+
     next = result.link.filter(function(entry) {
       return entry['@']['rel'] == 'next';
     });
+
     if(next.length > 0) {
       nextUrl = next[0]['@']['href'];
       readUrl(nextUrl);
     } else {
       finish();
     }
-    console.log(nextUrl);
+
+    console.log({action: "reading", data: nextUrl});
    });
 }
 function readUrl(urlstr) {
@@ -90,19 +97,40 @@ function finish(){
     password: 'fixy2k',
     database: 'yt'
   }).connect(function(error) {
-    this.query().
-      insert('playlist',
-        ['name', 'tracklist'],
-        [title, JSON.stringify(playlist)]
-      ).execute(function(error, result) {
-        if (error) {
-          console.log('ERROR: ' + error);
-          return;
+    var connection = this;
+    connection.query()
+      .select("id")
+      .from("playlist")
+      .where('authors = ?', [source])
+      .execute(function(error, result) {
+        
+        if(result.length) {
+          connection.query()
+            .update('playlist')
+            .set({ tracklist: JSON.stringify(playlist) })
+            .where("id = ?", [result[0].id])
+            .execute(function(error, result1) {
+              if (error) {
+                console.log({action: "db", error: error});
+              } else {
+                console.log({action: "db", updated: result[0].id});
+              }
+            });
+        } else {
+          connection.query().
+            insert('playlist',
+              ['authors', 'name', 'tracklist'],
+              [source, title, JSON.stringify(playlist)]
+            ).execute(function(error, result) {
+              if (error) {
+                console.log({action: "db", error: error});
+              } else {
+                console.log({action: "db", created: result.id});
+              }
+            });
         }
-        console.log('GENERATED id: ' + result.id);
-      });
+      })
   });
 }
 
-readUrl('https://gdata.youtube.com/feeds/api/users/ProcessRecordings/uploads');
-
+readUrl(source);

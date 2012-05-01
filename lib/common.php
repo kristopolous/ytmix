@@ -18,6 +18,12 @@ function sanitize($opts) {
   return $opts;
 }
 
+function getdata($sql) {
+  $row = mysql_fetch_assoc($sql);
+  foreach($row as $key => $value) {
+    return $value;
+  }
+}
 function get($opts, $fieldList) {
   $opts = sanitize($opts);
   $fieldList = explode(',', $fieldList);

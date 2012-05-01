@@ -134,9 +134,10 @@ ev.setter('recent', function(){
       console.log(data);
       data = _.without(data, false);
       each(data, function(which) {
-        if(which.tracklist.constructor == String) {
-          which.tracklist = JSON.parse(which.tracklist);
+        if(which.preview.constructor == String) {
+          which.preview = JSON.parse(which.preview);
         }
+        which.count = which.preview.count;
       });
       ev('recent', data);
     }   
