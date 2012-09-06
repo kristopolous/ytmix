@@ -1,8 +1,9 @@
 var 
   https = require('https'),
+  http = require('http'),
   xml2js = require('xml2js'),
   url = require('url'),
-  source = 'https://gdata.youtube.com/feeds/api/users/Engeltjeuit1970/uploads',
+  source = 'https://gdata.youtube.com/feeds/api/users/' + 'numnuts2009' + '/uploads',
   mysql = require('db-mysql'),
   fs = require('fs');
 
@@ -114,6 +115,7 @@ function finish(){
                 console.log({action: "db", error: error});
               } else {
                 console.log({action: "db", updated: result[0].id});
+                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result[0].id);
               }
             });
         } else {
@@ -126,6 +128,7 @@ function finish(){
                 console.log({action: "db", error: error});
               } else {
                 console.log({action: "db", created: result.id});
+                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result.id);
               }
             });
         }
