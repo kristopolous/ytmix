@@ -52,7 +52,6 @@ function pl_get($params) {
 function pl_update($params) {
   list($id, $tracklist, $name) = get($params, 'id, data, name');
 
-
   if($tracklist) {
     run('update playlist set tracklist="' . $tracklist . '" where id=' . $id);
   }

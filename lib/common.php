@@ -24,13 +24,18 @@ function getdata($sql) {
     return $value;
   }
 }
+
 function get($opts, $fieldList) {
   $opts = sanitize($opts);
   $fieldList = explode(',', $fieldList);
 
   $stack = Array();
   foreach($fieldList as $field) {
-    $stack[] = $opts[trim($field)];
+    if(array_key_exists(trim($field), $opts)) {
+      $stack[] = $opts[trim($field)];
+    } else {
+      $stack[] = '';
+    }
   }
   return $stack;
 }

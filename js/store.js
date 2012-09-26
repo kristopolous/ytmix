@@ -15,6 +15,7 @@ function remote(opts) {
   }
 
   $.post('api/playlist.php', opts, function(ret) {
+    console.log(ret);
     ret = JSON.parse(ret);
 
     var meta = {  

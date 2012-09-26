@@ -98,7 +98,11 @@ var Results = {
           )
         );
 
-      var result = $("<span class=result/>")
+      var 
+        splitup = obj.title.split(' - '),
+        title = splitup.pop(),
+        artist = splitup.join(' - '),
+        result = $("<span class=result/>")
         .hover(
           function(){ 
             timeline.css('display','block') 
@@ -110,7 +114,9 @@ var Results = {
             timeline.css('display','none') 
           }
         )
-        .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p><em>" + obj.title + "</em>" + Utils.secondsToTime(obj.length) + "</p></span>")
+        .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p>" +
+            '<a onclick=Timeline.pause() target=_blank href=http://www.youtube.com/watch?v=' + obj.ytid + 
+            '><em>' + artist + "</em>" + title + "</a></p></span>")
         .append(timeline)
         .append(star)
         .appendTo($("#video-viewport"));

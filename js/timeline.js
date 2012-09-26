@@ -50,7 +50,6 @@ var Timeline = (function(){
     _maxPlayer = 1,
     _isPlaying = true,
     _loaded = 0,
-    _zoom = 85,
     _scale = 0.04, // ems per second
 
     UNIQ = 0;
@@ -105,20 +104,6 @@ var Timeline = (function(){
         {allowScriptAccess: "always"}, {id: 'player-' + ix});
     }
 
-    function zoomsize(){
-      _zoom = Math.min(98, _zoom);
-      _zoom = Math.max(5, _zoom);
-      $("#scale").css('font-size', _zoom + "%");
-    }
-
-    $("#timeline").hover(
-      function(){ keyListen = true },
-      function(){ keyListen = false }
-    ).mousewheel(function(e, delta) {
-      _zoom += delta;
-      zoomsize();
-    });
-
     $(window).keyup(function(e) {
       if(!keyListen) { return }
 
@@ -163,13 +148,6 @@ var Timeline = (function(){
           Scrubber.real.dom.detach().appendTo("#offscreen");
         }
 
-        each(_.values(Player.activeData.$link), function(which) {
-          which.attr({
-            href : 'http://www.youtube.com/watch?v=' + Player.activeData.ytid + "#at=" + Math.ceil(time) + "s",
-            onclick: 'Timeline.pause()'
-          });
-        });
-
         // For some reason is appears that this value can
         // toggle back to non-high quality sometimes. So 
         // we check to see where it's at
@@ -177,9 +155,7 @@ var Timeline = (function(){
           Player.active.setPlaybackQuality('large');
         }
 
-        if(! ev.isset('timeline.dragging') ) {
-          $("#control").css('left', - 100 * ((time + Player.activeData.offset) / _totalRuntime) + "%");
-        }
+        $("#control").css('left', - 100 * ((time + Player.activeData.offset) / _totalRuntime) + "%");
 
         if(time > 0 && Player.active.getDuration() > 0 && (Player.active.getDuration() - time == 0)) {
           _offset += 1;
@@ -258,35 +234,10 @@ var Timeline = (function(){
     loadRelated(obj);
 
     var 
-      myid = UNIQ ++,
-
-      $control = $("<span />"),
-      $link = {
-        text: $("<a />").attr({
-            target: '_blank',
-            href: "http://www.youtube.com/watch?v=" + obj.ytid
-          }).html(obj.title),
-
-        image: $("<a />")
-          .addClass('image')
-          .attr({
-            target: '_blank',
-            href: "http://www.youtube.com/watch?v=" + obj.ytid
-          }).html("<img class=thumb src=http://i.ytimg.com/vi/" + obj.ytid + "/hqdefault.jpg?w=188&h=141>")
-      },
-      
-      hoverControl = $("<span class=timeline-hover />")
-        .append($link.image)
-        .append($control)
-        .append($("<p />")
-          .append($link.text)
-          .append(Utils.secondsToTime(obj.length))
-        ),
-
-      wrap = $("<span class=timeline-hover-wrap />").append(hoverControl);
+      myid = UNIQ ++;
+      wrap = $("<span class=timeline-hover-wrap />");
 
     var record = TimeDB.insert({
-      $link: $link,
       filter: false,
       title: obj.title,
       hover: wrap,
@@ -551,16 +502,6 @@ var Timeline = (function(){
         UserHistory.star(Player.activeData.ytid);
         $(this).toggleClass('active');
       })
-      $("#control").draggable({
-        axis: 'x',
-        start: function(){
-          ev.set('timeline.dragging');
-        },
-        stop: function() {
-          ev.unset('timeline.dragging');
-          Timeline.updatePosition();
-        }
-      });
     },
 
     add: function(obj, opts) {
