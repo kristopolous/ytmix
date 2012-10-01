@@ -61,6 +61,19 @@ var Results = {
 
     ev.on('request_gen', Results.gen);
   
+    // We need to scroll the video selector to put this
+    // in the right place.
+    $("#scroll-to").click(function(){
+      var
+        width = $("#video-list").width() - _scrollwidth,
+        height = $("#video-list").height(),
+        count = db.find().length,
+        perline = Math.floor(width / _video.width);
+
+      document.getElementById("video-list").scrollTop = (Timeline.player.activeData.id / perline) * _video.height - 2 * _video.height;
+
+      Results.gen();
+    });
   },
 
   resize: function(){
@@ -128,6 +141,7 @@ var Results = {
             Scrubber.phantom.container = timeline;
           }, function(){
             Scrubber.phantom.dom.detach().appendTo("#offscreen");
+            Scrubber.phantom.container = false;
           })
           .mousemove(function(e) {
             var point = (e.clientX - 8) - result.offset().left;
@@ -142,7 +156,7 @@ var Results = {
       result.timeline = timeline;
       result.star = star;
 
-      db.find({ytid: obj.ytid}).update({jqueryOjbect: result});
+      db.find({ytid: obj.ytid}).update({jqueryObject: result});
 
       dom = result;
       if (!UserHistory.isViewed(obj.ytid)) {
@@ -251,7 +265,7 @@ var Results = {
         current: ev('active_track').ytid 
       };
 
-      Scrubber.real.remove();
+      //Scrubber.real.remove();
       _.each(_.values(Results.viewable), function(which) {
         which.jquery.detach();
       });

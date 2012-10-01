@@ -133,19 +133,10 @@ var Timeline = (function(){
           // If we are in the purview of the track, then we can move on.
           // Otherwise, place ourselves underneath it so that the percentage
           // calculations will work out.
-          if(Scrubber.real.container != entry.jquery.timeline) {
-            Scrubber.real.remove();
-            Scrubber.real.dom.appendTo(entry.jquery.timeline);
-            if(Scrubber.real.container) {
-              Scrubber.real.container.removeClass("active");
-            }
-            Scrubber.real.container = entry.jquery.timeline;
-            Scrubber.real.container.addClass("active").css('display','block');
-          }
-
+          Scrubber.real.attach(entry.jquery.timeline);
           Scrubber.real.dom.css({ left: (time * 100 / Player.active.getDuration()) + '%'});
         } else {
-          Scrubber.real.dom.detach().appendTo("#offscreen");
+          Scrubber.real.remove();
         }
 
         // For some reason is appears that this value can

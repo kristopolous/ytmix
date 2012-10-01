@@ -267,8 +267,20 @@ $(function(){
 
   window.Scrubber = {
     real: { dom: $("#real-scrubber"),
+      attach: function(where) {
+        if(Scrubber.real.container != where) {
+          Scrubber.real.remove();
+          Scrubber.real.container = where;
+          Scrubber.real.dom.appendTo(where);
+        }
+        Scrubber.real.container.addClass("active").css('display','block');
+      },
       remove: function() {
-        Scrubber.real.dom.detach();
+        if(Scrubber.real.container) {
+          Scrubber.real.container.removeClass("active");
+          Scrubber.real.container = false;
+          Scrubber.real.dom.detach().appendTo("#offscreen");
+        }
       } },
     phantom: { dom: $("#phantom-scrubber") }
   };
