@@ -1,6 +1,8 @@
 var Results = {
   viewable: {},
 
+  SortCompare: {pre: {}, post: {}},
+
   init: function(){
     var timeout;
 
@@ -30,34 +32,25 @@ var Results = {
       .scroll(gencheck)
       .keydown(gencheck);
 
-    var compare = {pre: {}, post: {}};
-
-    /*
     $("#video-viewport").sortable({
-      start: function(event, ui) {
-        $("#video-viewport > *").each(function(index, dom) {
-          compare.pre[dom.ytid] = index;
-        });
-      },
       stop: function(event, ui) {
-        $("#video-viewport > *").each(function(index, dom) {
-          compare.post[dom.ytid] = index;
-        });
+        var elementList = document.getElementById("video-viewport").children;
+        for(var index = 0; index < elementList.length; index++) {
+          Results.SortCompare.post[elementList[index].ytid] = index;
+        }
 
         db.find({
-          ytid: db.isin(_.keys(compare.post))
+          ytid: db.isin(_.keys(Results.SortCompare.post))
         }).update(function(which) {
-          if('playlistid' in which) {
-            which.playlistid += compare.post[which.ytid] - compare.pre[which.ytid];
-          }
+          which.playlistid += Results.SortCompare.post[which.ytid] - Results.SortCompare.pre[which.ytid];
         });
 
-        var playlistOrder = db.hasKey('playlistid').sort('playlistid', 'asc');
+        var playlistOrder = db.sort(function(a, b) { return a.playlistid - b.playlistid });
 
         Timeline.build(playlistOrder);
       }
     });
-    */
+    
 
     ev.on('request_gen', Results.gen);
   
@@ -197,9 +190,7 @@ var Results = {
 
     opts = opts || {};
 
-    var 
-      tracks = Timeline.db.find().length,
-      bBoost, aBoost;
+    var tracks = Timeline.db.find().length;
 
     // There's a function that permits one to just display the related results
     // This not only show the isolated related results, but then modifies the
@@ -212,16 +203,7 @@ var Results = {
 
       set = db.find(constraints, {ytid: db.isin(unique)});
     } else {
-      // To make sure that our playlist gets to the front of the line,
-      // I create booster functions for sorting.  I should probably
-      // permit multi-tiered sorting based on various parameters in my
-      // sorting function, but I don't think I do that ... there's probably
-      // some tricky ordinal stuff I'd have to pull.
-      set = db.find(constraints).sort(function(a,b){ 
-        bBoost = isNaN(b.playlistid) ? 0 : (tracks - b.playlistId) * 1000;
-        aBoost = isNaN(a.playlistid) ? 0 : (tracks - a.playlistId) * 1000;
-        return (bBoost + b.reference.length) - (aBoost + a.reference.length);
-      });
+      set = db.find(constraints).sort(function(a, b) { return a.playlistid - b.playlistid });
 
       set = ev('search_results').concat(set);
     }
@@ -265,7 +247,6 @@ var Results = {
         current: ev('active_track').ytid 
       };
 
-      //Scrubber.real.remove();
       _.each(_.values(Results.viewable), function(which) {
         which.jquery.detach();
       });
@@ -293,6 +274,13 @@ var Results = {
         };
 
       });
+      
+      // This is for sorting. We construct the list after the gen of the
+      // elements in order to get an authortative one.
+      var elementList = document.getElementById("video-viewport").children;
+      for(var index = 0; index < elementList.length; index++) {
+        Results.SortCompare.pre[elementList[index].ytid] = index;
+      }
     }
 
     // This is used to make sure that our regeneration efforts
