@@ -115,7 +115,7 @@ ev({
   },
 
   'playlist_name': function(data, meta) {
-    if(ev('playlist_id')) {
+    if(meta.old && ev('playlist_id')) {
       remote({
         func: 'update',
         id: ev('playlist_id'),
@@ -129,7 +129,6 @@ ev.setter('recent', function(){
   remote({
     func: 'recent',
     onSuccess: function(data) {
-      console.log(data);
       data = _.without(data, false);
       each(data, function(which) {
         if(which.preview.constructor == String) {

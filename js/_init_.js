@@ -36,6 +36,7 @@ db.template.create({
   reference: [],
   removed: 0
 });
-
+/*
 ev.sniff();
 ev.sniff('tick');
+*/
