@@ -16,7 +16,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 .track a{display:block;text-decoration:none}
 .track a.image{display:inline-block}
 
-#timeline{position:relative;vertical-align:top;z-index:18;white-space:nowrap;overflow:hidden;width:100%;background:#180018;height:50px;padding-top:0.5em}
+#timeline{position:relative;vertical-align:top;z-index:18;white-space:nowrap;overflow:hidden;width:100%;background:#180018;height:20px;padding-top:0.5em}
 #timeline .track{height:20px}
 #timeline .title{font-size:12px;white-space:nowrap;cursor:default;width:90%;overflow:hidden}
 

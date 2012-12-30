@@ -51,7 +51,6 @@ function EvDa (imported) {
         }
       },
 
-
     last = function(obj) {
       return obj.length ? obj[obj.length - 1] : undefined;
     },
@@ -113,8 +112,8 @@ function EvDa (imported) {
       function(array, cb) {
         var ret = [];
 
-        for ( var i = 0, len = obj.length; i < len; i++ ) { 
-          ret.push(cb(obj[i], i));
+        for ( var i = 0, len = array.length; i < len; i++ ) { 
+          ret.push(cb(array[i], i));
         }
 
         return ret;
@@ -144,7 +143,7 @@ function EvDa (imported) {
     // The one time callback gets a property to
     // the end of the object to notify our future-selfs
     // that we ought to remove the function.
-    ONCE = {once:1},
+    ONCE = {once: 1},
 
     // Internals
     data = imported || {},
@@ -165,7 +164,7 @@ function EvDa (imported) {
       // went in. There *could* be a mix and match
       // of callbacks and setters, but that would
       // be fine I guess...
-      if( isObject(scope) && !isString(scope)) {
+      if( isObject(scope) ) {
         var ret = {};
 
         // Object style should be executed as a transaction
@@ -230,7 +229,7 @@ function EvDa (imported) {
   function isset ( key, callback ) {
     if( isObject(key) ) {
 
-      each( key, function( _value, _key ) {
+      each( key, function( _key, _value ) {
         key[_key] = isset( _key, _value );
       });
 
@@ -274,7 +273,7 @@ function EvDa (imported) {
     setter: function ( key, callback ) {
       setterMap[key] = callback;
 
-      if (eventMap['on' + key]) {
+      if (eventMap[ON + key]) {
         isset( key );
       }
     },
@@ -311,6 +310,8 @@ function EvDa (imported) {
       return pub.set ( key || BASE, data[key].slice(0, -1) );
     },
 
+    traceList: [],
+
     group: function ( list ) {
       var 
         opts = toArray(arguments),
@@ -334,6 +335,7 @@ function EvDa (imported) {
     set: function (key, value, _meta, bypass, _noexecute) {
       var 
         testKey = 'test' + key,
+        args = slice.call(arguments),
         times = size(eventMap[ testKey ]),
         failure,
 
@@ -354,6 +356,10 @@ function EvDa (imported) {
             }
           }
         };
+
+      each ( pub.traceList, function ( callback ) {
+        callback ( args );
+      });
 
       if (times && !bypass) {
         each ( eventMap[ testKey ], function ( callback ) {
@@ -454,28 +460,24 @@ function EvDa (imported) {
     },
 
     sniff: function () {
-      pub.set_ = pub.set;
-      var ignoreMap = {};
+      var 
+        ignoreMap = {},
+        startTime = +new Date();
 
-      pub.set = function() {
-        var args = Array.prototype.slice.call(arguments);
-
+      pub.traceList.unshift(function(args){
         if(!ignoreMap[args[0]]) {
-          console.log(+new Date(), args);
+          console.log((+new Date()) - startTime, args);
         }
-
-        pub.set_.apply (this, args);
-      }
-
+      });
+         
       // neuter this function but don't populate
       // the users keyspace.
       pub.sniff = function(key) {
         if(key) {
           ignoreMap[key] = !ignoreMap[key];
           return "[Un]ignoring " + key;
-        } else {
-          console.log(keys(ignoreMap));
-        }
+        } 
+        return keys(ignoreMap);
       }
     }
   });

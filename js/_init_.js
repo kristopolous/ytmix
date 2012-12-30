@@ -1,5 +1,6 @@
 var 
   db = DB(), 
+  START = (+new Date()),
   each = _.each,
   map = _.map,
   extend = _.extend,
@@ -36,7 +37,5 @@ db.template.create({
   removed: 0
 });
 
-/*
 ev.sniff();
 ev.sniff('tick');
-*/

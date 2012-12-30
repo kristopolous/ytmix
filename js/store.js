@@ -15,7 +15,6 @@ function remote(opts) {
   }
 
   $.post('api/playlist.php', opts, function(ret) {
-    console.log(ret);
     ret = JSON.parse(ret);
 
     var meta = {  
@@ -61,8 +60,6 @@ var Store = {
           'playlist_id': data.id,
           'playlist_tracks': JSON.parse(data.tracklist)
         });
-
-        Timeline.play(0);
       }
     });
   },

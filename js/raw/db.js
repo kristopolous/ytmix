@@ -72,8 +72,8 @@
       function(array, cb) {
         var ret = [];
 
-        for ( var i = 0, len = obj.length; i < len; i++ ) { 
-          ret.push(cb(obj[i], i));
+        for ( var i = 0, len = array.length; i < len; i++ ) { 
+          ret.push(cb(array[i], i));
         }
 
         return ret;
@@ -131,6 +131,21 @@
       'return function(x){return x' + which + 'rhs}'
     )
   });
+
+  function trace(obj, cb) {
+    obj.__$$tracer$$__ = {};
+
+    each(obj, function(key, value) {
+      if(_.isFun(value)) {
+        obj.__$$tracer$$__[key] = value;
+        obj[key] = function() {
+          console.log.apply(this, [key + ":" ].concat(slice.call(arguments)));
+          if(cb) { cb.apply(this, arguments); }
+          return obj.__$$tracer$$__[key].apply(this, arguments);
+        }
+      }
+    });
+  }
 
   // The first parameter, if exists, is assumed to be the value in the database,
   // which has a content of arrays, to search.
@@ -274,6 +289,9 @@
       }
     }
 
+    set.first = set[0];
+    set.last = set[set.length - 1];
+
     return set;
   }
 
@@ -282,8 +300,8 @@
   //
   // Missing is to get records that have keys not defined
   //
-  function missing() {
-    var fieldList = hash(slice.call(arguments));
+  function missing(arg) {
+    var fieldList = hash(arg);
 
     return function(record) {
       for(var field in fieldList) {
@@ -724,7 +742,7 @@
 
       // hasKey is to get records that have keys defined
       hasKey: function() {
-        return ret.find(missing.apply(this, slice.call(arguments))).invert();
+        return this.find(missing(slice.call(arguments))).invert();
       },
 
       isin: isin,
@@ -735,7 +753,8 @@
 
       // Missing is to get records that have keys not defined
       missing: function() { 
-        return ret.find(missing.apply(this, slice.call(arguments))); 
+        var base = missing(slice.call(arguments));
+        return _.isArr(this) ? this.find(base) : base;
       },
 
       // The callbacks in this list are called
@@ -773,6 +792,17 @@
       }
 
     });
+
+    ret.not = function() {
+      var func = ret.apply(this, slice(arguments));
+
+      return func;
+      /*
+      return function() {
+        return func.apply(this, slice(arguments)) === false;
+      }
+      */
+    }
 
     //
     // group
@@ -1105,7 +1135,24 @@
     find: find,
     each: eachRun,
     like: like,
+    trace: trace,
     isin: isin,
+
+    objectify: function(keyList, values) {
+      var obj = [];
+
+      each(values, function(row) {
+        var objRow = {};
+        each(keyList, function(key, index) {
+          objRow[key] = row[index];
+        });
+
+        obj.push(objRow);
+
+      });
+
+      return obj; 
+    },
 
     findFirst: function(){
       var res = find.apply(this, slice.call(arguments));

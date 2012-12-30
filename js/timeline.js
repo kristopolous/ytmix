@@ -50,11 +50,9 @@ var Timeline = (function(){
     _maxPlayer = 1,
     _isPlaying = true,
     _loaded = 0,
-    _scale = 0.04, // ems per second
 
     UNIQ = 0;
 
-  eval(_inject('timeline'));
   Player = {
     controls: [],
 
@@ -88,33 +86,6 @@ var Timeline = (function(){
     }
   };
 
-  $(function(){
-    var keyListen = false;
-
-    $("#timeline-now").css('opacity',0.6);
-
-    // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
-    // videos we which to play.
-    for(var ix = 0; ix < _maxPlayer; ix++) {
-      $("<div id=vidContainer-" + ix + ">").appendTo("#players");
-
-      swfobject.embedSWF("http://www.youtube.com/apiplayer?" +
-        "version=3&enablejsapi=1&playerapiid=player-" + ix,
-        "vidContainer-" + ix, "188", "152", "9", null, null, 
-        {allowScriptAccess: "always"}, {id: 'player-' + ix});
-    }
-
-    $(window).keyup(function(e) {
-      if(!keyListen) { return }
-
-      switch(e.which) {
-        case 37: Timeline.seekTo(_offset - 60); break;
-        case 46: Timeline.remove(Player.activeData); break;
-        case 39: Timeline.seekTo(_offset + 60); break;
-      }
-    });
-  });
-
   function updateytplayer() {
     ev.set('tick');
 
@@ -146,8 +117,6 @@ var Timeline = (function(){
           Player.active.setPlaybackQuality('large');
         }
 
-        $("#control").css('left', - 100 * ((time + Player.activeData.offset) / _totalRuntime) + "%");
-
         if(time > 0 && Player.active.getDuration() > 0 && (Player.active.getDuration() - time == 0)) {
           _offset += 1;
           Timeline.seekTo(_offset);
@@ -166,14 +135,8 @@ var Timeline = (function(){
 
       Player.controls[id] = document.getElementById(playerId);
 
-      // I don't think this actually gets run, regardless of
-      // what YT's official documentation says.
-      Player.controls[id].addEventListener('onStateChange', function(){ 
-        console.log(this, arguments); 
-      });
-
       if(_loaded == _maxPlayer) {
-        setTimeout(function(){ ev.set('flash_load'); },250);
+        setTimeout(function(){ ev.set('flash_load'); }, 1);
       }
     }
   }
@@ -186,67 +149,30 @@ var Timeline = (function(){
   // This is also when we start our polling function
   // that updates the scrubber and the status of
   // where we currently are.
+  ev('app_state', function(value) {
+    if (value == 'main') {
+      Timeline.seekTo((0.001 * (-_epoch + (+new Date()))) % _totalRuntime);
+    }
+  });
+
   ev.isset('flash_load', function(){
     Player.active = Player.controls[0];
     setInterval(updateytplayer, 150);
   });
-
-  function swap(x, y) {
-    if(_data[y]) {
-
-      TimeDB.update(function(row) {
-        if(row.id == x) {
-          row.id = y;
-        } else if (row.id == y) {
-          row.id = x;
-        }
-      });
-
-      Timeline.updateOffset();
-      Timeline.build();
-      if(Player.activeData.id == x || Player.activeData.id == y) {
-        Timeline.seekTo(_offset);
-      }
-    }
-  }
-
-  function hook(id) {
-    var node = _data[id];
-
-    node.dom.hover(
-      function(){ node.hover.css('display','block'); }, 
-      function(){ node.hover.css('display','none'); }
-    );
-  }
 
   function add(obj, opts) {
     opts = opts || {};
 
     loadRelated(obj);
 
-    var 
-      myid = UNIQ ++;
-      wrap = $("<span class=timeline-hover-wrap />");
+    var myid = UNIQ ++;
 
     var record = TimeDB.insert({
-      filter: false,
       title: obj.title,
-      hover: wrap,
       id: myid,
       ytid: obj.ytid,
-      active: true,
-      length: obj.length,
-
-      dom: $("<div />")
-        .css('width', obj.length * _scale + 'em')
-        .addClass('track')
-        .append(wrap)
-        .append("<span class=title>" + obj.title + "</span>")
+      length: obj.length
     });
-
-    ev('tick', function(){ record[0].dom.appendTo('#control'); }, {once: true});
-
-    hook(myid); 
 
     Timeline.updateOffset();
 
@@ -280,9 +206,6 @@ var Timeline = (function(){
         }
       });
 
-    // remove it from the dom
-    var dom = _data[index].dom;
-
     db.find({reference: function(field) {
       return field.length == 0;
     }}).remove();
@@ -297,8 +220,6 @@ var Timeline = (function(){
         Timeline.updateOffset();
       }
     }
-
-    ev('tick', function(){ dom.remove(); }, {once: true});
   };
 
   function build(){
@@ -334,12 +255,13 @@ var Timeline = (function(){
         add(value);
       }
     });
-
+/*
     setTimeout(function(){
       if(Player.activeData) {
         Timeline.seekTo((0.001 * (-_epoch + (+new Date()))) % _totalRuntime);
       }
     }, 3000);
+    */
   }
 
   ev('playlist_tracks', function(){build();});
@@ -348,23 +270,6 @@ var Timeline = (function(){
     db: TimeDB,
     player: Player,
     data: _data,
-
-    toStore: function(){
-      var store = [];
-
-      TimeDB
-        .find()
-        .sort('id', 'asc')
-        .each(function(which) {
-          store.push({
-            length: which.length,
-            title: which.title,
-            ytid: which.ytid
-          })
-        });
-
-      return store;
-    },
 
     remove: function(index){
       var playlist = ev('playlist_tracks');
@@ -427,8 +332,8 @@ var Timeline = (function(){
           Player.activeData = _data[dbid];
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
           ev('active_track', Player.activeData);
-          Player.start = $(_data[dbid].dom).offset().left - $("#control").offset().left;
           Player.Play();
+          console.log((+new Date()) - START);
         } else {
           Timeline.seekTo(offset, "relative");
         }
@@ -455,7 +360,7 @@ var Timeline = (function(){
       });
 
       if(track) {
-        if(track.id != Player.activeData.id) {
+        if(!Player.activeData || (track.id != Player.activeData.id)) {
           Timeline.play(track.id, absolute - track.offset);
         } else {
           Player.active.seekTo(absolute - track.offset);
@@ -465,15 +370,18 @@ var Timeline = (function(){
 
     build: build,
 
-    updatePosition: function() {
-      var 
-        offset = $("#control").offset().left - $("#scale").offset().left,
-        relative = offset / $("#control").width();
-
-      Timeline.seekTo( - relative);
-    },
-
     init: function() {
+      // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
+      // videos we which to play.
+      for(var ix = 0; ix < _maxPlayer; ix++) {
+        $("<div id=vidContainer-" + ix + ">").appendTo("#players");
+
+        swfobject.embedSWF("http://www.youtube.com/apiplayer?" +
+          "version=3&enablejsapi=1&playerapiid=player-" + ix,
+          "vidContainer-" + ix, "188", "152", "9", null, null, 
+          {allowScriptAccess: "always"}, {id: 'player-' + ix});
+      }
+
       // The controls in the lower left of the timeline
       $("#previous-track").click(function(){
         if (Timeline.player.activeData.id) {
