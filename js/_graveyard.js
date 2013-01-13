@@ -1,4 +1,46 @@
 
+  /*
+  function build(){
+    if(arguments.length) {
+      var trackList = arguments[0];
+
+      each(trackList, function(which) {
+        db.find('ytid', which.ytid).update({order: which.id});
+      });
+
+      Timeline.updateOffset();
+      return;
+    }
+
+    var trackList = arguments[0] || ev('playlist_tracks') || [];
+
+    each(trackList, function(track, index) {
+      if(_order[index] && track.ytid != _order[index].ytid) {
+        remove(index);
+      }
+      if(!_order[index] || track.ytid != _order[index].ytid) {
+        //addVids(track);
+      }
+    });
+
+    each(_order, function(value, index) {
+      if(index >= trackList.length) {
+        remove(index);
+      } else if(value.ytid != trackList[index].ytid) {
+        remove(index);
+        add(value);
+      }
+    });
+/*
+    setTimeout(function(){
+      if(Player.activeData) {
+        Timeline.seekTo((0.001 * (-_epoch + (+new Date()))) % _totalRuntime);
+      }
+    }, 3000);
+  }
+    */
+
+ // ev('playlist_tracks', function(){build();});
 
       // I don't think this actually gets run, regardless of
       // what YT's official documentation says.

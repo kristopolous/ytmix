@@ -2,6 +2,7 @@ var
   db = DB(), 
   START = (+new Date()),
   each = _.each,
+  UNIQ = 0,
   map = _.map,
   extend = _.extend,
   ev = EvDa({
@@ -33,6 +34,7 @@ var
 
 db.constrain('unique', 'ytid');
 db.template.create({
+  id: (function(){ return UNIQ++ }),
   reference: [],
   removed: 0
 });

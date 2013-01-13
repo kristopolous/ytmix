@@ -31,12 +31,6 @@ var UserHistory = (function(){
 })();
 var Timeline = (function(){
   var 
-    // The internal database of what is
-    // being played and its order
-    TimeDB = DB(),
-
-    Player = undefined,
-
     // The current offset into the total
     // playlist, in seconds
     _offset = 0,
@@ -45,46 +39,25 @@ var Timeline = (function(){
     // to be played.
     _totalRuntime,
 
-    _data = TimeDB.view('id'),
-    _order = TimeDB.view('order'),
+    _data = db.view('id'),
+    _order = db.view('order'),
     _maxPlayer = 1,
     _isPlaying = true,
     _loaded = 0,
 
-    UNIQ = 0;
+    Player = {
+      controls: [],
 
-  Player = {
-    controls: [],
-
-    Pauseplay: function(){
-      if(_isPlaying) {
-        Player.Pause();
-      } else {
-        Player.Play();
-      }
-      return _isPlaying;
-    },
-
-    Pause: function(){
-      ev.isset('flash_load', function(){
-        _isPlaying = false;
-        each(Player.controls, function (which) {
-          which.pauseVideo();
+      Play: function(){
+        ev.isset('flash_load', function(){
+          if(!_isPlaying) {
+            _isPlaying = true;
+            Player.active.playVideo();
+            $("#pause-play").html("&#9726;");
+          }
         });
-        $("#pause-play").html("&#9659;");
-      });
-    },
-
-    Play: function(){
-      ev.isset('flash_load', function(){
-        if(!_isPlaying) {
-          _isPlaying = true;
-          Player.active.playVideo();
-          $("#pause-play").html("&#9726;");
-        }
-      });
-    }
-  };
+      }
+    };
 
   function updateytplayer() {
     ev.set('tick');
@@ -151,7 +124,11 @@ var Timeline = (function(){
   // where we currently are.
   ev('app_state', function(value) {
     if (value == 'main') {
+      _totalRuntime = Utils.runtime(_data);
+
       Timeline.seekTo((0.001 * (-_epoch + (+new Date()))) % _totalRuntime);
+
+      ev.isset("flash_load", Results.scrollTo);
     }
   });
 
@@ -159,30 +136,6 @@ var Timeline = (function(){
     Player.active = Player.controls[0];
     setInterval(updateytplayer, 150);
   });
-
-  function add(obj, opts) {
-    opts = opts || {};
-
-    loadRelated(obj);
-
-    var myid = UNIQ ++;
-
-    var record = TimeDB.insert({
-      title: obj.title,
-      id: myid,
-      ytid: obj.ytid,
-      length: obj.length
-    });
-
-    Timeline.updateOffset();
-
-    db.find('ytid', obj.ytid)
-      .update({playlistid: myid});
-
-    // Add the related videos and then
-    // back reference them to this video
-    addVids(obj.related, obj);
-  }
 
   function remove(index) {
     // This track was just removed from the timeline.
@@ -195,7 +148,6 @@ var Timeline = (function(){
         // this was removed at some point and
         // may not be liked
         obj.removed++;
-        delete obj.playlistid;
 
         if(obj.related) {
           db
@@ -210,7 +162,7 @@ var Timeline = (function(){
       return field.length == 0;
     }}).remove();
 
-    var removed = TimeDB.remove({id: index});
+    var removed = db.remove({id: index});
 
     if(removed.length) {
       if(removed[0].offset < _offset) {
@@ -222,52 +174,7 @@ var Timeline = (function(){
     }
   };
 
-  function build(){
-    if(arguments.length) {
-      var 
-        trackList = arguments[0],
-        timelineMap = TimeDB.keyBy('ytid');
-
-      each(trackList, function(which) {
-        TimeDB.find('ytid', which.ytid).update({order: which.playlistid});
-      });
-
-      Timeline.updateOffset();
-      return;
-    }
-
-    var trackList = arguments[0] || ev('playlist_tracks') || [];
-
-    each(trackList, function(track, index) {
-      if(_order[index] && track.ytid != _order[index].ytid) {
-        remove(index);
-      }
-      if(!_order[index] || track.ytid != _order[index].ytid) {
-        add(track);
-      }
-    });
-
-    each(_order, function(value, index) {
-      if(index >= trackList.length) {
-        remove(index);
-      } else if(value.ytid != trackList[index].ytid) {
-        remove(index);
-        add(value);
-      }
-    });
-/*
-    setTimeout(function(){
-      if(Player.activeData) {
-        Timeline.seekTo((0.001 * (-_epoch + (+new Date()))) % _totalRuntime);
-      }
-    }, 3000);
-    */
-  }
-
-  ev('playlist_tracks', function(){build();});
-
   return {
-    db: TimeDB,
     player: Player,
     data: _data,
 
@@ -284,11 +191,22 @@ var Timeline = (function(){
     },
 
     pause: function(){
-      return Player.Pause();
+      ev.isset('flash_load', function(){
+        _isPlaying = false;
+        each(Player.controls, function (which) {
+          which.pauseVideo();
+        });
+        $("#pause-play").html("&#9659;");
+      });
     },
 
     pauseplay: function(){
-      return Player.Pauseplay();
+      if(_isPlaying) {
+        Timeline.pause();
+      } else {
+        Player.Play();
+      }
+      return _isPlaying;
     },
 
     updateOffset: function(){
@@ -312,12 +230,12 @@ var Timeline = (function(){
         _data[index].offset = aggregate;
         aggregate += (parseInt(_data[index].length) || 0);
       }
-      TimeDB.sync();
+      db.sync();
     },
 
     play: function(dbid, offset) {
       if(_.isString(dbid)) {
-        dbid = TimeDB.findFirst({ytid: dbid}).id;
+        dbid = db.findFirst({ytid: dbid}).id;
       }
       if(!arguments.length) {
         return Player.Play();
@@ -355,7 +273,7 @@ var Timeline = (function(){
       absolute = Math.max(0, absolute);
       absolute = Math.min(_totalRuntime, absolute);
 
-      var track = TimeDB.findFirst(function(row) { 
+      var track = db.findFirst(function(row) { 
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
       });
 
@@ -367,8 +285,6 @@ var Timeline = (function(){
         }
       }
     },
-
-    build: build,
 
     init: function() {
       // we instantiate [maxPlayers] swfobjects which will hold the ytids of the

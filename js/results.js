@@ -51,22 +51,28 @@ var Results = {
       }
     });
     
-
-    ev.on('request_gen', Results.gen);
+    ev({
+      search_results: Results.gen,
+      request_gen: Results.gen
+    });
   
     // We need to scroll the video selector to put this
     // in the right place.
-    $("#scroll-to").click(function(){
-      var
-        width = $("#video-list").width() - _scrollwidth,
-        height = $("#video-list").height(),
-        count = db.find().length,
-        perline = Math.floor(width / _video.width);
+    $("#scroll-to").click(Results.scrollTo);
+  },
 
-      document.getElementById("video-list").scrollTop = (Timeline.player.activeData.id / perline) * _video.height - 2 * _video.height;
+  scrollTo: function(){
+    var
+      width = $("#video-list").width() - _scrollwidth,
+      height = $("#video-list").height(),
+      count = db.find().length,
+      perline = Math.floor(width / _video.width);
 
-      Results.gen();
-    });
+    document.getElementById("video-list").scrollTop = 
+      (Timeline.player.activeData.id / perline) * _video.height - 
+      2 * _video.height;
+
+    Results.gen();
   },
 
   resize: function(){
@@ -174,7 +180,7 @@ var Results = {
       width = $("#video-list").width() - _scrollwidth,
       height = $("#video-list").height(),
       top = $("#video-list").scrollTop(),
-      bottom = $("#video-list").height() + top,
+      bottom = height + top,
       set,
       total,
       constraints = {removed: 0},
@@ -190,7 +196,7 @@ var Results = {
 
     opts = opts || {};
 
-    var tracks = Timeline.db.find().length;
+    var tracks = db.find().length;
 
     // There's a function that permits one to just display the related results
     // This not only show the isolated related results, but then modifies the

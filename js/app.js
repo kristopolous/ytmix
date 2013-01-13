@@ -178,11 +178,9 @@ var Search = {
             lastID = res.id;
 
             ev('search_results', res.vidList);
-            Results.gen();
           });
         } else {
           ev('search_results', []);
-          Results.gen();
         }
       }
     }, 650);
@@ -248,20 +246,11 @@ ev({
     Toolbar.status("Playing " + obj.title);
     ev.set('request_gen');
   },
-
-  'preview_track': function(obj) {
-    if(obj) {
-      $("#preview-track").html(obj.title);
-    } else {
-      $("#preview-track").css('display','none');
-    }
-  }
 });
 
 $(function(){
   Results.init();
   Toolbar.init();
-
   Timeline.init();
   Search.init();
 
