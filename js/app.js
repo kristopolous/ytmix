@@ -201,7 +201,6 @@ ev({
     if(state == 'splash') {
       ev.unset('playlist_id','playlist_tracks','playlist_name');
       Timeline.pause();
-      Timeline.build();
       $(".main-app").css('display','none');
       $("#splash").css('display','block');
       loadHistory();

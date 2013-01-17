@@ -68,9 +68,11 @@ var Results = {
       count = db.find().length,
       perline = Math.floor(width / _video.width);
 
-    document.getElementById("video-list").scrollTop = 
-      (Timeline.player.activeData.id / perline) * _video.height - 
-      2 * _video.height;
+    ev.isset("activeData", function(){
+      document.getElementById("video-list").scrollTop = 
+        (Timeline.player.activeData.id / perline) * _video.height - 
+        2 * _video.height;
+    });
 
     Results.gen();
   },

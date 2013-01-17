@@ -248,6 +248,7 @@ var Timeline = (function(){
           Timeline.pause();
         } else if(Player.activeData != _data[dbid]) {
           Player.activeData = _data[dbid];
+          ev.set("activeData");
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
           ev('active_track', Player.activeData);
           Player.Play();
