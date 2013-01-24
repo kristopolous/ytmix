@@ -53,7 +53,8 @@ var Results = {
     
     ev({
       search_results: Results.gen,
-      request_gen: Results.gen
+      request_gen: Results.gen,
+      search_query: Results.gen
     });
   
     // We need to scroll the video selector to put this

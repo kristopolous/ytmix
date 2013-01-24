@@ -164,7 +164,9 @@ var Search = {
       if(query != lastSearch) {
 
         ev('search_query', query);
+        lastSearch = query;
 
+        /*
         if( query.length && ev('search_related').length == 0) {
           lastSearch = query;
 
@@ -182,8 +184,9 @@ var Search = {
         } else {
           ev('search_results', []);
         }
+        */
       }
-    }, 650);
+    }, 250);
   
     _get('initial-search').focus();
   }

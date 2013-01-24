@@ -64,6 +64,8 @@ var Timeline = (function(){
 
     // mechanics for moving the centroid
     if(Player.active.getCurrentTime) {
+      localStorage[ev.db.playlist_id + 'offset'] = _offset;
+
       var time = Player.active.getCurrentTime();
 
       if (time > 0 && Player.activeData) {
@@ -126,7 +128,12 @@ var Timeline = (function(){
     if (value == 'main') {
       _totalRuntime = Utils.runtime(_data);
 
-      Timeline.seekTo((0.001 * (-_epoch + (+new Date()))) % _totalRuntime);
+      var myoffset = localStorage[ev.db.playlist_id + 'offset'];
+      if(myoffset) {
+        Timeline.seekTo(myoffset);
+      } else {
+        Timeline.seekTo((0.001 * (-_epoch + (+new Date()))) % _totalRuntime);
+      }
 
       ev.isset("flash_load", Results.scrollTo);
     }

@@ -2,7 +2,7 @@
 
 wget="wget --quiet --no-check-certificate"
 
-version_jq=1.8.3
+version_jq=1.9.0
 
 rawURLList="\
  swfobject.js http://swfobject.googlecode.com/svn/trunk/swfobject/src/swfobject.js\
