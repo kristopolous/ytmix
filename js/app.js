@@ -265,10 +265,12 @@ $(function(){
           Scrubber.real.dom.appendTo(where);
         }
         Scrubber.real.container.addClass("active").css('display','block');
+        Scrubber.real.container.parent().addClass("active");
       },
       remove: function() {
         if(Scrubber.real.container) {
           Scrubber.real.container.removeClass("active");
+          Scrubber.real.container.parent().removeClass("active");
           Scrubber.real.container = false;
           Scrubber.real.dom.detach().appendTo("#offscreen");
         }

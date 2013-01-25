@@ -55,6 +55,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 .result .timeline-inner {border: 9px solid #535;width:251px; height:9px}
 .result .timeline-container.active{display:block}
 
+.result.active{box-shadow:0 0 2px 3px #746;background:#1a041a}
 .result .star{position:absolute;top:3px;right:8px;font-size:1.25em;color:#323;cursor:pointer}
 
 #scale{margin-left:40%;vertical-align:middle;font-size:85%}
