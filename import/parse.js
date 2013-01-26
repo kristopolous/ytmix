@@ -3,7 +3,7 @@ var
   http = require('http'),
   xml2js = require('xml2js'),
   url = require('url'),
-  source = 'https://gdata.youtube.com/feeds/api/users/' + 'davepeo77' + '/uploads',
+  source = 'https://gdata.youtube.com/feeds/api/users/' + 'FirstBaller' + '/uploads',
   mysql = require('db-mysql'),
   fs = require('fs');
 
@@ -69,11 +69,11 @@ function addEntries(xml) {
     if(next.length > 0) {
       nextUrl = next[0]['@']['href'];
       readUrl(nextUrl);
+      console.log({action: "reading", data: nextUrl});
     } else {
       finish();
     }
 
-    console.log({action: "reading", data: nextUrl});
    });
 }
 function readUrl(urlstr) {
@@ -115,7 +115,7 @@ function finish(){
                 console.log({action: "db", error: error});
               } else {
                 console.log({action: "db", updated: result[0].id});
-                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result[0].id);
+                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result[0].id, function(){});
               }
             });
         } else {
@@ -128,7 +128,7 @@ function finish(){
                 console.log({action: "db", error: error});
               } else {
                 console.log({action: "db", created: result.id});
-                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result.id);
+                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result.id, function(){});
               }
             });
         }
