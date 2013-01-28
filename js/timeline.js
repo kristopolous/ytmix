@@ -219,6 +219,7 @@ var Timeline = (function(){
 
     updateOffset: function(){
       var 
+        index,
         aggregate = 0, 
         order = 0,
         prevIndex = false;
@@ -239,8 +240,10 @@ var Timeline = (function(){
         aggregate += (parseInt(_data[index].length) || 0);
       }
       // This final next pointer will enable wraparound
-      _data[index].next = 0;
-      _data[0].previous = index;
+      if(index) {
+        _data[index].next = 0;
+        _data[0].previous = index;
+      }
       db.sync();
     },
 

@@ -1,9 +1,11 @@
+#!/usr/bin/env node
+
 var 
   https = require('https'),
   http = require('http'),
   xml2js = require('xml2js'),
   url = require('url'),
-  source = 'https://gdata.youtube.com/feeds/api/users/' + 'cuchulainn187' + '/uploads',
+  source = 'https://gdata.youtube.com/feeds/api/users/' + 'ClassicDNBChannel' + '/uploads',
   mysql = require('db-mysql'),
   fs = require('fs');
 
@@ -130,6 +132,7 @@ function finish(){
                 console.log({action: "db", error: error});
               } else {
                 console.log({action: "db", created: result.id});
+                console.log("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result.id);
                 http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result.id, function(res){
                   console.log(res);
                 });
