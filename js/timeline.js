@@ -183,6 +183,7 @@ var Timeline = (function(){
 
   return {
     player: Player,
+    order: _order,
     data: _data,
 
     remove: function(index){
@@ -220,7 +221,7 @@ var Timeline = (function(){
       var 
         aggregate = 0, 
         order = 0,
-        lastIndex = false;
+        prevIndex = false;
 
       _totalRuntime = Utils.runtime(_data);
 
@@ -228,15 +229,18 @@ var Timeline = (function(){
         _data[index].order = order;
         order++;
 
-        if(lastIndex !== false) {
-          _data[lastIndex].next = index;
-          _data[index].previous = lastIndex;
+        if(prevIndex !== false) {
+          _data[prevIndex].next = index;
+          _data[index].previous = prevIndex;
         }
 
-        lastIndex = index;
+        prevIndex = index;
         _data[index].offset = aggregate;
         aggregate += (parseInt(_data[index].length) || 0);
       }
+      // This final next pointer will enable wraparound
+      _data[index].next = 0;
+      _data[0].previous = index;
       db.sync();
     },
 
@@ -310,22 +314,18 @@ var Timeline = (function(){
           {allowScriptAccess: "always"}, {id: 'player-' + ix});
       }
 
-      // The controls in the lower left of the timeline
+      // This doesn't reflect the filtered view ... it would be nice to know what the
+      // "previous" and "next" track is effeciently with a filter.
+      // The controls in the upper left of the timeline
       $("#previous-track").click(function(){
-        if (Timeline.player.activeData.id) {
-          Timeline.seekTo(_order[Timeline.player.activeData.previous].offset + 1);
-        }
+        Timeline.seekTo(_order[Timeline.player.activeData.previous].offset + 1);
+      });
+
+      $("#next-track").click(function(){
+        Timeline.seekTo(_order[Timeline.player.activeData.next].offset + 1);
       });
 
       $("#pause-play").click(Timeline.pauseplay);
-
-      // This doesn't reflect the filtered view ... it would be nice to know what the
-      // "next" track is effeciently with a filter.
-      $("#next-track").click(function(){
-        if (Timeline.player.activeData.next) {
-          Timeline.seekTo(_order[Timeline.player.activeData.next].offset + 1);
-        }
-      });
 
       $("#is-starred").click(function(){
         UserHistory.star(Player.activeData.ytid);
