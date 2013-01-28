@@ -69,7 +69,7 @@ var Results = {
       count = db.find().length,
       perline = Math.floor(width / _video.width);
 
-    ev.isset("activeData", function(){
+    ev.isset("active_track", function(){
       document.getElementById("video-list").scrollTop = 
         (Timeline.player.activeData.id / perline) * _video.height - 
         2 * _video.height;
@@ -113,6 +113,7 @@ var Results = {
           )
         );
 
+      // inlining html has fallen out of fashion for templates I know...
       var 
         splitup = obj.title.split(' - '),
         title = splitup.pop(),
@@ -129,9 +130,22 @@ var Results = {
             timeline.css('display','none') 
           }
         )
-        .append("<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg><span><p>" +
-            '<a onclick=Timeline.pause() target=_blank href=http://www.youtube.com/watch?v=' + obj.ytid + 
-            '><em>' + artist + "</em>" + title + "</a></p></span>")
+        .append(
+            '<a onclick=Timeline.pause() target=_blank href=http://www.youtube.com/watch?v=' + obj.ytid + '>' +
+              "<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg>" + 
+            "</a>" + 
+            '<span>' +
+              "<p>" +
+                '<em>' + 
+                  '<a onclick="Search.artist(this.inerHTML)">' +
+                    artist + 
+                  '</a>' +
+                "</em>"  +
+                '<a onclick="Search.related(\'' + obj.ytid + '\')">' + 
+                  title + 
+                "</a>" +
+              "</p>" +
+            "</span>")
         .append(timeline)
         .append(star)
         .appendTo($("#video-viewport"));

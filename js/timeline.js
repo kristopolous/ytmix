@@ -250,13 +250,16 @@ var Timeline = (function(){
 
       offset = offset || 0;
 
+      // Only run when the flash controller has been loaded
       ev.isset('flash_load', function(){
         if(!_data[dbid]) {
           Timeline.pause();
         } else if(Player.activeData != _data[dbid]) {
           Player.activeData = _data[dbid];
-          ev.set("activeData");
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
+
+          // At this point there is now active data, so anything depending
+          // on that can run.
           ev('active_track', Player.activeData);
           Player.Play();
           console.log((+new Date()) - START);
@@ -315,6 +318,8 @@ var Timeline = (function(){
 
       $("#pause-play").click(Timeline.pauseplay);
 
+      // This doesn't reflect the filtered view ... it would be nice to know what the
+      // "next" track is effeciently with a filter.
       $("#next-track").click(function(){
         if (Timeline.player.activeData.next) {
           Timeline.seekTo(_order[Timeline.player.activeData.next].offset + 1);

@@ -120,6 +120,12 @@ ev.test('playlist_tracks', function(data, meta) {
 });
 
 var Search = {
+  related: function(ytid) {
+    console.log("I would search things related to " + ytid);
+  },
+  artist: function(name) {
+    console.log("I would search artist: " + name);
+  },
   init: function(){
     var 
       lastSearch = '', 

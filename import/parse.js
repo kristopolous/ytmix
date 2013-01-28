@@ -3,7 +3,7 @@ var
   http = require('http'),
   xml2js = require('xml2js'),
   url = require('url'),
-  source = 'https://gdata.youtube.com/feeds/api/users/' + 'FirstBaller' + '/uploads',
+  source = 'https://gdata.youtube.com/feeds/api/users/' + 'cuchulainn187' + '/uploads',
   mysql = require('db-mysql'),
   fs = require('fs');
 
@@ -115,7 +115,9 @@ function finish(){
                 console.log({action: "db", error: error});
               } else {
                 console.log({action: "db", updated: result[0].id});
-                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result[0].id, function(){});
+                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result[0].id, function(res){
+                  console.log(res);
+                });
               }
             });
         } else {
@@ -128,7 +130,9 @@ function finish(){
                 console.log({action: "db", error: error});
               } else {
                 console.log({action: "db", created: result.id});
-                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result.id, function(){});
+                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result.id, function(res){
+                  console.log(res);
+                });
               }
             });
         }
