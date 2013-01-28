@@ -22,7 +22,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 
 .splash-container{cursor:pointer;border:2px solid #a9a;background:#434;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em;position:relative}
 .splash-container .play{position:absolute;top:8px;left:4px;display:none}
-.splash-container p{font-size:0.85em}
+.splash-container p{font-size:0.85em;white-space:nowrap;overflow:hidden;margin:0 8px}
 .splash-container small{font-size:0.7em}
 
 #splash{text-align:center;color:#cbc;text-shadow:0px 0px 2px #212;font-size:1.25em}

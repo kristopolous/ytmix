@@ -69,7 +69,7 @@ var Results = {
       count = db.find().length,
       perline = Math.floor(width / _video.width);
 
-    ev.isset("active_track", function(){
+    ev.isset("active_data", function(){
       document.getElementById("video-list").scrollTop = 
         (Timeline.player.activeData.id / perline) * _video.height - 
         2 * _video.height;

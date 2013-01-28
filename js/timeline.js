@@ -261,6 +261,7 @@ var Timeline = (function(){
           // At this point there is now active data, so anything depending
           // on that can run.
           ev('active_track', Player.activeData);
+          ev.set('active_data');
           Player.Play();
           console.log((+new Date()) - START);
         } else {
