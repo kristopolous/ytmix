@@ -47,8 +47,12 @@ function loadRelated(obj, opts){
   
   // The related entry will be null (see the template in
   // _init_.js for more info) unless this call is made
-  if(!db.findFirst(match).related) {
+  if(
+      !db.findFirst(match).related || 
+      !db.findFirst(match).related.length
+    ) {
 
+    Toolbar.status("Adding related " + obj.title);
     // This "mutex like" object is to
     // make sure that we don't request
     // more then one related at a time.
@@ -120,11 +124,28 @@ ev.test('playlist_tracks', function(data, meta) {
 });
 
 var Search = {
-  related: function(ytid) {
-    console.log("I would search things related to " + ytid);
+  id: 0,
+  net: function(query) {
+    $.getJSON('api/ytsearch.php', { 
+        id: ++Search.id,
+        query: query
+      }, function(res) {
+
+      console.log("I am searching: " + query);
+
+      _.each(
+        res.vidList,
+        Timeline.add
+      );
+
+      ev.set('request_gen', {force: true});
+    });
   },
-  artist: function(name) {
-    console.log("I would search artist: " + name);
+  related: function(ytid) {
+    loadRelated(db.findFirst('ytid', ytid));
+  },
+  artist: function(el) {
+    Search.net(el.innerHTML + " music");
   },
   init: function(){
     var 
@@ -172,25 +193,6 @@ var Search = {
         ev('search_query', query);
         lastSearch = query;
 
-        /*
-        if( query.length && ev('search_related').length == 0) {
-          lastSearch = query;
-
-          $.getJSON('api/ytsearch.php', { 
-              id: ++searchID,
-              query: query
-            }, function(res) {
-
-            if(res.id < lastID) { return; }
-
-            lastID = res.id;
-
-            ev('search_results', res.vidList);
-          });
-        } else {
-          ev('search_results', []);
-        }
-        */
       }
     }, 250);
   

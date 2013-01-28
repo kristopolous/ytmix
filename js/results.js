@@ -107,6 +107,7 @@ var Results = {
           UserHistory.star(obj.ytid);
           $(this).toggleClass('active');
         }),
+        remove = $("<a>X</a>").addClass("del").click(function(){}),
         timeline = $("<div class=timeline-container />").addClass('hover').append(
           $("<div class=timeline-outer />").css('opacity', 0.5).append( 
             $("<div class=timeline-inner />")
@@ -137,7 +138,7 @@ var Results = {
             '<span>' +
               "<p>" +
                 '<em>' + 
-                  '<a onclick="Search.artist(this.inerHTML)">' +
+                  '<a onclick="Search.artist(this)">' +
                     artist + 
                   '</a>' +
                 "</em>"  +

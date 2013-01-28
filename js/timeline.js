@@ -344,10 +344,6 @@ var Timeline = (function(){
 
       Toolbar.status("Added " + obj.title);
       ev.push('playlist_tracks', obj);
-
-      if(opts.noplay != true) {
-        Timeline.play(UNIQ - 1);
-      }
     }
   };
 })();
