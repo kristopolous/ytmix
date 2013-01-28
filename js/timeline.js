@@ -92,6 +92,7 @@ var Timeline = (function(){
           Player.active.setPlaybackQuality('large');
         }
 
+        // If the player is active and we are at the end of a song, then move ahead
         if(time > 0 && Player.active.getDuration() > 0 && (Player.active.getDuration() - time == 0)) {
           _offset += 1;
           Timeline.seekTo(_offset);
@@ -287,7 +288,9 @@ var Timeline = (function(){
 
       Timeline.updateOffset();
 
-      var absolute = (offset < 1) ? offset * _totalRuntime : offset;
+      // If it's between 0 and 1, we assume it's a relative offset ... otherwise we
+      // take it as the absolute; and we modulus it by the runtime to permit wrap-around
+      var absolute = ((offset < 1) ? offset * _totalRuntime : offset) % _totalRuntime;
 
       absolute = Math.max(0, absolute);
       absolute = Math.min(_totalRuntime, absolute);
