@@ -145,12 +145,13 @@ var Timeline = (function(){
     setInterval(updateytplayer, 150);
   });
 
-  function remove(index) {
+  function remove(ytid) {
     // This track was just removed from the timeline.
     // This means that we need to removed it from the
     // data view of the timeline and reflect the fact
     // that it was removed in the larger database.
-    db.find('ytid', _data[index].ytid)
+    /*
+    db.find('ytid', ytid)
       .update(function(obj){
         // increment the announcement that 
         // this was removed at some point and
@@ -161,7 +162,7 @@ var Timeline = (function(){
           db
             .find('ytid', db.isin(obj.related))
             .update(function(record){
-              record.reference = _.without(record.reference, _data[index].ytid);
+              record.reference = _.without(record.reference, ytid);
             });
         }
       });
@@ -180,6 +181,7 @@ var Timeline = (function(){
         Timeline.updateOffset();
       }
     }
+    */
   };
 
   return {
@@ -193,9 +195,8 @@ var Timeline = (function(){
       Toolbar.status("Removed " + _order[index].title);
       Scrubber.real.remove();
 
-      playlist_splice(index, 1);
+      db.find('ytid', _order[index].ytid).remove();
       ev('playlist_tracks', playlist);
-
       ev.set('request_gen');
     },
 

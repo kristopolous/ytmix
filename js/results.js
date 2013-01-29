@@ -107,7 +107,9 @@ var Results = {
           UserHistory.star(obj.ytid);
           $(this).toggleClass('active');
         }),
-        remove = $("<a>X</a>").addClass("del").click(function(){}),
+        remove = $("<a>X</a>").addClass("del").click(function(){
+          Timeline.remove(obj.order);
+        }),
         timeline = $("<div class=timeline-container />").addClass('hover').append(
           $("<div class=timeline-outer />").css('opacity', 0.5).append( 
             $("<div class=timeline-inner />")
@@ -148,6 +150,7 @@ var Results = {
               "</p>" +
             "</span>")
         .append(timeline)
+        .append(remove)
         .append(star)
         .appendTo($("#video-viewport"));
 
@@ -314,6 +317,8 @@ var Results = {
     // can occur that will make the results slowly scroll by in
     // Chrome.
     $("#video-list").get(0).scrollTop = top;
+
+    Timeline.updateOffset();
   }
 };
 
