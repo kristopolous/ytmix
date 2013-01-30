@@ -143,9 +143,7 @@ var Results = {
             '<span>' +
               "<p>" +
                 '<em>' + 
-                  '<a onclick="Search.artist(this)">' +
-                    artist + 
-                  '</a>' +
+                  artist + 
                 "</em>"  +
                 '<a onclick="Search.related(\'' + obj.ytid + '\')">' + 
                   title + 
