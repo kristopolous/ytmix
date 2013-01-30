@@ -60,6 +60,9 @@ function pl_update($params) {
     run('update playlist set name="' . $name . '" where id=' . $id);
   }
 
+  pl_generatePreview(Array(
+    'id' => $id
+  ));
   return true;
 }
 
