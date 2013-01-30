@@ -69,6 +69,7 @@ function loadRelated(obj, opts){
            related: db.find({ytid: db.isin(_.pluck(data.related, 'ytid'))})
         });
 
+      Store.saveTracks();
       ev.set('request_gen');
 
       // This makes sure that we don't hammer

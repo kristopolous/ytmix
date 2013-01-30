@@ -197,7 +197,7 @@ var Timeline = (function(){
 
       db.find('ytid', _order[index].ytid).remove();
       ev('playlist_tracks', playlist);
-      ev.set('request_gen');
+      ev.set('request_gen', {force: true});
     },
 
     pause: function(){
@@ -246,7 +246,7 @@ var Timeline = (function(){
         _data[index].next = 0;
         _data[0].previous = index;
       }
-      db.sync();
+      // db.sync();
     },
 
     play: function(dbid, offset) {
@@ -343,7 +343,6 @@ var Timeline = (function(){
     add: function(obj, opts) {
       opts = opts || {};
 
-      Toolbar.status("Added " + obj.title);
       ev.push('playlist_tracks', obj);
     }
   };

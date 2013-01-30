@@ -45,6 +45,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 .result span a{
   color:#888897;
   text-decoration:none}
+.result span a:hover{color:#ccccd5}
 .result span em{display:block;color:#aaaab5;font-style:normal;font-weight:bold;font-size:1em;max-height:4em;overflow:hidden}
 .result.playing{background:#323}
 .result .timeline-container,

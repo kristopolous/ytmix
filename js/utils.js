@@ -4,7 +4,7 @@ var Utils = {
     catch (e) { return(
       e.stack
         .split('\n')
-        .slice(2,7)
+        .slice(4,22)
         .join('\n')
         .replace(/^[^@]*/mg, '')
         .replace(/\n[^@]*/mg, '\n   ')

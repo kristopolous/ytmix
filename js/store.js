@@ -64,6 +64,16 @@ var Store = {
     });
   },
 
+  saveTracks: function(){
+    ev(
+     'playlist_tracks', 
+      DB.objectify(
+        ['id','title','ytid','length'],
+        db.find().select('id', 'title', 'ytid','length')
+      )
+    );
+  },
+
   remove: function(id) {
     return remote({ 
       func: 'remove',

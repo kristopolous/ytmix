@@ -2,7 +2,7 @@
 // db.js Javascript Database 0.0.1
 // https://github.com/kristopolous/db.js
 //
-// Copyright 2011, Chris McKenzie
+// Copyright 2011 - 2013, Chris McKenzie
 // Dual licensed under the MIT or GPL Version 2 licenses.
 //
 (function(){
@@ -346,6 +346,8 @@
           } else {
             callback = cache[key];
           }
+        } else if(_.isStr(compare)) {
+          callback = new Function('x', 'return indexOf(' + compare + ', x) > -1');
         } else {
           callback = function(x) { return indexOf(compare, x) > -1; };
         }
@@ -722,6 +724,16 @@
     }
 
     extend(ret, {
+
+      transaction: {
+        start: function() {
+          bSync = true;
+        },
+        end: function(){
+          bSync = false;
+          sync();
+        }
+      },
 
       // This isn't a true schema derivation ... it's a spot check
       // over the data-set to try to show a general schema ... since

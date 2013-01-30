@@ -288,20 +288,22 @@ var Results = {
       // We take the results from all the things that we
       // display on the screen (it returns a jquery element
       // with a back reference to the ytid).
-      each(map(set.slice(start,stop), Results.draw), function(which) {
+      db.transaction.start(); {
+        each(map(set.slice(start,stop), Results.draw), function(which) {
 
-        // And then we create our map based on ytid
-        // of the jquery and the dom reference. This
-        // is used in the updateytplayer function of
-        // timeline.js in order to generate and update
-        // the result based scrubber.
-        Results.viewable[which.ytid] = {
-          jquery: which.jqueryObject,
-          dom: which.jqueryObject.get(0)
-        };
+          // And then we create our map based on ytid
+          // of the jquery and the dom reference. This
+          // is used in the updateytplayer function of
+          // timeline.js in order to generate and update
+          // the result based scrubber.
+          Results.viewable[which.ytid] = {
+            jquery: which.jqueryObject,
+            dom: which.jqueryObject.get(0)
+          };
 
-      });
-      
+        });
+      } db.transaction.end();
+
       // This is for sorting. We construct the list after the gen of the
       // elements in order to get an authortative one.
       var elementList = document.getElementById("video-viewport").children;
