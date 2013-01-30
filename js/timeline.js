@@ -40,7 +40,6 @@ var Timeline = (function(){
     _totalRuntime,
 
     _data = db.view('id'),
-    _order = db.view('order'),
     _maxPlayer = 1,
     _isPlaying = true,
     _loaded = 0,
@@ -148,16 +147,15 @@ var Timeline = (function(){
 
   return {
     player: Player,
-    order: _order,
     data: _data,
 
     remove: function(index){
 
-      Toolbar.status("Removed " + _order[index].title);
+      Toolbar.status("Removed " + _data[index].title);
       Scrubber.real.remove();
 
       // we should store that it was removed
-      db.find('ytid', _order[index].ytid).remove();
+      db.find('ytid', _data[index].ytid).remove();
       Timeline.updateOffset();
       Store.saveTracks();
       ev.set('request_gen', {force: true});
@@ -192,9 +190,6 @@ var Timeline = (function(){
       _totalRuntime = Utils.runtime(_data);
 
       for(index in _data) {
-        _data[index].order = order;
-        order++;
-
         if(prevIndex !== false) {
           _data[prevIndex].next = index;
           _data[index].previous = prevIndex;
@@ -288,11 +283,11 @@ var Timeline = (function(){
       // "previous" and "next" track is effeciently with a filter.
       // The controls in the upper left of the timeline
       $("#previous-track").click(function(){
-        Timeline.seekTo(_order[Timeline.player.activeData.previous].offset + 1);
+        Timeline.seekTo(_data[Timeline.player.activeData.previous].offset + 1);
       });
 
       $("#next-track").click(function(){
-        Timeline.seekTo(_order[Timeline.player.activeData.next].offset + 1);
+        Timeline.seekTo(_data[Timeline.player.activeData.next].offset + 1);
       });
 
       $("#pause-play").click(Timeline.pauseplay);

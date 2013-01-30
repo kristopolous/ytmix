@@ -111,7 +111,7 @@ var Results = {
           $(this).toggleClass('active');
         }),
         remove = $("<a>X</a>").addClass("del").click(function(){
-          Timeline.remove(obj.order);
+          Timeline.remove(obj.id);
         }),
         timeline = $("<div class=timeline-container />").addClass('hover').append(
           $("<div class=timeline-outer />").css('opacity', 0.5).append( 
