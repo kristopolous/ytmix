@@ -112,6 +112,7 @@ var Timeline = (function(){
       Player.controls[id] = document.getElementById(playerId);
 
       if(_loaded == _maxPlayer) {
+        // This slight indirection is needed for IE.
         setTimeout(function(){ ev.set('flash_load'); }, 1);
       }
     }
@@ -145,58 +146,20 @@ var Timeline = (function(){
     setInterval(updateytplayer, 150);
   });
 
-  function remove(ytid) {
-    // This track was just removed from the timeline.
-    // This means that we need to removed it from the
-    // data view of the timeline and reflect the fact
-    // that it was removed in the larger database.
-    /*
-    db.find('ytid', ytid)
-      .update(function(obj){
-        // increment the announcement that 
-        // this was removed at some point and
-        // may not be liked
-        obj.removed++;
-
-        if(obj.related) {
-          db
-            .find('ytid', db.isin(obj.related))
-            .update(function(record){
-              record.reference = _.without(record.reference, ytid);
-            });
-        }
-      });
-
-    db.find({reference: function(field) {
-      return field.length == 0;
-    }}).remove();
-
-    var removed = db.remove({id: index});
-
-    if(removed.length) {
-      if(removed[0].offset < _offset) {
-        _offset -= removed[0].length;
-        Timeline.seekTo(_offset);
-      } else {
-        Timeline.updateOffset();
-      }
-    }
-    */
-  };
-
   return {
     player: Player,
     order: _order,
     data: _data,
 
     remove: function(index){
-      var playlist = ev('playlist_tracks');
 
       Toolbar.status("Removed " + _order[index].title);
       Scrubber.real.remove();
 
+      // we should store that it was removed
       db.find('ytid', _order[index].ytid).remove();
-      ev('playlist_tracks', playlist);
+      Timeline.updateOffset();
+      Store.saveTracks();
       ev.set('request_gen', {force: true});
     },
 
@@ -338,12 +301,6 @@ var Timeline = (function(){
         UserHistory.star(Player.activeData.ytid);
         $(this).toggleClass('active');
       })
-    },
-
-    add: function(obj, opts) {
-      opts = opts || {};
-
-      ev.push('playlist_tracks', obj);
     }
   };
 })();

@@ -106,3 +106,41 @@ var User = {
     */
   }
 };
+  function remove(ytid) {
+    // This track was just removed from the timeline.
+    // This means that we need to removed it from the
+    // data view of the timeline and reflect the fact
+    // that it was removed in the larger database.
+    /*
+    db.find('ytid', ytid)
+      .update(function(obj){
+        // increment the announcement that 
+        // this was removed at some point and
+        // may not be liked
+        obj.removed++;
+
+        if(obj.related) {
+          db
+            .find('ytid', db.isin(obj.related))
+            .update(function(record){
+              record.reference = _.without(record.reference, ytid);
+            });
+        }
+      });
+
+    db.find({reference: function(field) {
+      return field.length == 0;
+    }}).remove();
+
+    var removed = db.remove({id: index});
+
+    if(removed.length) {
+      if(removed[0].offset < _offset) {
+        _offset -= removed[0].length;
+        Timeline.seekTo(_offset);
+      } else {
+        Timeline.updateOffset();
+      }
+    }
+    */
+  };
