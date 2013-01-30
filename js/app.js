@@ -132,8 +132,6 @@ var Search = {
         query: query
       }, function(res) {
 
-      console.log("I am searching: " + query);
-
       _.each(
         res.vidList,
         Timeline.add
@@ -144,9 +142,6 @@ var Search = {
   },
   related: function(ytid) {
     loadRelated(db.findFirst('ytid', ytid));
-  },
-  artist: function(el) {
-    Search.net(el.innerHTML + " music");
   },
   init: function(){
     var 
@@ -159,15 +154,6 @@ var Search = {
       lastID = 0;
 
     $("#clear-search").click(function(){ $("#normal-search").val(''); });
-
-    $("#search-context").hover(
-      function(){
-        $("#search-context-dropdown").css('display','block');
-      },
-      function(){
-        $("#search-context-dropdown").css('display','none');
-      }
-    );
 
     Utils.onEnter("#initial-search", function(){
       ev('app_state', 'main');

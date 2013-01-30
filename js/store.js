@@ -65,11 +65,18 @@ var Store = {
   },
 
   saveTracks: function(){
+    var remote_keys = [
+      'length',     // Duration of the track
+      'title',      // YT title
+      'id',
+      'ytid'       // YT id after watch?
+    ];
+
     ev(
      'playlist_tracks', 
       DB.objectify(
-        ['id','title','ytid','length'],
-        db.find().select('id', 'title', 'ytid','length')
+        remote_keys,
+        db.find().select(remote_keys)
       )
     );
   },
@@ -94,32 +101,12 @@ ev.setter('playlist_id', function(){
   });
 });
 
-remote_keys = [
-  'length',     // Duration of the track
-  'title',      // YT title
-  'ytid',       // YT id after watch?
-  'playlistid', // Playlist position
-  'related'     // The related videos
-];
-
 // Update the table with new data given
 // an assumed index that had been previously
 // set
 ev({
   'playlist_tracks': function(data, meta) { 
     if(meta.old && ev('playlist_id')) {
-
-      data = _.map(data, function(original) {
-        var copy = {};
-
-        each(remote_keys, function(key) {
-          copy[key] = original[key];
-        });
-        copy.reference = [];
-
-        return copy;
-      });
-
       ev('remote_data', {data: JSON.stringify(data)}); 
     }
   },

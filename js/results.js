@@ -32,6 +32,7 @@ var Results = {
       .scroll(gencheck)
       .keydown(gencheck);
 
+    /*
     $("#video-viewport").sortable({
       stop: function(event, ui) {
         var elementList = document.getElementById("video-viewport").children;
@@ -50,6 +51,7 @@ var Results = {
         Timeline.build(playlistOrder);
       }
     });
+    */
     
     ev({
       search_results: Results.gen,
@@ -82,6 +84,7 @@ var Results = {
     var height = window.innerHeight || document.body.offsetHeight;
 
     $("#video-list").css('height', (height - $("#bottom-box").offset().top) + 'px');
+    ev.set('request_gen');
   },
 
   draw: function(obj) {
@@ -318,7 +321,7 @@ var Results = {
     // Based on when things generate in the DOM, a race condition
     // can occur that will make the results slowly scroll by in
     // Chrome.
-    $("#video-list").get(0).scrollTop = top;
+    //$("#video-list").get(0).scrollTop = top;
 
     Timeline.updateOffset();
   }
