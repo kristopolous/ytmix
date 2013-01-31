@@ -140,6 +140,9 @@ var Search = {
       ev.set('request_gen', {force: true});
     });
   },
+  artist: function(who) {
+    $("#normal-search").val(who);
+  },
   related: function(ytid) {
     loadRelated(db.findFirst('ytid', ytid));
   },

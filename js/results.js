@@ -3,8 +3,11 @@ var Results = {
 
   SortCompare: {pre: {}, post: {}},
 
+
   init: function(){
     var timeout;
+
+    Results.template = _.template( $("#T-Result").html() );
 
     // The scrollbar is consumed improperly and
     // so it must be accounted for in the width 
@@ -136,20 +139,11 @@ var Results = {
             timeline.css('display','none') 
           }
         )
-        .append(
-            '<a onclick=Timeline.pause() target=_blank href=http://www.youtube.com/watch?v=' + obj.ytid + '>' +
-              "<img src=http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg>" + 
-            "</a>" + 
-            '<span>' +
-              "<p>" +
-                '<em>' + 
-                  artist + 
-                "</em>"  +
-                '<a onclick="Search.related(\'' + obj.ytid + '\')">' + 
-                  title + 
-                "</a>" +
-              "</p>" +
-            "</span>")
+        .append(Results.template({
+          ytid: obj.ytid,
+          title: title,
+          artist: artist
+        }))
         .append(timeline)
         .append(remove)
         .append(star)

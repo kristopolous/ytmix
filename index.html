@@ -48,6 +48,23 @@
     <div class=scrubber id=real-scrubber></div>
   </div>
 
+  <script id="T-Result" type="text/template">
+    <a onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>">
+      <img src="http://i4.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
+    <span>
+      <p>
+        <em>
+          <a onclick="Search.artist('<%= artist %>')">
+            <%= artist %>
+          </a>
+        </em>
+        <a onclick="Search.related('<%= ytid %>')">
+          <%= title %>
+        </a>
+      </p>
+    </span>
+  </script>
+
   </body>
 
   <!-- Dependencies { -->
