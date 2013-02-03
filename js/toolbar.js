@@ -20,7 +20,7 @@ var Toolbar = {
       input = $("<input>");
 
     Utils.onEnter(input, function() {
-      ev("playlist_name", this.value);
+      ev("name", this.value);
       input.replaceWith(dom);
       $("#edit-name").html("edit");
     });
@@ -29,10 +29,10 @@ var Toolbar = {
       if(this.innerHTML == 'edit') {
         this.innerHTML = "save";
         dom.replaceWith(input);
-        input.val(ev('playlist_name'));
+        input.val(ev('name'));
         input.focus();
       } else {
-        ev("playlist_name", input.val());
+        ev("name", input.val());
         input.replaceWith(dom);
         this.innerHTML = "edit";
       }

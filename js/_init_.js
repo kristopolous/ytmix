@@ -7,11 +7,12 @@ var
   extend = _.extend,
   ev = EvDa({
     'app_state': '',
-    'playlist_name': '',
+    'name': '',
+    'blacklist': [],
     'search_related': [],
     'search_results': [],
-    'active_track': {},
-    'search_query': ''
+    'search_query': '',
+    'active_track': {}
   }),
   _epoch = 1334106009061,
   _get = function(id){ 
@@ -37,6 +38,10 @@ db.template.create({
   id: (function(){ return UNIQ++ }),
   reference: [],
   removed: 0
+});
+
+db.addIf(function(what) {
+  return ev('blacklist').indexOf(what.ytid) == -1;
 });
 
 /*

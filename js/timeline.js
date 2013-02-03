@@ -63,7 +63,7 @@ var Timeline = (function(){
 
     // mechanics for moving the centroid
     if(Player.active.getCurrentTime) {
-      localStorage[ev.db.playlist_id + 'offset'] = _offset;
+      localStorage[ev.db.id + 'offset'] = _offset;
 
       var time = Player.active.getCurrentTime();
 
@@ -129,7 +129,7 @@ var Timeline = (function(){
     if (value == 'main') {
       _totalRuntime = Utils.runtime(_data);
 
-      var myoffset = localStorage[ev.db.playlist_id + 'offset'];
+      var myoffset = localStorage[ev.db.id + 'offset'];
       if(myoffset) {
         Timeline.seekTo(myoffset);
       } else {
@@ -155,6 +155,7 @@ var Timeline = (function(){
       Scrubber.real.remove();
 
       // we should store that it was removed
+      ev.setadd('blacklist', _data[index].ytid);
       db.find('ytid', _data[index].ytid).remove();
       Timeline.updateOffset();
       Store.saveTracks();

@@ -91,6 +91,7 @@ function loadHistory(){
   ev.isset('recent', function(data) {
 
     each(data, function(which) {
+      which.preview = JSON.parse(which.preview);
       var 
         total = which.preview.length,
         tracks = which.preview.tracks,
@@ -119,7 +120,7 @@ function loadHistory(){
   });
 }
 
-ev.test('playlist_tracks', function(data, meta) {
+ev.test('tracklist', function(data, meta) {
   db.insert(data);
   meta.done(true);
 });
@@ -164,8 +165,8 @@ var Search = {
       input.val(this.value);
 
       ev.isset('search.results', function(results) { 
-        ev.isset('playlist_id', function(){
-          ev.push('playlist_tracks', results[0]); 
+        ev.isset('id', function(){
+          ev.push('tracklist', results[0]); 
         });
       });
     });
@@ -200,7 +201,8 @@ ev({
     } 
 
     if(state == 'splash') {
-      ev.unset('playlist_id','playlist_tracks','playlist_name');
+      ev.unset('id','tracklist','name');
+      db.find().remove();
       Timeline.pause();
       $(".main-app").css('display','none');
       $("#splash").css('display','block');
@@ -229,7 +231,7 @@ ev({
     }
   },
 
-  'playlist_name': function(name, meta) { 
+  'name': function(name, meta) { 
     document.title = name + " on Audisco";
     $("#playlist-name").html(name);
 
@@ -237,7 +239,7 @@ ev({
       remote({
         func: 'update',
         name: name,
-        id: ev('playlist_id')
+        id: ev('id')
       });
     }
   },

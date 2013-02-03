@@ -1,3 +1,4 @@
+
 var Utils = {
   stack: function(ex) {
     try { throw new Error(); }
@@ -114,7 +115,7 @@ Queue.prototype.doshift = function(){
       // And then sets those objects as the playlist_tracks
       // which will fire off a remote request to do 
       // an update
-      ev('playlist_tracks',
+      ev('tracklist',
         db
           .hasKey('playlistid')
           .order('playlistid', 'asc')

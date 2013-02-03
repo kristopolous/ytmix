@@ -50,18 +50,21 @@ function pl_get($params) {
 }
 
 function pl_update($params) {
-  list($id, $tracklist, $name) = get($params, 'id, data, name');
+  $opts = getassoc($params, 'id, tracklist, blacklist, name');
 
-  if($tracklist) {
-    run('update playlist set tracklist="' . $tracklist . '" where id=' . $id);
-  }
-
-  if($name) {
-    run('update playlist set name="' . $name . '" where id=' . $id);
+  foreach($opts as $key => $value) {
+    // skip past the id
+    if($key == 'id') {
+      continue;
+    }
+  
+    // this sounds totally unsafe, let's do it anyway. WEEEEEE, 
+    // livin on the edge ... you can't help yourself from fallllinnn.
+    run('update playlist set ' . $key . ' = "' . $value . '" where id = ' . $opts['id']);
   }
 
   pl_generatePreview(Array(
-    'id' => $id
+    'id' => $opts['id']
   ));
   return true;
 }

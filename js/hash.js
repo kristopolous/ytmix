@@ -1,24 +1,24 @@
 var Hash = (function(){
   ev({
-    'playlist_id': function(id) { 
-      if(ev('playlist_name')) {
+    'id': function(id) { 
+      if(ev('name')) {
         set({
-          name: ev('playlist_name'),
+          name: ev('name'),
           id: id
         }); 
       }
     },
-    'playlist_name': function(name) { 
-      if(ev('playlist_id')) {
+    'name': function(name) { 
+      if(ev('id')) {
         set({
-          id: ev('playlist_id'),
+          id: ev('id'),
           name: name
         }); 
       }
     },
     'hash': function(hash) {
       if(hash.id) {
-        if(hash.id != ev('playlist_id')) {
+        if(hash.id != ev('id')) {
           Store.get(parseInt(hash.id));
         }
       } else {

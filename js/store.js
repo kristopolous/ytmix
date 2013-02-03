@@ -30,6 +30,17 @@ function remote(opts) {
       }[ret.status];
     }
 
+    // convenience function of parsing the results
+    for(var key in ret.result) {
+      if(_.isString(ret.result[key])) {
+        var candidate;
+        try {
+          candidate = JSON.parse(ret.result[key]);
+          ret.result[key] = candidate;
+        } catch (ex) { }
+      }
+    }
+
     if(ret.status === true && onSuccess) {
       onSuccess(ret.result);
     } 
@@ -54,12 +65,12 @@ var Store = {
       func: 'get',
       id: id,
       onSuccess: function(data) {
-        ev({
-          'app_state': 'main',
-          'playlist_name': data.name,
-          'playlist_id': data.id,
-          'playlist_tracks': JSON.parse(data.tracklist)
-        });
+        ev(
+          _.extend(
+            { 'app_state': 'main'},
+            data
+          )
+        );
       }
     });
   },
@@ -73,7 +84,7 @@ var Store = {
     ];
 
     ev(
-     'playlist_tracks', 
+     'tracklist', 
       DB.objectify(
         remote_keys,
         db.find().select(remote_keys)
@@ -89,13 +100,13 @@ var Store = {
   }
 };
 
-ev.setter('playlist_id', function(){
+ev.setter('id', function(){
   remote({
     func: 'createID',
     onSuccess: function(id) {
       ev({
-        'playlist_id': id,
-        'playlist_name': 'no name'
+        'id': id,
+        'name': 'no name'
       });
     }
   });
@@ -105,18 +116,27 @@ ev.setter('playlist_id', function(){
 // an assumed index that had been previously
 // set
 ev({
-  'playlist_tracks': function(data, meta) { 
-    if(meta.old && ev('playlist_id')) {
-      ev('remote_data', {data: JSON.stringify(data)}); 
+  'blacklist': function(data, meta) {
+    if(meta.old && ev('id')) {
+      remote({
+        func: 'update',
+        id: ev('id'),
+        blacklist: JSON.stringify(data)
+      });
+    }
+  },
+  'tracklist': function(data, meta) { 
+    if(meta.old && ev('id')) {
+      ev('remote_data', {tracklist: JSON.stringify(data)}); 
     }
   },
 
-  'playlist_name': function(data, meta) {
-    if(meta.old && ev('playlist_id')) {
+  'name': function(data, meta) {
+    if(meta.old && ev('id')) {
       remote({
         func: 'update',
-        id: ev('playlist_id'),
-        name: data
+        id: ev('id'),
+        tracklist: data
       });
     }
   }
@@ -128,9 +148,6 @@ ev.setter('recent', function(){
     onSuccess: function(data) {
       data = _.without(data, false);
       each(data, function(which) {
-        if(which.preview.constructor == String) {
-          which.preview = JSON.parse(which.preview);
-        }
         which.count = which.preview.count;
       });
       ev('recent', data);
@@ -143,7 +160,7 @@ setInterval(function(){
 
     remote(extend({ 
       func: 'update' ,
-      id: ev('playlist_id')
+      id: ev('id')
     }, ev('remote_data')));
 
     ev.unset('remote_data');
