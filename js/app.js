@@ -90,7 +90,12 @@ function loadRelated(obj, opts){
 function loadHistory(){
   ev.isset('recent', function(data) {
 
-    each(data, function(which) {
+    var row;
+    each(data, function(which, ix) {
+      if(!(ix % 4)) {
+        row = $("<div />").addClass("row").appendTo("#splash-history");
+      }
+
       which.preview = JSON.parse(which.preview);
 
       var play = $("<img class=play src=css/play.png />")
@@ -100,6 +105,7 @@ function loadHistory(){
         }),
         container = $("<span />")
           .addClass("splash-container")
+          .addClass("span3")
           .html(
             Splash.template({
               ytList: which.preview.tracks.slice(0, 4),
@@ -112,7 +118,7 @@ function loadHistory(){
       container.hover(
         function() { play.fadeIn() },
         function() { play.fadeOut() }
-      ).append(play).appendTo("#splash-history");
+      ).append(play).appendTo(row);
     });
 
     $("#history").fadeIn();
