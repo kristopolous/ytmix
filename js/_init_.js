@@ -1,6 +1,7 @@
 var 
   db = DB(), 
   START = (+new Date()),
+  Splash = {},
   each = _.each,
   UNIQ = 0,
   map = _.map,

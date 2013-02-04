@@ -6,10 +6,29 @@
     <title>Audisco :: Discover new music every day</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-responsive.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css"> 
   </head>
 
   <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Project name</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
     <div class="main-app">
       <div id="header">
         <span class="control-wrapper">
@@ -35,9 +54,11 @@
     </div>
 
     <div id="splash">
-      <h1>audisco</h1>
-      <p>Paste a YouTube URL here and get lots of videos</p>
-      <input id="initial-search" class="search" />
+      <div class="hero-unit">
+        <h1>audisco</h1>
+        <p>Paste a YouTube URL here and get lots of videos</p>
+        <input id="initial-search" class="search" />
+      </div>
       <div id="history">
         <p>Recent playlists</p>
         <div id="splash-history"></div>
@@ -49,6 +70,17 @@
     <div class=scrubber id=phantom-scrubber></div>
     <div class=scrubber id=real-scrubber></div>
   </div>
+
+  <script id="T-Preview" type="text/template">
+    <span class="track">
+      <% _.each(ytList, function(which) { %><img src="http://i4.ytimg.com/vi/<%= which.ytid %>/default.jpg"><% }) %>
+    </span>
+    <img src="css/play.png" class="play" style="display: none;">
+    <p><%= title %>
+      <br>
+      <small>(<%= count %> tracks <%= duration %>)</small>
+    </p>
+  </script>
 
   <script id="T-Result" type="text/template">
     <a onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>">

@@ -92,28 +92,27 @@ function loadHistory(){
 
     each(data, function(which) {
       which.preview = JSON.parse(which.preview);
-      var 
-        total = which.preview.length,
-        tracks = which.preview.tracks,
-        container = $("<span class=splash-container>").appendTo("#splash-history"),
-        play = $("<img class=play src=css/play.png />").click(function(){
+
+      var play = $("<img class=play src=css/play.png />")
+        .click(function(){
           ev('app_state', 'main');
           Store.get(which.id);
         }),
-        track = $("<span class=track />");
+        container = $("<span />")
+          .addClass("splash-container")
+          .html(
+            Splash.template({
+              ytList: which.preview.tracks.slice(0, 4),
+              title: which.name,
+              count: which.preview.count,
+              duration: Utils.secondsToTime(which.preview.length)
+            })
+          );
 
-      for(var ix = 0; ix < Math.min(tracks.length, 4); ix++) {
-        track.append("<img src=http://i4.ytimg.com/vi/" + tracks[ix].ytid + "/default.jpg>");
-      }
-
-      container
-        .hover(function(){play.fadeIn()}, function(){play.fadeOut()})
-        .append(track)
-        .append(play)
-        .append("<p>" + which.name + 
-           " <br><small>(" + which.count + " track" + (which.count != 1 ? 's' : '') + " " 
-           + Utils.secondsToTime(total) + 
-           ")</small></p>");
+      container.hover(
+        function() { play.fadeIn() },
+        function() { play.fadeOut() }
+      ).append(play).appendTo("#splash-history");
     });
 
     $("#history").fadeIn();
@@ -282,5 +281,6 @@ $(function(){
     var entry = db.findFirst({ ytid: Scrubber.phantom.id });
     Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
   });
+  Splash.template = _.template( $("#T-Preview").html() );
 });
 
