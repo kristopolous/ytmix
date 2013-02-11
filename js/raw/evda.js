@@ -233,24 +233,31 @@ function EvDa (imported) {
         key[_key] = isset( _key, _value );
       });
 
+      // Return the entire object as the result
       return key;
     }
 
     // If I know how to set this key but
     // I just haven't done it yet, run through
-    // those functions now.
-
+    // that function now.
     if( setterMap[key] ) {
-      setterMap[key]();
+      // If someone explicitly sets the k/v in the setter
+      // that is fine, that means this function isn't run.
+      setterMap[key](function(value) {
+        pub(key, value);
+      });
 
-      // This is functionally the same as a delete
-      // for our purposes.  Also, this should not
-      // grow enormous so it's an inexpensive 
-      // optimization.
-      setterMap[key] = 0;
+      delete setterMap[key];
     }
 
     if ( callback ) {
+      // If it already exists, then just call the function
+      // that came in.
+      //
+      // Otherwise have it called once on a set. This means
+      // that the setter is inherently asynchronous since
+      // the execution of this function is continued to be
+      // blocked until the key is set.
       return key in data ?
         callback ( data[key] ) :
         pub ( key, callback, ONCE );
@@ -273,6 +280,9 @@ function EvDa (imported) {
     setter: function ( key, callback ) {
       setterMap[key] = callback;
 
+      // If I am setting a setter and
+      // a function is already waiting on it,
+      // then run it now.
       if (eventMap[ON + key]) {
         isset( key );
       }

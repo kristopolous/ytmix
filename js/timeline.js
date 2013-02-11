@@ -1,4 +1,13 @@
 var UserHistory = (function(){
+  function get(prefix) {
+    var res = [];
+    for(var key in localStorage) {
+      if(key.substr(0,1) == prefix) {
+        res.push(key.slice(1));
+      }
+    }
+    return res;
+  }
 
   return {
     isViewed: function(id) {
@@ -15,6 +24,12 @@ var UserHistory = (function(){
       }
       ev.set('request_gen', {force: true});
       return localStorage["s" + id]; 
+    },
+    getViewed: function(){
+      return get('v');
+    },
+    getFavorites: function(){
+      return get('s');
     },
     view: function (object, id, offset) {
       localStorage["v" + id] = true;

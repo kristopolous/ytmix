@@ -1,6 +1,8 @@
 <? 
 
 include ('../lib/common.php');
+// To make life easy
+include ('favorite.php');
 
 function pl_getUser() {
   result('true', uniqid('', true));

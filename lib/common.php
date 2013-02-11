@@ -51,7 +51,7 @@ function getdata($sql) {
   }
 }
 
-function getassoc($opts, $fieldList) {
+function getAssoc($opts, $fieldList) {
   $opts = sanitize($opts);
   $fieldList = explode(',', $fieldList);
 
@@ -63,6 +63,24 @@ function getassoc($opts, $fieldList) {
     } 
   }
   return $stack;
+}
+
+// I'll learn these ORM things eventually ... but
+// until then...
+function toInsert($assoc) {
+  return (
+    '(' . implode(', ', array_keys($assoc)) . ')' .
+    ' values ' .
+    '(\'' . implode(', \'', array_values($assoc)) . '\')'
+  );
+}
+
+function toUpdate($assoc) {
+  $stack = Array();
+  foreach($assoc as $key => $value) {
+    $stack[] = "$key = '$value'";
+  }
+  return implode(' and ', $stack);
 }
 
 function get($opts, $fieldList) {

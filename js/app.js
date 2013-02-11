@@ -261,6 +261,21 @@ $(function(){
   Timeline.init();
   Search.init();
 
+  // User ids for the favorites feature
+  ev.setter('uid', function(done){
+    if(localStorage['uid']) {
+      done(localStorage['uid']);
+    } else {
+      remote({
+        func: 'getUser',
+        onSuccess: done
+      });
+    }
+  });
+  ev.isset('uid', function(uid){
+    localStorage['uid'] = uid;
+  });
+
   window.Scrubber = {
     real: { dom: $("#real-scrubber"),
       attach: function(where) {
