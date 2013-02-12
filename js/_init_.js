@@ -7,6 +7,7 @@ var
   map = _.map,
   extend = _.extend,
   ev = EvDa({
+    'volume': 100,
     'app_state': '',
     'name': '',
     'blacklist': [],

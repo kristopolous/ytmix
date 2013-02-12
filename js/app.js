@@ -261,6 +261,12 @@ $(function(){
   Timeline.init();
   Search.init();
 
+  $("#volume-down").click(function(){
+    ev.set("volume", Math.max(ev('volume') - 10, 0));
+  });
+  $("#volume-up").click(function(){
+    ev.set("volume", Math.min(ev('volume') + 10, 100));
+  });
   // User ids for the favorites feature
   ev.setter('uid', function(done){
     if(localStorage['uid']) {

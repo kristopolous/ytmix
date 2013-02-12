@@ -160,6 +160,11 @@ var Timeline = (function(){
     setInterval(updateytplayer, 150);
   });
 
+  ev('volume', function(volume){
+    Toolbar.status("Set volume to " + volume);
+    Timeline.player.active.setVolume(volume);
+  });
+
   return {
     player: Player,
     data: _data,
