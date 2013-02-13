@@ -255,6 +255,42 @@ ev({
   },
 });
 
+function findStatus(idList, cb) {
+  var status = [],
+      count = idList.length,
+      subgroup,
+      current = 0;
+
+  while(idList.length) {
+    subgroup = idList.splice(0, 50);
+    $.getJSON("https://www.googleapis.com/youtube/v3/videos?" + [
+        "id=" + subgroup.join(','), 
+        "part=contentDetails",
+        "key=AIzaSyAHtzuv9cF6sdFbIvBWoXhhflxcCFz5qfA"
+      ].join('&'), function(res) {
+      _.each(res.items, function(row) {
+        console.log("(status) " + row.id);
+        status.push( row );
+        current++;
+      });
+      if(current >= count) {
+        cb(status);
+      }
+    });
+  }
+}
+
+// The great db.js... yes it is this awesome.
+function updateBlackList () {
+  findStatus(db.find().select('ytid'), function(what) { 
+    DB()
+      .insert(what)
+      .find( DB(".contentDetails.regionRestriction.blocked.indexOf('US') > -1") )
+      .select('id')
+      .each(Timeline.remove);
+  });
+}
+
 $(function(){
   Results.init();
   Toolbar.init();

@@ -170,7 +170,15 @@ var Timeline = (function(){
     data: _data,
 
     remove: function(index){
+      if(_.isString(index)) {
+        index = db.findFirst({ytid: index}).id;
+        console.log(index);
+      }
 
+      if(! _data[index]) {
+        console.log("Unable to remove>> " + index);
+        return;
+      }
       Toolbar.status("Removed " + _data[index].title);
       Scrubber.real.remove();
 
