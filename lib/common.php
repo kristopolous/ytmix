@@ -105,3 +105,12 @@ function run($mysql_string) {
   }
   return $result;
 }
+
+function run_assoc($mysql_string) {
+  $result = run("select * from playlist where tracklist is not NULL");
+
+  $ret = array();
+  while($ret[] = mysql_fetch_assoc($result));
+  array_pop($ret);
+  return $ret;
+}

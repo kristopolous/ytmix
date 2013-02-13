@@ -35,11 +35,7 @@ function pl_createID() {
 }
 
 function pl_recent() {
-  $result = run('select id, name, preview from playlist where tracklist is not NULL order by id desc limit 20');
-  $ret = Array();
-  while($ret[] = mysql_fetch_assoc($result));
-  
-  return $ret;
+  return run_assoc('select id, name, preview from playlist where tracklist is not NULL order by id desc limit 20');
 }
 
 function pl_get($params) {

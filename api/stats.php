@@ -1,11 +1,7 @@
 <?
 include ('../lib/common.php');
 
-$result = run("select * from playlist where tracklist is not NULL");
-
-$ret = array();
-while($ret[] = mysql_fetch_assoc($result));
-array_pop($ret);
+$ret = run_assoc("select * from playlist where tracklist is not NULL");
 
 // It's almost as if PHP was intended to be a templating language ... lol
 ?>
