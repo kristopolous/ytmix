@@ -1,11 +1,7 @@
 <?
 include ('../lib/common.php');
 
-$obj = Array();
 $result = run("select * from playlist where tracklist is not NULL");
-
-$obj['count'] = count($result);
-$obj['entries'] = array();
 
 $ret = array();
 while($ret[] = mysql_fetch_assoc($result));
@@ -17,6 +13,9 @@ array_pop($ret);
 <style> th, td { background: #eee; padding: 0 2em 0 0.5em} table{ background: #687 } </style>
 
 <table>
+
+  <caption><?= count($ret) ?> Active</caption>
+
   <thead>
     <tr>
 
