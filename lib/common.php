@@ -107,7 +107,7 @@ function run($mysql_string) {
 }
 
 function run_assoc($mysql_string) {
-  $result = run("select * from playlist where tracklist is not NULL");
+  $result = run($mysql_string);
 
   $ret = array();
   while($ret[] = mysql_fetch_assoc($result));

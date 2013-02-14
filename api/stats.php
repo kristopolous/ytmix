@@ -19,10 +19,11 @@ $ret = run_assoc("select * from playlist where tracklist is not NULL");
     foreach(Array(
       'id',
       'name',
-      'tracklist-bytesize',
-      'tracklist-count',
-      'blacklist-bytesize',
-      'blacklist-count') as $row) { ?>
+      'tracklist bytes',
+      'count',
+      'density',
+      'blacklist bytes',
+      'count') as $row) { ?>
 
       <th><?= $row ?></th>
 
@@ -34,8 +35,13 @@ $ret = run_assoc("select * from playlist where tracklist is not NULL");
 
   <?
   foreach($ret as $row) {
+
     $track = json_decode($row['tracklist']);
     $black = json_decode($row['blacklist']);
+
+    if(count($track) == 0) {
+      continue;
+    }
     ?>
 
     <tr>
@@ -46,6 +52,7 @@ $ret = run_assoc("select * from playlist where tracklist is not NULL");
       $row['name'],
       strlen($row['tracklist']),
       count($track),
+      floor(strlen($row['tracklist']) / count($track)),
       strlen($row['blacklist']),
       count($black)) as $el) { ?> 
 

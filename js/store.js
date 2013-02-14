@@ -75,20 +75,16 @@ var Store = {
     });
   },
 
-  saveTracks: function(){
-    var remote_keys = [
-      'length',     // Duration of the track
-      'title',      // YT title
-      'id',
-      'ytid'       // YT id after watch?
-    ];
+  remoteKeys: [
+    'length',     // Duration of the track
+    'title',      // YT title
+    'ytid'       // YT id after watch?
+  ],
 
+  saveTracks: function(){
     ev(
      'tracklist', 
-      DB.objectify(
-        remote_keys,
-        db.find().select(remote_keys)
-      )
+      db.find().select(Store.remoteKeys)
     );
   },
 

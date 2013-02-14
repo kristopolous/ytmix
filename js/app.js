@@ -125,8 +125,19 @@ function loadHistory(){
   });
 }
 
+// This is the loading of the tracks into the database.
 ev.test('tracklist', function(data, meta) {
-  db.insert(data);
+  if(_.isArray(data[0])) {
+    db.insert(
+      DB.objectify(
+        Store.remoteKeys,
+        data
+      )
+    );
+  } else {
+    db.insert( data );
+  }
+
   meta.done(true);
 });
 

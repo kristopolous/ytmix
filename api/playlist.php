@@ -8,6 +8,11 @@ function pl_getUser() {
   result('true', uniqid('', true));
 }
 
+function pl_getPreview($params){
+  list($id) = get($params, 'id');
+  return getdata(run("select preview from playlist where id = $id"));
+}
+
 function pl_generatePreview($params) {
   list($id) = get($params, 'id');
   $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
@@ -15,7 +20,7 @@ function pl_generatePreview($params) {
   $preview['tracks'] = $firstFour = array_slice($playlist, 0, 4);
   $length = 0;
   foreach($playlist as $entry) {
-    $length += $entry['length'];
+    $length += $entry[0];
   }
   $preview['length'] = $length;
   $preview['count'] = count($playlist);
