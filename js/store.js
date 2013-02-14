@@ -60,11 +60,19 @@ function remote(opts) {
 }
 
 var Store = {
+  //
+  // *****************************
+  //  THIS IS THE PLAYLIST LOADER 
+  // *****************************
+  //
   get: function(id) {
     return remote({
       func: 'get',
       id: id,
       onSuccess: function(data) {
+        if(!data.blacklist) {
+          delete data.blacklist;
+        }
         ev(
           _.extend(
             { 'app_state': 'main'},

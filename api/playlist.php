@@ -20,7 +20,11 @@ function pl_generatePreview($params) {
   $preview['tracks'] = $firstFour = array_slice($playlist, 0, 4);
   $length = 0;
   foreach($playlist as $entry) {
-    $length += $entry[0];
+    if(!empty($entry[0])) {
+      $length += $entry[0];
+    } else {
+      $length += $entry['length'];
+    }
   }
   $preview['length'] = $length;
   $preview['count'] = count($playlist);
