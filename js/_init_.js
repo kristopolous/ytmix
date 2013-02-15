@@ -3,6 +3,7 @@ var
   START = (+new Date()),
   Splash = {},
   each = _.each,
+  slice = Array.prototype.slice,
   UNIQ = 0,
   map = _.map,
   extend = _.extend,

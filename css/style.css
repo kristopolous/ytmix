@@ -135,4 +135,17 @@ a{cursor:pointer}
   position: absolute;
   top: -10000px;
   left: -10000px;
- }
+}
+
+#debug { 
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding:0.75em 1em 0.15em;
+  font-family: monospace;
+  font-size: 12px;
+  background: rgba(0, 7, 12, 0.75);
+  color: #9b9;
+  white-space: pre;
+}
+

@@ -40,6 +40,7 @@ var UserHistory = (function(){
         $("#is-starred").removeClass('active');
       }
 
+      Player.offset = offset;
       Timeline.backup.off(object).loadVideoById(id, offset);
     }
   }
@@ -121,7 +122,7 @@ var Timeline = (function(){
       $("#backupPlayer").html(
         _template.backup({
           offset: Math.floor(Player.offset),
-          ytid: Timeline.player.activeData.ytid
+          ytid: Player.activeData.ytid
         })
       );
     },
@@ -138,8 +139,48 @@ var Timeline = (function(){
     }
   };
 
+  var _rateWindow = [];
   function updateytplayer() {
     ev.set('tick');
+
+    // make sure we aren't the backup player
+    if(Player.active && !Player.active.on) {
+      var rateStart = 1e10,
+          stats,
+          rateEnd = Player.active.getVideoBytesLoaded();
+
+      stats = [
+        Player.active.getPlayerState(),
+
+        // How far in
+        (
+          Player.active.getCurrentTime() / 
+          Player.active.getDuration() 
+        ).toFixed(3),
+
+        // How much do we have
+        Player.active.getVideoLoadedFraction().toFixed(3)
+      ];
+
+      _rateWindow.push(rateEnd);
+
+      // we update every 150 ms so a 20 unit window is over 3 seconds
+      if(_rateWindow.length > 20) {
+        rateStart = _rateWindow.shift();
+      }
+
+      if(rateStart < rateEnd) {
+        stats.push(
+          (
+            ((rateEnd - rateStart) / 3) / 1024
+          ).toFixed(3) + " KBps"
+        ); 
+      }
+
+      debug(stats);
+    } else {
+      debug(["(backup)", Player.active.getCurrentTime().toFixed(3)]);
+    }
 
     // mechanics for moving the centroid
     if(Player.active.getCurrentTime) {
@@ -185,7 +226,7 @@ var Timeline = (function(){
   _.each(Player.eventList, function(what) {
     self['ytDebug_' + what] = function(that) {
       ev.set("yt-" + what, what);
-      console.log(what, that);
+      log(what, that);
     }
   });
 
@@ -242,9 +283,10 @@ var Timeline = (function(){
 
   ev('volume', function(volume){
     Toolbar.status("Set volume to " + volume);
-    Timeline.player.active.setVolume(volume);
+    Player.active.setVolume(volume);
   });
 
+  self.Player = Player;
   return {
     player: Player,
     data: _data,
@@ -253,11 +295,11 @@ var Timeline = (function(){
     remove: function(index){
       if(_.isString(index)) {
         index = db.findFirst({ytid: index}).id;
-        console.log(index);
+        log(index);
       }
 
       if(! _data[index]) {
-        console.log("Unable to remove>> " + index);
+        log("Unable to remove>> " + index);
         return;
       }
       Toolbar.status("Removed " + _data[index].title);
@@ -338,7 +380,7 @@ var Timeline = (function(){
           ev('active_track', Player.activeData);
           ev.set('active_data');
           Player.Play();
-          console.log((+new Date()) - START);
+          log("Playing ", Player.activeData.ytid, Player.activeData.title);
         } else {
           Timeline.seekTo(offset, "relative");
         }
@@ -395,7 +437,7 @@ var Timeline = (function(){
         'getVolume',
         'isMuted'
       ], function(what){
-        stats[what] = Timeline.player.active[what]();
+        stats[what] = Player.active[what]();
       });
       console.log(stats);
     },
@@ -419,11 +461,11 @@ var Timeline = (function(){
       // "previous" and "next" track is effeciently with a filter.
       // The controls in the upper left of the timeline
       $("#previous-track").click(function(){
-        Timeline.seekTo(_data[Timeline.player.activeData.previous].offset + 1);
+        Timeline.seekTo(_data[Player.activeData.previous].offset + 1);
       });
 
       $("#next-track").click(function(){
-        Timeline.seekTo(_data[Timeline.player.activeData.next].offset + 1);
+        Timeline.seekTo(_data[Player.activeData.next].offset + 1);
       });
 
       $("#pause-play").click(Timeline.pauseplay);

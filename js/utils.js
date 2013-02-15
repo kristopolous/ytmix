@@ -1,11 +1,15 @@
 
 var Utils = {
-  stack: function(ex) {
+  stack: function(start, stop) {
+    if (arguments.length == 0) {
+      start = 4;
+      stop = 22;
+    }
     try { throw new Error(); }
     catch (e) { return(
       e.stack
         .split('\n')
-        .slice(4,22)
+        .slice(start,stop)
         .join('\n')
         .replace(/^[^@]*/mg, '')
         .replace(/\n[^@]*/mg, '\n   ')
@@ -123,3 +127,21 @@ Queue.prototype.doshift = function(){
     }
   }
 };
+
+function log() {
+  console.log.apply(this, [
+    '@' + 
+      ((new Date() - START) / 1000).toFixed(2) + ' ' + 
+        Utils
+          .stack(2,3)
+          .split('/')
+          .pop() +
+    ':'
+  ].concat(
+    slice.call(arguments)
+  ));
+}
+
+function debug(list) {
+  document.getElementById('debug').innerHTML = list.join(' ');
+}
