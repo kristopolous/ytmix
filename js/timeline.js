@@ -40,7 +40,7 @@ var UserHistory = (function(){
         $("#is-starred").removeClass('active');
       }
 
-      object.loadVideoById(id, offset);
+      Timeline.backup.off(object).loadVideoById(id, offset);
     }
   }
 })();
@@ -59,8 +59,19 @@ var Timeline = (function(){
     _isPlaying = true,
     _loaded = 0,
 
+    _backup = {},
+    _template = {},
+
     Player = {
       controls: [],
+
+      eventList: [ 
+        'StateChange',
+        'PlaybackQualityChange',
+        'PlaybackRateChange',
+        'Error',
+        'ApiChange'
+      ],
 
       Play: function(){
         ev.isset('flash_load', function(){
@@ -72,6 +83,60 @@ var Timeline = (function(){
         });
       }
     };
+
+  _backup = {
+    start: 0,
+
+    off: function(){
+      if(Player.active.off) {
+        $("#backupPlayer").html('');
+        Player.active = Player.controls[0];
+      }
+      return Player.active;
+    },
+
+    getCurrentTime: function(){
+      return Player.offset + ((new Date()) - _backup._start) / 1000;
+    },
+
+    getDuration: function(){
+      return Player.activeData.length;
+    },
+
+    pauseVideo: function() {
+      Player.offset = Player.active.getCurrentTime();
+      $("#backupPlayer").html('');
+    },
+
+    seekTo: function(what) {
+      Player.active.pauseVideo();
+      Player.offset = what;
+      Player.active.playVideo();
+    },
+
+    playVideo: function(){
+      // We pad for load time
+      Player.active._start = (+new Date()) + 2000;
+
+      $("#backupPlayer").html(
+        _template.backup({
+          offset: Math.floor(Player.offset),
+          ytid: Timeline.player.activeData.ytid
+        })
+      );
+    },
+
+    getPlaybackQuality: function(){
+      return "large";
+    },
+
+    on: function() {
+      Player.offset = Player.offset || 0;
+
+      Player.active = _backup;
+      Player.active.playVideo();
+    }
+  };
 
   function updateytplayer() {
     ev.set('tick');
@@ -117,6 +182,17 @@ var Timeline = (function(){
     }
   }
 
+  _.each(Player.eventList, function(what) {
+    self['ytDebug_' + what] = function(that) {
+      ev.set("yt-" + what, what);
+      console.log(what, that);
+    }
+  });
+
+  ev.on('yt-Error', function(what) {
+    _backup.on();
+  });
+
   self.onYouTubePlayerReady = function(playerId) {
     var id = parseInt(playerId.substr(-1));
 
@@ -124,6 +200,10 @@ var Timeline = (function(){
       _loaded ++;
 
       Player.controls[id] = document.getElementById(playerId);
+
+      _.each(Player.eventList, function(what) {
+        Player.controls[id].addEventListener("on" + what, 'ytDebug_' + what);
+      });
 
       if(_loaded == _maxPlayer) {
         // This slight indirection is needed for IE.
@@ -168,6 +248,7 @@ var Timeline = (function(){
   return {
     player: Player,
     data: _data,
+    backup: _backup,
 
     remove: function(index){
       if(_.isString(index)) {
@@ -193,9 +274,7 @@ var Timeline = (function(){
     pause: function(){
       ev.isset('flash_load', function(){
         _isPlaying = false;
-        each(Player.controls, function (which) {
-          which.pauseVideo();
-        });
+        Player.active.pauseVideo();
         $("#pause-play").html("&#9659;");
       });
     },
@@ -291,12 +370,40 @@ var Timeline = (function(){
         if(!Player.activeData || (track.id != Player.activeData.id)) {
           Timeline.play(track.id, absolute - track.offset);
         } else {
+          Player.offset = absolute - track.offset;
           Player.active.seekTo(absolute - track.offset);
         }
       }
     },
 
+    debug: function() {
+      var stats = {};
+      _.each([
+        'getAvailablePlaybackRates',
+        'getAvailableQualityLevels',
+        'getCurrentTime',
+        'getDuration',
+        'getPlaybackQuality',
+        'getPlaybackRate',
+        'getPlayerState',
+        'getVideoBytesLoaded',
+        'getVideoBytesTotal',
+        'getVideoEmbedCode',
+        'getVideoLoadedFraction',
+        'getVideoStartBytes',
+        'getVideoUrl',
+        'getVolume',
+        'isMuted'
+      ], function(what){
+        stats[what] = Timeline.player.active[what]();
+      });
+      console.log(stats);
+    },
+
     init: function() {
+
+      _template.backup = _.template($("#T-Backup").html());
+
       // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
       // videos we which to play.
       for(var ix = 0; ix < _maxPlayer; ix++) {
