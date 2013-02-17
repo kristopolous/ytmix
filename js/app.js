@@ -108,7 +108,7 @@ function loadHistory(){
           .addClass("span3")
           .html(
             Splash.template({
-              ytList: which.preview.tracks.slice(0, 4),
+              ytList: which.preview.tracks ? which.preview.tracks.slice(0, 4) : [],
               title: which.name,
               count: which.preview.count,
               duration: Utils.secondsToTime(which.preview.length)
