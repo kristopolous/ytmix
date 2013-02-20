@@ -217,13 +217,19 @@ ev({
     } 
 
     if(state == 'splash') {
-      ev.unset('id','tracklist','name');
-      db.find().remove();
-      Timeline.pause();
-      $(".main-app").css('display','none');
-      $("#splash").css('display','block');
-      loadHistory();
-      document.body.style.overflow = 'auto';
+      // If we go to the splash page ... realistically, "back" to it,
+      // then we just force a reload
+      if (ev.isset('tracklist')) {
+        location.reload();
+      } else {
+        ev.unset('id','tracklist','name');
+        db.find().remove();
+        Timeline.pause();
+        $(".main-app").css('display','none');
+        $("#splash").css('display','block');
+        loadHistory();
+        document.body.style.overflow = 'auto';
+      }
     } else if (state == 'main') {
       $(".main-app").css({
         opacity: 0,
