@@ -10,12 +10,12 @@ var
   fs = require('fs');
 
 var 
-  playlistid = 'LLvyPrFyPTBXmXNJItvAKSQQ',
   playlist = [],
   id = 0,
   title = "(no title)",
   subtitle;
 
+  console.log(source);
 function newentry(entry) {
   if (entry.title.constructor != String) {
     entry.title = entry.title['#'];
@@ -64,6 +64,7 @@ function addEntries(xml) {
       newentry(result.entry);
     }
 
+    console.log(result.link);
     next = result.link.filter(function(entry) {
       return entry['@']['rel'] == 'next';
     });

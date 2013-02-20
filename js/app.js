@@ -63,21 +63,24 @@ function loadRelated(obj, opts){
     $.getJSON( 'api/related.php', match, function (data){
       addVids(data.related, obj);
 
-      db
-        .find(match)
-        .update({
-           related: db.find({ytid: db.isin(_.pluck(data.related, 'ytid'))})
-        });
+      console.log(data.related);
+      getDuration(_.pluck(data.related, 'ytid'), function(){
+        db
+          .find(match)
+          .update({
+             related: db.find({ytid: db.isin(_.pluck(data.related, 'ytid'))})
+          });
 
-      Store.saveTracks();
-      ev.set('request_gen');
+        Store.saveTracks();
+        ev.set('request_gen');
 
-      // This makes sure that we don't hammer
-      // the server to get related videos
-      setTimeout(function(){
-        _remote.active = false;
-        _remote.queue.doshift();
-      }, 1000);
+        // This makes sure that we don't hammer
+        // the server to get related videos
+        setTimeout(function(){
+          _remote.active = false;
+          _remote.queue.doshift();
+        }, 1000);
+      });
     });
   } else { 
     _remote.queue.doshift();
@@ -96,6 +99,9 @@ function loadHistory(){
         row = $("<div />").addClass("row").appendTo("#splash-history");
       }
 
+      if(!which.preview) {
+        return;
+      }
       which.preview = JSON.parse(which.preview);
 
       var play = $("<img class=play src=css/play.png />")
@@ -271,6 +277,21 @@ ev({
     ev.set('request_gen');
   },
 });
+
+function getDuration(idList, cb) {
+  findStatus(idList, function(list) {
+    _.each(list, function(row) {
+      // duration comes back like PT8M37S
+      var parts = _.map(row.contentDetails.duration.slice(2, -1).split(/[A-Z]/), function(m) { return parseInt(m); }),
+          duration = parts.pop() + (60 * parts.pop()) + (60 * 60 * (parts.pop() || 0));
+
+      db.find({ytid: row.id}).update({length: duration});
+    });
+    if(cb) {
+      cb();
+    }
+  });
+}
 
 function findStatus(idList, cb) {
   var status = [],

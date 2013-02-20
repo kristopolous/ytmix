@@ -44,7 +44,14 @@ function pl_createID() {
 }
 
 function pl_recent() {
-  return run_assoc('select id, name, preview from playlist where tracklist is not NULL order by id desc limit 20');
+  return run_assoc('select 
+    id, name, preview 
+    from playlist 
+    where 
+      tracklist is not NULL and 
+      name is not null and 
+      preview is not null 
+    order by id desc limit 20');
 }
 
 function pl_get($params) {

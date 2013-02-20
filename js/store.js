@@ -152,7 +152,11 @@ ev.setter('recent', function(){
     onSuccess: function(data) {
       data = _.without(data, false);
       each(data, function(which) {
-        which.count = which.preview.count;
+        if(which.preview) {
+          which.count = which.preview.count;
+        } else {
+          which.count = 0;
+        }
       });
       ev('recent', data);
     }   
