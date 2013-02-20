@@ -143,6 +143,8 @@ var Timeline = (function(){
   function updateytplayer() {
     ev.set('tick');
 
+    var scrubberPosition = 0;
+
     // make sure we aren't the backup player
     if(Player.active && !Player.active.on) {
       var rateStart = 1e10,
@@ -179,7 +181,12 @@ var Timeline = (function(){
 
       debug(stats);
     } else {
-      debug(["(backup)", Player.active.getCurrentTime().toFixed(3)]);
+      debug([
+        "(backup)", 
+        Player.active.getCurrentTime().toFixed(3),
+        "/",
+        Player.active.getDuration().toFixed(3)
+      ]);
     }
 
     // mechanics for moving the centroid
@@ -200,7 +207,7 @@ var Timeline = (function(){
           // Otherwise, place ourselves underneath it so that the percentage
           // calculations will work out.
           Scrubber.real.attach(entry.jquery.timeline);
-          Scrubber.real.dom.css({ left: (time * 100 / Player.active.getDuration()) + '%'});
+          scrubberPosition = time * 100 / Player.active.getDuration();
         } else {
           Scrubber.real.remove();
         }
@@ -213,7 +220,7 @@ var Timeline = (function(){
         }
 
         // If the player is active and we are at the end of a song, then move ahead
-        if(time > 0 && Player.active.getDuration() > 0 && (Player.active.getDuration() - time == 0)) {
+        if(time > 0 && Player.active.getDuration() > 0 && (Player.active.getDuration() - time <= 0)) {
           _offset += 1;
           Timeline.seekTo(_offset);
         } else {
@@ -221,6 +228,7 @@ var Timeline = (function(){
         }
       }
     }
+    Scrubber.real.dom.css({ left: scrubberPosition + "%"});
   }
 
   _.each(Player.eventList, function(what) {

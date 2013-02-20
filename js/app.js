@@ -330,15 +330,16 @@ $(function(){
   });
 
   window.Scrubber = {
-    real: { dom: $("#real-scrubber"),
+    real: { 
+      dom: $("#real-scrubber"),
       attach: function(where) {
         if(Scrubber.real.container != where) {
           Scrubber.real.remove();
           Scrubber.real.container = where;
           Scrubber.real.dom.appendTo(where);
+          Scrubber.real.container.addClass("active").css('display','block');
+          Scrubber.real.container.parent().addClass("active");
         }
-        Scrubber.real.container.addClass("active").css('display','block');
-        Scrubber.real.container.parent().addClass("active");
       },
       remove: function() {
         if(Scrubber.real.container) {
