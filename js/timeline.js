@@ -62,6 +62,7 @@ var Timeline = (function(){
 
     _backup = {},
     _template = {},
+    _rateWindow = [],
 
     Player = {
       controls: [],
@@ -139,7 +140,6 @@ var Timeline = (function(){
     }
   };
 
-  var _rateWindow = [];
   function updateytplayer() {
     ev.set('tick');
 

@@ -7,7 +7,7 @@ var Toolbar = {
         opacity: 1,
         top: "-30px"
       })
-      .animate({top: "10px"}, 1000, function(){
+      .animate({top: "0px"}, 1000, function(){
         setTimeout(function(){
           $("#status .message").fadeOut(1000);
         }, 1500);

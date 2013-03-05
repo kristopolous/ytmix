@@ -13,6 +13,17 @@ function pl_getPreview($params){
   return getdata(run("select preview from playlist where id = $id"));
 }
 
+function pl_getTracks($params) {
+  list($id) = get($params, 'id');
+  $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
+  $result = array();
+  foreach($playlist as $entry) {
+    $result[] = $entry['ytid'];
+  }
+  echo implode("\n", $result);
+  exit(0);
+}
+
 function pl_generatePreview($params) {
   list($id) = get($params, 'id');
   $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
