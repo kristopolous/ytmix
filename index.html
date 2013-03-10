@@ -39,15 +39,14 @@
     </div>
 
     <div id="splash" class="container">
-      <small style="font:14px/16px Verdana;width:50em;display:inline-block;text-align:left">
+      <small style="display:none;font:14px/16px Verdana;width:50em;text-align:left">
         Hello, this is <a href=https://github.com/kristopolous/ytmix>an open-source project</a> for discovering new music on youtube.  <a href=http://qaa.ath.cx/>I've</a> been working on the idea over the course of <a href=http://iizuu.com>a few</a> different <a href=http://oblong.com>companies</a> as side projects since 2007.  I use (and patch) this every day.  You should clone a copy; it's best for personal use right now. ~chris (2013.02.16)</small>
       <div class="hero-unit">
         <h1>audisco</h1>
-        <p>Paste a YouTube URL here and get lots of videos</p>
         <input id="initial-search" class="search" />
+        <a class="button" id="favorites-link">Your Favorites</a>
       </div>
       <div id="history">
-        <p>Recent playlists</p>
         <div id="splash-history"></div>
       </div>
     </div>
@@ -125,6 +124,7 @@
   <!-- Application { -->
     <script src="js/_init_.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/search.js"></script>
     <script src="js/store.js"></script>
     <script src="js/timeline.js"></script>
     <script src="js/toolbar.js"></script>

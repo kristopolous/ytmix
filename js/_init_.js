@@ -54,7 +54,7 @@ db.sync(function(){
   console.log(Utils.stack());
   console.log(++sCount, +new Date());
 });
-
+*/
 ev.sniff();
 ev.sniff('tick');
-*/
+

@@ -129,7 +129,7 @@ Queue.prototype.doshift = function(){
 };
 
 function log() {
-  console.log.apply(this, [
+  console.log([
     '@' + 
       ((new Date() - START) / 1000).toFixed(2) + ' ' + 
         Utils

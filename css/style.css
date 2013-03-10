@@ -5,7 +5,7 @@ p{margin:0}
 a:hover{text-decoration:none;color:#fff}
 a{color:#ccc}
 input{font-size:17px;background:#545;color:#fff;border:2px solid;padding:0 2px;border-color:#434 #989 #989 #434}
-h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em}
+h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #playlist-name{margin:0;font-size:1.25em;color:#fff;display:inline-block;padding:0 15px}
 
 .star{color:#434 !important;cursor:pointer}
@@ -28,7 +28,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0.5em 0;font-size:2.75em
 
 #splash{text-align:center;color:#cbc;text-shadow:0px 0px 2px #212;font-size:1.25em}
 #splash-history{margin-top:0.25em}
-#splash input{font-size:1.5em;box-shadow:0 0 0px 2px #fff;margin:0.5em 0 1em 0}
+#splash input{font-size:1.5em;box-shadow:0 0 0px 2px #fff;margin:0}
 #splash .track{height:9em;line-height:0;text-align:center;width:100%;margin-top:0.25em;box-shadow:none}
 #splash .track img{width:5em;margin:0.25em;border:1px solid #878}
 
@@ -155,3 +155,10 @@ a{cursor:pointer}
   height: 34px;
   color: #fff;
 }
+
+.hero-unit { margin-top:0 }
+.hero-unit h1{
+  display: inline-block;
+  margin:0 1em 0 0;
+}
+.hero-unit a { font-size: 1em;margin-left:2em;margin-bottom:2em;display:inline-block}
