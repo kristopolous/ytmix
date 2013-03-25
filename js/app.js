@@ -131,7 +131,13 @@ function loadHistory(){
   });
 }
 
-// This is the loading of the tracks into the database.
+// ********************
+//
+// This is the loading 
+// of the tracks into 
+// the database.
+//
+// ********************
 ev.test('tracklist', function(data, meta) {
   if(_.isArray(data[0])) {
     db.insert(

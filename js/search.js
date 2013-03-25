@@ -31,7 +31,9 @@ var Search = {
       searchID = 0, 
       lastID = 0;
 
-    $("#clear-search").click(function(){ $("#normal-search").val(''); });
+    $("#clear-search").click(function(){ 
+      $("#normal-search").val(''); 
+    });
 
     Utils.onEnter("#initial-search", function(){
       ev('app_state', 'main');
@@ -61,6 +63,10 @@ var Search = {
       }
     }, 250);
   
+    $("#use-internet").click(function(){
+      Search.net($("#initial-search").val());
+    });
+
     _get('initial-search').focus();
   }
 };
