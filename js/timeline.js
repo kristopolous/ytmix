@@ -140,6 +140,26 @@ var Timeline = (function(){
     }
   };
 
+  // This changes the volume down and back up
+  // to fix the annoying click sound
+  var clickFix = {
+    _set: false,
+    start: function(){
+      if(Player.active) {
+        Player.active.setVolume(0);
+        clickFix.set = true;
+      }
+    },
+    end: function(){
+      if(clickFix.set) {
+        setTimeout(function() {
+          Player.active.setVolume(ev('volume'));
+        }, 500);
+        clickFix.set = false;
+      }
+    }
+  };
+
   function updateytplayer() {
     ev.set('tick');
 
@@ -196,6 +216,8 @@ var Timeline = (function(){
       var time = Player.active.getCurrentTime();
 
       if (time > 0 && Player.activeData) {
+
+        clickFix.end();
 
         // This generates the scrubber in the results tab below.
         // We first check to see if the video is in the viewport window
@@ -417,6 +439,7 @@ var Timeline = (function(){
       });
 
       if(track) {
+        clickFix.start();
         if(!Player.activeData || (track.id != Player.activeData.id)) {
           Timeline.play(track.id, absolute - track.offset);
         } else {
