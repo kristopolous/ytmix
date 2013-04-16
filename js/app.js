@@ -299,6 +299,7 @@ $(function(){
           Scrubber.real.container.addClass("active").css('display','block');
           Scrubber.real.container.parent().addClass("active");
         }
+        where.css('display','block');
       },
       remove: function() {
         if(Scrubber.real.container) {

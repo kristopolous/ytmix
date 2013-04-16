@@ -228,9 +228,9 @@ var Timeline = (function(){
           // If we are in the purview of the track, then we can move on.
           // Otherwise, place ourselves underneath it so that the percentage
           // calculations will work out.
+          scrubberPosition = time * 100 / Player.active.getDuration();
           entry.jquery.timeline.css('display','block');
           Scrubber.real.attach(entry.jquery.timeline);
-          Scrubber.real.dom.css({ left: scrubberPosition + "%"});
         } else {
           Scrubber.real.remove();
         }
@@ -251,6 +251,7 @@ var Timeline = (function(){
         }
       }
     }
+    Scrubber.real.dom.css({ left: scrubberPosition + "%"});
   }
 
   _.each(Player.eventList, function(what) {
