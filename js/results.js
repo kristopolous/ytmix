@@ -102,6 +102,10 @@ var Results = {
       // append it to the video viewport, returning
       // the object that was previously created.
 
+//      if(!dbReference[0].jqueryObject.hasClass("active")) {
+        dbReference[0].jqueryObject.timeline.css('display','none');
+ //     }
+
       $("#video-viewport").append(dbReference[0].jqueryObject);
       dom = dbReference[0].jqueryObject;
     } else {
