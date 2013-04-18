@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+while [ $# -gt 0 ]; do
+  if [ -e ../js/min/$1 ]; then
+    echo "Removing $1"
+    rm ../js/min/$1 ../js/raw/$1
+  fi
+  shift
+done
+
 wget="wget --quiet --no-check-certificate"
 
 version_jq=1.9.0
