@@ -83,6 +83,8 @@ var Store = {
     });
   },
 
+  // This is what is stored remotely. Note that
+  // the offset isn't there.
   remoteKeys: [
     'length',     // Duration of the track
     'title',      // YT title
@@ -174,4 +176,26 @@ setInterval(function(){
     ev.unset('remote_data');
   }
 }, 4000);
+
+// ********************
+//
+// This is the loading 
+// of the tracks into 
+// the database.
+//
+// ********************
+ev.test('tracklist', function(data, meta) {
+  if(_.isArray(data[0])) {
+    db.insert(
+      DB.objectify(
+        Store.remoteKeys,
+        data
+      )
+    );
+  } else {
+    db.insert( data );
+  }
+
+  meta.done(true);
+});
 

@@ -214,8 +214,6 @@ var Results = {
 
     opts = opts || {};
 
-    var tracks = db.find().length;
-
     // There's a function that permits one to just display the related results
     // This not only show the isolated related results, but then modifies the
     // drop down menu near the related results to say as much.  This second
@@ -227,7 +225,9 @@ var Results = {
 
       set = db.find(constraints, {ytid: db.isin(unique)});
     } else {
-      set = db.find(constraints).sort(function(a, b) { return a.playlistid - b.playlistid });
+      set = db.find(constraints).sort(function(a, b) { 
+        return a.playlistid - b.playlistid;
+      });
 
       set = ev('search_results').concat(set);
     }

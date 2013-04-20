@@ -3,90 +3,6 @@
 // used just like an array.
 _remote.queue = new Queue();
 
-// Adds vids in the format 
-// {length: sec, title: text, ytid: youtube id}
-function addVids(vidList, backref) {
-  // insert each related video into our
-  // db of known videos if needed
-  each(vidList, function(video) {
-    db.insert(video).update(function(data){
-      data.reference.push(backref.ytid);
-      data.removed = data.removed || 0;
-    });
-  })
-}
-
-// Loads the videos related to a db object that
-// should have ytid defined.  It is also designed
-// so it doesn't hose the serve with a bunch of
-// requests but instead tries to space them out
-// so that one finishes, some time lapses, then
-// another one starts.
-//
-// The related videos for the playlist are stored
-// as the database object which has the problem
-// of related videos becoming stale and delisted,
-// as of now (2011/11/27) unsolved, but it avoids
-// the problem of having to have this stagnant
-// request cycle every time a user tries to load
-// the playlist for his or her own use.
-//
-// Stale links should be taken care of OOB and not
-// be a deferred problem that justifies funky looking
-// incremental loads.
-//
-function loadRelated(obj, opts){
-  if(_remote.active) {
-    _remote.queue.push(function(){
-      loadRelated(obj, opts);
-    });
-    return;
-  }
-
-  var match = {ytid: obj.ytid};
-  
-  // The related entry will be null (see the template in
-  // _init_.js for more info) unless this call is made
-  if(
-      !db.findFirst(match).related || 
-      !db.findFirst(match).related.length
-    ) {
-
-    Toolbar.status("Adding related " + obj.title);
-    // This "mutex like" object is to
-    // make sure that we don't request
-    // more then one related at a time.
-    _remote.active = true;
-
-    // The match happens to be the same as the server
-    // query in this case
-    $.getJSON( 'api/related.php', match, function (data){
-      addVids(data.related, obj);
-
-      console.log(data.related);
-      getDuration(_.pluck(data.related, 'ytid'), function(){
-        db
-          .find(match)
-          .update({
-             related: db.find({ytid: db.isin(_.pluck(data.related, 'ytid'))})
-          });
-
-        Store.saveTracks();
-        ev.set('request_gen');
-
-        // This makes sure that we don't hammer
-        // the server to get related videos
-        setTimeout(function(){
-          _remote.active = false;
-          _remote.queue.doshift();
-        }, 1000);
-      });
-    });
-  } else { 
-    _remote.queue.doshift();
-  }
-}
-
 // This is on the splash page. It loads
 // the recent history of tracks that have
 // been previously played.
@@ -130,28 +46,6 @@ function loadHistory(){
     $("#history").fadeIn();
   });
 }
-
-// ********************
-//
-// This is the loading 
-// of the tracks into 
-// the database.
-//
-// ********************
-ev.test('tracklist', function(data, meta) {
-  if(_.isArray(data[0])) {
-    db.insert(
-      DB.objectify(
-        Store.remoteKeys,
-        data
-      )
-    );
-  } else {
-    db.insert( data );
-  }
-
-  meta.done(true);
-});
 
 
 ev({
