@@ -172,6 +172,10 @@ var Timeline = (function(){
           rateEnd = Player.active.getVideoBytesLoaded();
 
       stats = [
+        Player.active.getDuration(),
+        Player.active.getCurrentTime(),
+        Player.activeData.length,
+
         Player.active.getPlayerState(),
 
         // How far in
@@ -240,6 +244,14 @@ var Timeline = (function(){
         // we check to see where it's at
         if( Player.active.getPlaybackQuality() != 'large') {
           Player.active.setPlaybackQuality('large');
+        }
+
+        // There's this youtube bug (2013/05/11) that can sometimes report totally incorrect values for the duration
+        // If it's more than 20 seconds off and greater than 0, then we try to reload the video. This bug seems to
+        // have been around for almost a year or so?  Simply loading the video again appears to fix it.
+        if(Player.active.getDuration() > 30 && (Player.active.getDuration() + 20 < Player.activeData.length)) {
+          console.log("Reloading");
+          UserHistory.view(Player.active, Player.activeData.ytid, Player.active.getCurrentTime());
         }
 
         // If the player is active and we are at the end of a song, then move ahead
