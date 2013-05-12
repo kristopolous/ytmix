@@ -243,8 +243,14 @@ function EvDa (imported) {
     if( setterMap[key] ) {
       // If someone explicitly sets the k/v in the setter
       // that is fine, that means this function isn't run.
-      setterMap[key](function(value) {
-        pub(key, value);
+      //
+      // NOTE: using the return value as the thing to be set is a bad idea
+      // because things can be done asynchronously.  So there is no way to
+      // reliably check if the code explicitly set things after the function
+      // returns.
+      
+      /* var ThisIsWorthless = */ setterMap[key](function(value) {
+        pub.set(key, value);
       });
 
       delete setterMap[key];
@@ -271,8 +277,10 @@ function EvDa (imported) {
     // extensions can be made.
     list: {},
     db: data,
+    setterMap: setterMap,
     events: eventMap,
     del: del,
+    whenSet: isset,
     isset: isset,
 
     // Unlike much of the reset of the code,
@@ -284,8 +292,16 @@ function EvDa (imported) {
       // a function is already waiting on it,
       // then run it now.
       if (eventMap[ON + key]) {
-        isset( key );
+        return isset( key );
       }
+    },
+
+    when: function ( key, toTest, lambda ) {
+      return pub(key, function(value) {
+        if(value === toTest) {
+          lambda(value);
+        }
+      });
     },
 
     incr: function ( key ) {
@@ -367,6 +383,8 @@ function EvDa (imported) {
           }
         };
 
+      meta.result = meta.done;
+
       each ( pub.traceList, function ( callback ) {
         callback ( args );
       });
@@ -405,7 +423,11 @@ function EvDa (imported) {
         }
       }
 
-      return value;
+      // Don't return the value...
+      // return the current value of that key.
+      // 
+      // This is because keys can be denied
+      return data[key];
     },
 
     once: function ( key, lambda ) {
@@ -422,6 +444,7 @@ function EvDa (imported) {
           delete callback.S;
         }
       });
+      return pub.list[listName];
     },
 
     setadd: function ( key, value ) {
@@ -436,12 +459,16 @@ function EvDa (imported) {
       each(pub.list[listName], function(callback) {
         ( callback.S || (callback.S = {}) ) [ listName ] = true;
       });
+      return pub.list[listName];
     },
 
     unset: function () { 
+      var bool = true;
       each(arguments, function(which) {
+        bool &= (which in data);
         delete data[which];
       });
+      return bool;
     },
 
     find: function ( regex ) {
@@ -450,13 +477,13 @@ function EvDa (imported) {
       });
     },
 
-    added: function(key, callback) {
+    changed: function(key, callback) {
       if( !callback ) {
         callback = key;
         key = BASE;
       }
 
-      pub.on(key, function(value, meta) {
+      return pub.on(key, function(value, meta) {
         var 
           newlen = size(value),
           oldlen = size(meta.old);
@@ -472,26 +499,47 @@ function EvDa (imported) {
     sniff: function () {
       var 
         ignoreMap = {},
-        startTime = +new Date();
+        startTime = +new Date(),
+        // Use a few levels of indirection to be
+        // able to toggle the sniffing on or off.
+        sniff = function(args) {
+          if(!ignoreMap[args[0]]) {
+            console.log((+new Date()) - startTime, args);
+          }
+        },
+        dummy = function() {},
+        sniffProxy = sniff;
 
       pub.traceList.unshift(function(args){
-        if(!ignoreMap[args[0]]) {
-          console.log((+new Date()) - startTime, args);
-        }
+        sniffProxy(args);
       });
          
       // neuter this function but don't populate
       // the users keyspace.
       pub.sniff = function(key) {
-        if(key) {
-          ignoreMap[key] = !ignoreMap[key];
-          return "[Un]ignoring " + key;
+        if(arguments.length > 0) {
+          if(isString(key)) {
+            ignoreMap[key] = !ignoreMap[key];
+            return "[Un]ignoring " + key;
+          } else {
+            // If the key is true then we turn sniffing "on"
+            // by linking the proxy to the real sniff function.
+            //
+            // Otherwise, we link the proxy to a dummy function
+            sniffProxy = key ? sniff : dummy;
+            return key;
+          }
         } 
         return keys(ignoreMap);
       }
     }
   });
 
+  pub.setAdd = pub.setadd;
+  pub.setDel = pub.setdel;
+  pub.isSet = pub.isset;
+
+  pub.get = pub;
   pub.change = pub.on;
   pub.add = pub.push;
 

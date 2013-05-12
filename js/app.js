@@ -7,21 +7,29 @@ _remote.queue = new Queue();
 // the recent history of tracks that have
 // been previously played.
 function loadHistory(){
+  // The 'recent' has a setter that this will
+  // trigger; see store.js.  
   ev.isset('recent', function(data) {
 
     var row;
     each(data, function(which, ix) {
+      // This is the horizontal row of results.
+      // Each row will contain 4 playlist links.
       if(!(ix % 4)) {
         row = $("<div />").addClass("row").appendTo("#splash-history");
       }
 
+      // If there is no preview for this playlist, then skip it.
       if(!which.preview) {
         return;
       }
+
       which.preview = JSON.parse(which.preview);
 
       var play = $("<img class=play src=css/play.png />")
         .click(function(){
+          // Clicking it will switch us to the playlist mode and
+          // get the playlist.
           ev('app_state', 'main');
           Store.get(which.id);
         }),
@@ -46,7 +54,6 @@ function loadHistory(){
     $("#history").fadeIn();
   });
 }
-
 
 ev({
   // The app_state variable maintains whether the application is
