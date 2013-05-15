@@ -165,7 +165,7 @@ var Timeline = (function(){
 
     var scrubberPosition = 0;
 
-    // make sure we aren't the backup player
+    // Make sure we aren't the backup player
     if(Player.active && !Player.active.on && Player.active.getVideoBytesLoaded) {
       var rateStart = 1e10,
           stats,
@@ -190,7 +190,7 @@ var Timeline = (function(){
 
       _rateWindow.push(rateEnd);
 
-      // we update every 150 ms so a 20 unit window is over 3 seconds
+      // Update every 150 ms so a 20 unit window is over 3 seconds
       if(_rateWindow.length > 20) {
         rateStart = _rateWindow.shift();
       }
@@ -213,7 +213,7 @@ var Timeline = (function(){
       ]);
     }
 
-    // mechanics for moving the centroid
+    // The mechanics for moving the centroid
     if(Player.active.getCurrentTime) {
       localStorage[ev.db.id + 'offset'] = _offset;
 
@@ -239,22 +239,24 @@ var Timeline = (function(){
           Scrubber.real.remove();
         }
 
-        // For some reason is appears that this value can
+        // For some reason it appears that this value can
         // toggle back to non-high quality sometimes. So 
-        // we check to see where it's at
+        // we check to see where it's at.
         if( Player.active.getPlaybackQuality() != 'large') {
           Player.active.setPlaybackQuality('large');
         }
 
-        // There's this youtube bug (2013/05/11) that can sometimes report totally incorrect values for the duration
-        // If it's more than 20 seconds off and greater than 0, then we try to reload the video. This bug seems to
-        // have been around for almost a year or so?  Simply loading the video again appears to fix it.
+        // There's this YouTube bug (2013/05/11) that can sometimes report 
+        // totally incorrect values for the duration. If it's more than 
+        // 20 seconds off and greater than 0, then we try to reload the 
+        // video. This bug seems to have been around for almost a year or 
+        // so?  Simply loading the video again appears to fix it.
         if(Player.active.getDuration() > 30 && (Player.active.getDuration() + 20 < Player.activeData.length)) {
           console.log("Reloading");
           UserHistory.view(Player.active, Player.activeData.ytid, Player.active.getCurrentTime());
         }
 
-        // If the player is active and we are at the end of a song, then move ahead
+        // If the player is active and we are at the end of a song, then move ahead.
         if(time > 0 && Player.active.getDuration() > 0 && (Player.active.getDuration() - time <= 0)) {
           _offset += 1;
           Timeline.seekTo(_offset);
@@ -273,6 +275,10 @@ var Timeline = (function(){
     }
   });
 
+  // If there's an error loading the video (usually due to
+  // embed restrictions), we have a backup player that can
+  // be used.  There's significantly less control over this
+  // player so it's the backup plan.
   ev.on('yt-Error', function(what) {
     _backup.on();
   });
@@ -291,7 +297,9 @@ var Timeline = (function(){
 
       if(_loaded == _maxPlayer) {
         // This slight indirection is needed for IE.
-        setTimeout(function(){ ev.set('flash_load'); }, 1);
+        setTimeout(function() { 
+          ev.set('flash_load'); 
+        }, 1);
       }
     }
   }
@@ -395,7 +403,12 @@ var Timeline = (function(){
       // This final next pointer will enable wraparound
       if(index) {
         _data[index].next = 0;
-        _data[0].previous = index;
+
+        // TODO: Sometimes _data[0] is undefined. I have to figure out
+        // how this offset problem occurs.
+        for(var ix = 0; !_data[ix]; ix++); 
+
+        _data[ix].previous = index;
       }
       // db.sync();
     },

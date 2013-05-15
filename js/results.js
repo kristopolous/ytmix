@@ -3,7 +3,6 @@ var Results = {
 
   SortCompare: {pre: {}, post: {}},
 
-
   init: function(){
     var timeout;
 

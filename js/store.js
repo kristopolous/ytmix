@@ -88,14 +88,18 @@ var Store = {
   remoteKeys: [
     'length',     // Duration of the track
     'title',      // YT title
-    'ytid'       // YT id after watch?
+    'ytid'        // YT id after watch?v=(\w*)$
   ],
 
   saveTracks: function(){
+    log("a");
+    var result = db.find().select(Store.remoteKeys);
+    log("b");
     ev(
      'tracklist', 
-      db.find().select(Store.remoteKeys)
+      result
     );
+    log("c");
   },
 
   remove: function(id) {
@@ -131,6 +135,7 @@ ev({
       });
     }
   },
+
   'tracklist': function(data, meta) { 
     if(meta.old && ev('id')) {
       ev('remote_data', {tracklist: JSON.stringify(data)}); 
