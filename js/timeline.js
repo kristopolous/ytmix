@@ -146,14 +146,18 @@ var Timeline = (function(){
     _set: false,
     start: function(){
       if(Player.active) {
-        Player.active.setVolume(0);
+        if(Player.active.setVolume) {
+          Player.active.setVolume(0);
+        }
         clickFix.set = true;
       }
     },
     end: function(){
       if(clickFix.set) {
         setTimeout(function() {
-          Player.active.setVolume(ev('volume'));
+          if(Player.active.setVolume) {
+            Player.active.setVolume(ev('volume'));
+          }
         }, 500);
         clickFix.set = false;
       }
