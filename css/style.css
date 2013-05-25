@@ -162,3 +162,8 @@ a{cursor:pointer}
   margin:0 1em 0 0;
 }
 .hero-unit a { font-size: 1em;margin-left:2em;margin-bottom:2em;display:inline-block}
+
+#clipboard-wrapper  {
+  display:inline-block;
+  position:relative;
+}

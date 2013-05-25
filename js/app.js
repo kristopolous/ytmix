@@ -161,8 +161,26 @@ function updateBlackList () {
   });
 }
 
+//
+// ytButton initializes the "youtube-dl" button
+// to get the copy/pasta for a command line downloading
+function ytButton() {
+  var clip = new ZeroClipboard.Client();
+  ZeroClipboard.setMoviePath("js/min/ZeroClipboard.swf");
+  clip.setHandCursor(true);
+  clip.glue('clipboard-button', 'clipboard-wrapper');
+  $("#ZeroClipboardMovie_1").css('opacity', 0.001);
+
+  // Update the clipboard data when a new track is loaded.
+  ev('active_track', function(data) {
+    // The ytid is .ytid of the data.
+    clip.setText('youtube-dl -t ' + data.ytid);
+  });
+}
+
 $(function(){
   Splash.template = _.template( $("#T-Preview").html() );
+  ev.when('app_state', 'main', ytButton).once = true;
   Results.init();
   Toolbar.init();
   Timeline.init();

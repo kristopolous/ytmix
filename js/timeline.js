@@ -41,6 +41,7 @@ var UserHistory = (function(){
       }
 
       Player.offset = offset;
+
       Timeline.backup.off(object).loadVideoById(id, offset);
     }
   }
@@ -432,13 +433,23 @@ var Timeline = (function(){
         if(!_data[dbid]) {
           Timeline.pause();
         } else if(Player.activeData != _data[dbid]) {
+          // NOTE:
+          //
+          // This is the only entry point for loading and playing a video
+          // There are other references to playing and pausing, but this 
+          // is the only line that activley loads the id and offset into
+          // the player. This is because there has to be an activeData in
+          // order to go forward.
           Player.activeData = _data[dbid];
+          
+          // After the assignment, then we add it to the userhistory
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
 
           // At this point there is now active data, so anything depending
           // on that can run.
           ev('active_track', Player.activeData);
           ev.set('active_data');
+
           Player.Play();
           log("Playing ", Player.activeData.ytid, Player.activeData.title);
         } else {

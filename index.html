@@ -26,7 +26,7 @@
         <div id="search" class="control-wrapper"><span id="search-context"><span id="search-context-title"></span><span id="search-context-dropdown"></span></span><a class="button" id="clear-search">X</a><input id="normal-search" class="search"><a class="button" id="use-internet">internet</a></div>
       </div>
       <div id="timeline">
-        <div id="deck-control"><a id="previous-track" class="button">&lt;&lt;</a><a id="pause-play" class="button">&#9726;</a><a id="next-track" class="button">&gt;&gt;</a><a id="is-starred" class="button star">&#9733;</a><a id="scroll-to" class="button">Scroll To</a><a id="favorites" class="button">Favorites</a><a class="button" id="remove">Remove</a><a class="button" id="ytdl">youtube-dl</a></div>
+        <div id="deck-control"><a id="previous-track" class="button">&lt;&lt;</a><a id="pause-play" class="button">&#9726;</a><a id="next-track" class="button">&gt;&gt;</a><a id="is-starred" class="button star">&#9733;</a><a id="scroll-to" class="button">Scroll To</a><a id="favorites" class="button">Favorites</a><a class="button" id="remove">Remove</a><span id='clipboard-wrapper'><a class="button" id="clipboard-button">youtube-dl</a></span></div>
       </div>
       <div id="bottom-box">
         <span class="resize" id="video-list">
@@ -119,6 +119,7 @@
     <script src=js/min/jquery-1.9.0.js></script>
     <script src=js/min/underscore.js></script>
     <script src=js/min/evda.js></script>
+    <script src=js/min/ZeroClipboard.js></script>
   <!-- } -->
 
   <!-- Application { -->
@@ -132,6 +133,8 @@
     <script src="js/app.js"></script>
     <script src="js/hash.js"></script>
     <script src="js/analytics.js"></script>
+    <!-- TODO: <script src=js/ZeroClipboard.js></script> -->
+    <script src=js/min/ZeroClipboard.js></script>
   <!-- } -->
 
 </html>
