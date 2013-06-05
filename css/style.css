@@ -172,3 +172,7 @@ a{cursor:pointer}
   display:inline-block;
   position:relative;
 }
+
+#remove-name { 
+  display: none
+}

@@ -25,13 +25,25 @@ var Toolbar = {
       $("#edit-name").html("edit");
     });
 
+    $("#remove-name").click(function(){
+      remote({
+        func: 'remove',
+        id: ev('id'),
+        onSuccess: function(data) {
+          ev('app_state', 'splash');
+        }
+      });
+    });
+
     $("#edit-name").click(function(){
       if(this.innerHTML == 'edit') {
+        $("#remove-name").show();
         this.innerHTML = "save";
         dom.replaceWith(input);
         input.val(ev('name'));
         input.focus();
       } else {
+        $("#remove-name").hide();
         ev("name", input.val());
         input.replaceWith(dom);
         this.innerHTML = "edit";
