@@ -231,7 +231,7 @@
       if(_.isFun(value)) {
         obj.__$$tracer$$__[key] = value;
         obj[key] = function() {
-          console.log.apply(this, [key + ":" ].concat(slice.call(arguments)));
+          console.log([key + ":" ].concat(slice.call(arguments)));
           if(cb) { cb.apply(this, arguments); }
           return obj.__$$tracer$$__[key].apply(this, arguments);
         }
@@ -712,7 +712,28 @@
   }
 
   // the list of functions to chain
-  var chainList = list2obj('has hasKey insert invert missing isin group keyBy remove update where select find sort orderBy order each like'.split(' '));
+  var chainList = list2obj([
+    'each',
+    'find',
+    'group',
+    'has',
+    'hasKey',
+    'indexBy',
+    'insert',
+    'invert',
+    'isin',
+    'keyBy',
+    'like',
+    'missing',
+    'order',
+    'orderBy',
+    'remove',
+    'select',
+    'sort',
+    'unset',
+    'update',
+    'where'
+  ]);
 
   // --- START OF AN INSTANCE ----
   //
@@ -817,6 +838,21 @@
           constraints.addIf.push(lambda);
         }
         return constraints.addIf;
+      },
+
+      unset: function(key) {
+        if(_.isArr(key)) {
+          return each(key, arguments.callee);
+        } else {
+          var list = _.isArr(this) ? this : ret.find();
+          each(list, function(what) {
+            if(key in what) {
+              delete what[key];
+            }
+          });
+          sync();
+          return chain(list);
+        }
       },
 
       each: eachRun,
@@ -925,6 +961,22 @@
     } 
 
     //
+    // indexBy is just a sort without a chaining of the args
+    ret.indexBy = function () {
+      // alias chain away
+      var _chain = chain; 
+
+      // make chain a dummy function
+      chain = function(m) { return m; }
+
+      // set the order output to the raw
+      ret.__raw__ = raw = ret.order.apply(this, arguments);
+
+      // and then re-assign chain back to the proper place
+      chain = _chain; 
+    }
+
+    //
     // sort
     //
     // This is like SQLs orderby function.  If you pass it just a field, then
@@ -969,7 +1021,6 @@
 
         eval('fnSort=function(a,b){return order(a.' + key + ', b.' + key + ')}');
       }
-
       return chain(slice.call(filter).sort(fnSort));
     }
 
