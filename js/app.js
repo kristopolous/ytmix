@@ -151,6 +151,30 @@ function findStatus(idList, cb, status) {
   });
 }
 
+function replace(id) {
+  var vid = db.findFirst({id: id}),
+    candidate = false,
+    firstWord = vid.title.split(' - ')[0].toLowerCase();
+
+  $.getJSON("api/ytsearch.php", {query: vid.title}, function(resp) {
+    _.each(resp.vidList, function(what) {
+      if(Math.abs(vid.length - what.length) < 35) {
+        if(what.title.toLowerCase().search(firstWord) > -1) {
+          // Keep the old title in case this is a bad match.
+          // I don't want to revoke all knowledge of it.
+          delete what.title;
+
+          db.find({id: id})
+            .update(what)
+            .unset('jqueryObject');
+
+          ev.set('request_gen');
+        }
+      }
+    });
+  });
+}
+
 // The great db.js... yes it is this awesome.
 function updateBlackList () {
   findStatus(db.find().select('ytid'), function(what) { 
