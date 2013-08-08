@@ -18,7 +18,7 @@ function pl_getTracks($params) {
   $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
   $result = array();
   foreach($playlist as $entry) {
-    $result[] = $entry['ytid'];
+    $result[] = $entry[2];
   }
   echo implode("\n", $result);
   exit(0);
