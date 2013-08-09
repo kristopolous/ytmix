@@ -22,17 +22,18 @@ function newentry(entry) {
   }
   ytid = entry['media:group']['yt:videoid'];
   if (ytid == undefined) {
-    switch(entry.link[0]['@'].type) {
+    switch(entry.link[0].$.type) {
       case 'text/html':
-        ytid = entry.link[0]['@'].href.match(/v=([\w-_]*)&/)[1];
+        ytid = entry.link[0].$.href.match(/v=([\w-_]*)&/)[1];
         break;
       case 'application/atom+xml':
-        ytid = entry.link[0]['@'].href.split('/').pop();
+        ytid = entry.link[0]['$'].href.split('/').pop();
         break;
     }
   }
+
   playlist.push({
-    length: parseInt(entry['media:group']['yt:duration']['@']['seconds']),
+    length: parseInt(entry['media:group'][0]['yt:duration'][0]['$']['seconds']),
     title: entry.title,
     ytid: ytid,
     related: [],
@@ -58,19 +59,21 @@ function addEntries(xml) {
       }
       subtitle = result.subtitle;
     }
+
+    result.entry = result.feed.entry;
     if ("forEach" in result.entry) {
       result.entry.forEach(newentry)
     } else {
       newentry(result.entry);
     }
 
-    console.log(result.link);
+    result.link = result.feed.link;
     next = result.link.filter(function(entry) {
-      return entry['@']['rel'] == 'next';
+      return entry['$']['rel'] == 'next';
     });
 
     if(next.length > 0) {
-      nextUrl = next[0]['@']['href'];
+      nextUrl = next[0]['$']['href'];
       readUrl(nextUrl);
       console.log({action: "reading", data: nextUrl});
     } else {
