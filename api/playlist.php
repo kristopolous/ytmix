@@ -4,10 +4,6 @@ include ('../lib/common.php');
 // To make life easy
 include ('favorite.php');
 
-function pl_getUser() {
-  result('true', uniqid('', true));
-}
-
 function pl_getPreview($params){
   list($id) = get($params, 'id');
   return getdata(run("select preview from playlist where id = $id"));
@@ -49,9 +45,35 @@ function pl_remove($params) {
   return $result;
 }
 
-function pl_createID() {
+// createID:
+//  params:
+//    source (optional) URL of already created id to find, if exists.
+//
+function pl_createID($params) {
+  list($source) = get($params, 'source');
+  
+  $result = null;
+
+  if(!empty($source)) {
+    $result = getdata(run('select id from playlist where authors="' . $source .'"'));
+    if($result) { 
+      return $result; 
+    }
+  }
   mysql_query('insert into playlist values ()');
   return mysql_insert_id();
+}
+
+function pl_addTracks($params) {
+  $opts = getassoc($params, 'id, tracklist');
+  $opts['tracklist'] = json_decode($opts['tracklist']);
+
+  $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
+  $playlist = json_encode(array_merge($playlist, $opts['tracklist']));
+  
+  run('update playlist set tracklist = "' . $playlist . '" where id = ' . $opts['id']);
+
+  echo $playlist;
 }
 
 function pl_recent() {

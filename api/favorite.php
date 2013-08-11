@@ -11,3 +11,8 @@ function pl_getFavorite($params) {
 function pl_delFavorite($params) {
   return run("delete from favorite where " . toUpdate(getAssoc($params, 'user, ytid')));
 }
+
+function pl_getUser() {
+  result('true', uniqid('', true));
+}
+

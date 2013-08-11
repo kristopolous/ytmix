@@ -46,12 +46,16 @@ function sanitize($opts) {
 
 function getdata($sql) {
   $row = mysql_fetch_assoc($sql);
-  foreach($row as $key => $value) {
-    return $value;
+  if($row) {
+    foreach($row as $key => $value) {
+      return $value;
+    }
+  } else {
+    return null;
   }
 }
 
-function getAssoc($opts, $fieldList) {
+function getassoc($opts, $fieldList) {
   $opts = sanitize($opts);
   $fieldList = explode(',', $fieldList);
 

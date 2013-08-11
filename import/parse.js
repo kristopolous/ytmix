@@ -5,9 +5,7 @@ var
   http = require('http'),
   xml2js = require('xml2js'),
   url = require('url'),
-  source = 'https://gdata.youtube.com/feeds/api/users/' + process.argv[2] + '/uploads',
-  mysql = require('db-mysql'),
-  fs = require('fs');
+  source = 'https://gdata.youtube.com/feeds/api/users/' + process.argv[2] + '/uploads';
 
 var 
   playlist = [],
@@ -16,6 +14,7 @@ var
   subtitle;
 
   console.log(source);
+
 function newentry(entry) {
   if (entry.title.constructor != String) {
     entry.title = entry.title['#'];
@@ -44,6 +43,7 @@ function newentry(entry) {
 
 function addEntries(xml) {
   var parser = new xml2js.Parser(), ytid;
+
   parser.parseString(xml, function (err, result) {
     if(err) {
       console.log({
@@ -82,6 +82,7 @@ function addEntries(xml) {
 
    });
 }
+
 function readUrl(urlstr) {
   var buffer = "";
   parsed = url.parse(urlstr);
@@ -97,6 +98,7 @@ function readUrl(urlstr) {
     console.error(e);
   });
 }
+
 function finish(){
   new mysql.Database({
     hostname: 'localhost',
