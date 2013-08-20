@@ -275,7 +275,7 @@ var Timeline = (function(){
 
   _.each(Player.eventList, function(what) {
     self['ytDebug_' + what] = function(that) {
-      ev.set("yt-" + what, what);
+      ev.set("yt-" + what, that);
       log(what, that);
     }
   });
@@ -285,6 +285,7 @@ var Timeline = (function(){
   // be used.  There's significantly less control over this
   // player so it's the backup plan.
   ev.on('yt-Error', function(what) {
+    console.log("yt-error", what);
     _backup.on();
   });
 

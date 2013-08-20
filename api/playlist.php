@@ -60,20 +60,27 @@ function pl_createID($params) {
       return $result; 
     }
   }
-  mysql_query('insert into playlist values ()');
+  mysql_query('insert into playlist (authors) values ("' . $source .'")');
   return mysql_insert_id();
 }
 
 function pl_addTracks($params) {
   $opts = getassoc($params, 'id, tracklist');
-  $opts['tracklist'] = json_decode($opts['tracklist']);
+  $id = $opts['id'];
 
   $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
+  if(!$playlist) {
+    $playlist = array();
+  }
+
   $playlist = json_encode(array_merge($playlist, $opts['tracklist']));
   
-  run('update playlist set tracklist = "' . $playlist . '" where id = ' . $opts['id']);
+  echo('update playlist set tracklist = \'' . $playlist . '\' where id = ' . $id);
+  pl_generatePreview(Array(
+    'id' => $id
+  ));
 
-  echo $playlist;
+  return $playlist;
 }
 
 function pl_recent() {

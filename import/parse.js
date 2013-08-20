@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 var 
-  https = require('https'),
+  request = require('request'),
+  base = 'http://localhost:8000/ghub/ytmix/api/',
   http = require('http'),
   xml2js = require('xml2js'),
   url = require('url'),
-  source = 'https://gdata.youtube.com/feeds/api/users/' + process.argv[2] + '/uploads';
+  source = 'http://gdata.youtube.com/feeds/api/users/' + process.argv[2] + '/uploads';
 
 var 
   playlist = [],
@@ -17,7 +18,7 @@ var
 
 function newentry(entry) {
   if (entry.title.constructor != String) {
-    entry.title = entry.title['#'];
+    entry.title = entry.title[0]['_'];
   }
   ytid = entry['media:group']['yt:videoid'];
   if (ytid == undefined) {
@@ -31,18 +32,31 @@ function newentry(entry) {
     }
   }
 
-  playlist.push({
-    length: parseInt(entry['media:group'][0]['yt:duration'][0]['$']['seconds']),
-    title: entry.title,
-    ytid: ytid,
-    related: [],
-    reference: [],
-    playlistid: id++
+  playlist.push([
+    parseInt(entry['media:group'][0]['yt:duration'][0]['$']['seconds']),
+    entry.title,
+    ytid
+  ]);
+}
+
+function easyget(location, callback) {
+  var buffer = '';
+  if(location.length) {
+    location = url.parse(location);
+  }
+  http.get(location, function(res) {
+    res.on('data', function(d) { buffer += d; });
+    res.on('end', function(){
+      callback.call(this, buffer);
+    });
+  }).on('error', function(e) {
+    console.error(location, e);
   });
 }
 
 function addEntries(xml) {
   var parser = new xml2js.Parser(), ytid;
+  playlist = [];
 
   parser.parseString(xml, function (err, result) {
     if(err) {
@@ -62,91 +76,66 @@ function addEntries(xml) {
 
     result.entry = result.feed.entry;
     if ("forEach" in result.entry) {
-      result.entry.forEach(newentry)
+      result.entry.forEach(newentry);
     } else {
       newentry(result.entry);
     }
+    request.post(base + 'playlist.php', {form: {
+      func: 'addTracks',
+      id: id,
+      tracklist: playlist
+    }}, function(error, response, body) {
+      console.log(error, response.body, body);
 
-    result.link = result.feed.link;
-    next = result.link.filter(function(entry) {
-      return entry['$']['rel'] == 'next';
-    });
+      result.link = result.feed.link;
+      next = result.link.filter(function(entry) {
+        return entry['$']['rel'] == 'next';
+      });
 
-    if(next.length > 0) {
-      nextUrl = next[0]['$']['href'];
-      readUrl(nextUrl);
-      console.log({action: "reading", data: nextUrl});
-    } else {
-      finish();
-    }
-
+      if(next.length > 0) {
+        nextUrl = next[0]['$']['href'];
+        readUrl(nextUrl);
+        console.log({action: "reading", data: nextUrl});
+      } else {
+        finish();
+      }
+        }
+      );
    });
 }
 
 function readUrl(urlstr) {
-  var buffer = "";
   parsed = url.parse(urlstr);
   parsed.path = parsed.pathname + (parsed.search || "");
-  https.get(parsed, function(res) {
-    res.on('data', function(d) {
-      buffer += d;
-    });
-    res.on('end', function(){
-      addEntries(buffer);
-    });
-  }).on('error', function(e) {
-    console.error(e);
-  });
+
+  easyget(parsed, addEntries);
 }
 
 function finish(){
-  new mysql.Database({
-    hostname: 'localhost',
-    user: 'php',
-    password: 'fixy2k',
-    database: 'yt'
-  }).connect(function(error) {
-    var connection = this;
-    connection.query()
-      .select("id")
-      .from("playlist")
-      .where('authors = ?', [source])
-      .execute(function(error, result) {
-        
-        if(result.length) {
-          connection.query()
-            .update('playlist')
-            .set({ tracklist: JSON.stringify(playlist) })
-            .where("id = ?", [result[0].id])
-            .execute(function(error, result1) {
-              if (error) {
-                console.log({action: "db", error: error});
-              } else {
-                console.log({action: "db", updated: result[0].id});
-                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result[0].id, function(res){
-                  console.log(res);
-                });
-              }
-            });
-        } else {
-          connection.query().
-            insert('playlist',
-              ['authors', 'name', 'tracklist'],
-              [source, title, JSON.stringify(playlist)]
-            ).execute(function(error, result) {
-              if (error) {
-                console.log({action: "db", error: error});
-              } else {
-                console.log({action: "db", created: result.id});
-                console.log("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result.id);
-                http.get("http://qaa.ath.cx/ytwatch1/api/playlist.php?func=generatePreview&id=" + result.id, function(res){
-                  console.log(res);
-                });
-              }
-            });
-        }
-      })
+  easyget(base + 'playlist.php?func=createID&source=' + source, function(data) {
+    var 
+      res = JSON.parse(data),
+      id = res.result;
+
+    if(id) {
+      (function(){
+        var me = arguments.callee;
+        var subset = playlist.splice(0, 25);
+        easyget(base + 'playlist.php?func=addTracks&id=' + id + 'tracklist=' + escape(JSON.stringify(subset)),
+          function(what) {
+            console.log(what);
+            if(playlist.length) {
+              me();
+            }
+          }
+        );
+      })();
+    }
   });
 }
 
-readUrl(source);
+easyget(base + 'playlist.php?func=createID&source=' + source, function(data) {
+  var res = JSON.parse(data);
+  id = res.result;
+  readUrl(source);
+});

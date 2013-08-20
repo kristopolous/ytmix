@@ -39,7 +39,9 @@ function result($succeed, $message) {
 
 function sanitize($opts) {
   foreach ($opts as $k => $v) {
-    $opts[$k] = mysql_real_escape_string($v);
+    if(gettype($v) == 'string') {
+      $opts[$k] = mysql_real_escape_string($v);
+    }
   }
   return $opts;
 }
