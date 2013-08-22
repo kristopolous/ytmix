@@ -95,7 +95,7 @@
 
   <script id="T-Result" type="text/template">
     <a onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>">
-      <img src="http://i4.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
+      <img onerror="replace(<%= id %>)" src="http://i4.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
     <span>
       <p>
         <em>

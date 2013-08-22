@@ -153,13 +153,17 @@ function findStatus(idList, cb, status) {
 
 function replace(id) {
   var vid = db.findFirst({id: id}),
-    candidate = false,
-    firstWord = vid.title.split(' - ')[0].toLowerCase();
+    replaced = false,
+    firstWord = vid.title.split(' - ')[0].toLowerCase().replace(/-/, '');
 
+  console.log("Replacing (" + id + ") " + vid.title);
   $.getJSON("api/ytsearch.php", {query: vid.title}, function(resp) {
     _.each(resp.vidList, function(what) {
+      console.log(vid.title, vid.length, what.length, what.title);
       if(Math.abs(vid.length - what.length) < 35) {
         if(what.title.toLowerCase().search(firstWord) > -1) {
+          replaced = true;
+          console.log("Success >> (" + id + ") " + vid.title);
           // Keep the old title in case this is a bad match.
           // I don't want to revoke all knowledge of it.
           delete what.title;
@@ -172,6 +176,9 @@ function replace(id) {
         }
       }
     });
+    if(!replaced) {
+      console.log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title);
+    }
   });
 }
 

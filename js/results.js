@@ -114,7 +114,10 @@ var Results = {
           UserHistory.star(obj.ytid);
           $(this).toggleClass('active');
         }),
-        remove = $("<a>X</a>").addClass("del").click(function(){
+        reload = $("<a>&#x21bb;</a>").addClass('reload').click(function(){
+          replace(obj.id);
+        }),
+        remove = $("<a>X</a>").addClass("remove").click(function(){
           Timeline.remove(obj.id);
         }),
         timeline = $("<div class=timeline-container />").addClass('hover').append(
@@ -141,12 +144,14 @@ var Results = {
           }
         )
         .append(Results.template({
+          id: obj.id,
           ytid: obj.ytid,
           title: title,
           artist: artist
         }))
         .append(timeline)
         .append(remove)
+        .append(reload)
         .append(star)
         .appendTo($("#video-viewport"));
 
