@@ -2,6 +2,7 @@ var
   db = DB(), 
   START = (+new Date()),
   Splash = {},
+  DL = DamerauLevenshtein({}, false),
   each = _.each,
   slice = Array.prototype.slice,
   UNIQ = 0,

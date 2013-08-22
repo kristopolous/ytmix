@@ -151,17 +151,51 @@ function findStatus(idList, cb, status) {
   });
 }
 
-function replace(id) {
+function replace(id, cb) {
   var vid = db.findFirst({id: id}),
     replaced = false,
-    firstWord = vid.title.split(' - ')[0].toLowerCase().replace(/-/, '');
+    check = replace.clean(vid.title),
+    wc = check.split(' ').length;
 
   console.log("Replacing (" + id + ") " + vid.title);
-  $.getJSON("api/ytsearch.php", {query: vid.title}, function(resp) {
+  $.getJSON("api/ytsearch.php", {query: check}, function(resp) {
     _.each(resp.vidList, function(what) {
-      console.log(vid.title, vid.length, what.length, what.title);
-      if(Math.abs(vid.length - what.length) < 35) {
-        if(what.title.toLowerCase().search(firstWord) > -1) {
+      if(replaced) { return; } 
+
+      var attempt = replace.clean(what.title),
+        distance = DL(check, attempt),
+        short,
+        cutoff,
+        attemptWc = attempt.split(' ').length;
+
+      console.log(distance, check, attempt, vid.length, what.length);
+      if(distance > 5) { 
+        // try again but make the word count match
+        if(attemptWc != wc) {
+          cutoff = Math.max(Math.min(attemptWc, wc), 3);
+          short = [
+            check.split(' ').slice(0, cutoff).join(' '),
+            attempt.split(' ').slice(0, cutoff).join(' ')
+          ];
+          distance = DL.apply(this, short);
+          console.log("--", distance, cutoff, "words", short[0], ":", short[1]);
+        }
+        if(distance < 9 && distance > 5) {
+          cutoff = Math.max(Math.min(attempt.length, check.length), 18);
+          short = [
+            check.slice(0, cutoff),
+            attempt.slice(0, cutoff)
+          ];
+          distance = DL.apply(this, short);
+          console.log("--", distance, cutoff, "chars", short[0], ":", short[1]);
+        }
+      }
+
+      if(
+        (Math.abs(vid.length - what.length) < 35) ||
+        (Math.abs(vid.length - what.length) < 100 && distance < 3)
+      ) {
+        if(distance < 5) {
           replaced = true;
           console.log("Success >> (" + id + ") " + vid.title);
           // Keep the old title in case this is a bad match.
@@ -179,7 +213,14 @@ function replace(id) {
     if(!replaced) {
       console.log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title);
     }
+    if(cb) {
+      cb(replaced);
+    }
   });
+}
+
+replace.clean = function(str) {
+  return str.replace(/[\-0-9\(\)]/g, '').replace(/\./g, ' ').replace(/\s+/g, ' ').toLowerCase();
 }
 
 // The great db.js... yes it is this awesome.

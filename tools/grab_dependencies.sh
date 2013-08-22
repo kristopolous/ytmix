@@ -13,6 +13,7 @@ wget="wget --quiet --no-check-certificate"
 version_jq=1.9.0
 
 rawURLList="\
+ damerau-levenshtein.js https://raw.github.com/cbaatz/damerau-levenshtein/master/damerau-levenshtein.js\
  swfobject.js http://swfobject.googlecode.com/svn/trunk/swfobject/src/swfobject.js\
  db.js https://github.com/kristopolous/db.js/raw/master/db.js\
  _inject.js https://github.com/kristopolous/_inject/raw/master/_inject.js\
@@ -21,6 +22,7 @@ rawURLList="\
  evda.js https://raw.github.com/kristopolous/EvDa/master/evda.js"
 
 minURLList="\
+ damerau-levenshtein.js https://raw.github.com/cbaatz/damerau-levenshtein/master/damerau-levenshtein.js\
  swfobject.js http://swfobject.googlecode.com/svn/trunk/swfobject/swfobject.js\
  db.js https://github.com/kristopolous/db.js/raw/master/db.min.js\
  _inject.js https://github.com/kristopolous/_inject/raw/master/_inject.min.js\

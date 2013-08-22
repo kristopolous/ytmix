@@ -115,7 +115,11 @@ var Results = {
           $(this).toggleClass('active');
         }),
         reload = $("<a>&#x21bb;</a>").addClass('reload').click(function(){
-          replace(obj.id);
+          replace(obj.id, function(success) {
+            if(success) {
+              Store.saveTracks();
+            }
+          });
         }),
         remove = $("<a>X</a>").addClass("remove").click(function(){
           Timeline.remove(obj.id);
