@@ -171,7 +171,7 @@ var Timeline = (function(){
     var scrubberPosition = 0;
 
     // Make sure we aren't the backup player
-    if(Player.active && !Player.active.on && Player.active.getVideoBytesLoaded) {
+    if(Player.active && !Player.active.on && Player.active.getVideoBytesLoaded && Player.activeData) {
       var rateStart = 1e10,
           stats,
           rateEnd = Player.active.getVideoBytesLoaded();

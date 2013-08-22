@@ -29,7 +29,7 @@ function pl_generatePreview($params) {
   foreach($playlist as $entry) {
     if(!empty($entry[0])) {
       $length += $entry[0];
-    } else {
+    } else if(!empty($entry['length'])) {
       $length += $entry['length'];
     }
   }
