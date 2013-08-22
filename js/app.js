@@ -158,7 +158,8 @@ function replace(id, cb) {
     wc = check.split(' ').length;
 
   console.log("Replacing (" + id + ") " + vid.title);
-  $.getJSON("api/ytsearch.php", {query: check}, function(resp) {
+  $.getJSON("api/entry.php", {func: 'query', query: check}, function(resp) {
+    resp = resp.result;
     _.each(resp.vidList, function(what) {
       if(replaced) { return; } 
 
@@ -211,7 +212,7 @@ function replace(id, cb) {
       }
     });
     if(!replaced) {
-      console.log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title);
+      console.log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title, resp.url);
     }
     if(cb) {
       cb(replaced);

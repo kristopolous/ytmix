@@ -1,9 +1,5 @@
 <? 
 
-include ('../lib/common.php');
-// To make life easy
-include ('favorite.php');
-
 function pl_getPreview($params){
   list($id) = get($params, 'id');
   return getdata(run("select preview from playlist where id = $id"));
@@ -123,16 +119,3 @@ function pl_update($params) {
   return true;
 }
 
-if(function_exists('pl_' . $_REQUEST['func'])) {
-  $toRun = 'pl_' . $_REQUEST['func'];
-  unset($_REQUEST['func']);
-
-  $result = $toRun ( $_REQUEST );
-  if(is_string($result)) {
-    result(false, $result);
-  } else { 
-    result(true, $result);
-  }
-} else {
-  result(false, 'Function not found');
-}

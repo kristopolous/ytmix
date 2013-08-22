@@ -14,7 +14,7 @@ function remote(opts) {
     delete opts.onFailure;
   }
 
-  $.post('api/playlist.php', opts, function(ret) {
+  $.post('api/entry.php', opts, function(ret) {
     ret = JSON.parse(ret);
 
     var meta = {  
