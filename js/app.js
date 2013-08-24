@@ -151,15 +151,24 @@ function findStatus(idList, cb, status) {
   });
 }
 
-function replace(id, cb) {
+function replace(id, cb, attempt) {
   var vid = db.findFirst({id: id}),
     replaced = false,
     check = replace.clean(vid.title),
     wc = check.split(' ').length;
 
-  console.log("Replacing (" + id + ") " + vid.title);
+  attempt = attempt || 0;
+  if(attempt) {
+    check = check.split(' ').slice(0, -1).join(' ');
+    wc = check.split(' ').length
+  }
+
+  console.log("[" + (attempt + 1) + "] Replacing (" + id + ") " + vid.title);
   $.getJSON("api/entry.php", {func: 'query', query: check}, function(resp) {
     resp = resp.result;
+    if(resp.vidList.length == 0) {
+      replace(id, cb, 1);
+    }
     _.each(resp.vidList, function(what) {
       if(replaced) { return; } 
 
