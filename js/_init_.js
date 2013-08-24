@@ -39,9 +39,7 @@ var
 
 db.constrain('unique', 'ytid');
 db.template.create({
-  id: (function(){ return UNIQ++ }),
-  reference: [],
-  removed: 0
+  id: (function(){ return UNIQ++ })
 });
 
 db.addIf(function(what) {

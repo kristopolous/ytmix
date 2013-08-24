@@ -286,7 +286,9 @@ var Timeline = (function(){
   // player so it's the backup plan.
   ev.on('yt-Error', function(what) {
     console.log("yt-error", what);
-    _backup.on();
+    if(what != 150) {
+      _backup.on();
+    }
   });
 
   self.onYouTubePlayerReady = function(playerId) {

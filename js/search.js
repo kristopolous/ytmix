@@ -131,8 +131,6 @@ function loadRelated(obj, opts){
       // duration of the video, only the id.
       each(data.related, function(video) {
         db.insert(video).update(function(row){
-          row.reference.push(match.ytid);
-          row.removed = data.removed || 0;
         });
       })
 

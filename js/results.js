@@ -209,7 +209,7 @@ var Results = {
       bottom = height + top,
       set,
       total,
-      constraints = {removed: 0},
+      constraints = {},
       query = ev('search_query'),
       perline = Math.floor(width / _video.width),
       start = Math.floor(top / _video.height) * perline,
