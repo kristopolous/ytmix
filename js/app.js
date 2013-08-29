@@ -166,7 +166,7 @@ function replace(id, cb, attempt) {
   console.log("[" + (attempt + 1) + "] Replacing (" + id + ") " + vid.title);
   $.getJSON("api/entry.php", {func: 'query', query: check}, function(resp) {
     resp = resp.result;
-    if(resp.vidList.length == 0 && wc > 2) {
+    if(resp.vidList.length == 0 && wc > 2 && attempt != 1) {
       replace(id, cb, 1);
     }
     _.each(resp.vidList, function(what) {
