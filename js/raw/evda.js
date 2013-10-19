@@ -157,6 +157,11 @@ function EvDa (imported) {
     // If there was one argument, then this is
     // either a getter or the object style
     // invocation.
+    if (isArray(scope)) {
+      return map(scope, function(which) {
+        return pub.call(pub.context, which, value, meta);
+      });
+    }
     if ( arguments.length == 1 ) {
 
       // The object style invocation will return
@@ -185,10 +190,6 @@ function EvDa (imported) {
         });
 
         return scope;
-      } else if (isArray(scope)) {
-        return map(scope, function(which) {
-          return pub(which, value, meta);
-        });
       }
 
       return data[ scope ];
@@ -250,7 +251,7 @@ function EvDa (imported) {
       // returns.
       
       /* var ThisIsWorthless = */ setterMap[key](function(value) {
-        pub.set(key, value);
+        pub.set.call(pub.context, key, value);
       });
 
       delete setterMap[key];
@@ -265,7 +266,7 @@ function EvDa (imported) {
       // the execution of this function is continued to be
       // blocked until the key is set.
       return key in data ?
-        callback ( data[key] ) :
+        callback.call ( pub.context, data[key] ) :
         pub ( key, callback, ONCE );
     }
 
@@ -275,6 +276,7 @@ function EvDa (imported) {
   extend(pub, {
     // Exposing the internal variables so that
     // extensions can be made.
+    context: this,
     list: {},
     db: data,
     setterMap: setterMap,
@@ -298,8 +300,12 @@ function EvDa (imported) {
 
     when: function ( key, toTest, lambda ) {
       return pub(key, function(value) {
-        if(value === toTest) {
-          lambda(value);
+        if(
+          ( isArray(toTest)    && toTest.sort().join('') === value.sort().join('') ) ||
+          ( isFunction(toTest) && toTest(value) ) ||
+          ( value === toTest ) 
+        ) {
+          lambda.call(pub.context, value);
         }
       });
     },
@@ -368,30 +374,31 @@ function EvDa (imported) {
         // Invoke will also get done
         // but it will have no semantic
         // meaning, so it's fine.
-        meta = {
-          meta: _meta || {},
-          old: clone(data[key]),
-          key: key,
-          done: function ( ok ) {
-            failure |= (ok === false);
+        meta = function ( ok ) {
+          failure |= (ok === false);
 
-            if ( ! --times ) {
-              if ( ! failure ) { 
-                pub.set ( key, value, _meta, 1 );
-              }
+          if ( ! --times ) {
+            if ( ! failure ) { 
+              pub.set ( key, value, _meta, 1 );
             }
           }
         };
 
-      meta.result = meta.done;
+      meta.old = clone(data[key]);
+      extend(meta, {
+        meta: _meta || {},
+        done: meta, 
+        result: meta,
+        key: key
+      });
 
       each ( pub.traceList, function ( callback ) {
-        callback ( args );
+        callback.call ( pub.context, args );
       });
 
       if (times && !bypass) {
         each ( eventMap[ testKey ], function ( callback ) {
-          callback ( value, meta );
+          callback.call ( pub.context, value, meta );
         });
       } else {
         // Set the key to the new value.
@@ -406,7 +413,7 @@ function EvDa (imported) {
             function(callback) {
 
               if(!callback.S) {
-                callback ( value, meta );
+                callback.call ( pub.context, value, meta );
 
                 if ( callback.once ) {
                   del ( callback );
@@ -417,7 +424,7 @@ function EvDa (imported) {
         }
 
         if(!_noexecute) {
-          return cback();
+          return cback.call(pub.context);
         } else {
           return cback;
         }
@@ -459,6 +466,7 @@ function EvDa (imported) {
       each(pub.list[listName], function(callback) {
         ( callback.S || (callback.S = {}) ) [ listName ] = true;
       });
+
       return pub.list[listName];
     },
 
@@ -489,9 +497,9 @@ function EvDa (imported) {
           oldlen = size(meta.old);
         
         if(newlen - oldlen == 1) {
-          callback(last(value));
+          callback.call( pub.context, last(value) );
         } else if (newlen > oldlen) { 
-          callback(toArray(value).slice(oldlen));
+          callback.call( pub.context, toArray(value).slice(oldlen) );
         }
       });
     },
@@ -543,5 +551,6 @@ function EvDa (imported) {
   pub.change = pub.on;
   pub.add = pub.push;
 
+  pub.isArray = isArray;
   return pub;
 }

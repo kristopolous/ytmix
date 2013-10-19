@@ -134,7 +134,8 @@ function finish(){
   });
 }
 
-easyget(base + 'playlist.php?func=createID&source=' + source, function(data) {
+easyget(base + 'entry.php?func=createID&source=' + source, function(data) {
+  console.log(data);
   var res = JSON.parse(data);
   id = res.result;
   readUrl(source);

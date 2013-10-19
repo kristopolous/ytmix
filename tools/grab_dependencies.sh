@@ -10,14 +10,14 @@ done
 
 wget="wget --quiet --no-check-certificate"
 
-version_jq=1.9.0
+version_jq=1.10.2
 
 rawURLList="\
  damerau-levenshtein.js https://raw.github.com/cbaatz/damerau-levenshtein/master/damerau-levenshtein.js\
  swfobject.js http://swfobject.googlecode.com/svn/trunk/swfobject/src/swfobject.js\
  db.js https://github.com/kristopolous/db.js/raw/master/db.js\
  _inject.js https://github.com/kristopolous/_inject/raw/master/_inject.js\
- jquery-${version_jq}.js http://code.jquery.com/jquery-${version_jq}.js\
+ jquery.js http://code.jquery.com/jquery-${version_jq}.js\
  underscore.js https://raw.github.com/documentcloud/underscore/master/underscore.js\
  evda.js https://raw.github.com/kristopolous/EvDa/master/evda.js"
 
@@ -26,7 +26,7 @@ minURLList="\
  swfobject.js http://swfobject.googlecode.com/svn/trunk/swfobject/swfobject.js\
  db.js https://github.com/kristopolous/db.js/raw/master/db.min.js\
  _inject.js https://github.com/kristopolous/_inject/raw/master/_inject.min.js\
- jquery-${version_jq}.js http://code.jquery.com/jquery-${version_jq}.min.js\
+ jquery.js http://code.jquery.com/jquery-${version_jq}.min.js\
  underscore.js https://raw.github.com/documentcloud/underscore/master/underscore-min.js\
  evda.js https://raw.github.com/kristopolous/EvDa/master/evda.min.js"
 
