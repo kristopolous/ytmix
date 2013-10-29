@@ -1,0 +1,29 @@
+<!doctype html>
+<pre id="output"></pre>
+<form action="javascript:request()">
+<input id="query" value="">
+</form>
+<script src=../js/min/jquery.js></script>
+<script>
+$(function(){
+    $("#query").val('').focus();
+  });
+function request() {
+  var query = $("#query").val();
+  $("#query").val("loading ...");
+  $.get('../api/' + query, function(data) {
+    var html;
+    try {
+      html = JSON.stringify(JSON.parse(data), undefined, 2);
+    } catch(ex) {
+      html = data;
+    }
+    $("#output")
+      .append('<hr><b>' + query + '</b>\n')
+      .append(html);
+    $("#query").val('').focus();
+    window.scrollTo(0,1000000);
+    
+  })
+}
+</script>

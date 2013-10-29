@@ -27,13 +27,23 @@ function trace(){
   );
 }
 
-function result($succeed, $message) {
-  echo json_encode(
-    Array(
-      'status' => $succeed,
-      'result' => $message
-    )
-  );
+function result($succeed, $message, $extra = false) {
+  if(!$extra) {
+    echo json_encode(
+      Array(
+        'status' => $succeed,
+        'result' => $message
+      )
+    );
+  } else {
+    echo json_encode(
+      Array(
+        'status' => $succeed,
+        'result' => $message,
+        'message' => $extra
+      )
+    );
+  }
   exit(0);
 }
 

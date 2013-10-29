@@ -9,6 +9,7 @@ _remote.queue = new Queue();
 function loadHistory(){
   // The 'recent' has a setter that this will
   // trigger; see store.js.  
+  ev.isset('init', function(){
   ev.isset('recent', function(data) {
 
     var row;
@@ -52,6 +53,7 @@ function loadHistory(){
     });
 
     $("#history").fadeIn();
+  });
   });
 }
 
@@ -321,5 +323,6 @@ $(function(){
     var entry = db.findFirst({ ytid: Scrubber.phantom.id });
     Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
   });
+  ev.set('init');
 });
 

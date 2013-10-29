@@ -4,7 +4,19 @@ include ('playlist.php');
 include ('favorite.php');
 include ('ytsearch.php');
 
-if(function_exists('pl_' . $_REQUEST['func'])) {
+function pl_help($message = false) {
+  $list = get_defined_functions()['user'];
+  $func = array();
+  foreach($list as $name) {
+    if(preg_match('/^pl_/', $name)) {
+      $func[] = substr($name, 3);
+    }
+  }
+  sort($func);
+  result(true, $func, $message);
+}
+
+if(isset($_REQUEST['func']) && function_exists('pl_' . $_REQUEST['func'])) {
   $toRun = 'pl_' . $_REQUEST['func'];
   unset($_REQUEST['func']);
 
@@ -15,5 +27,5 @@ if(function_exists('pl_' . $_REQUEST['func'])) {
     result(true, $result);
   }
 } else {
-  result(false, 'Function not found');
+  return pl_help($_SERVER);
 }

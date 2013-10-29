@@ -19,20 +19,24 @@ function pl_getTracks($params) {
 function pl_generatePreview($params) {
   list($id) = get($params, 'id');
   $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
-  $preview = Array();
-  $preview['tracks'] = $firstFour = array_slice($playlist, 0, 4);
-  $length = 0;
-  foreach($playlist as $entry) {
-    if(!empty($entry[0])) {
-      $length += $entry[0];
-    } else if(!empty($entry['length'])) {
-      $length += $entry['length'];
+  if($playlist && sizeof($playlist) > 0) {
+    $preview = Array();
+    $preview['tracks'] = $firstFour = array_slice($playlist, 0, 4);
+    $length = 0;
+    foreach($playlist as $entry) {
+      if(!empty($entry[0])) {
+        $length += $entry[0];
+      } else if(!empty($entry['length'])) {
+        $length += $entry['length'];
+      }
     }
+    $preview['length'] = $length;
+    $preview['count'] = count($playlist);
+    $preview = mysql_real_escape_string(json_encode($preview));
+    return run('update playlist set preview="' . $preview . '" where id=' . $id);
+  } else {
+    return ("ok");
   }
-  $preview['length'] = $length;
-  $preview['count'] = count($playlist);
-  $preview = mysql_real_escape_string(json_encode($preview));
-  return run('update playlist set preview="' . $preview . '" where id=' . $id);
 }
 
 function pl_remove($params) {
