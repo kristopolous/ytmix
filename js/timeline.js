@@ -1,51 +1,40 @@
-var UserHistory = (function(){
-  function get(prefix) {
-    var res = [];
-    for(var key in localStorage) {
-      if(key.substr(0,1) == prefix) {
-        res.push(key.slice(1));
-      }
+var UserHistory = {
+  isViewed: function(id) {
+    return localStorage["v"].search(id) > -1;
+  },
+  isStarred: function(id) {
+    return localStorage["s"].search(id) > -1;
+  },
+  star: function(id) {
+    if(UserHistory.isStarred(id)) {
+      localStorage['s'] = localStorage['s'].replace(' ' + id, '');
+    } else {
+      localStorage["s"] += " " + id;
     }
-    return res;
-  }
+    ev.set('request_gen', {force: true});
+    return UserHistory.isStarred(id);
+  },
+  getViewed: function(){
+    return localStorage['v'].split(' ');
+  },
+  getFavorites: function(){
+    return localStorage['s'].split(' ');
+  },
+  view: function (object, id, offset) {
+    localStorage["v"] += " " + id;
 
-  return {
-    isViewed: function(id) {
-      return localStorage["v" + id];
-    },
-    isStarred: function(id) {
-      return localStorage["s" + id];
-    },
-    star: function(id) {
-      if(UserHistory.isStarred(id)) {
-        delete localStorage["s" + id];
-      } else {
-        localStorage["s" + id] = true;
-      }
-      ev.set('request_gen', {force: true});
-      return localStorage["s" + id]; 
-    },
-    getViewed: function(){
-      return get('v');
-    },
-    getFavorites: function(){
-      return get('s');
-    },
-    view: function (object, id, offset) {
-      localStorage["v" + id] = true;
-
-      if(UserHistory.isStarred(id)) {
-        $("#is-starred").addClass('active');
-      } else {
-        $("#is-starred").removeClass('active');
-      }
-
-      Player.offset = offset;
-
-      Timeline.backup.off(object).loadVideoById(id, offset);
+    if(UserHistory.isStarred(id)) {
+      $("#is-starred").addClass('active');
+    } else {
+      $("#is-starred").removeClass('active');
     }
+
+    Player.offset = offset;
+
+    Timeline.backup.off(object).loadVideoById(id, offset);
   }
-})();
+};
+
 var Timeline = (function(){
   var 
     // The current offset into the total

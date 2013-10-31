@@ -34,27 +34,6 @@ var Results = {
       .scroll(gencheck)
       .keydown(gencheck);
 
-    /*
-    $("#video-viewport").sortable({
-      stop: function(event, ui) {
-        var elementList = document.getElementById("video-viewport").children;
-        for(var index = 0; index < elementList.length; index++) {
-          Results.SortCompare.post[elementList[index].ytid] = index;
-        }
-
-        db.find({
-          ytid: db.isin(_.keys(Results.SortCompare.post))
-        }).update(function(which) {
-          which.playlistid += Results.SortCompare.post[which.ytid] - Results.SortCompare.pre[which.ytid];
-        });
-
-        var playlistOrder = db.sort(function(a, b) { return a.playlistid - b.playlistid });
-
-        Timeline.build(playlistOrder);
-      }
-    });
-    */
-    
     ev({
       search_results: Results.gen,
       request_gen: Results.gen,
@@ -316,14 +295,6 @@ var Results = {
         Results.SortCompare.pre[elementList[index].ytid] = index;
       }
     }
-
-    // This is used to make sure that our regeneration efforts
-    // don't confuse the browser an cause a scrolling problem.
-    // 
-    // Based on when things generate in the DOM, a race condition
-    // can occur that will make the results slowly scroll by in
-    // Chrome.
-    //$("#video-list").get(0).scrollTop = top;
 
     Timeline.updateOffset();
   }
