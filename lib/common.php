@@ -1,4 +1,4 @@
-<?
+<?php
 include ('db.php');
 
 function trace(){

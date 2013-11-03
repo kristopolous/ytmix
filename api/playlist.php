@@ -1,4 +1,4 @@
-<? 
+<?php 
 
 function pl_getPreview($params){
   list($id) = get($params, 'id');

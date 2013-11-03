@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function pl_setFavorite($params) {
   return run("insert into favorite " . toInsert(getAssoc($params, 'user, ytid')));

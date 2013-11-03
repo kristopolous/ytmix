@@ -1,4 +1,4 @@
-<?
+<?php
 include ('../lib/common.php');
 
 $ret = run_assoc("select * from playlist where tracklist is not NULL");

@@ -1,4 +1,4 @@
-<?
+<?php
 function pl_query($params) {
   $query = preg_replace('/%u\d{4}/','', utf8_decode($params['query']));
   $query = preg_replace('/%u\d{4}/','', urldecode($query));

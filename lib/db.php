@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $db = mysql_connect('localhost', 'php', 'fixy2k');
 mysql_select_db('yt', $db);

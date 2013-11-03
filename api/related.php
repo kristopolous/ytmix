@@ -1,4 +1,5 @@
-<?
+<?php
+
 $related_videos = Array();
 $ytid = $_GET['ytid'];
 $source = 'https://gdata.youtube.com/feeds/api/videos/' . $ytid .'/related?v=2';
