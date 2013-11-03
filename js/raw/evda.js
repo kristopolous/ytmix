@@ -9,6 +9,7 @@ function EvDa (imported) {
   var 
     BASE = '__base',
     slice = Array.prototype.slice,  
+    onceKey = "__once__lGx9BTY0Qf78CgAAsNdlZQik3bFlhvTISBLwAAaUasKQ",
 
     // This is mostly underscore functions here. But they are included to make sure that
     // they are supported here without requiring an additional library. 
@@ -149,12 +150,17 @@ function EvDa (imported) {
     // The one time callback gets a property to
     // the end of the object to notify our future-selfs
     // that we ought to remove the function.
-    ONCE = {once: 1},
+    ONCE = {},
 
     // Internals
     data = imported || {},
     setterMap = {},
     eventMap = {};
+
+  // This is a magic-string anti-pattern. The best we can do here
+  // is either refactor (hard), or use a really long UUID (easy).
+  // I think you know what I'm going to do.
+  ONCE[onceKey] = 1;
 
   // This is the main invocation function. After
   // you declare an instance and call that instance
@@ -233,7 +239,7 @@ function EvDa (imported) {
     });
   }
 
-  function isset ( key, callback ) {
+  function isset ( key, callback, meta ) {
     // This supports the style
     // ev.isset(['key1', 'key2'], something).
     //
@@ -241,16 +247,20 @@ function EvDa (imported) {
     // what order we trigger things in.  We don't have to do any crazy
     // accounting, just cascading should do fine.
     if ( isArray(key) ) {
-      return isset(key.pop(), function() {
+      var myKey = key.pop();
+      return isset(myKey, function(data) {
+        var ret = {};
+        ret[myKey] = data;
+
         return isset( 
           (
             (key.length == 1) ?
             key[0] : key
-          ), callback);
+          ), callback, extend({}, ret, meta));
       });
       // ^^ this should recurse nicely.
-      // although it won't return all 
-      // the values in a nice set.
+      // It uses the meta feature to
+      // aggregate the k/v pairs as it goes through them.
       
     } 
 
@@ -262,7 +272,7 @@ function EvDa (imported) {
     if( isObject(key) ) {
 
       each( key, function( _key, _value ) {
-        key[_key] = isset( _key, _value );
+        key[_key] = isset( _key, _value, meta );
       });
 
       // Return the entire object as the result
@@ -283,7 +293,7 @@ function EvDa (imported) {
       // returns.
       
       /* var ThisIsWorthless = */ setterMap[key](function(value) {
-        pub.set.call(pub.context, key, value);
+        pub.set.call(pub.context, key, value, meta);
       });
 
       delete setterMap[key];
@@ -298,8 +308,8 @@ function EvDa (imported) {
       // the execution of this function is continued to be
       // blocked until the key is set.
       return key in data ?
-        callback.call ( pub.context, data[key] ) :
-        pub ( key, callback, ONCE );
+        callback.call ( pub.context, data[key], meta ) :
+        pub ( key, callback, extend({}, ONCE, meta || {}) );
     }
 
     return key in data;
@@ -452,7 +462,7 @@ function EvDa (imported) {
               if(!callback.S) {
                 callback.call ( pub.context, value, meta );
 
-                if ( callback.once ) {
+                if ( callback[onceKey] ) {
                   del ( callback );
                 }
               }
@@ -474,8 +484,20 @@ function EvDa (imported) {
       return data[key];
     },
 
-    once: function ( key, lambda ) {
-      return pub ( key, lambda, { once: true } );
+    once: function ( key, lambda, meta ) {
+      // If this is a callback, then we can register it to be called once.
+      if(lambda) {
+        // Through some slight recursion.
+        return pub.once( 
+          // First we register it as normal.
+          // Then we call the once with the 
+          // handle, returning here
+          pub ( key, lambda, meta )
+          // And running the function below:
+        );
+      } 
+      // This will add the k/v pair to the handler
+      return extend( key, ONCE );
     },
 
     enable: function ( listName ) {

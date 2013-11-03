@@ -9,10 +9,11 @@ _remote.queue = new Queue();
 function loadHistory(){
   // The 'recent' has a setter that this will
   // trigger; see store.js.  
-  ev.isset('init', function(){
-  ev.isset('recent', function(data) {
-
+  ev.isset(['init', 'recent'], function(data, meta) {
     var row;
+
+    data = meta.recent; 
+
     each(data, function(which, ix) {
       // This is the horizontal row of results.
       // Each row will contain 4 playlist links.
@@ -53,7 +54,6 @@ function loadHistory(){
     });
 
     $("#history").fadeIn();
-  });
   });
 }
 
