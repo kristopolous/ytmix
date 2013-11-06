@@ -1,9 +1,9 @@
 var UserHistory = {
   isViewed: function(id) {
-    return localStorage["v"].search(id) > -1;
+    return localStorage['v'] ? localStorage["v"].search(id) > -1 : false;
   },
   isStarred: function(id) {
-    return localStorage["s"].search(id) > -1;
+    return localStorage["s"] ? localStorage['s'].search(id) > -1 : false;
   },
   star: function(id) {
     if(UserHistory.isStarred(id)) {
@@ -15,10 +15,10 @@ var UserHistory = {
     return UserHistory.isStarred(id);
   },
   getViewed: function(){
-    return localStorage['v'].split(' ');
+    return localStorage['v'] ? localStorage['v'].split(' ') : false;
   },
   getFavorites: function(){
-    return localStorage['s'].split(' ');
+    return localStorage['s'] ? localStorage['s'].split(' ') : false;
   },
   view: function (object, id, offset) {
     localStorage["v"] += " " + id;
