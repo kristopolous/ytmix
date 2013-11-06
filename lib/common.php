@@ -56,6 +56,19 @@ function sanitize($opts) {
   return $opts;
 }
 
+function toJson(&$data, $decode = Array()) {
+  foreach($decode as $field) {
+    if(gettype($field) == 'array') {
+      foreach($data as &$child) {
+        toJson($child, $field);
+      }
+    } else {
+      $data[$field] = json_decode($data[$field], true);
+    }
+  }
+  return $data;
+}
+
 function getdata($sql) {
   $row = mysql_fetch_assoc($sql);
   if($row) {

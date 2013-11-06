@@ -84,14 +84,14 @@ function pl_addTracks($params) {
 }
 
 function pl_recent() {
-  return run_assoc('select 
+  return toJson(run_assoc('select 
     id, name, preview 
     from playlist 
     where 
       tracklist is not NULL and 
       name is not null and 
       preview is not null 
-    order by id desc limit 20');
+    order by id desc limit 20'), Array(Array('preview')));
 }
 
 function pl_get($params) {
@@ -100,7 +100,8 @@ function pl_get($params) {
   run('update playlist set viewcount = viewcount + 1 where id=' . $id);
 
   $result = run('select * from playlist where id=' . $id);
-  return mysql_fetch_assoc($result);
+  $data = mysql_fetch_assoc($result);
+  return toJson($data, Array('tracklist', 'preview'));
 }
 
 function pl_update($params) {

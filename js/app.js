@@ -26,8 +26,6 @@ function loadHistory(){
         return;
       }
 
-      which.preview = JSON.parse(which.preview);
-
       var play = $("<img class=play src=css/play.png />")
         .click(function(){
           // Clicking it will switch us to the playlist mode and
