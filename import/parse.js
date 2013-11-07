@@ -136,8 +136,16 @@ function readUrl(urlstr) {
 }
 
 api('createid', source, function(data) {
-  console.log(data);
   var res = JSON.parse(data);
   id = res.result;
+
+  request.post(
+    base + 'entry.php', 
+    {form: {
+      func: 'update',
+      id: res.result,
+      name: 'Uploads by ' + process.argv[2]
+    }});
+
   readUrl(source);
 });
