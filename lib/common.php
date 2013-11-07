@@ -130,7 +130,7 @@ function get($opts, $fieldList) {
 function run($mysql_string) {
   $result = mysql_query($mysql_string);
   if(!$result) {
-    result(false, "Unable to get playlist");
+    result(false, $mysql_string);
   }
   return $result;
 }

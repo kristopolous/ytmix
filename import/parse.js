@@ -39,6 +39,32 @@ function newentry(entry) {
   ]);
 }
 
+function api() {
+  var 
+    args = Array.prototype.slice.call(arguments),
+    cb = args.pop();
+
+  if(args.filter(function(m) {return m.search(/\//) > -1}).length) {
+    var param = {};
+
+    ["func", "id", "param"].forEach(function(which) {
+      if(args) {
+        param[which] = args.shift();
+      }
+    })
+
+    request.post(
+      base + 'entry.php', 
+      {form: param}, 
+      function(error, response, body) {
+        cb(body);
+      }
+    )
+  } else {
+    easyget(base + args.join('/'), cb);
+  }
+}
+
 function easyget(location, callback) {
   var buffer = '';
   if(location.length) {
@@ -80,10 +106,10 @@ function addEntries(xml) {
     } else {
       newentry(result.entry);
     }
-    request.post(base + 'playlist.php', {form: {
+    request.post(base + 'entry.php', {form: {
       func: 'addTracks',
       id: id,
-      tracklist: playlist
+      param: playlist
     }}, function(error, response, body) {
       console.log(error, response.body, body);
 
@@ -96,9 +122,7 @@ function addEntries(xml) {
         nextUrl = next[0]['$']['href'];
         readUrl(nextUrl);
         console.log({action: "reading", data: nextUrl});
-      } else {
-        finish();
-      }
+      } 
         }
       );
    });
@@ -111,30 +135,7 @@ function readUrl(urlstr) {
   easyget(parsed, addEntries);
 }
 
-function finish(){
-  easyget(base + 'playlist.php?func=createID&source=' + source, function(data) {
-    var 
-      res = JSON.parse(data),
-      id = res.result;
-
-    if(id) {
-      (function(){
-        var me = arguments.callee;
-        var subset = playlist.splice(0, 25);
-        easyget(base + 'playlist.php?func=addTracks&id=' + id + 'tracklist=' + escape(JSON.stringify(subset)),
-          function(what) {
-            console.log(what);
-            if(playlist.length) {
-              me();
-            }
-          }
-        );
-      })();
-    }
-  });
-}
-
-easyget(base + 'entry.php?func=createID&source=' + source, function(data) {
+api('createid', source, function(data) {
   console.log(data);
   var res = JSON.parse(data);
   id = res.result;

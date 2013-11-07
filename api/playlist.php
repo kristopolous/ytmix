@@ -18,7 +18,9 @@ function pl_getTracks($params) {
 
 function pl_generatePreview($params) {
   list($id) = get($params, 'id');
+
   $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
+
   if($playlist && sizeof($playlist) > 0) {
     $preview = Array();
     $preview['tracks'] = $firstFour = array_slice($playlist, 0, 4);
@@ -47,10 +49,10 @@ function pl_remove($params) {
 
 // createID:
 //  params:
-//    source (optional) URL of already created id to find, if exists.
+//    id (optional) URL of already created id to find, if exists.
 //
 function pl_createID($params) {
-  list($source) = get($params, 'source');
+  list($source) = get($params, 'id');
   
   $result = null;
 
@@ -65,22 +67,41 @@ function pl_createID($params) {
 }
 
 function pl_addTracks($params) {
-  $opts = getassoc($params, 'id, tracklist');
+  $opts = getassoc($params, 'id, param');
+
+  if(gettype($opts['param']) == 'string') {
+    $opts['param'] = json_decode($opts['param'], true);
+  }
   $id = $opts['id'];
 
-  $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
+  $playlist = json_decode(
+    getdata(
+      run("select tracklist from playlist where id = $id")
+    ), true
+  );
+
   if(!$playlist) {
     $playlist = array();
   }
 
-  $playlist = json_encode(array_merge($playlist, $opts['tracklist']));
-  
-  echo('update playlist set tracklist = \'' . $playlist . '\' where id = ' . $id);
-  pl_generatePreview(Array(
-    'id' => $id
-  ));
+  $hash = Array();
+  foreach($playlist as $item) {
+    $hash[$item[2]] = $item;
+  }
 
-  return $playlist;
+  foreach($opts['param'] as $item) {
+    if(!array_key_exists($item[2], $hash)) {
+      $playlist[] = $item;
+    }
+  }
+
+  $string_playlist = mysql_real_escape_string(json_encode($playlist));
+  
+  run('update playlist set tracklist = \'' . $string_playlist . '\' where id = ' . $id);
+
+  pl_generatePreview(Array( 'id' => $id));
+
+  return true;
 }
 
 function pl_recent() {

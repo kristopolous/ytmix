@@ -27,5 +27,5 @@ if(isset($_REQUEST['func']) && function_exists('pl_' . $_REQUEST['func'])) {
     result(true, $result);
   }
 } else {
-  return pl_help($_SERVER);
+  return pl_help($_REQUEST);
 }

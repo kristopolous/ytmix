@@ -3,9 +3,10 @@ Options +FollowSymLinks
     Options -MultiViews
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)/(.*)/(.*)$ entry.php?func=$1&id=$2&param=$3 [L,N]
+    RewriteCond %{REQUEST_FILENAME} !entry.php
     RewriteRule ^(.*)/(.*)$ entry.php?func=$1&id=$2 [L,N]
     RewriteCond %{REQUEST_FILENAME} !entry.php
     RewriteRule ^([^/]*)$ entry.php?func=$1 [NS]
-    #RewriteRule ^([^/]*)$ %{REQUEST_FILENAME} [NS]
 </IfModule>
 
