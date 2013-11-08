@@ -57,13 +57,15 @@ function sanitize($opts) {
 }
 
 function toJson(&$data, $decode = Array()) {
-  foreach($decode as $field) {
-    if(gettype($field) == 'array') {
-      foreach($data as &$child) {
-        toJson($child, $field);
+  if($data) {
+    foreach($decode as $field) {
+      if(gettype($field) == 'array') {
+        foreach($data as &$child) {
+          toJson($child, $field);
+        }
+      } else {
+        $data[$field] = json_decode($data[$field], true);
       }
-    } else {
-      $data[$field] = json_decode($data[$field], true);
     }
   }
   return $data;

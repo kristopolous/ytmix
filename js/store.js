@@ -70,6 +70,7 @@ var Store = {
       func: 'get',
       id: id,
       onSuccess: function(data) {
+        console.log(data);
         if(!data.blacklist) {
           delete data.blacklist;
         }
@@ -190,15 +191,17 @@ setInterval(function(){
 //
 // ********************
 ev.test('tracklist', function(data, meta) {
-  if(_.isArray(data[0])) {
-    db.insert(
-      DB.objectify(
-        Store.remoteKeys,
-        data
-      )
-    );
-  } else {
-    db.insert( data );
+  if(data) {
+    if(_.isArray(data[0])) {
+      db.insert(
+        DB.objectify(
+          Store.remoteKeys,
+          data
+        )
+      );
+    } else {
+      db.insert( data );
+    }
   }
 
   meta.done(true);

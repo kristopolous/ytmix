@@ -8,6 +8,7 @@ function pl_getPreview($params){
 function pl_getTracks($params) {
   list($id) = get($params, 'id');
   $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
+
   $result = array();
   foreach($playlist as $entry) {
     $result[] = $entry[2];
@@ -122,7 +123,7 @@ function pl_get($params) {
 
   $result = run('select * from playlist where id=' . $id);
   $data = mysql_fetch_assoc($result);
-  return toJson($data, Array('tracklist', 'preview'));
+  return toJson($data, Array('tracklist', 'preview', 'blacklist'));
 }
 
 function pl_update($params) {
@@ -133,15 +134,18 @@ function pl_update($params) {
     if($key == 'id') {
       continue;
     }
+
+    // Make sure that the value isn't empty
+    if(empty($value)) {
+      continue;
+    }
   
     // this sounds totally unsafe, let's do it anyway. WEEEEEE, 
     // livin on the edge ... you can't help yourself from fallllinnn.
     run('update playlist set ' . $key . ' = "' . $value . '" where id = ' . $opts['id']);
   }
 
-  pl_generatePreview(Array(
-    'id' => $opts['id']
-  ));
+  pl_generatePreview(Array( 'id' => $opts['id']));
   return true;
 }
 

@@ -6,7 +6,7 @@ a:hover{text-decoration:none;color:#fff}
 a{color:#ccc}
 input{font-size:17px;background:#545;color:#fff;border:2px solid;padding:0 2px;border-color:#434 #989 #989 #434}
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
-#playlist-name{margin:0;font-size:1.25em;color:#fff;display:inline-block;padding:0 15px}
+#playlist-name{margin:0;font-size:1.15em;color:#fff;display:inline-block;padding:0 15px}
 
 .star{color:#434 !important;cursor:pointer}
 .star.active{color:#a89 !important}
@@ -20,7 +20,11 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 .track img{width:102px;height:77px;background:#000}
 
 #timeline{position:relative;vertical-align:top;z-index:18;white-space:nowrap;overflow:hidden;width:100%;background:#180018;height:20px;padding-top:0.5em}
-#timeline .track{height:20px}
+
+#timeline .track{
+  height:20px
+}
+
 #timeline .title{font-size:12px;white-space:nowrap;cursor:default;width:90%;overflow:hidden}
 
 .splash-container{cursor:pointer;border:2px solid #a9a;background:#434;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em;position:relative}
@@ -80,7 +84,8 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #search-results{width:162px}
 
 .button{border:0;cursor:pointer;display:inline-block;font-size:13px;color:#ccc;background:transparent;padding:7px 9px}
-.button:hover{text-shadow:0 0 1px white;color:#fff;box-shadow:0 0 5px -4px #888 inset, 0 0 10px -3px #888;border-radius:3px}
+.button:hover{text-shadow:0 0 1px white;color:#fff;
+background:#545;}
 .button:active{color:#aaa}
 .button.sunken{background:#323}
 
@@ -114,7 +119,12 @@ text-shadow:0 0 1px white;color:#fff;box-shadow:0 0 5px -4px #888 inset, 0 0 10p
 .timeline-hover em{font-weight:bold;font-style:normal;color:#aaaab5}
 .timeline-hover-wrap{padding:5px 0 0 0;position:absolute;display:none;top:20px;left:0}
 
-.control-wrapper{background:#434;padding:2px;display:inline-block;border-radius:3px;box-shadow: 0 0 8px 1px #656 inset;height:30px;vertical-align:top}
+.control-wrapper input {
+  width: 400px;
+}
+.control-wrapper{
+  background:#434;padding:2px;display:inline-block;
+vertical-align:top}
 
 #status {position:relative;overflow:hidden;height:30px;margin:-5px 0 -10px 0;padding:0 30px}
 #status .mask{position:absolute;top:0;left:0;width:100%;height:100%;box-shadow: 0 0 25px 10px #323 inset;z-index:40}
