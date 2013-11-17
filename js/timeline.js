@@ -21,7 +21,11 @@ var UserHistory = {
     return localStorage['s'] ? localStorage['s'].split(' ') : false;
   },
   view: function (object, id, offset) {
-    localStorage["v"] += " " + id;
+    if(localStorage['v']) {
+      localStorage['v'] += " " + id;
+    } else {
+      localStorage['v'] = id;
+    }
 
     if(UserHistory.isStarred(id)) {
       $("#is-starred").addClass('active');
@@ -199,12 +203,17 @@ var Timeline = (function(){
 
       debug(stats);
     } else {
-      debug([
-        "(backup)", 
-        Player.active.getCurrentTime().toFixed(3),
-        "/",
-        Player.active.getDuration().toFixed(3)
-      ]);
+      try {
+        debug([
+          "(backup)", 
+          Player.active.getCurrentTime().toFixed(3),
+          "/",
+          Player.active.getDuration().toFixed(3)
+        ]);
+      } catch(ex) {
+        console.log(Player.active, ex);
+        debug([ "(backup) - failure" ]);
+      }
     }
 
     // The mechanics for moving the centroid
