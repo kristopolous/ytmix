@@ -6,10 +6,14 @@ var UserHistory = {
     return localStorage["s"] ? localStorage['s'].search(id) > -1 : false;
   },
   star: function(id) {
-    if(UserHistory.isStarred(id)) {
-      localStorage['s'] = localStorage['s'].replace(' ' + id, '');
+    if(!localStorage['s']) {
+      localStorage["s"] = id;
     } else {
-      localStorage["s"] += " " + id;
+      if(UserHistory.isStarred(id)) {
+        localStorage['s'] = localStorage['s'].replace(' ' + id, '');
+      } else {
+        localStorage["s"] += " " + id;
+      }
     }
     ev.set('request_gen', {force: true});
     return UserHistory.isStarred(id);
