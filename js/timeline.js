@@ -62,6 +62,7 @@ var Timeline = (function(){
     _template = {},
     _rateWindow = [],
 
+
     Player = {
       controls: [],
 
@@ -84,6 +85,7 @@ var Timeline = (function(){
       }
     };
 
+    eval(_inject('t'));
   _backup = {
     start: 0,
 
@@ -479,10 +481,14 @@ var Timeline = (function(){
 
       absolute = Math.max(0, absolute);
       absolute = Math.min(_totalRuntime, absolute);
+      console.log("Seeking to ", absolute);
 
       var track = db.findFirst(function(row) { 
+        console.log(row, row.offset, absolute, row.length);
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
       });
+
+      console.log("Playing ", track);
 
       if(track) {
         clickFix.start();

@@ -1,5 +1,11 @@
 <?php 
 
+// make sure that the track that comes in is in the right format
+function sanitize_track($array) {
+  $array[0] = intval($array[0]);
+  return $array;
+}
+
 function pl_getPreview($params){
   list($id) = get($params, 'id');
   return getdata(run("select preview from playlist where id = $id"));
@@ -42,6 +48,12 @@ function pl_generatePreview($params) {
   }
 }
 
+function pl_clear($params) {
+  list($id) = get($params, 'id');
+  $result = run('update playlist set tracklist=null where id=' . $id);
+  return $result;
+}
+
 function pl_remove($params) {
   list($id) = get($params, 'id');
   $result = run('delete from playlist where id=' . $id);
@@ -70,11 +82,13 @@ function pl_createID($params) {
 function pl_addTracks($params) {
   $opts = getassoc($params, 'id, param');
 
+  // Make sure that the object passed in is interpreted.
   if(gettype($opts['param']) == 'string') {
     $opts['param'] = json_decode($opts['param'], true);
   }
   $id = $opts['id'];
 
+  // Get the current playlist
   $playlist = json_decode(
     getdata(
       run("select tracklist from playlist where id = $id")
@@ -85,14 +99,16 @@ function pl_addTracks($params) {
     $playlist = array();
   }
 
+  // Make a map of it
   $hash = Array();
   foreach($playlist as $item) {
     $hash[$item[2]] = $item;
   }
 
+  // If what we want to insert isn't there, then we process it.
   foreach($opts['param'] as $item) {
     if(!array_key_exists($item[2], $hash)) {
-      $playlist[] = $item;
+      $playlist[] = sanitize_track($item);
     }
   }
 
