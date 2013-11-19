@@ -111,7 +111,7 @@ function addEntries(xml) {
       id: id,
       param: playlist
     }}, function(error, response, body) {
-      console.log(error, response.body, body);
+      console.log(playlist, error, response.body, body, "<<\n");
 
       result.link = result.feed.link;
       next = result.link.filter(function(entry) {
@@ -123,9 +123,8 @@ function addEntries(xml) {
         readUrl(nextUrl);
         console.log({action: "reading", data: nextUrl});
       } 
-        }
-      );
    });
+ });
 }
 
 function readUrl(urlstr) {

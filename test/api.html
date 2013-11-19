@@ -1,4 +1,21 @@
 <!doctype html>
+<style>
+form {
+  position:fixed;
+  bottom:0;
+  left:0;
+  width: 100%;
+  padding: 0.5em 1em;
+  background: rgba(20,20,20,0.5);
+}
+input {
+  padding: 0.25em;
+  width: 20em;
+}
+body { 
+  margin-bottom: 5em
+}
+</style>
 <pre id="output"></pre>
 <form action="javascript:request()">
 <input id="query" value="">
@@ -10,6 +27,11 @@ $(function(){
   });
 function request() {
   var query = $("#query").val();
+  if(query == 'clear') {
+    $("#output").html('');
+    $("#query").val('').focus();
+    return;
+  }
   $("#query").val("loading ...");
   $.get('../api/' + query, function(data) {
     var html;

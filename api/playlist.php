@@ -135,11 +135,15 @@ function pl_recent() {
 function pl_get($params) {
   list($id) = get($params, 'id');
 
-  run('update playlist set viewcount = viewcount + 1 where id=' . $id);
+  if($id) {
+    run('update playlist set viewcount = viewcount + 1 where id=' . $id);
 
-  $result = run('select * from playlist where id=' . $id);
-  $data = mysql_fetch_assoc($result);
-  return toJson($data, Array('tracklist', 'preview', 'blacklist'));
+    $result = run('select * from playlist where id=' . $id);
+    $data = mysql_fetch_assoc($result);
+    return toJson($data, Array('tracklist', 'preview', 'blacklist'));
+  } else {
+    return run_assoc('select id, name from playlist where preview is not null');
+  }
 }
 
 function pl_update($params) {
