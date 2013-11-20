@@ -484,7 +484,6 @@ var Timeline = (function(){
       console.log("Seeking to ", absolute);
 
       var track = db.findFirst(function(row) { 
-        console.log(row, row.offset, absolute, row.length);
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
       });
 
