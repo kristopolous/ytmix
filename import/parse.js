@@ -111,7 +111,7 @@ function addEntries(xml) {
       id: id,
       param: playlist
     }}, function(error, response, body) {
-      console.log(playlist, error, response.body, body, "<<\n");
+      console.log(playlist, error, response.body, body);
 
       result.link = result.feed.link;
       next = result.link.filter(function(entry) {

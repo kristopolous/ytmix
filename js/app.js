@@ -12,7 +12,7 @@ function loadHistory(){
   ev.isset(['init', 'recent'], function(data, meta) {
     var row;
 
-    data = meta.recent; 
+    data = ev('recent');
 
     each(data, function(which, ix) {
       // This is the horizontal row of results.
@@ -73,8 +73,10 @@ ev({
         ev.unset('id','tracklist','name');
         db.find().remove();
         Timeline.pause();
-        $(".main-app").css('display','none');
-        $("#splash").css('display','block');
+
+        $(".main-app").hide();
+        $("#splash").show();
+
         loadHistory();
         document.body.style.overflow = 'auto';
       }
