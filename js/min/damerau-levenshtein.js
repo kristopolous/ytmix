@@ -103,5 +103,3 @@ function DamerauLevenshtein (prices, damerau) {
     };
     return distance;
 };
-
-module.exports = DamerauLevenshtein;
