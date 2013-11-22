@@ -9,7 +9,6 @@ function EvDa (imported) {
   var 
     BASE = '__base',
     slice = Array.prototype.slice,  
-    onceKey = "__once__lGx9BTY0Qf78CgAAsNdlZQik",
 
     // This is mostly underscore functions here. But they are included to make sure that
     // they are supported here without requiring an additional library. 
@@ -151,17 +150,12 @@ function EvDa (imported) {
     // The one time callback gets a property to
     // the end of the object to notify our future-selfs
     // that we ought to remove the function.
-    ONCE = {},
+    ONCE = {once: 1},
 
     // Internals
     data = imported || {},
     setterMap = {},
     eventMap = {};
-
-  // This is a magic-string anti-pattern. The best we can do here
-  // is either refactor (hard), or use a really long UUID (easy).
-  // I think you know what I'm going to do.
-  ONCE[onceKey] = 1;
 
   // This is the main invocation function. After
   // you declare an instance and call that instance
@@ -260,16 +254,11 @@ function EvDa (imported) {
     // accounting, just cascading should do fine.
     if ( isArray(key) ) {
       var myKey = key.pop();
-      return isset(myKey, function(data) {
-        var ret = {};
-        ret[myKey] = data;
 
-        return isset( 
-          (
-            (key.length == 1) ?
-            key[0] : key
-          ), callback, extend({}, ret, meta));
-      });
+      return isset(myKey, function(data, meta) {
+        var next = (key.length == 1) ? key[0] : key;
+        return isset(next, callback, meta);
+      }, meta);
       // ^^ this should recurse nicely.
       // It uses the meta feature to
       // aggregate the k/v pairs as it goes through them.
@@ -321,9 +310,11 @@ function EvDa (imported) {
       // blocked until the key is set.
       return key in data ?
         callback.call ( pub.context, data[key], meta ) :
-        pub ( key, callback, extend({}, ONCE, meta || {}) );
+        pub ( key, callback, extend( meta || {}, ONCE ) );
     }
 
+    // Otherwise, if there is no callback, just return
+    // whether this key is defined or not.
     return key in data;
   };
 
@@ -428,20 +419,21 @@ function EvDa (imported) {
         testKey = 'test' + key,
         args = slice.call(arguments),
         times = size(eventMap[ testKey ]),
+        doTest = (times && !bypass),
         failure,
 
         // Invoke will also get done
         // but it will have no semantic
         // meaning, so it's fine.
-        meta = function ( ok ) {
-          failure |= (ok === false);
+        meta = doTest ? (
+          function ( ok ) {
+            failure |= (ok === false);
 
-          if ( ! --times ) {
-            if ( ! failure ) { 
+            if ( ! --times && ! failure ) { 
               pub.set ( key, value, _meta, 1 );
             }
           }
-        };
+        ) : {};
 
       meta.old = clone(data[key]);
       extend(meta, {
@@ -455,13 +447,14 @@ function EvDa (imported) {
         callback.call ( pub.context, args );
       });
 
-      if (times && !bypass) {
+      if (doTest) {
+        // This is the test handlers
         each ( eventMap[ testKey ], function ( callback ) {
           callback.call ( pub.context, value, meta );
         });
       } else {
         // Set the key to the new value.
-        // The old value is beind passed in
+        // The old value is being passed in
         // through the meta
         data[key] = value;
 
@@ -471,10 +464,15 @@ function EvDa (imported) {
             (eventMap[AFTER + key] || []), 
             function(callback) {
 
-              if(!callback.S) {
-                callback.call ( pub.context, value, meta );
+              if( ! callback.S) {
+                // our ingested meta was folded into our callback
+                callback.call ( 
+                  pub.context, 
+                  value, 
+                  meta
+                );
 
-                if ( callback[onceKey] ) {
+                if ( callback.once ) {
                   del ( callback );
                 }
               }
