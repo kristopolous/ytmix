@@ -122,14 +122,16 @@ function pl_addTracks($params) {
 }
 
 function pl_recent() {
-  return toJson(run_assoc('select 
+  $res = run_assoc('select 
     id, name, preview 
     from playlist 
     where 
       tracklist is not NULL and 
       name is not null and 
       preview is not null 
-    order by id desc limit 20'), Array(Array('preview')));
+    order by id desc limit 20');
+  $key = Array(Array('preview'));
+  return toJson($res, $key);
 }
 
 function pl_get($params) {
