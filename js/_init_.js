@@ -46,6 +46,10 @@ db.addIf(function(what) {
   return ev('blacklist').indexOf(what.ytid) == -1;
 });
 
+db.beforeAdd(function(what) {
+  what.length = parseInt(what.length, 10);
+});
+
 /*
 var sCount = 0;
 db.sync(function(){
