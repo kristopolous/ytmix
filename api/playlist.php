@@ -126,9 +126,8 @@ function pl_recent() {
     id, name, preview 
     from playlist 
     where 
-      tracklist is not NULL and 
-      name is not null and 
-      preview is not null 
+      preview is not null and
+      type = 0
     order by id desc limit 20');
   $key = Array(Array('preview'));
   return toJson($res, $key);

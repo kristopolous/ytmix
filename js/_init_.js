@@ -3,6 +3,7 @@ var
   START = (+new Date()),
   Splash = {},
   DL = DamerauLevenshtein({}, false),
+  CLOCK_FREQ = 150,
   each = _.each,
   slice = Array.prototype.slice,
   UNIQ = 0,

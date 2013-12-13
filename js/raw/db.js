@@ -94,19 +94,6 @@
       return ret;
     },
 
-    Filter = function(obj, iterator, context) {
-      var results = [];
-      if (obj == null) return results;
-      if ([].filter) return obj.filter(iterator, context);
-
-      each(obj, function(value, index, list) {
-        if (iterator.call(context, value, index, list)) {
-          results[results.length] = value
-        };
-      });
-      return results;
-    },
- 
     map = [].map ?
       function(array, cb) { 
         return array.map(cb) 
@@ -150,50 +137,16 @@
         }
      };
    
-  // Jacked from Resig's jquery 1.5.2
-  // The code has been modified to not rely on jquery and stripped
-  // to not be so safe and general
-  function extend(o1, o2) {
-    var 
-      options, src, copy, copyIsArray, clone,
-      target = o1,
-      len = arguments.length;
-
-    for (var i = 0 ; i < len; i++ ) {
-      // Only deal with non-null/undefined values
-      options = arguments[ i ];
-
-      // Extend the base object
-      for (var name in options ) {
-        src = target[ name ];
-        copy = options[ name ];
-
-        // Prevent never-ending loop
-        if ( target === copy ) {
-          continue;
-        }
-
-        // Recurse if we're merging plain objects or arrays
-        if ( copy && ( copy.constructor == Object || (copyIsArray = (_.isArr(copy))) ) ) {
-          if ( copyIsArray ) {
-            copyIsArray = false;
-            clone = src && (_.isArr(constructor)) ? src : [];
-          } else {
-            clone = src && (src.constructor == Object) ? src : {};
-          }
-
-          // Never move original objects, clone them
-          target[ name ] = extend( clone, copy );
-
-        // Don't bring in undefined values
-        } else if ( copy !== _u ) {
-          target[ name ] = copy;
+  // This is from underscore. It's a <<shallow>> object merge.
+  function extend(obj) {
+    each(slice.call(arguments, 1), function(source) {
+      if (source) {
+        for (var prop in source) {
+          obj[prop] = source[prop];
         }
       }
-    }
- 
-    // Return the modified object
-    return target;
+    });
+    return obj;
   }
 
   function kvarg(which){
@@ -219,16 +172,6 @@
     return ret;
   }
 
-  function print(arg) {
-    if(_.isStr(arg)) {
-      return '"' + arg.replace(/\"/g, '\\\"') + '"';
-    } else if(_.isNum(arg)) {
-      return arg;
-    } else if(_.isArr(arg)) {
-      return '[' + arg.map(function(param) { return print(param) }).join(',') + ']';
-    }
-  }
-
   // We create basic comparator prototypes to avoid evals
   each('< <= > >= == === != !=='.split(' '), function(which) {
     _compProto[which] = Function(
@@ -238,40 +181,24 @@
   });
 
   function trace(obj, cb) {
-    obj.__$$tracer$$__ = {};
+    obj.__trace__ = {};
 
     each(obj, function(key, value) {
       if(_.isFun(value)) {
-        obj.__$$tracer$$__[key] = value;
+        obj.__trace__[key] = value;
         obj[key] = function() {
           console.log([key + ":" ].concat(slice.call(arguments)));
           if(cb) { cb.apply(this, arguments); }
-          return obj.__$$tracer$$__[key].apply(this, arguments);
+          return obj.__trace__[key].apply(this, arguments);
         }
       }
     });
-  }
-
-  function deepcopy(from) {
-    // @http://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-clone-a-javascript-object
-    return extend({}, from);
   }
 
   function simplecopy(obj) {
     // we need to call slice for array-like objects, such as the dom
     return obj.length ? slice.call(obj) : values(obj);
   }
-
-  function list2obj(list) {
-    var ret = {};
-
-    each(list, function(which) {
-      ret[which] = true;
-    });
-
-    return ret;
-  }
-
 
   // These function accept index lists.
   function setdiff(larger, subset) {
@@ -372,7 +299,7 @@
       // This permits find(key, value)
       which = {};
       which[filterList[0]] = filterList[1];
-      filterList = [deepcopy(which)];
+      filterList = [which];
     } 
 
     for(filterIx = 0; filterIx < filterList.length; filterIx++) {
@@ -658,13 +585,13 @@
             if(!cache[expr]) {
 
               try {
-                ret = new Function("x,rec", "try { return x " + expr + "} catch(e) {return undefined;}");
+                ret = new Function("x,rec", "try { return x " + expr + "} catch(e) {}");
               } catch(ex) {
                 ret = {};
               }
 
               try {
-                ret.single = new Function("rec", "try { return " + arg0 + "} catch(e) {return undefined;}");
+                ret.single = new Function("rec", "try { return " + arg0 + "} catch(e) {}");
               } catch(ex) {}
 
               cache[expr] = ret;
@@ -685,7 +612,7 @@
                 cache[expr] = _compProto[canned[1]](canned[2].replace(/['"]$/, ''));
               } else {      
                 // if not, fall back on it 
-                cache[expr] = new Function("x,rec", "try { return x " + expr + "} catch(e) {return undefined;}");
+                cache[expr] = new Function("x,rec", "try { return x " + expr + "} catch(e) {}");
               }
             } 
             ret[arg0] = cache[expr];
@@ -716,16 +643,16 @@
 
       for(var key in filter) {
         if(!_.isFun(filter[key])) {
-          ret[key] = callback.call(this, filter[key]);
+          ret[key] = callback.call(0, filter[key]);
         }
       }
     } 
 
-    return Filter(ret, function(m) { return m !== undefined } );
+    return ret;
   }
 
   // the list of functions to chain
-  var chainList = list2obj([
+  var chainList = hash([
     'each',
     'find',
     'group',
@@ -762,16 +689,16 @@
       constraints = {addIf:[]},
       constrainCache = {},
       syncList = [],
-      bSync = false,
+      syncLock = false,
       _template = false,
       ret = expression(),
       raw = [];
 
     function sync() {
-      if(!bSync) {
-        bSync = true;
+      if(!syncLock) {
+        syncLock = true;
         each(syncList, function(which) { which.call(ret, raw); });
-        bSync = false;
+        syncLock = false;
       }
     }
 
@@ -797,10 +724,11 @@
 
       transaction: {
         start: function() {
-          bSync = true;
+          syncLock = true;
         },
         end: function(){
-          bSync = false;
+          // Have to turn the syncLock off prior to attempting it.
+          syncLock = false;
           sync();
         }
       },
@@ -821,7 +749,6 @@
         // makes no sense whatsoever.
         var 
           agg = {}, 
-          _u, 
           len = raw.length, 
           entry;
 
@@ -856,9 +783,11 @@
       // beforeAdd allows you to mutate data prior to insertion.
       // It's really an addIf that returns true
       beforeAdd: function( lambda ) {
-        return lambda ? 
-            ret.addIf(function() { lambda.apply(0, arguments); return true; })
-          : ret.addIf();
+        return ret.addIf(
+          lambda ? 
+              function() { lambda.apply(0, arguments); return true; } 
+            : false
+          )
       },
 
       unset: function(key) {
@@ -906,6 +835,10 @@
       // The callbacks in this list are called
       // every time the database changes with
       // the raw value of the database.
+      //
+      // Note that this is different from the internal
+      // definition of the sync function, which does the
+      // actual synchronization
       sync: function(callback) { 
         if(callback) {
           syncList.push(callback);
@@ -1268,10 +1201,10 @@
         } catch(ex) {
 
           // Embedded objects, like flash controllers
-          // will bail on JQuery's extend because the
-          // properties aren't totally enumerable.  We
-          // work around that by slightly changing the 
-          // object; hopefully in a non-destructive way.
+          // will bail on extend because the properties 
+          // aren't totally enumerable.  We work around 
+          // that by slightly changing the object;
+          // hopefully in a non-destructive way.
           which.constructor = secret(ix);
           raw.push(which);
         }
@@ -1345,6 +1278,7 @@
     each: eachRun,
     like: like,
     trace: trace,
+    values: values,
     isin: isin,
 
     objectify: function(keyList, values) {

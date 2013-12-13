@@ -360,18 +360,20 @@ function EvDa (imported) {
       });
     },
 
-    incr: function ( key ) {
+    incr: function ( key, amount ) {
+      amount = amount || 1;
       // we can't use the same trick here because if we
-      // hit 0, it will auto-increment to 1
-      return pub.set ( key, isNumber(data[key]) ? (data[key] + 1) : 1 );
+      // hit 0, it will auto-increment to amount
+      return pub.set ( key, isNumber(data[key]) ? (data[key] + amount) : amount );
     },
 
-    decr: function ( key ) {
+    decr: function ( key, amount ) {
+      amount = amount || 1;
       // if key isn't in data, it returns 0 and sets it
       // if key is in data but isn't a number, it returns NaN and sets it
       // if key is 1, then it gets reduced to 0, getting 0,
       // if key is any other number, than it gets set
-      return pub.set ( key, data[key] - 1 || 0 );
+      return pub.set ( key, data[key] - amount || 0 );
     },
 
     // If we are pushing and popping a non-array then

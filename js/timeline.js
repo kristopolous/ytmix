@@ -24,6 +24,10 @@ var UserHistory = {
   getFavorites: function(){
     return localStorage['s'] ? localStorage['s'].split(' ') : false;
   },
+  reload: function(){
+    console.log("Reloading");
+    UserHistory.view(Player.active, Player.activeData.ytid, Player.active.getCurrentTime());
+  },
   view: function (object, id, offset) {
     if(localStorage['v']) {
       localStorage['v'] += " " + id;
@@ -40,6 +44,11 @@ var UserHistory = {
     Player.offset = offset;
 
     Timeline.backup.off(object).loadVideoById(id, offset);
+
+    // TODO: This feels like a bad place to do this.
+    // There should probably be a more abstract and less 
+    // explicit way to handle this.
+    ev.set('deadair', 0);
   }
 };
 
@@ -61,7 +70,6 @@ var Timeline = (function(){
     _backup = {},
     _template = {},
     _rateWindow = [],
-
 
     Player = {
       controls: [],
@@ -165,9 +173,12 @@ var Timeline = (function(){
   };
 
   function updateytplayer() {
-    ev.set('tick');
-
-    var scrubberPosition = 0;
+    // This is the "clock" that everything is rated by.
+    var 
+      // The tick is the clock-time ... this is different from the
+      // _offset which is where we should be in the playlist
+      tick = ev.incr('tick'), 
+      scrubberPosition = 0;
 
     // Make sure we aren't the backup player
     if(Player.active && !Player.active.on && Player.active.getVideoBytesLoaded && Player.activeData) {
@@ -177,7 +188,7 @@ var Timeline = (function(){
 
       stats = [
         Player.active.getDuration(),
-        Player.active.getCurrentTime(),
+        Player.active.getCurrentTime().toFixed(3),
         Player.activeData.length,
 
         Player.active.getPlayerState(),
@@ -194,8 +205,8 @@ var Timeline = (function(){
 
       _rateWindow.push(rateEnd);
 
-      // Update every 150 ms so a 20 unit window is over 3 seconds
-      if(_rateWindow.length > 20) {
+      // Update every CLOCK_FREQ so a 20 unit window is over 3 seconds
+      if(_rateWindow.length > (3000 / CLOCK_FREQ)) {
         rateStart = _rateWindow.shift();
       }
 
@@ -226,7 +237,8 @@ var Timeline = (function(){
     if(Player.active.getCurrentTime) {
       localStorage[ev.db.id + 'offset'] = _offset;
 
-      var time = Player.active.getCurrentTime();
+      var time = Player.active.getCurrentTime(),
+          prevOffset = _offset;
 
       if (time > 0 && Player.activeData) {
 
@@ -261,8 +273,7 @@ var Timeline = (function(){
         // video. This bug seems to have been around for almost a year or 
         // so?  Simply loading the video again appears to fix it.
         if(Player.active.getDuration() > 30 && (Player.active.getDuration() + 20 < Player.activeData.length)) {
-          console.log("Reloading");
-          UserHistory.view(Player.active, Player.activeData.ytid, Player.active.getCurrentTime());
+          UserHistory.reload();
         }
 
         // If the player is active and we are at the end of a song, then move ahead.
@@ -272,6 +283,20 @@ var Timeline = (function(){
         } else {
           _offset = Player.activeData.offset + time;
         }
+
+        // If we are supposed to be playing
+        if (_isPlaying) {
+
+          // And we haven't moved forward 
+          if (_offset - prevOffset == 0) {
+            // This means there's been dead-air for a few seconds.
+            if ( ev.incr('deadair', CLOCK_FREQ) > 4000 ) {
+              UserHistory.reload();
+            }
+          } 
+
+        }
+
       }
     }
     Scrubber.real.dom.css({ left: scrubberPosition + "%"});
@@ -341,7 +366,7 @@ var Timeline = (function(){
 
   ev.isset('flash_load', function(){
     Player.active = Player.controls[0];
-    setInterval(updateytplayer, 150);
+    setInterval(updateytplayer, CLOCK_FREQ);
   });
 
   ev('volume', function(volume){
@@ -481,13 +506,13 @@ var Timeline = (function(){
 
       absolute = Math.max(0, absolute);
       absolute = Math.min(_totalRuntime, absolute);
-      console.log("Seeking to ", absolute);
+      // console.log("Seeking to ", absolute);
 
       var track = db.findFirst(function(row) { 
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
       });
 
-      console.log("Playing ", track);
+      // console.log("Playing ", track);
 
       if(track) {
         clickFix.start();
@@ -496,6 +521,9 @@ var Timeline = (function(){
         } else {
           Player.offset = absolute - track.offset;
           Player.active.seekTo(absolute - track.offset);
+
+          // TODO: This feels like a bad place to do this.
+          ev.set('deadair', 0);
         }
       }
     },
