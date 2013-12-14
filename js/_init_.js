@@ -4,6 +4,7 @@ var
   Splash = {},
   DL = DamerauLevenshtein({}, false),
   CLOCK_FREQ = 150,
+  QUALITY_LEVELS = ['large', 'medium', 'small', 'tiny'],
   each = _.each,
   slice = Array.prototype.slice,
   UNIQ = 0,

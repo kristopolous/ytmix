@@ -71,6 +71,9 @@ var Timeline = (function(){
     _template = {},
     _rateWindow = [],
 
+    // preferred quality
+    _quality = _.last(QUALITY_LEVELS),
+
     Player = {
       controls: [],
 
@@ -81,6 +84,25 @@ var Timeline = (function(){
         'Error',
         'ApiChange'
       ],
+
+      Quality: {
+        set: function(what) {
+          if(what < 0) { what = 0; }
+
+          _quality = QUALITY_LEVELS[what % QUALITY_LEVELS.length];
+          $("#quality-down")[ (_quality == _.last(QUALITY_LEVELS) ? 'add' : 'remove') + 'Class']("disabled");
+          $("#quality-up")[ (_quality == _.first(QUALITY_LEVELS) ? 'add' : 'remove') + 'Class']("disabled");
+          return _quality;
+        },
+
+        down: function(){ 
+          return Player.Quality.set(_.indexOf(QUALITY_LEVELS, _quality) + 1);
+        },
+
+        up: function(){
+          return Player.Quality.set(_.indexOf(QUALITY_LEVELS, _quality) - 1);
+        }
+      },
 
       Play: function(){
         ev.isset('flash_load', function(){
@@ -93,7 +115,6 @@ var Timeline = (function(){
       }
     };
 
-    eval(_inject('t'));
   _backup = {
     start: 0,
 
@@ -137,7 +158,7 @@ var Timeline = (function(){
     },
 
     getPlaybackQuality: function(){
-      return "large";
+      return _quality;
     },
 
     on: function() {
@@ -263,8 +284,8 @@ var Timeline = (function(){
         // For some reason it appears that this value can
         // toggle back to non-high quality sometimes. So 
         // we check to see where it's at.
-        if( Player.active.getPlaybackQuality() != 'large') {
-          Player.active.setPlaybackQuality('large');
+        if( Player.active.getPlaybackQuality() != _quality) {
+          Player.active.setPlaybackQuality(_quality);
         }
 
         // There's this YouTube bug (2013/05/11) that can sometimes report 
@@ -375,6 +396,7 @@ var Timeline = (function(){
   });
 
   self.Player = Player;
+
   return {
     player: Player,
     data: _data,
@@ -579,6 +601,9 @@ var Timeline = (function(){
       });
 
       $("#pause-play").click(Timeline.pauseplay);
+
+      $("#quality-down").click(Player.Quality.down);
+      $("#quality-up").click(Player.Quality.up);
 
       $("#is-starred").click(function(){
         UserHistory.star(Player.activeData.ytid);

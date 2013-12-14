@@ -88,13 +88,14 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 background:#545;}
 .button:active{color:#aaa}
 .button.sunken{background:#323}
+.button.disabled{color:#555}
 
 .hover{display:none;position:absolute;bottom:0.5em;left:1%;width:98%;opacity:0.9;text-align:center}
 .hover a{cursor:pointer;display:inline-block;height:1.75em;font-size:1em;background:#434;box-shadow:1px 1px 1px #a9a inset;margin-bottom:0.03em;margin-left:1%;padding-top:0.20em;text-decoration:none;width:32%}
 .hover a:active{box-shadow:-1px -1px 1px #a9a inset}
 .hover a:hover{background-color:#656}
 
-#clipboard-wrapper .hover{display:block;position:relative;bottom:0;left:0;margin:0;padding:7px 5px;
+#clipboard-wrapper .hover{display:block;position:relative;bottom:0;left:0;margin:0 14px 0 0;padding:7px 2px;
 text-shadow:0 0 1px white;color:#fff;box-shadow:0 0 5px -4px #888 inset, 0 0 10px -3px #888;border-radius:3px
 }
 #clipboard-wrapper .active{color:#aaa}
