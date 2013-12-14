@@ -89,7 +89,7 @@ background:#545;}
 .button:active{color:#aaa}
 .button.sunken{background:#323}
 .button.disabled{color:#555}
-.button.disabled:hover{background:transparent;color:#555}
+.button.disabled:hover{background:transparent;color:#555;cursor:default;text-shadow:0}
 
 .hover{display:none;position:absolute;bottom:0.5em;left:1%;width:98%;opacity:0.9;text-align:center}
 .hover a{cursor:pointer;display:inline-block;height:1.75em;font-size:1em;background:#434;box-shadow:1px 1px 1px #a9a inset;margin-bottom:0.03em;margin-left:1%;padding-top:0.20em;text-decoration:none;width:32%}

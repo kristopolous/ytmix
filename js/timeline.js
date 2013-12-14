@@ -395,7 +395,7 @@ var Timeline = (function(){
 
   self.Player = Player;
 
-  Player.set.Quality(_.last(QUALITY_LEVELS));
+  Player.Quality.set(_.last(QUALITY_LEVELS));
 
   return {
     player: Player,
