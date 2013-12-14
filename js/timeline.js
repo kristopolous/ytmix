@@ -72,7 +72,7 @@ var Timeline = (function(){
     _rateWindow = [],
 
     // preferred quality
-    _quality = _.last(QUALITY_LEVELS),
+    _quality, 
 
     Player = {
       controls: [],
@@ -282,7 +282,7 @@ var Timeline = (function(){
         }
 
         // For some reason it appears that this value can
-        // toggle back to non-high quality sometimes. So 
+        // toggle back to different quality sometimes. So 
         // we check to see where it's at.
         if( Player.active.getPlaybackQuality() != _quality) {
           Player.active.setPlaybackQuality(_quality);
@@ -311,13 +311,11 @@ var Timeline = (function(){
           // And we haven't moved forward 
           if (_offset - prevOffset == 0) {
             // This means there's been dead-air for a few seconds.
-            if ( ev.incr('deadair', CLOCK_FREQ) > 4000 ) {
+            if ( ev.incr('deadair', CLOCK_FREQ) > RELOAD_THRESHOLD ) {
               UserHistory.reload();
             }
           } 
-
         }
-
       }
     }
     Scrubber.real.dom.css({ left: scrubberPosition + "%"});
@@ -327,17 +325,6 @@ var Timeline = (function(){
     self['ytDebug_' + what] = function(that) {
       ev.set("yt-" + what, that);
       log(what, that);
-    }
-  });
-
-  // If there's an error loading the video (usually due to
-  // embed restrictions), we have a backup player that can
-  // be used.  There's significantly less control over this
-  // player so it's the backup plan.
-  ev.on('yt-Error', function(what) {
-    console.log("yt-error", what);
-    if(what != 150) {
-      _backup.on();
     }
   });
 
@@ -385,9 +372,15 @@ var Timeline = (function(){
     }
   });
 
-  ev.isset('flash_load', function(){
-    Player.active = Player.controls[0];
-    setInterval(updateytplayer, CLOCK_FREQ);
+  // If there's an error loading the video (usually due to
+  // embed restrictions), we have a backup player that can
+  // be used.  There's significantly less control over this
+  // player so it's the backup plan.
+  ev('yt-Error', function(what) {
+    console.log("yt-error", what);
+    if(what != 150) {
+      _backup.on();
+    }
   });
 
   ev('volume', function(volume){
@@ -395,7 +388,14 @@ var Timeline = (function(){
     Player.active.setVolume(volume);
   });
 
+  ev.isset('flash_load', function(){
+    Player.active = Player.controls[0];
+    setInterval(updateytplayer, CLOCK_FREQ);
+  });
+
   self.Player = Player;
+
+  Player.set.Quality(_.last(QUALITY_LEVELS));
 
   return {
     player: Player,

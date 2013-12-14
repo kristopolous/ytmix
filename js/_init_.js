@@ -5,6 +5,8 @@ var
   DL = DamerauLevenshtein({}, false),
   CLOCK_FREQ = 150,
   QUALITY_LEVELS = ['large', 'medium', 'small', 'tiny'],
+  // How long to wait before forcing a reload of a video
+  RELOAD_THRESHOLD = 4500,
   each = _.each,
   slice = Array.prototype.slice,
   UNIQ = 0,
