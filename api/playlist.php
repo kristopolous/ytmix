@@ -77,8 +77,24 @@ function pl_createID($params) {
   if(empty($param)) {
     $param = 0;
   }
-  mysql_query('insert into playlist (authors, type) values ("' . $source .'", ' . $param . ')');
+  mysql_query('insert into playlist (authors, type, method) values ("' . $source .'", ' . $param . ', "{}")');
   return mysql_insert_id();
+}
+
+function pl_addMethod($params) {
+  list($id, $param) = get($params, 'id, param');
+
+  $method = json_decode(getdata(run('select method from playlist where id=' . $id )), true);
+
+  if(array_key_exists($param, $method)) {
+    return $method[$param];
+  } else {
+    $value = base_convert(count($method) + 1, 10, 36);
+    $method[$param] = $value;
+    $string_method = mysql_real_escape_string(json_encode($method));
+    run('update playlist set method = \'' . $string_method . '\' where id = ' . $id);
+    return $value;
+  }
 }
 
 function pl_addTracks($params) {
