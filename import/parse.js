@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var 
+  PLAYLIST = 0,
   request = require('request'),
   base = 'http://localhost:8000/ghub/ytmix/api/',
   http = require('http'),
@@ -44,7 +45,7 @@ function api() {
     args = Array.prototype.slice.call(arguments),
     cb = args.pop();
 
-  if(args.filter(function(m) {return m.search(/\//) > -1}).length) {
+  if(args.filter(function(m) {return (m.toString()).search(/\//) > -1}).length) {
     var param = {};
 
     ["func", "id", "param"].forEach(function(which) {
@@ -134,7 +135,7 @@ function readUrl(urlstr) {
   easyget(parsed, addEntries);
 }
 
-api('createid', source, function(data) {
+api('createid', source, PLAYLIST, function(data) {
   var res = JSON.parse(data);
   id = res.result;
 

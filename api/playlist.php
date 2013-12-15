@@ -65,17 +65,19 @@ function pl_remove($params) {
 //    id (optional) URL of already created id to find, if exists.
 //
 function pl_createID($params) {
-  list($source) = get($params, 'id');
+  list($source, $param) = get($params, 'id, param');
   
-  $result = null;
-
   if(!empty($source)) {
     $result = getdata(run('select id from playlist where authors="' . $source .'"'));
     if($result) { 
       return $result; 
     }
   }
-  mysql_query('insert into playlist (authors) values ("' . $source .'")');
+
+  if(empty($param)) {
+    $param = 0;
+  }
+  mysql_query('insert into playlist (authors, type) values ("' . $source .'", ' . $param . ')');
   return mysql_insert_id();
 }
 
