@@ -1,16 +1,17 @@
 
 var Search = {
-  id: 0,
-  net: function(query) {
-    $.getJSON('api/ytsearch.php', { 
-        id: ++Search.id,
-        query: query
-      }, function(res) {
+  _useNet: false,
+  _id: 0,
 
-      _.each(
-        res.vidList,
-        Timeline.add
-      );
+  net: function(query) {
+    $.getJSON( [
+      'api',
+      'query',
+      ++Search._id,
+      query
+    ].join('/'), function(res) {
+
+      db.insert(res.result.vidList);
 
       ev.set('request_gen', {force: true});
     });
@@ -61,10 +62,16 @@ var Search = {
         lastSearch = query;
 
       }
+
+      if(Search._useNet) {
+        Search.net(ev('search_query'));
+        Search._useNet = false;
+      }
+
     }, 250);
   
     $("#use-internet").click(function(){
-      Search.net($("#initial-search").val());
+      Search._useNet = true;
     });
 
     _get('initial-search').focus();

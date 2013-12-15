@@ -1,6 +1,7 @@
 <?php
 function pl_query($params) {
-  $query = preg_replace('/%u\d{4}/','', utf8_decode($params['query']));
+  $qstr = $params['param'];
+  $query = preg_replace('/%u\d{4}/','', utf8_decode($qstr));
   $query = preg_replace('/%u\d{4}/','', urldecode($query));
   $query = preg_replace('/\(.*/','', urldecode($query));
 
@@ -25,7 +26,7 @@ function pl_query($params) {
   }
 
   return Array(
-    'query' => $_GET['query'],
+    'query' => $qstr,
     'vidList' => $resList,
     'url' => $url
   );
