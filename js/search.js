@@ -4,16 +4,14 @@ var Search = {
   _id: 0,
 
   net: function(query) {
-    $.getJSON( [
-      'api',
-      'query',
-      ++Search._id,
-      query
-    ].join('/'), function(res) {
-
-      db.insert(res.result.vidList);
-
-      ev.set('request_gen', {force: true});
+    remote({
+      func: 'query',
+      id: ++Search._id,
+      param: query,
+      onSuccess: function(res) {
+        db.insert(res.vidList);
+        ev.set('request_gen', {force: true});
+      }
     });
   },
   artist: function(who) {
