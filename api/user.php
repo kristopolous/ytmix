@@ -12,7 +12,18 @@ function pl_delFavorite($params) {
   return run("delete from favorite where " . toUpdate(getAssoc($params, 'user, ytid')));
 }
 
-function pl_getUser() {
-  result('true', uniqid('', true));
+function pl_getUser($params) {
+  list($id) = get($params, 'id');
+  if($id) {
+    $result = run('select * from playlist where name="' . $id . '"');
+    $data = mysql_fetch_assoc($result);
+    if($data) {
+      return toJson($data, Array('tracklist', 'preview', 'blacklist'));
+    } else {
+      return Array();
+    }
+  } else {
+    result('true', uniqid('', true));
+  }
 }
 

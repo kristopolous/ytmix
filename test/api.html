@@ -25,6 +25,11 @@ body {
 $(function(){
     $("#query").val('').focus();
   });
+function query(what) {
+  $("#query").val(what.innerHTML);
+  request();
+}
+
 function request() {
   var query = $("#query").val();
   if(query == 'clear') {
@@ -41,7 +46,7 @@ function request() {
       html = data;
     }
     $("#output")
-      .append('<hr><b>' + query + '</b>\n')
+      .append('<hr><a href=# onclick=query(this)>' + query + '</a>\n')
       .append(html);
     $("#query").val('').focus();
     window.scrollTo(0,1000000);

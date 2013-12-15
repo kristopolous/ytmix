@@ -1,7 +1,7 @@
 <?php
 include ('../lib/common.php');
 include ('playlist.php');
-include ('favorite.php');
+include ('user.php');
 include ('ytsearch.php');
 
 function pl_help($message = false) {
