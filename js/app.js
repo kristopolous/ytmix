@@ -166,67 +166,71 @@ function replace(id, cb, attempt) {
   }
 
   console.log("[" + (attempt + 1) + "] Replacing (" + id + ") " + vid.title);
-  $.getJSON("api/entry.php", {func: 'query', query: check}, function(resp) {
-    resp = resp.result;
-    if(resp.vidList.length == 0 && wc > 2 && attempt != 1) {
-      replace(id, cb, 1);
-    }
-    _.each(resp.vidList, function(what) {
-      if(replaced) { return; } 
-
-      var attempt = replace.clean(what.title),
-        distance = DL(check, attempt),
-        short,
-        cutoff,
-        attemptWc = attempt.split(' ').length;
-
-      console.log(distance, check, attempt, vid.length, what.length);
-      if(distance > 5) { 
-        // try again but make the word count match
-        if(attemptWc != wc) {
-          cutoff = Math.max(Math.min(attemptWc, wc), 3);
-          short = [
-            check.split(' ').slice(0, cutoff).join(' '),
-            attempt.split(' ').slice(0, cutoff).join(' ')
-          ];
-          distance = DL.apply(this, short);
-          console.log("--", distance, cutoff, "words", short[0], ":", short[1]);
-        }
-        if(distance < 9 && distance > 5) {
-          cutoff = Math.max(Math.min(attempt.length, check.length), 18);
-          short = [
-            check.slice(0, cutoff),
-            attempt.slice(0, cutoff)
-          ];
-          distance = DL.apply(this, short);
-          console.log("--", distance, cutoff, "chars", short[0], ":", short[1]);
-        }
+  remote({
+    func: 'query',
+    id: 1,
+    param: check,
+    onSuccess: function(resp) {
+      if(resp.vidList.length == 0 && wc > 2 && attempt != 1) {
+        replace(id, cb, 1);
       }
+      _.each(resp.vidList, function(what) {
+        if(replaced) { return; } 
 
-      if(
-        (Math.abs(vid.length - what.length) < 35) ||
-        (Math.abs(vid.length - what.length) < 100 && distance < 3)
-      ) {
-        if(distance < 5) {
-          replaced = true;
-          console.log("Success >> (" + id + ") " + vid.title);
-          // Keep the old title in case this is a bad match.
-          // I don't want to revoke all knowledge of it.
-          delete what.title;
+        var attempt = replace.clean(what.title),
+          distance = DL(check, attempt),
+          short,
+          cutoff,
+          attemptWc = attempt.split(' ').length;
 
-          db.find({id: id})
-            .update(what)
-            .unset('jqueryObject');
-
-          ev.set('request_gen');
+        console.log(distance, check, attempt, vid.length, what.length);
+        if(distance > 5) { 
+          // try again but make the word count match
+          if(attemptWc != wc) {
+            cutoff = Math.max(Math.min(attemptWc, wc), 3);
+            short = [
+              check.split(' ').slice(0, cutoff).join(' '),
+              attempt.split(' ').slice(0, cutoff).join(' ')
+            ];
+            distance = DL.apply(this, short);
+            console.log("--", distance, cutoff, "words", short[0], ":", short[1]);
+          }
+          if(distance < 9 && distance > 5) {
+            cutoff = Math.max(Math.min(attempt.length, check.length), 18);
+            short = [
+              check.slice(0, cutoff),
+              attempt.slice(0, cutoff)
+            ];
+            distance = DL.apply(this, short);
+            console.log("--", distance, cutoff, "chars", short[0], ":", short[1]);
+          }
         }
+
+        if(
+          (Math.abs(vid.length - what.length) < 35) ||
+          (Math.abs(vid.length - what.length) < 100 && distance < 3)
+        ) {
+          if(distance < 5) {
+            replaced = true;
+            console.log("Success >> (" + id + ") " + vid.title);
+            // Keep the old title in case this is a bad match.
+            // I don't want to revoke all knowledge of it.
+            delete what.title;
+
+            db.find({id: id})
+              .update(what)
+              .unset('jqueryObject');
+
+            ev.set('request_gen');
+          }
+        }
+      });
+      if(!replaced) {
+        console.log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title, resp.url);
       }
-    });
-    if(!replaced) {
-      console.log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title, resp.url);
-    }
-    if(cb) {
-      cb(replaced);
+      if(cb) {
+        cb(replaced);
+      }
     }
   });
 }
