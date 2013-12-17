@@ -1,6 +1,14 @@
 var _requestID = 0;
 
 function remote(opts) {
+  if(remote.lock) {
+    log("deferring. Queue size:", remote.queue.length);
+    remote.queue.push(arguments);
+    return;
+  }
+
+  remote.lock = true;
+  
   var 
     reqID = _requestID ++,
     onSuccess,
@@ -34,6 +42,12 @@ function remote(opts) {
   }
 
   $.post('api/entry.php', opts, function(ret) {
+    remote.lock = false;
+    if(remote.queue.length) {
+      log("Queue pop!", remote.queue.length);
+      remote.apply(0, remote.shift());
+    }
+
     ret = JSON.parse(ret);
 
     var meta = {  
@@ -77,6 +91,7 @@ function remote(opts) {
 
   return reqID;
 }
+remote.queue = [];
 
 var Store = {
   //

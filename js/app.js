@@ -261,7 +261,7 @@ function ytButton() {
   // Update the clipboard data when a new track is loaded.
   ev('active_track', function(data) {
     // The ytid is .ytid of the data.
-    clip.setText('youtube-dl -t ' + data.ytid);
+    clip.setText('youtube-dl -t -- ' + data.ytid);
   });
 }
 
