@@ -54,14 +54,6 @@ db.beforeAdd(function(what) {
   what.length = parseInt(what.length, 10);
 });
 
-/*
-var sCount = 0;
-db.sync(function(){
-
-  console.log(Utils.stack());
-  console.log(++sCount, +new Date());
-});
-*/
 ev.sniff();
 ev.sniff('tick');
 
