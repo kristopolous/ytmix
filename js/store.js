@@ -39,57 +39,63 @@ function remote(opts) {
     delete opts.onFailure;
   }
 
-  $.post('api/entry.php', opts, function(ret) {
+  $.ajax({
+    url: "api/entry.php",
+    data: opts,
+    type: "POST",
+    timeout: 2500,
+    dataType: "text",
+    success: function(ret) {
 
-    ret = JSON.parse(ret);
+      ret = JSON.parse(ret);
 
-    var meta = {  
-      reqID: reqID,
-      opts: opts,
-      ret: ret
-    };
+      var meta = {  
+        reqID: reqID,
+        opts: opts,
+        ret: ret
+      };
 
-    if(_.isString(ret.status)) {
-      ret.status = {
-        "true": true,
-        "false": false
-      }[ret.status];
-    }
-
-    // convenience function of parsing the results
-    for(var key in ret.result) {
-      if(_.isString(ret.result[key])) {
-        var candidate;
-        try {
-          candidate = JSON.parse(ret.result[key]);
-          ret.result[key] = candidate;
-        } catch (ex) { }
+      if(_.isString(ret.status)) {
+        ret.status = {
+          "true": true,
+          "false": false
+        }[ret.status];
       }
-    }
 
-    if(ret.status === true && onSuccess) {
-      onSuccess(ret.result);
-    } 
-
-    if(ret.status === false){
-      console.log(meta);
-
-      if(onFailure) { 
-        onFailure(ret.result);
-      }
-    }
-
-    ev('remote', meta);
-  }, 'text')
-    .always(function() {
-      setTimeout(function(){
-        remote.lock = false;
-        if(remote.queue.length) {
-          log("Queue pop!", remote.queue.length);
-          remote.apply(0, remote.queue.shift());
+      // convenience function of parsing the results
+      for(var key in ret.result) {
+        if(_.isString(ret.result[key])) {
+          var candidate;
+          try {
+            candidate = JSON.parse(ret.result[key]);
+            ret.result[key] = candidate;
+          } catch (ex) { }
         }
-      }, 100);
-    });
+      }
+
+      if(ret.status === true && onSuccess) {
+        onSuccess(ret.result);
+      } 
+
+      if(ret.status === false){
+        console.log(meta);
+
+        if(onFailure) { 
+          onFailure(ret.result);
+        }
+      }
+
+      ev('remote', meta);
+    }
+  }).always(function() {
+    setTimeout(function(){
+      remote.lock = false;
+      if(remote.queue.length) {
+        log("Queue pop!", remote.queue.length);
+        remote.apply(0, remote.queue.shift());
+      }
+    }, 100);
+  });
 
   return reqID;
 }
