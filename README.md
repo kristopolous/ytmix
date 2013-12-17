@@ -1,14 +1,10 @@
 See here:
 
-http://qaa.ath.cx/ytwatch1
+http://9ol.es/ytwatch1
 
 ## TODO
 
-When I get to the end of a song, it sometimes loops there, I donn't know why.
-
 When I have a search result, I can't move forward and backward right
-
-When things become delisted, it's expensive and broken to clean things up
 
 When I add related songs, they don't add directly after the point. This is ultimately confusing.
 
