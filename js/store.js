@@ -45,7 +45,7 @@ function remote(opts) {
     remote.lock = false;
     if(remote.queue.length) {
       log("Queue pop!", remote.queue.length);
-      remote.apply(0, remote.shift());
+      remote.apply(0, remote.queue.shift());
     }
 
     ret = JSON.parse(ret);
