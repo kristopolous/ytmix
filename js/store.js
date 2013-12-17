@@ -82,11 +82,13 @@ function remote(opts) {
     ev('remote', meta);
   }, 'text')
     .always(function() {
-      remote.lock = false;
-      if(remote.queue.length) {
-        log("Queue pop!", remote.queue.length);
-        remote.apply(0, remote.queue.shift());
-      }
+      setTimeout(function(){
+        remote.lock = false;
+        if(remote.queue.length) {
+          log("Queue pop!", remote.queue.length);
+          remote.apply(0, remote.queue.shift());
+        }
+      }, 100);
     });
 
   return reqID;
