@@ -65,7 +65,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 .result .timeline-inner {border: 9px solid #535;width:251px; height:9px}
 .result .timeline-container.active{display:block}
 
-.result.active{box-shadow:0 0 2px 3px #746;background:#1a041a}
+.result.active{box-shadow:0 0 0 4px #746}
 .result .remove{position:absolute;top:-1px;left:3px;font-size:1em;color:#323;cursor:pointer;font-weight:bold;}
 .result .reload{position:absolute;top:-1px;left:15px;font-size:1.25em;color:#323;cursor:pointer;font-weight:bold;}
 .result .star{position:absolute;top:-2px;right:3px;font-size:1.25em;color:#323;cursor:pointer}
@@ -84,8 +84,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #search-results{width:162px}
 
 .button{border:0;cursor:pointer;display:inline-block;font-size:13px;color:#ccc;background:transparent;padding:7px 9px}
-.button:hover{text-shadow:0 0 1px white;color:#fff;
-background:#545;}
+.button:hover{color:#fff;background:#545;}
 .button:active{color:#aaa}
 .button.sunken{background:#323}
 .button.disabled{color:#555}
@@ -97,7 +96,7 @@ background:#545;}
 .hover a:hover{background-color:#656}
 
 #clipboard-wrapper .hover{display:block;position:relative;bottom:0;left:0;margin:0 14px 0 0;padding:7px 2px;
-text-shadow:0 0 1px white;color:#fff;box-shadow:0 0 5px -4px #888 inset, 0 0 10px -3px #888;border-radius:3px
+background-color:#656;color:#fff;
 }
 #clipboard-wrapper .active{color:#aaa}
 
