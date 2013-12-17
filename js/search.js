@@ -91,15 +91,6 @@ var Search = {
 // incremental loads.
 //
 function loadRelated(obj, opts){
-  // make sure we aren't hitting this more than
-  // we should be.
-  if(_remote.active) {
-    _remote.queue.push(function(){
-      loadRelated(obj, opts);
-    });
-    return;
-  }
-
   var match = db.find({ytid: obj.ytid});
   
   // The related entry will be null (see the template in
@@ -110,10 +101,6 @@ function loadRelated(obj, opts){
     ) {
 
     Toolbar.status("Adding related " + match[0].title);
-    // This "mutex like" object is to
-    // make sure that we don't request
-    // more then one related at a time.
-    _remote.active = true;
 
     // The match happens to be the same as the server
     // query in this case
@@ -140,18 +127,9 @@ function loadRelated(obj, opts){
         Store.saveTracks();
         ev.set('request_gen');
 
-        // This makes sure that we don't hammer
-        // the server to get related videos
-        setTimeout(function(){
-          _remote.active = false;
-          _remote.queue.doshift();
-        }, 1000);
       });
     });
-  } else { 
-    _remote.active = false;
-    _remote.queue.doshift();
-  }
+  } 
 }
 
 ev({

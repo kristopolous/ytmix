@@ -1,8 +1,3 @@
-// See utils.js for how a queue could ostensibly work.
-// At the time of the comment's authorship, it's being
-// used just like an array.
-_remote.queue = new Queue();
-
 // This is on the splash page. It loads
 // the recent history of tracks that have
 // been previously played.

@@ -1,5 +1,3 @@
-var _requestID = 0;
-
 function remote(opts) {
   if(remote.lock) {
     log("deferring. Queue size:", remote.queue.length);
@@ -10,7 +8,7 @@ function remote(opts) {
   remote.lock = true;
   
   var 
-    reqID = _requestID ++,
+    reqID = remote.id ++,
     onSuccess,
     onFailure;
 
@@ -42,11 +40,6 @@ function remote(opts) {
   }
 
   $.post('api/entry.php', opts, function(ret) {
-    remote.lock = false;
-    if(remote.queue.length) {
-      log("Queue pop!", remote.queue.length);
-      remote.apply(0, remote.queue.shift());
-    }
 
     ret = JSON.parse(ret);
 
@@ -87,11 +80,19 @@ function remote(opts) {
     }
 
     ev('remote', meta);
-  }, 'text');
+  }, 'text')
+    .always(function() {
+      remote.lock = false;
+      if(remote.queue.length) {
+        log("Queue pop!", remote.queue.length);
+        remote.apply(0, remote.queue.shift());
+      }
+    });
 
   return reqID;
 }
 remote.queue = [];
+remote.id = 0;
 
 var Store = {
   //
@@ -123,14 +124,11 @@ var Store = {
   ],
 
   saveTracks: function(){
-    log("a");
     var result = db.find().select(Store.remoteKeys);
-    log("b");
     ev(
      'tracklist', 
       result
     );
-    log("c");
   },
 
   remove: function(id) {
