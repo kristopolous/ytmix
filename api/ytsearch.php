@@ -1,4 +1,26 @@
 <?php
+function pl_related($params) {
+  $ytid = $params['id'];
+
+  $related_videos = Array();
+  $source = 'https://gdata.youtube.com/feeds/api/videos/' . $ytid .'/related?v=2';
+  @$raw_data = file_get_contents($source);
+  $xml = simplexml_load_string($raw_data);
+
+  foreach($xml->entry as $row) {
+    $pieces = explode(':', $row->id);
+    $related_videos[] = Array(
+      'ytid' => array_pop($pieces),
+      'title' => strval($row->title)
+    ); 
+  }
+
+  return (Array(
+    'ytid' => $ytid,
+    'related' => $related_videos
+  ));
+}
+
 function pl_query($params) {
   $qstr = $params['param'];
   $query = preg_replace('/%u\d{4}/','', utf8_decode($qstr));
