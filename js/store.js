@@ -3,8 +3,27 @@ var _requestID = 0;
 function remote(opts) {
   var 
     reqID = _requestID ++,
-    onSuccess = opts.onSuccess,
+    onSuccess,
+    onFailure;
+
+  // This is the array way of calling things.
+  if(_.isString(opts)) {
+    var list = slice.call(arguments);
+    opts = {};
+
+    // the success function is the last thing
+    onSuccess = list.pop();
+
+    ["func", "id", "param"].forEach(function(which) {
+      if(list) {
+        opts[which] = list.shift();
+      }
+    })
+
+  } else {
     onFailure = opts.onFailure;
+    onSuccess = opts.onSuccess;
+  }
 
   if(onSuccess) {
     delete opts.onSuccess;
@@ -66,21 +85,17 @@ var Store = {
   // *****************************
   //
   get: function(id) {
-    return remote({
-      func: 'get',
-      id: id,
-      onSuccess: function(data) {
-        console.log(data);
-        if(!data.blacklist) {
-          delete data.blacklist;
-        }
-        ev(
-          _.extend(
-            { 'app_state': 'main'},
-            data
-          )
-        );
+    return remote('get', id, function(data) {
+      console.log(data);
+      if(!data.blacklist) {
+        delete data.blacklist;
       }
+      ev(
+        _.extend(
+          { 'app_state': 'main'},
+          data
+        )
+      );
     });
   },
 
@@ -104,22 +119,16 @@ var Store = {
   },
 
   remove: function(id) {
-    return remote({ 
-      func: 'remove',
-      id: id
-    });
+    return remote('remove', id);
   }
 };
 
 ev.setter('id', function(){
-  remote({
-    func: 'createID',
-    onSuccess: function(id) {
-      ev({
-        'id': id,
-        'name': 'no name'
-      });
-    }
+  remote('createID', function(id) {
+    ev({
+      'id': id,
+      'name': 'no name'
+    });
   });
 });
 
@@ -155,19 +164,16 @@ ev({
 });
 
 ev.setter('recent', function(){
-  remote({
-    func: 'recent',
-    onSuccess: function(data) {
-      data = _.without(data, false);
-      each(data, function(which) {
-        if(which.preview) {
-          which.count = which.preview.count;
-        } else {
-          which.count = 0;
-        }
-      });
-      ev('recent', data);
-    }   
+  remote('recent', function(data) {
+    data = _.without(data, false);
+    each(data, function(which) {
+      if(which.preview) {
+        which.count = which.preview.count;
+      } else {
+        which.count = 0;
+      }
+    });
+    ev('recent', data);
   });
 });
 

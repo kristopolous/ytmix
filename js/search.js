@@ -4,14 +4,9 @@ var Search = {
   _id: 0,
 
   net: function(query) {
-    remote({
-      func: 'query',
-      id: ++Search._id,
-      param: query,
-      onSuccess: function(res) {
-        db.insert(res.vidList);
-        ev.set('request_gen', {force: true});
-      }
+    remote('query', ++Search._id, query, function(res) {
+      db.insert(res.vidList);
+      ev.set('request_gen', {force: true});
     });
   },
   artist: function(who) {
@@ -122,9 +117,7 @@ function loadRelated(obj, opts){
 
     // The match happens to be the same as the server
     // query in this case
-    $.getJSON( 
-      'api/related.php', 
-      {ytid: match[0].ytid}, 
+    remote('related', match[0].ytid, 
       function (data){
 
       var ytidList = _.pluck(data.related, 'ytid');

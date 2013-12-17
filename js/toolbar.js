@@ -26,12 +26,8 @@ var Toolbar = {
     });
 
     $("#remove-name").click(function(){
-      remote({
-        func: 'remove',
-        id: ev('id'),
-        onSuccess: function(data) {
-          ev('app_state', 'splash');
-        }
+      remote('remove', ev('id'), function(data) {
+        ev('app_state', 'splash');
       });
     });
 
