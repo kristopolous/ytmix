@@ -2,16 +2,14 @@ body{overflow:hidden;background:#212;color:#754654;margin:0}
 *{font-family:'Trebuchet Ms',Helvetica,sans-serif}
 span{display:inline-block}
 p{margin:0}
-a:hover{text-decoration:none;color:#fff}
-a{color:#ccc}
+a:hover{text-decoration:none;color:#000;background:#fff}
+a{color:#cccccf;text-decoration:none}
 input{font-size:17px;background:#545;color:#fff;border:2px solid;padding:0 2px;border-color:#434 #989 #989 #434}
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #playlist-name{margin:0;font-size:1.15em;color:#fff;display:inline-block;padding:0 15px}
 
 .star{color:#434 !important;cursor:pointer}
 .star.active{color:#a89 !important}
-.reload:hover,
-.remove:hover{color:#f89 !important}
 
 .track{width:0;white-space:normal;position:relative;display:inline-block;margin:0;text-align:center;height:12em;color:#ccc;vertical-align:top;background:#434;box-shadow:0 0 15px 5px #212}
 .track img.thumb{width:75px;vertical-align:bottom}
@@ -43,17 +41,14 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #video-list {display:block}
 #video-viewport{text-align:left;margin-left:80px}
 #video-viewport .result img{background:#000;width:96px;height:72px}
+.result .thumbnail { padding: 0 }
 .result{
   opacity:0.7;
   height:89px;
   overflow:hidden;
   background:#101;display:inline-block;width:260px;padding:0.4em;margin:0.25em;vertical-align:top;position:relative}
 .result img{width:6em}
-.result span{width:150px;padding-left:0.5em;font-size:0.8em;overflow:hidden;vertical-align:top;display:inline-block;text-align:left}
-.result span a{
-  color:#888897;
-  text-decoration:none}
-.result span a:hover{color:#ccccd5}
+.result span{width:150px;padding-left:0;font-size:0.8em;overflow:hidden;vertical-align:top;display:inline-block;text-align:left}
 .result span em{display:block;color:#aaaab5;font-style:normal;font-weight:bold;font-size:1em;max-height:4em;overflow:hidden}
 .result.playing{background:#323}
 .result .timeline-container,
