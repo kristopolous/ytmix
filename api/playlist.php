@@ -81,6 +81,8 @@ function pl_createID($params) {
   return mysql_insert_id();
 }
 
+// Methods are how a track got into the playlist. In order to keep the payload of the playlist
+// brief, they are given ids and then referenced here.
 function pl_addMethod($params) {
   list($id, $param) = get($params, 'id, param');
 

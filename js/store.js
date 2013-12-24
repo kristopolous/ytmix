@@ -1,4 +1,7 @@
 function remote(opts) {
+  // We make sure that we don't hammer the server unnecessarily.
+  // If more than one request is happening at a time, we build a
+  // queue of the requests.
   if(remote.lock) {
     log("deferring. Queue size:", remote.queue.length);
     remote.queue.push(arguments);
@@ -128,7 +131,8 @@ var Store = {
   remoteKeys: [
     'length',     // Duration of the track
     'title',      // YT title
-    'ytid'        // YT id after watch?v=(\w*)$
+    'ytid',       // YT id after watch?v=(\w*)$
+    'method'      // The method that the video came in through
   ],
 
   saveTracks: function(){
