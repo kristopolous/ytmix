@@ -1,12 +1,12 @@
-body{overflow:hidden;background:#212;color:#754654;margin:0}
+body{overflow:hidden;background:#212;color:#fff;margin:0}
 *{font-family:'Trebuchet Ms',Helvetica,sans-serif}
 span{display:inline-block}
 p{margin:0}
 a:hover{text-decoration:none;color:#000;background:#fff}
-a{color:#cccccf;text-decoration:none}
+a{color:#cccccf;text-decoration:none;cursor:pointer}
 input{font-size:17px;background:#545;color:#fff;border:2px solid;padding:0 2px;border-color:#434 #989 #989 #434}
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
-#playlist-name{margin:0;font-size:1.15em;color:#fff;display:inline-block;padding:0 15px}
+#playlist-name{margin:0;display:inline-block}
 
 .star{color:#434 !important;cursor:pointer}
 .star.active{color:#a89 !important}
@@ -17,13 +17,8 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 .track a.image{display:inline-block}
 .track img{width:102px;height:77px;background:#000}
 
-#timeline{position:relative;vertical-align:top;z-index:18;white-space:nowrap;overflow:hidden;width:100%;background:#180018;height:20px;padding-top:0.5em}
-
-#timeline .track{
-  height:20px
-}
-
-#timeline .title{font-size:12px;white-space:nowrap;cursor:default;width:90%;overflow:hidden}
+#lower{position:relative;vertical-align:top;z-index:18;white-space:nowrap;overflow:hidden;width:100%;background:#180018}
+#deck-control{float: left}
 
 .splash-container{cursor:pointer;border:2px solid #a9a;background:#434;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em;position:relative}
 .splash-container .play{position:absolute;top:8px;left:4px;display:none}
@@ -79,8 +74,6 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #search-results{width:162px}
 
 .button{border:0;cursor:pointer;display:inline-block;font-size:13px;color:#ccc;background:transparent;padding:7px 9px}
-.button:hover{color:#fff;background:#545;}
-.button:active{color:#aaa}
 .button.sunken{background:#323}
 .button.disabled{color:#555}
 .button.disabled:hover{background:transparent;color:#555;cursor:default;text-shadow:0}
@@ -91,9 +84,8 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 .hover a:hover{background-color:#656}
 
 #clipboard-wrapper .hover{display:block;position:relative;bottom:0;left:0;margin:0 14px 0 0;padding:7px 2px;
-background-color:#656;color:#fff;
+background-color:#fff;color:#000;
 }
-#clipboard-wrapper .active{color:#aaa}
 
 .resize{overflow-y:auto}
 
@@ -119,14 +111,13 @@ background-color:#656;color:#fff;
   width: 400px;
 }
 .control-wrapper{
-  background:#434;padding:2px;display:inline-block;
-vertical-align:top}
+  float:right;
+  display:inline-block; vertical-align:top}
 
 #status {position:relative;overflow:hidden;height:30px;margin:-5px 0 -10px 0;padding:0 30px}
 #status .mask{position:absolute;top:0;left:0;width:100%;height:100%;box-shadow: 0 0 25px 10px #323 inset;z-index:40}
 #status .message{position:relative;color:white;font-weight:bold;z-index:35}
 
-#deck-control{position:absolute;bottom:0}
 #search-context{box-shadow:-1px -1px 3px 0px #212 inset,1px 1px 3px 0px #bab inset;padding:4px 9px;cursor:pointer;color:#dcd;display:none}
 
 .scrubber{
@@ -143,7 +134,6 @@ vertical-align:top}
   box-shadow: 0 0 3px 2px #889
 }
 
-a{cursor:pointer}
 
 #backupPlayer { 
   position: absolute;
@@ -163,11 +153,9 @@ a{cursor:pointer}
   white-space: pre;
 }
 
-#volume button {
-  line-height: 0;
+#header .controls a {
   font-size: 1.7em;
-  height: 34px;
-  color: #fff;
+  padding: 0 9px 2px;
 }
 
 .hero-unit { margin-top:0 }

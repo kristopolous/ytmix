@@ -35,12 +35,6 @@ var UserHistory = {
       localStorage['v'] = id;
     }
 
-    if(UserHistory.isStarred(id)) {
-      $("#is-starred").addClass('active');
-    } else {
-      $("#is-starred").removeClass('active');
-    }
-
     Player.offset = offset;
 
     Timeline.backup.off(object).loadVideoById(id, offset);
@@ -604,11 +598,6 @@ var Timeline = (function(){
 
       $("#quality-down").click(Player.Quality.down);
       $("#quality-up").click(Player.Quality.up);
-
-      $("#is-starred").click(function(){
-        UserHistory.star(Player.activeData.ytid);
-        $(this).toggleClass('active');
-      })
     }
   };
 })();
