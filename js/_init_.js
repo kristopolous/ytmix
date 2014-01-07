@@ -1,5 +1,5 @@
 var 
-  db = DB(), 
+  _db = DB(), 
   START = (+new Date()),
   Splash = {},
   DL = DamerauLevenshtein({}, false),
@@ -41,16 +41,16 @@ var
     active: false
   };
 
-db.constrain('unique', 'ytid');
-db.template.create({
+_db.constrain('unique', 'ytid');
+_db.template.create({
   id: (function(){ return UNIQ++ })
 });
 
-db.addIf(function(what) {
+_db.addIf(function(what) {
   return ev('blacklist').indexOf(what.ytid) == -1;
 });
 
-db.beforeAdd(function(what) {
+_db.beforeAdd(function(what) {
   what.length = parseInt(what.length, 10);
 });
 

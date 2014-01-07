@@ -5,15 +5,30 @@ var Search = {
 
   net: function(query) {
     remote('query', ++Search._id, query, function(res) {
-      db.insert(res.vidList);
+      _db.insert(res.vidList);
       ev.set('request_gen', {force: true});
     });
+  },
+  reset: function() {
+    _db.byId = _db.ALL;
+    _db.current = _db;
+    Timeline.updateOffset();
+    log("search reset");
+  },
+  index: function(subset) {
+    var id = 0;
+    _db.current = DB.update(
+      DB.copy(subset),
+      {id: eval(DB.local('id++'))}
+    );
+    _db.byId = _db.current.view('id');
+    Timeline.updateOffset();
   },
   artist: function(who) {
     $("#normal-search").val(who);
   },
   related: function(ytid) {
-    loadRelated(db.findFirst('ytid', ytid));
+    loadRelated(_db.findFirst('ytid', ytid));
   },
   init: function(){
     var 
@@ -91,7 +106,7 @@ var Search = {
 // incremental loads.
 //
 function loadRelated(obj, opts){
-  var match = db.find({ytid: obj.ytid});
+  var match = _db.find({ytid: obj.ytid});
   
   // The related entry will be null (see the template in
   // _init_.js for more info) unless this call is made
@@ -115,7 +130,7 @@ function loadRelated(obj, opts){
       // this list of related videos doesn't have the
       // duration of the video, only the id.
       each(data.related, function(video) {
-        db.insert(video).update(function(row){
+        _db.insert(video).update(function(row){
         });
       })
 

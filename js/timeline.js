@@ -56,7 +56,6 @@ var Timeline = (function(){
     // to be played.
     _totalRuntime,
 
-    _data = db.view('id'),
     _maxPlayer = 1,
     _isPlaying = true,
     _loaded = 0,
@@ -108,6 +107,11 @@ var Timeline = (function(){
         });
       }
     };
+
+  // The "current" list of videos is the same as all.
+  // the current could point to some other database entirely
+  _db.byId = _db.ALL = _db.view('id');
+  _db.current = _db;
 
   _backup = {
     start: 0,
@@ -353,7 +357,7 @@ var Timeline = (function(){
   // where we currently are.
   ev('app_state', function(value) {
     if (value == 'main') {
-      _totalRuntime = Utils.runtime(_data);
+      _totalRuntime = Utils.runtime(_db.byId);
 
       var myoffset = localStorage[ev.db.id + 'offset'];
       if(myoffset) {
@@ -393,27 +397,19 @@ var Timeline = (function(){
 
   return {
     player: Player,
-    data: _data,
     backup: _backup,
 
-    remove: function(index){
-      if(_.isString(index)) {
-        index = db.findFirst({ytid: index}).id;
-        log(index);
-      }
-
-      if(! _data[index]) {
-        log("Unable to remove>> " + index);
-        return;
-      }
-      Toolbar.status("Removed " + _data[index].title);
+    remove: function(obj){
+      Toolbar.status("Removed " + obj.title);
       Scrubber.real.remove();
 
       // we should store that it was removed
-      ev.setadd('blacklist', _data[index].ytid);
-      db.find('ytid', _data[index].ytid).remove();
+      ev.setadd('blacklist', obj.ytid);
+      _db.find('ytid', obj.ytid).remove();
+
       Timeline.updateOffset();
       Store.saveTracks();
+
       ev.set('request_gen', {force: true});
     },
 
@@ -441,34 +437,33 @@ var Timeline = (function(){
         order = 0,
         prevIndex = false;
 
-      _totalRuntime = Utils.runtime(_data);
+      _totalRuntime = Utils.runtime(_db.byId);
 
-      for(index in _data) {
+      for(index in _db.byId) {
         if(prevIndex !== false) {
-          _data[prevIndex].next = index;
-          _data[index].previous = prevIndex;
+          _db.byId[prevIndex].next = index;
+          _db.byId[index].previous = prevIndex;
         }
 
         prevIndex = index;
-        _data[index].offset = aggregate;
-        aggregate += (parseInt(_data[index].length) || 0);
+        _db.byId[index].offset = aggregate;
+        aggregate += (parseInt(_db.byId[index].length) || 0);
       }
       // This final next pointer will enable wraparound
       if(index) {
-        _data[index].next = 0;
+        _db.byId[index].next = 0;
 
-        // TODO: Sometimes _data[0] is undefined. I have to figure out
+        // TODO: Sometimes _db.byId[0] is undefined. I have to figure out
         // how this offset problem occurs.
-        for(var ix = 0; !_data[ix]; ix++); 
+        for(var ix = 0; !_db.byId[ix]; ix++); 
 
-        _data[ix].previous = index;
+        _db.byId[ix].previous = index;
       }
-      // db.sync();
     },
 
     play: function(dbid, offset) {
       if(_.isString(dbid)) {
-        dbid = db.findFirst({ytid: dbid}).id;
+        dbid = _db.current.findFirst({ytid: dbid}).id;
       }
       if(!arguments.length) {
         return Player.Play();
@@ -478,9 +473,9 @@ var Timeline = (function(){
 
       // Only run when the flash controller has been loaded
       ev.isset('flash_load', function(){
-        if(!_data[dbid]) {
+        if(!_db.byId[dbid]) {
           Timeline.pause();
-        } else if(Player.activeData != _data[dbid]) {
+        } else if(Player.activeData != _db.byId[dbid]) {
           // NOTE:
           //
           // This is the only entry point for loading and playing a video
@@ -488,7 +483,7 @@ var Timeline = (function(){
           // is the only line that activley loads the id and offset into
           // the player. This is because there has to be an activeData in
           // order to go forward.
-          Player.activeData = _data[dbid];
+          Player.activeData = _db.byId[dbid];
           
           // After the assignment, then we add it to the userhistory
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
@@ -524,7 +519,7 @@ var Timeline = (function(){
       absolute = Math.min(_totalRuntime, absolute);
       // console.log("Seeking to ", absolute);
 
-      var track = db.findFirst(function(row) { 
+      var track = _db.current.findFirst(function(row) { 
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
       });
 
@@ -587,11 +582,11 @@ var Timeline = (function(){
       // "previous" and "next" track is effeciently with a filter.
       // The controls in the upper left of the timeline
       $("#previous-track").click(function(){
-        Timeline.seekTo(_data[Player.activeData.previous].offset + 1);
+        Timeline.seekTo(_db.byId[Player.activeData.previous].offset + 1);
       });
 
       $("#next-track").click(function(){
-        Timeline.seekTo(_data[Player.activeData.next].offset + 1);
+        Timeline.seekTo(_db.byId[Player.activeData.next].offset + 1);
       });
 
       $("#pause-play").click(Timeline.pauseplay);

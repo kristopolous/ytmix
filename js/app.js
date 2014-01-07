@@ -66,7 +66,7 @@ ev({
         location.reload();
       } else {
         ev.unset('id','tracklist','name');
-        db.find().remove();
+        _db.find().remove();
         Timeline.pause();
 
         $(".main-app").hide();
@@ -114,7 +114,7 @@ function getDuration(idList, cb) {
       var parts = _.map(row.contentDetails.duration.slice(2, -1).split(/[A-Z]/), function(m) { return parseInt(m); }),
           duration = parts.pop() + (60 * parts.pop()) + (60 * 60 * (parts.pop() || 0));
 
-      db.find({ytid: row.id}).update({length: duration});
+      _db.find({ytid: row.id}).update({length: duration});
     });
     if(cb) {
       cb();
@@ -149,7 +149,7 @@ function findStatus(idList, cb, status) {
 }
 
 function replace(id, cb, attempt) {
-  var vid = db.findFirst({id: id}),
+  var vid = _db.findFirst({id: id}),
     replaced = false,
     check = replace.clean(vid.title),
     wc = check.split(' ').length;
@@ -208,7 +208,7 @@ function replace(id, cb, attempt) {
           // I don't want to revoke all knowledge of it.
           delete what.title;
 
-          db.find({id: id})
+          _db.find({id: id})
             .update(what)
             .unset('jqueryObject');
 
@@ -231,14 +231,14 @@ replace.clean = function(str) {
 
 // The great db.js... yes it is this awesome.
 function updateBlackList () {
-  findStatus(db.find().select('ytid'), function(what) { 
-    console.log(db.find().select('ytid').length, what.length);
+  findStatus(_db.find().select('ytid'), function(what) { 
+    console.log(_db.find().select('ytid').length, what.length);
     DB()
       .insert(what)
       .find( DB(".contentDetails.regionRestriction.blocked.indexOf('US') > -1") )
       .each(function(what) {
         console.log("remove >> ", what.id);
-        Timeline.remove(what.id);
+        Timeline.remove(what);
       });
   });
 }
@@ -311,7 +311,7 @@ $(function(){
   };
   
   Scrubber.phantom.dom.click(function() {
-    var entry = db.findFirst({ ytid: Scrubber.phantom.id });
+    var entry = _db.findFirst({ ytid: Scrubber.phantom.id });
     Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
   });
   ev.set('init');

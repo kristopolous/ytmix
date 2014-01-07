@@ -49,7 +49,7 @@ var Results = {
     var
       width = $("#video-list").width() - _scrollwidth,
       height = $("#video-list").height(),
-      count = db.find().length,
+      count = _db.find().length,
       perline = Math.floor(width / _video.width);
 
     ev.isset("active_data", function(){
@@ -73,7 +73,7 @@ var Results = {
     // Look to see if we have generated this before.
     var 
       dom,
-      dbReference = db.find({ytid: obj.ytid});
+      dbReference = _db.find({ytid: obj.ytid});
 
     if(dbReference.length && dbReference[0].jqueryObject) {
       // If so, then just take the old dom entry and
@@ -101,7 +101,7 @@ var Results = {
           });
         }),
         remove = $("<a>X</a>").addClass("remove").click(function(){
-          Timeline.remove(obj.id);
+          Timeline.remove(obj);
         }),
         timeline = $("<div class=timeline-container />").addClass('hover').append(
           $("<div class=timeline-outer />").css('opacity', 0.5).append( 
@@ -160,7 +160,7 @@ var Results = {
       result.timeline = timeline;
       result.star = star;
 
-      db.find({ytid: obj.ytid}).update({jqueryObject: result});
+      _db.find({ytid: obj.ytid}).update({jqueryObject: result});
 
       dom = result;
       if (!UserHistory.isViewed(obj.ytid)) {
@@ -196,7 +196,7 @@ var Results = {
       topmodoffset = top % _video.height;
 
     if(query.length) {
-      constraints.title = db.like(query);
+      constraints.title = _db.like(query);
     }
 
     opts = opts || {};
@@ -207,16 +207,22 @@ var Results = {
     // part should probably be removed and abstracted to somewhere else.
     if(ev('search_related').length) {
       var 
-        allrelated = db.find('ytid', db.isin(ev('search_related'))).select('related'),
+        allrelated = _db.find('ytid', _db.isin(ev('search_related'))).select('related'),
         unique = _.uniq(_.flatten(allrelated));
 
-      set = db.find(constraints, {ytid: db.isin(unique)});
+      set = _db.find(constraints, {ytid: _db.isin(unique)});
     } else {
-      set = db.find(constraints).sort(function(a, b) { 
+      set = _db.find(constraints).sort(function(a, b) { 
         return a.playlistid - b.playlistid;
       });
 
       set = ev('search_results').concat(set);
+
+      if(query.length) {
+        Search.index(set);
+      } else {
+        Search.reset();
+      }
     }
 
     // We find out some statistics about what we should be
@@ -272,7 +278,7 @@ var Results = {
       // We take the results from all the things that we
       // display on the screen (it returns a jquery element
       // with a back reference to the ytid).
-      db.transaction.start(); {
+      _db.transaction.start(); {
         each(map(set.slice(start,stop), Results.draw), function(which) {
 
           // And then we create our map based on ytid
@@ -286,7 +292,7 @@ var Results = {
           };
 
         });
-      } db.transaction.end();
+      } _db.transaction.end();
 
       // This is for sorting. We construct the list after the gen of the
       // elements in order to get an authortative one.

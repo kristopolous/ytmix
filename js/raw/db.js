@@ -195,7 +195,7 @@
     });
   }
 
-  function simplecopy(obj) {
+  function copy(obj) {
     // we need to call slice for array-like objects, such as the dom
     return obj.length ? slice.call(obj) : values(obj);
   }
@@ -293,7 +293,7 @@
       ix,
 
       // The dataset to compare against
-      set = simplecopy(_.isArr(this) ? this : filterList.shift());
+      set = copy(_.isArr(this) ? this : filterList.shift());
 
     if( filterList.length == 2 && _.isStr( filterList[0] )) {
       // This permits find(key, value)
@@ -317,7 +317,7 @@
         }
         set = result;
       } else if(_.isFun(filter)) {
-        var callback = filter.single || filter;
+        var callback = filter;
 
         for(end = set.length, ix = end - 1; ix >= 0; ix--) {
           which = set[ix];
@@ -522,13 +522,16 @@
     if(_.isFun(arg0)) {
       each(filter, arg0);
     } else {
+      // {a: blah, b: blah}
       each(arg0, function(key, value) {
+        // {a: function(){ return }}
         if(_.isFun( value )) {
           // take each item from the filter (filtered results)
           // and then apply the value function to it, storing
           // back the results
           each(filter, function(which) { 
             if(_.isFun(which[key])) {
+
               which[key]( value(which) );
             } else {
               which[key] = value(which); 
@@ -587,12 +590,14 @@
               try {
                 ret = new Function("x,rec", "try { return x " + expr + "} catch(e) {}");
               } catch(ex) {
-                ret = {};
+                ret = false;
               }
 
-              try {
-                ret.single = new Function("rec", "try { return " + arg0 + "} catch(e) {}");
-              } catch(ex) {}
+              if(!ret) {
+                try {
+                  ret = new Function("rec", "try { return " + arg0 + "} catch(e) {}");
+                } catch(ex) {}
+              }
 
               cache[expr] = ret;
             } else {
@@ -1287,6 +1292,20 @@
     trace: trace,
     values: values,
     isin: isin,
+
+    // like expr but for local functions
+    local: function(){
+      return '(function(){ return ' + 
+        DB.apply(this, arguments).toString() + 
+      ';})()';
+    },
+
+    // expensive basic full depth copying.
+    copy: function(data) {
+      return map(data, function(what) {
+        return extend({}, what);
+      });
+    },
 
     objectify: function(keyList, values) {
       var obj = [];

@@ -49,7 +49,7 @@ download() {
       echo "Getting $2 > $DIR/$file"
       $wget $2 -O $DIR/$file
     fi
-    echo "<script src=js/$DIR/$file></script>" >> .tmpfile
+    echo "<script src=\"js/$DIR/$file\"></script>" >> .tmpfile
 
     shift; shift;
   done

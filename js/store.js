@@ -136,7 +136,7 @@ var Store = {
   ],
 
   saveTracks: function(){
-    var result = db.find().select(Store.remoteKeys);
+    var result = _db.find().select(Store.remoteKeys);
     ev(
      'tracklist', 
       result
@@ -224,14 +224,14 @@ setInterval(function(){
 ev.test('tracklist', function(data, meta) {
   if(data) {
     if(_.isArray(data[0])) {
-      db.insert(
+      _db.insert(
         DB.objectify(
           Store.remoteKeys,
           data
         )
       );
     } else {
-      db.insert( data );
+      _db.insert( data );
     }
   }
 

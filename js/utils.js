@@ -120,7 +120,7 @@ Queue.prototype.doshift = function(){
       // which will fire off a remote request to do 
       // an update
       ev('tracklist',
-        db
+        _db
           .hasKey('playlistid')
           .order('playlistid', 'asc')
       );

@@ -3,6 +3,7 @@ body{overflow:hidden;background:#212;color:#fff;margin:0}
 span{display:inline-block}
 p{margin:0}
 a:hover{text-decoration:none;color:#000;background:#fff}
+a:active{color:#000;background:#ccc}
 a{color:#cccccf;text-decoration:none;cursor:pointer}
 input{font-size:17px;background:#545;color:#fff;border:2px solid;padding:0 2px;border-color:#434 #989 #989 #434}
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
@@ -36,7 +37,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #video-list {display:block}
 #video-viewport{text-align:left;margin-left:80px}
 #video-viewport .result img{background:#000;width:96px;height:72px}
-.result .thumbnail { padding: 0 }
+.result .thumbnail { padding: 1px; display: inline-block; line-height: 0 }
 .result{
   opacity:0.7;
   height:89px;
@@ -78,14 +79,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 .button.disabled{color:#555}
 .button.disabled:hover{background:transparent;color:#555;cursor:default;text-shadow:0}
 
-.hover{display:none;position:absolute;bottom:0.5em;left:1%;width:98%;opacity:0.9;text-align:center}
-.hover a{cursor:pointer;display:inline-block;height:1.75em;font-size:1em;background:#434;box-shadow:1px 1px 1px #a9a inset;margin-bottom:0.03em;margin-left:1%;padding-top:0.20em;text-decoration:none;width:32%}
-.hover a:active{box-shadow:-1px -1px 1px #a9a inset}
-.hover a:hover{background-color:#656}
-
-#clipboard-wrapper .hover{display:block;position:relative;bottom:0;left:0;margin:0 14px 0 0;padding:7px 2px;
-background-color:#fff;color:#000;
-}
+#clipboard-wrapper .hover{display:block;position:relative;bottom:0;left:0;background-color:#fff;color:#000;}
 
 .resize{overflow-y:auto}
 
