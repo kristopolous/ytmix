@@ -660,13 +660,13 @@
   var chainList = hash([
     'each',
     'find',
+    'findFirst',
     'group',
     'has',
     'hasKey',
     'indexBy',
     'insert',
     'invert',
-    'slice',
     'isin',
     'keyBy',
     'like',
@@ -675,9 +675,11 @@
     'orderBy',
     'remove',
     'select',
+    'slice',
     'sort',
     'unset',
     'update',
+    'view',
     'where'
   ]);
 

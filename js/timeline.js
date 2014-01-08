@@ -417,7 +417,7 @@ var Timeline = (function(){
       ev.isset('flash_load', function(){
         _isPlaying = false;
         Player.active.pauseVideo();
-        $("#pause-play").html("&#9659;");
+        $("#pause-play").html("&#9654;");
       });
     },
 

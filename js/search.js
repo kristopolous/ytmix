@@ -17,8 +17,9 @@ var Search = {
   },
   index: function(subset) {
     var id = 0;
-    _db.current = DB.update(
-      DB.copy(subset),
+    _db.current = DB( 
+      DB.copy(subset)
+    ).update(
       {id: eval(DB.local('id++'))}
     );
     _db.byId = _db.current.view('id');
