@@ -19,7 +19,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 .track img{width:102px;height:77px;background:#000}
 
 #lower{position:relative;vertical-align:top;z-index:18;white-space:nowrap;overflow:hidden;width:100%;background:#180018}
-#deck-control{float: left}
+#deck-control{float: left;font-size:11px;color:#aaa;}
 
 .splash-container{cursor:pointer;border:2px solid #a9a;background:#434;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em;position:relative}
 .splash-container .play{position:absolute;top:8px;left:4px;display:none}

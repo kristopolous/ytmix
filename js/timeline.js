@@ -80,11 +80,17 @@ var Timeline = (function(){
 
       Quality: {
         set: function(what) {
-          if(what < 0) { what = 0; }
+          if(what < 0 || !_.isNumber(what)) { what = 0; } 
 
           _quality = QUALITY_LEVELS[what % QUALITY_LEVELS.length];
           $("#quality-down")[ (_quality == _.last(QUALITY_LEVELS) ? 'add' : 'remove') + 'Class']("disabled");
           $("#quality-up")[ (_quality == _.first(QUALITY_LEVELS) ? 'add' : 'remove') + 'Class']("disabled");
+
+          // This function is invoked at startup without arguments.
+          if(arguments.length) {
+            Toolbar.status("Set preferred quality to " + _quality);
+          }
+
           return _quality;
         },
 
@@ -107,6 +113,9 @@ var Timeline = (function(){
         });
       }
     };
+
+  Player.Quality.set();
+  eval(_inject('t'));
 
   // The "current" list of videos is the same as all.
   // the current could point to some other database entirely
@@ -392,8 +401,6 @@ var Timeline = (function(){
   });
 
   self.Player = Player;
-
-  Player.Quality.set(_.last(QUALITY_LEVELS));
 
   return {
     player: Player,
