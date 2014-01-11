@@ -52,7 +52,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   .result .timeline-inner
   {position:absolute;bottom:0;left:0;width:260px}
 
-.result .timeline-container {bottom:2px; left: 2px}
+.result .timeline-container {bottom:2px; left: 2px; display: none}
 .result .timeline-inner {border: 9px solid #535;width:251px; height:9px}
 .result .timeline-container.active{display:block}
 
@@ -61,12 +61,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 .result .reload{position:absolute;top:-1px;left:15px;font-size:1.25em;color:#323;cursor:pointer;font-weight:bold;}
 .result .star{position:absolute;top:-2px;right:3px;font-size:1.25em;color:#323;cursor:pointer}
 
-#scale{margin-left:40%;vertical-align:middle;font-size:85%}
 #control{display:inline-block;position:relative}
-
-/* The scrubbers */
-.now{width:6px;background:#99a;z-index:45;display:inline-block;vertical-align:bottom;position:absolute}
-#timeline-now{height:26px;margin-top:-3px}
 
 /* This is based on the result height */
 #result-now{height:93px;display:none;top:0}
@@ -89,17 +84,6 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 
 #main-menu{position:fixed;top:0;right:0}
 #header{background:#323;padding:6px}
-
-.timeline-hover{color:#AAAAb5;width:150px;background:#212;padding:10px;box-shadow: 0 0 1px 1px #434 inset, 0 2px 2px 2px #101;border-radius:1px;font-size:12px }
-
-#timeline .timeline-hover span a{cursor:pointer;margin:0.25em;box-shadow:1px 1px 1px #a9a inset;padding:3px;text-decoration:none}
-#timeline .timeline-hover span a:active{box-shadow:-1px -1px 1px #a9a inset}
-#timeline .timeline-hover a.close{position:absolute;top:4px;right:-2px;cursor:pointer;background:#101;width:15px;line-height:19px}
-.timeline-hover span a:hover{background-color:#656}
-.timeline-hover span{width:75px}
-.timeline-hover p{text-align:left;margin-top:6px;text-align:left;font-size:11px;color:#888897}
-.timeline-hover em{font-weight:bold;font-style:normal;color:#aaaab5}
-.timeline-hover-wrap{padding:5px 0 0 0;position:absolute;display:none;top:20px;left:0}
 
 .control-wrapper input {
   width: 400px;
