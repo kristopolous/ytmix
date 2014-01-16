@@ -219,8 +219,8 @@ function EvDa (imported) {
   }
 
   // Register callbacks for
-  // test, on, and after.
-  each ( [ON, AFTER, 'test'], function ( stage ) {
+  // test, on, after, and or.
+  each ( [ON, AFTER, 'test', 'or'], function ( stage ) {
 
     // register the function
     pub[stage] = function ( key, callback, meta ) {
@@ -318,6 +318,21 @@ function EvDa (imported) {
     return key in data;
   };
 
+  function runCallback(callback, context, value, meta) {
+    if( ! callback.S) {
+      // our ingested meta was folded into our callback
+      callback.call ( 
+        context, 
+        value, 
+        meta
+      );
+
+      if ( callback.once ) {
+        del ( callback );
+      }
+    }
+  }
+
   extend(pub, {
     // Exposing the internal variables so that
     // extensions can be made.
@@ -344,6 +359,21 @@ function EvDa (imported) {
     },
 
     when: function ( key, toTest, lambda ) {
+      // See if toTest makes sense as a block of code
+      // This may have some drastically unexpected side-effects.
+      if ( isString(toTest) ) {
+        try {
+          var attempt = new Function("x", "return x" + toTest);
+
+          // If this doesn't throw an exception,
+          // we'll call it gold and then make the function
+          // our test case
+          attempt();
+
+          toTest = attempt;
+        } catch (ex) { }
+      }
+
       return pub(key, function(value) {
         if(
           // Look for identical arrays by comparing their string values.
@@ -431,22 +461,25 @@ function EvDa (imported) {
           function ( ok ) {
             failure |= (ok === false);
 
-            if ( ! --times && ! failure ) { 
-              pub.set ( key, value, _meta, 1 );
+            if ( ! --times ) { 
+              if ( failure ) { 
+                each ( eventMap[ "or" + key ] || [], function ( callback ) {
+                  runCallback ( callback, pub.context, value, _meta );
+                });
+              } else {
+                pub.set ( key, value, _meta, 1 );
+              }
             }
           }
         ) : {};
 
       meta.old = clone(data[key]);
+
       extend(meta, {
         meta: _meta || {},
         done: meta, 
         result: meta,
         key: key
-      });
-
-      each ( pub.traceList, function ( callback ) {
-        callback.call ( pub.context, args );
       });
 
       if (doTest) {
@@ -455,6 +488,11 @@ function EvDa (imported) {
           callback.call ( pub.context, value, meta );
         });
       } else {
+
+        each ( pub.traceList, function ( callback ) {
+          callback.call ( pub.context, args );
+        });
+
         // Set the key to the new value.
         // The old value is being passed in
         // through the meta
@@ -465,19 +503,7 @@ function EvDa (imported) {
             (eventMap[ON + key] || []).concat
             (eventMap[AFTER + key] || []), 
             function(callback) {
-
-              if( ! callback.S) {
-                // our ingested meta was folded into our callback
-                callback.call ( 
-                  pub.context, 
-                  value, 
-                  meta
-                );
-
-                if ( callback.once ) {
-                  del ( callback );
-                }
-              }
+              runCallback(callback, pub.context, value, meta);
             });
           return value;
         }

@@ -268,12 +268,21 @@ $(function(){
   Timeline.init();
   Search.init();
 
-  $("#volume-down").click(function(){
-    ev.set("volume", Math.max(ev('volume') - 10, 0));
+  ev.test('volume', function(what, cb) {
+    $("#volume-down")[
+      (what <= 0 ? 'add' : 'remove' ) + "Class"
+    ]('disabled');
+
+    $("#volume-up")[
+      (what >= 100 ? 'add' : 'remove') + "Class"
+    ]('disabled');
+
+    cb(what >= 0 && what <= 100);
   });
-  $("#volume-up").click(function(){
-    ev.set("volume", Math.min(ev('volume') + 10, 100));
-  });
+
+  $("#volume-down").click(function(){ ev.incr("volume", -10); });
+  $("#volume-up").click(function(){ ev.incr("volume", 10); });
+
   // User ids for the favorites feature
   ev.setter('uid', function(done){
     if(localStorage['uid']) {
@@ -282,6 +291,7 @@ $(function(){
       remote('getUser', done);
     }
   });
+
   ev.isset('uid', function(uid){
     localStorage['uid'] = uid;
   });
