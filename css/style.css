@@ -74,7 +74,8 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 .button.disabled{color:#555}
 .button.disabled:hover{background:transparent;color:#555;cursor:default;text-shadow:0}
 
-#clipboard-wrapper .hover{display:block;position:relative;bottom:0;left:0;background-color:#fff;color:#000;}
+#clipboard-button.zeroclipboard-is-hover{cursor:pointer;background-color:#fff;color:#000}
+#clipboard-button.zeroclipboard-is-active{cursor:pointer;background-color:#ccc}
 
 .resize{overflow-y:auto}
 

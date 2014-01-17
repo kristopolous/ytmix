@@ -247,16 +247,26 @@ function updateBlackList () {
 // ytButton initializes the "youtube-dl" button
 // to get the copy/pasta for a command line downloading
 function ytButton() {
-  var clip = new ZeroClipboard.Client();
-  ZeroClipboard.setMoviePath("js/min/ZeroClipboard.swf");
-  clip.setHandCursor(true);
-  clip.glue('clipboard-button', 'clipboard-wrapper');
-  $("#ZeroClipboardMovie_1").css('opacity', 0.001);
+  var clip = new ZeroClipboard(
+    $('#clipboard-button'),
+    {
+      forceHandCursor: true, 
+      moviePath: "js/min/ZeroClipboard.swf"
+    }
+  );
 
-  // Update the clipboard data when a new track is loaded.
-  ev('active_track', function(data) {
-    // The ytid is .ytid of the data.
-    clip.setText('youtube-dl -t -- ' + data.ytid);
+  // I swear, this shit is sooo buggy.
+ // _.each(['mouseup', 'dataRequested', 'complete'], function(what) {
+    clip.on('complete', function() {
+      Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
+      clip.setText('youtube-dl -t -- ' + ev('active_track').ytid);
+    });
+ // });
+
+  _.each(['load', 'mouseover', 'mouseout', 'mousedown', 'mouseup', 'complete', 'noflash', 'wrongflash', 'dataRequested'], function(what) {
+    clip.on(what, function() {
+      console.log([what].concat(arguments));
+    });
   });
 }
 
