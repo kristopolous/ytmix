@@ -3,10 +3,16 @@ var Search = {
   _useNet: false,
   _id: 0,
 
+  // Search for videos from the net given a string.
   net: function(query) {
     remote('query', ++Search._id, query, function(res) {
-      _db.insert(res.vidList);
-      ev.set('request_gen', {force: true});
+      // add the method of this search string being the
+      // way these were found
+      Store.addMethod('q:' + query, function(id) {
+        // inject the id into all the results.
+        _db.insert(res.vidList).update({method: id});
+        ev.set('request_gen', {force: true});
+      })
     });
   },
   reset: function() {

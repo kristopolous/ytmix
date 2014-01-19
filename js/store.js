@@ -113,7 +113,6 @@ var Store = {
   //
   get: function(id) {
     return remote('get', id, function(data) {
-      console.log(data);
       if(!data.blacklist) {
         delete data.blacklist;
       }
@@ -141,6 +140,16 @@ var Store = {
      'tracklist', 
       result
     );
+  },
+
+  // Add a method for how the content comes in (via a search or related)
+  // and then hit the callback with that.
+  addMethod: function(method, cb) {
+    if(! (method in ev('method')) ) {
+      remote('addMethod', id, method, cb);
+    } else {
+      cb(ev('method')[method]);
+    }
   },
 
   remove: function(id) {

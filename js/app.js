@@ -257,7 +257,7 @@ function ytButton() {
 
   // I swear, this shit is sooo buggy.
  // _.each(['mouseup', 'dataRequested', 'complete'], function(what) {
-    clip.on('complete', function() {
+    clip.on('mousedown', function() {
       Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
       clip.setText('youtube-dl -t -- ' + ev('active_track').ytid);
     });

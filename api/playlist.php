@@ -83,6 +83,7 @@ function pl_createID($params) {
 
 // Methods are how a track got into the playlist. In order to keep the payload of the playlist
 // brief, they are given ids and then referenced here.
+// Its {method_name: short_code}
 function pl_addMethod($params) {
   list($id, $param) = get($params, 'id, param');
 
@@ -161,7 +162,7 @@ function pl_get($params) {
 
     $result = run('select * from playlist where id=' . $id);
     $data = mysql_fetch_assoc($result);
-    return toJson($data, Array('tracklist', 'preview', 'blacklist'));
+    return toJson($data, Array('tracklist', 'preview', 'blacklist', 'method'));
   } else {
     return run_assoc('select id, name from playlist where preview is not null');
   }
