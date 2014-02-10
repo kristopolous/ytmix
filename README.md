@@ -6,11 +6,11 @@ http://9ol.es/ytwatch1
 
 You can use [youtube-dl](http://rg3.github.io/youtube-dl/) with a FIFO-pipe and mplayer to play things over a low-bitrate connection like so:
 
-$ mkfifo audio-pipe
+    $ mkfifo audio-pipe
 
 ### terminal 1
 
-    $ mplayer audio-pipe
+    $ while [ 0 ]; do mplayer audio-pipe; done
 
 ### terminal 2
 
