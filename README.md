@@ -16,7 +16,7 @@ You can use [youtube-dl](http://rg3.github.io/youtube-dl/) with a FIFO-pipe and 
 
     $ curl localhost/ytmix/api/gettracks/(id) \ 
       | shuf \
-      | xargs youtube-dl -o audio-pipe -f 140
+      | xargs -n 1 youtube-dl -o audio-pipe -f 140
 
 format 140 is an audio-only format that about 95% or so of youtube videos support.
 
