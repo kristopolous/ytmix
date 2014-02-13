@@ -259,7 +259,7 @@ function ytButton() {
  // _.each(['mouseup', 'dataRequested', 'complete'], function(what) {
     clip.on('mousedown', function() {
       Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
-      clip.setText('youtube-dl -t -- ' + ev('active_track').ytid);
+      clip.setText('youtube-dl -f 140 -t -- ' + ev('active_track').ytid);
     });
  // });
 
