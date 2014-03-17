@@ -25,6 +25,8 @@ var Toolbar = {
       $("#edit-name").html("edit");
     });
 
+    $("#reload").click(UserHistory.reload);
+
     $("#remove-name").click(function(){
       remote('remove', ev('id'), function(data) {
         ev('app_state', 'splash');
