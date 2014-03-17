@@ -46,7 +46,7 @@ function remote(opts) {
     url: "api/entry.php",
     data: opts,
     type: "POST",
-    timeout: 2500,
+    timeout: 7500,
     dataType: "text",
     success: function(ret) {
 
@@ -97,7 +97,7 @@ function remote(opts) {
         log("Queue pop!", remote.queue.length);
         remote.apply(0, remote.queue.shift());
       }
-    }, 100);
+    }, 5000);
   });
 
   return reqID;
