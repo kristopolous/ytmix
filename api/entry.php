@@ -21,9 +21,7 @@ if(isset($_REQUEST['func']) && function_exists('pl_' . $_REQUEST['func'])) {
   unset($_REQUEST['func']);
 
   $result = $toRun ( $_REQUEST );
-  if(is_string($result)) {
-    result(false, $result);
-  } else { 
+  if(! $g_error ) {
     result(true, $result);
   }
 } else {

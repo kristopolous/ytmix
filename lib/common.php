@@ -1,5 +1,6 @@
 <?php
 include ('db.php');
+$g_error = false;
 
 function trace(){
   static $which = 0;
@@ -25,6 +26,13 @@ function trace(){
     3, 
     "/tmp/mydebug"
   );
+}
+
+function doError($str) {
+  global $g_error;
+  $g_error = $str;
+  
+  result(false, $str);
 }
 
 function result($succeed, $message, $extra = false) {
@@ -132,7 +140,7 @@ function get($opts, $fieldList) {
 function run($mysql_string) {
   $result = mysql_query($mysql_string);
   if(!$result) {
-    result(false, $mysql_string);
+    doError($mysql_string);
   }
   return $result;
 }
