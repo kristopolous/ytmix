@@ -136,19 +136,21 @@ function loadRelated(obj, opts){
       //
       // this list of related videos doesn't have the
       // duration of the video, only the id.
-      each(data.related, function(video) {
-        _db.insert(video).update(function(row){
+      Store.addMethod('r:' + obj.ytid, function(id) {
+
+        console.log("method added: " + id);
+        var stuff = Utils
+          .insertAfter(match, data.related)
+          .update({method: id});
+
+        console.log(stuff);
+        // Here we find the duration of the videos
+        getDuration(ytidList, function(){
+
+          Store.saveTracks();
+          ev.set('request_gen');
+
         });
-      })
-
-      match.update({related: ytidList});
-
-      // Here we find the duration of the videos
-      getDuration(ytidList, function(){
-
-        Store.saveTracks();
-        ev.set('request_gen');
-
       });
     });
   } 
