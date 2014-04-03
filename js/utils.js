@@ -1,5 +1,35 @@
 
 var Utils = {
+  insertAfter: function(entry, list, db) {
+    db = db || _db;
+
+    // we don't care how entry is expressed .. it's either an id, a ytid, or an object .. baaaasically
+    entry = db.find([
+      {id: entry},
+      {ytid: entry},
+      entry
+    ]).first;
+
+    // the size of things we are putting in.
+    var len = list.length;
+
+    // move the things forward.
+    db.find(
+      { id: db('> ' + entry.id) }
+    ).update(
+      function(entry) {
+        entry.id += len;
+      }
+    );
+
+    var start_id = entry.id + 1;
+
+    return db.insert(list).update(function(entry) {
+      entry.id = start_id++;
+    });    
+
+  },
+
   stack: function(start, stop) {
     if (arguments.length == 0) {
       start = 4;
