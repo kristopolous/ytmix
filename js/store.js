@@ -81,7 +81,7 @@ function remote(opts) {
       } 
 
       if(ret.status === false){
-        console.log(meta);
+        console.log(">> call failed", opts, meta);
 
         if(onFailure) { 
           onFailure(ret.result);
@@ -146,7 +146,7 @@ var Store = {
   // and then hit the callback with that.
   addMethod: function(method, cb) {
     if(! (method in ev('method')) ) {
-      remote('addMethod', id, method, cb);
+      remote('addMethod', ev('id'), method, cb);
     } else {
       cb(ev('method')[method]);
     }
