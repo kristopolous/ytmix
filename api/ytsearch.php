@@ -3,8 +3,8 @@ function pl_related($params) {
   $ytid = $params['id'];
 
   $related_videos = Array();
-  $source = 'https://gdata.youtube.com/feeds/api/videos/' . $ytid .'/related?v=2';
-  @$raw_data = file_get_contents($source);
+  $url = 'https://gdata.youtube.com/feeds/api/videos/' . $ytid .'/related?v=2';
+  @$raw_data = file_get_contents($url);
   $xml = simplexml_load_string($raw_data);
 
   foreach($xml->entry as $row) {
@@ -15,10 +15,11 @@ function pl_related($params) {
     ); 
   }
 
-  return (Array(
+  return Array(
     'ytid' => $ytid,
-    'related' => $related_videos
-  ));
+    'related' => $related_videos,
+    'url' => $url
+  );
 }
 
 function pl_query($params) {

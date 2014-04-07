@@ -8,7 +8,7 @@ function sanitize_track($array) {
 
 function pl_getPreview($params){
   list($id) = get($params, 'id');
-  return getdata(run("select preview from playlist where id = $id"));
+  return json_decode(getdata(run("select preview from playlist where id = $id")));
 }
 
 function pl_getTracks($params) {
