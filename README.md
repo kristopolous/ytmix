@@ -22,7 +22,7 @@ format 140 is an audio-only format that about 95% or so of youtube videos suppor
 
 ## API
 
-All the following can be accessed by doing api/<the thing listed>
+All the following can be accessed by doing a GET (unless otherwise specified) to `api/[the thing listed]`
 
 ### (JSON) help 
 List the supported functions
@@ -39,10 +39,10 @@ The track was added by...
  * l:url/string - ...scraping the url, looking for <string>, and inferring a track-listing by surrounding text
 
 ### (JSON) addTracks/id/json
-Adds tracks to the playlist at <id>.  The json should be youtube ids. This is used in the node.js importer
+Adds tracks to the playlist at `id`.  The json should be youtube ids. This is used in the node.js importer
 
 ### (JSON) clear/id
-REMOVES ALL TRACKS FROM <id>.  Use with caution.
+REMOVES ALL TRACKS FROM `id`.  Use with caution.
 
 ### (JSON) createid/[source]/[tracks]
 If:
@@ -55,16 +55,16 @@ If:
 Removes the `ytid` from the favorite list of `user`.
 
 ### (JSON) generatePreview/id
-Generates the 2x2 preview window for playlist <id>. This includes things like track count and duration.  It should be run after updating a tracklist.
+Generates the 2x2 preview window for playlist `id`. This includes things like track count and duration.  It should be run after updating a tracklist.
 
 ### (JSON) get/id
 Returns a `select * from playalist where id = <id>` in JSON format.  This includes the methods, blacklists, types, source, and playlist.
 
 ### (JSON) getFavorite/user
-Gets all the favorite tracks of user <user>.
+Gets all the favorite tracks of user `user`.
 
 ### (JSON) getPreview/id
-Returns the preview for a specific playlist <id> in the following format:
+Returns the preview for a specific playlist `id` in the following format:
 
   * tracks: A list of triplets in the format: [track length in seconds, title, ytid]
   * length: The length of the playlist in seconds
@@ -87,11 +87,11 @@ Searches `string` on youtube, returning 20 results. The format returned is as fo
 A set of previews for recent playlists.
 
 ### (JSON) related/id
-Returns a set of videos related to youtube-id rid` In the following format:
+Returns a set of videos related to youtube-id `id` In the following format:
 
-  * ytid - The ytid used in the query.
-  * related - The list of related videos with the keys title and ytid.
-  * url - The url used for the query.
+  * `ytid` - The ytid used in the query.
+  * `related` - The list of related videos with the keys title and ytid.
+  * `url` - The url used for the query.
 
 ### (JSON) remove/id
 REMOVES A PLAYLIST from the database with id <id>.
