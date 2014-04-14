@@ -22,7 +22,13 @@ format 140 is an audio-only format that about 95% or so of youtube videos suppor
 
 ## API
 
-All the following can be accessed by doing a GET (unless otherwise specified) to `api/[the thing listed]`
+All the following can be accessed by doing a GET (unless otherwise specified) to `api/[the thing listed]`.
+The JSON results return 
+
+    {status: bool, result: json }
+
+Where `status` is either true or false, depending on whether the call succeeded or failed. 
+If the call fails, then the result will hold an error string.
 
 ### (JSON) help 
 List the supported functions
