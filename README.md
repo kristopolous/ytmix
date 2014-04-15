@@ -27,35 +27,41 @@ The JSON results return
 
     {status: bool, result: json }
 
-Where `status` is either true or false, depending on whether the call succeeded or failed. 
+Where `status` is either True or False, depending on whether the call succeeded or failed. 
 If the call fails, then the result will hold an error string.
 
 ### (JSON) help 
-List the supported functions
+List the supported functions (enumerated below).
 
-### (JSON) addMethod/id/param 
-Playlists keep an audit trail of how items were added.  This audit trail is called a method.
+### (JSON) addMethod/id/method
+Playlists keep an audit trail of how videos were added.  This audit trail is called a method.
 It's a xref table.  Each method has an id.  Examples are things like:
 
 The track was added by...
 
- * s:artist - ...searching for the string "artist"
- * r:ytid - ...getting videos related to the ytid
- * u:user - ...adding videos by a specific user
- * l:url/string - ...scraping the url, looking for <string>, and inferring a track-listing by surrounding text
+ * `s:artist` - ...searching for the string "artist"
+ * `r:ytid` - ...getting videos related to the ytid
+ * `u:user` - ...adding videos by a specific user
+ * `l:url/string` - ...scraping the url, looking for <string>, and inferring a track-listing by surrounding text
+
+The result is an id to refer to the method by.  So 
+
+    GET /api/addMethod/123/s:someone
+
+Will return an id to refer to "s:someone" by.
 
 ### (JSON) addTracks/id/json
-Adds tracks to the playlist at `id`.  The json should be youtube ids. This is used in the node.js importer
+Adds tracks to the playlist at `id`.  The JSON should be an array of YouTube ids. This is used in the node.js importer
 
 ### (JSON) clear/id
-REMOVES ALL TRACKS FROM `id`.  Use with caution.
+REMOVES ALL TRACKS FROM `id`.  Use with Caution!
 
 ### (JSON) createid/[source]/[tracks]
 If:
 
- * createid - Will return the next valid playlist id which can then be populated
- * createid/source - Will look for a playlist with the source <source>. If found, will return the id, otherwise, create a new one.
- * createid/source/tracks - Will do the same as above, but if it does not exist, will seed with the JSON of tracks.
+ * `createid` - Will return the next valid playlist id which can then be populated
+ * `createid/source` - Will look for a playlist with the source <source>. If found, will return the id, otherwise, create a new one.
+ * `createid/source/tracks` - Will do the same as above, but if it does not exist, will seed with the JSON of tracks.
 
 ### (JSON) delFavorite/user/ytid
 Removes the `ytid` from the favorite list of `user`.
