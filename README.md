@@ -59,9 +59,9 @@ REMOVES ALL TRACKS FROM `id`.  Use with Caution!
 ### (JSON) createid/[source]/[tracks]
 If:
 
- * `createid` - Will return the next valid playlist id which can then be populated
- * `createid/source` - Will look for a playlist with the source <source>. If found, will return the id, otherwise, create a new one.
- * `createid/source/tracks` - Will do the same as above, but if it does not exist, will seed with the JSON of tracks.
+ * `createid` - Will return the next valid playlist id which can be populated.
+ * `createid/source` - Will look for a playlist with the source `source`. If found, will return the id, otherwise, create a new one.
+ * `createid/source/tracks` - Will do the same as above, but if the source does not exist, will seed a new playlist with the JSON of tracks.
 
 ### (JSON) delFavorite/user/ytid
 Removes the `ytid` from the favorite list of `user`.
@@ -70,7 +70,7 @@ Removes the `ytid` from the favorite list of `user`.
 Generates the 2x2 preview window for playlist `id`. This includes things like track count and duration.  It should be run after updating a tracklist.
 
 ### (JSON) get/id
-Returns a `select * from playalist where id = <id>` in JSON format.  This includes the methods, blacklists, types, source, and playlist.
+Returns a `select * from playalist where id = <id>` in JSON format.  This includes the `methods`, `blacklists` (of removed tracks), `types`, `source`, and `playlist`.
 
 ### (JSON) getFavorite/user
 Gets all the favorite tracks of user `user`.
@@ -78,9 +78,9 @@ Gets all the favorite tracks of user `user`.
 ### (JSON) getPreview/id
 Returns the preview for a specific playlist `id` in the following format:
 
-  * tracks: A list of triplets in the format: [track length in seconds, title, ytid]
-  * length: The length of the playlist in seconds
-  * count: The number of tracks in the playlist
+  * `tracks`: A list of triplets in the format: [track length in seconds, title, ytid]
+  * `length`: The length of the playlist in seconds.
+  * `count`: The number of tracks in the playlist.
 
 ### (newline delimited text) getTracks/id
 Returns just the youtube-id entries for a playlist, delimited by a newline.
