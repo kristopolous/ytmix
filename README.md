@@ -89,24 +89,24 @@ Returns just the youtube-id entries for a playlist, delimited by a newline.
 If `id` is specified, returns the db entry for that user, otherwise creates a new one.
 
 ### (JSON) query/string
-Searches `string` on youtube, returning 20 results. The format returned is as follows:
+Searches `string` on YouTube, returning 20 results. The format returned is as follows:
 
-  * query - the query string searched.
-  * vidList - A set of triplets with the keys title, ytid, and length.
-  * url - The url used for the query.
+  * `query` - the query string searched.
+  * `vidList` - An array of objects with the keys `title`, `ytid`, and `length`.
+  * `url` - The url used for the query.
 
 ### (JSON) recent
 A set of previews for recent playlists.
 
 ### (JSON) related/id
-Returns a set of videos related to youtube-id `id` In the following format:
+Returns a set of videos related to YouTube-id `id` In the following format:
 
   * `ytid` - The ytid used in the query.
-  * `related` - The list of related videos with the keys title and ytid.
+  * `related` - An array of related video objects with the keys `title` and `ytid`.
   * `url` - The url used for the query.
 
 ### (JSON) remove/id
-REMOVES A PLAYLIST from the database with id <id>.
+REMOVES A PLAYLIST from the database with id `id`.
 
 ### (JSON) setFavorite/id/ytid
 Adds `ytid` to user `id's`favorite list.
