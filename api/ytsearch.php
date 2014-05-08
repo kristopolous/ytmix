@@ -4,15 +4,29 @@ function pl_related($params) {
 
   $related_videos = Array();
   $url = 'https://gdata.youtube.com/feeds/api/videos/' . $ytid .'/related?v=2';
-  @$raw_data = file_get_contents($url);
+
+  // simple_xml breaks down with namespaces ... you need to register xmlns documents
+  // and then do xpath queries and find parent nodes and lots of utter nonsense because
+  // colons aren't supported.  Soooo lets just removed the fucking colons.
+  $raw_data = preg_replace('/yt:statistics/', 'stats', file_get_contents($url));
   $xml = simplexml_load_string($raw_data);
 
   foreach($xml->entry as $row) {
     $pieces = explode(':', $row->id);
-    $related_videos[] = Array(
-      'ytid' => array_pop($pieces),
-      'title' => strval($row->title)
-    ); 
+
+    // youtube related videos have turned to crap recently,
+    // trying to suggest things with a bazillion views that
+    // have zero relation whatsoever - so we only include things
+    // that have fewer views - 100k seems to be a good number
+    // to avoid stupid shit.
+    $vc = (int)$row->stats['viewCount'][0];
+    if ($vc < 100000) {
+      $related_videos[] = Array(
+        'vc' => $vc,
+        'ytid' => array_pop($pieces),
+        'title' => strval($row->title)
+      ); 
+    }
   }
 
   return Array(
