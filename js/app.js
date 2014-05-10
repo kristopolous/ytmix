@@ -243,6 +243,15 @@ function updateBlackList () {
   });
 }
 
+function volumeUp() {
+  ev.incr("volume", 10);
+}
+
+function volumeDown() {
+  ev.incr("volume", -10);
+}
+
+
 //
 // ytButton initializes the "youtube-dl" button
 // to get the copy/pasta for a command line downloading
@@ -278,6 +287,25 @@ $(function(){
   Timeline.init();
   Search.init();
 
+  var KEY = {
+    space: 32,
+    up: 38,
+    down: 40,
+    right: 39, 
+    left: 37
+  };
+
+  $(window).keydown( function(ev) {
+    if(ev.ctrlKey) {
+      if(ev.keyCode == KEY.up) { volumeUp(); }
+      else if(ev.keyCode == KEY.down) { volumeDown(); }
+      else if(ev.keyCode == KEY.right) { Timeline.next(); }
+      else if(ev.keyCode == KEY.left) { Timeline.prev(); }
+      else if(ev.keyCode == KEY.space) { Timeline.pauseplay(); }
+      else console.log(ev);
+    }
+  });
+
   ev.test('volume', function(what, cb) {
     $("#volume-down")[
       (what <= 0 ? 'add' : 'remove' ) + "Class"
@@ -290,8 +318,8 @@ $(function(){
     cb(what >= 0 && what <= 100);
   });
 
-  $("#volume-down").click(function(){ ev.incr("volume", -10); });
-  $("#volume-up").click(function(){ ev.incr("volume", 10); });
+  $("#volume-down").click(volumeDown);
+  $("#volume-up").click(volumeUp);
 
   // User ids for the favorites feature
   ev.setter('uid', function(done){
