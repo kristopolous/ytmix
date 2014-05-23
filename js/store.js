@@ -77,7 +77,9 @@ function remote(opts) {
       }
 
       if(ret.status === true && onSuccess) {
-        onSuccess(ret.result);
+        try {
+          onSuccess(ret.result);
+        } catch (ex) { }
       } 
 
       if(ret.status === false){
