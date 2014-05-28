@@ -37,7 +37,14 @@ var UserHistory = {
 
     Player.offset = offset;
 
-    Timeline.backup.off(object).loadVideoById(id, offset);
+    Timeline
+      .backup
+      .off(object)
+      .loadVideoById({
+        videoId: id, 
+        startSeconds: offset,
+        suggestedQuality: ev('quality')
+      });
 
     // TODO: This feels like a bad place to do this.
     // There should probably be a more abstract and less 
@@ -90,6 +97,7 @@ var Timeline = (function(){
           if(arguments.length) {
             Toolbar.status("Set preferred quality to " + _quality);
           }
+          ev('quality', _quality);
 
           return _quality;
         },
