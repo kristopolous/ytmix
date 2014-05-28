@@ -219,7 +219,7 @@ function replace(id, cb, attempt) {
     if(!replaced) {
       console.log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title, resp.url);
     }
-    if(cb) {
+    if(cb && _.isFunction(cb)) {
       cb(replaced);
     }
   });
