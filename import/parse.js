@@ -3,7 +3,7 @@
 var 
   PLAYLIST = 0,
   request = require('request'),
-  base = 'http://localhost:8000/ghub/ytmix/api/',
+  base = 'http://localhost/ghub/ytmix/api/',
   http = require('http'),
   xml2js = require('xml2js'),
   url = require('url'),
@@ -58,7 +58,11 @@ function api() {
       base + 'entry.php', 
       {form: param}, 
       function(error, response, body) {
-        cb(body);
+        if(body == undefined) {
+          console.log("Make sure that " + base + " is accessible");
+        } else {
+          cb(body);
+        }
       }
     )
   } else {
