@@ -154,6 +154,9 @@ function EvDa (imported) {
 
     // Internals
     data = imported || {},
+
+    // the backlog to execute if something is paused.
+    backlog = [],
     setterMap = {},
     eventMap = {};
 
@@ -175,9 +178,11 @@ function EvDa (imported) {
     // If there was one argument, then this is
     // either a getter or the object style
     // invocation.
-    if (isArray(scope)) {
+    if ( isArray(scope) ) {
+      var args = slice.call(arguments, 1);
+
       return map(scope, function(which) {
-        return pub.call(pub.context, which, value, meta);
+        return pub.apply(pub.context, [which].concat(args));
       });
     }
     if ( arguments.length == 1 ) {
@@ -336,14 +341,54 @@ function EvDa (imported) {
   extend(pub, {
     // Exposing the internal variables so that
     // extensions can be made.
+    _: {},
     context: this,
     list: {},
+    isPaused: false,
     db: data,
     setterMap: setterMap,
     events: eventMap,
     del: del,
     whenSet: isset,
     isset: isset,
+
+    pause: function() {
+      if(!pub.isPaused) {
+        pub.isPaused = true;
+        pub._.set = pub.set;
+        pub.set = function() {
+          backlog.push(['set', arguments]);
+        }
+        return true;
+      }
+      return false;
+    }, 
+
+    play: function() {
+      if(pub.isPaused) {
+        // first we take it off being paused
+        pub.isPaused = false;
+
+        // now we make a mock evda
+        var mock = EvDa();
+
+        // unswap out our dummy functions
+        pub.set = pub._.set;
+
+        // And we run the backlog on it (with no events firing of course)
+        each(backlog, function(row) {
+          mock[row[0]].apply(mock, row[1]);
+        });
+        // clear the backlog
+        backlog = [];
+
+        // now we invoke the mock database over our own
+        pub(mock.db);
+
+        return true;
+      }
+      return false;
+    },
 
     // Unlike much of the reset of the code,
     // setters have single functions.
