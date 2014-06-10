@@ -1,6 +1,6 @@
 See here:
 
-http://9ol.es/ytwatch1
+http://9ol.es/yt
 
 ## Low Bandwidth Stream Example
 
