@@ -20,7 +20,7 @@ function pl_related($params) {
     // that have fewer views - 100k seems to be a good number
     // to avoid stupid shit.
     $vc = (int)$row->stats['viewCount'][0];
-    if ($vc < 100000) {
+    if ($vc < 20000) {
       $related_videos[] = Array(
         'vc' => $vc,
         'ytid' => array_pop($pieces),

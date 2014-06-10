@@ -158,7 +158,7 @@ function pl_get($params) {
   list($id) = get($params, 'id');
 
   if($id) {
-    run('update playlist set viewcount = viewcount + 1 where id=' . $id);
+    //run('update playlist set viewcount = viewcount + 1 where id=' . $id);
 
     $result = run('select * from playlist where id=' . $id);
     $data = mysql_fetch_assoc($result);
