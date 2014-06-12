@@ -149,7 +149,7 @@ function pl_recent() {
     where 
       preview is not null and
       type = 0
-    order by id desc limit 20');
+    order by id desc limit 30');
   $key = Array(Array('preview'));
   return toJson($res, $key);
 }
