@@ -62,9 +62,7 @@ var Results = {
   },
 
   resize: function(){
-    var height = window.innerHeight || document.body.offsetHeight;
-
-    $("#video-list").css('height', (height - $("#bottom-box").offset().top) + 'px');
+    $("#video-list").css('height', ($(window).height() - $("#bottom-box").offset().top) + 'px');
     ev.set('request_gen');
   },
 
