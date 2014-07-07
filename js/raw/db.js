@@ -53,6 +53,9 @@
       // } end underscore.js
       // from jquery 1.5.2's type
       isObj: function( obj ){
+        if(_.isFun(obj) || _.isStr(obj) || _.isNum(obj) || _.isArr(obj)) {
+          return false;
+        }
         return obj == null ? 
           String( obj ) == 'object' : 
           toString.call(obj) === '[object Object]' || true ;
@@ -94,6 +97,12 @@
       return ret;
     },
 
+    obj = function(key, value) {
+      var ret = {};
+      ret[key] = value;
+      return ret;
+    },
+
     map = [].map ?
       function(array, cb) { 
         return array.map(cb) 
@@ -116,6 +125,8 @@
         if (obj.length === 0) { return; }
         if (_.isArr(obj)) { 
           obj.forEach(cb);
+        } else if(_.isStr(obj)) {
+          cb(obj);
         } else {
           for( var key in obj ) {
             cb(key, obj[key]);
@@ -197,7 +208,7 @@
 
   function copy(obj) {
     // we need to call slice for array-like objects, such as the dom
-    return obj.length ? slice.call(obj) : values(obj);
+    return 'length' in obj ? slice.call(obj) : values(obj);
   }
 
   // These function accept index lists.
@@ -310,12 +321,34 @@
       if(_.isArr(filter)) {
         // If we just pass the inner array, this would be wrong because
         // then it would operate as an AND so we need to do things individually.
-        var result = [], remaining = set;
-        for(ix = 0; ix < filter.length; ix++) {
-          result = result.concat(find(remaining, filter[ix]));
-          remaining = setdiff(remaining, result);
+        var 
+          result = [], 
+          remaining = set;
+
+        // TODO: this feels wrong.
+        if (filter.length === 0) {
+          set = remaining;
+        } else {
+
+          // Wanting to do DB.find(['field1', 'field2'], condition) 
+          // seems convenient enough.
+          if(
+            !_.isObj(filter[0]) &&
+            filterList.length == 2
+          ) {
+            var _condition = filterList.pop();
+            filter = map(filter, function(row) {
+              return obj(row, _condition);
+            });
+          }
+       
+          for(ix = 0; ix < filter.length; ix++) {
+            result = result.concat(find(remaining, filter[ix]));
+            remaining = setdiff(remaining, result);
+          }
+
+          set = result;
         }
-        set = result;
       } else if(_.isFun(filter)) {
         var callback = filter;
 
@@ -336,6 +369,22 @@
         }
       } else {
         each(filter, function(key, value) {
+          // this permits mongo-like invocation
+          if( _.isObj(value)) {
+            var 
+              _key = keys(value)[0],
+              _fn = _key.slice(1);
+
+            // see if the routine asked for exists
+            if(_fn in DB) {
+              value = DB[_fn](value[_key]);
+            } else {
+              throw new Error(_fn + " is an unknown function");
+            }
+          } else if( _.isArr(value)) {
+          // a convenience isin short-hand.
+            value = isin(value);
+          }
 
           if( _.isFun(value)) {
             for(end = set.length, ix = end - 1; ix >= 0; ix--) {
@@ -421,11 +470,14 @@
     // It has a cache for optimization
     var cache = {};
 
+    // todo: typecheck each element and then extract functions 
     return function (param1, param2) {
       var 
         callback,
         len = arguments.length,
         compare = len == 1 ? param1 : (param2 || []),
+        dynamicList = [],
+        staticList = [],
         obj = {};
 
       // If the second argument is an array then we assume that we are looking
@@ -434,22 +486,22 @@
         throw new TypeError("isin's argument is wrong. ", compare);
       }
       if(compare.length){
-        if(compare.length < 20 && _.isNum(compare[0])) {
-          var key = compare.join(',');
-
-          // new Function is faster then eval but it's still slow, so we cache
-          // the output of them and then pass them down the pipe if we need them
-          // again
-          if(! cache[key]) {
-            callback = cache[key] = new Function('x', 'return x==' + compare.join('||x=='));
+        each(compare, function(what) {
+          if(_.isFun(what)) {
+            dynamicList.push(what);
           } else {
-            callback = cache[key];
+            staticList.push(what);
           }
-        } else if(_.isStr(compare)) {
-          callback = new Function('x', 'return indexOf(' + compare + ', x) > -1');
-        } else {
-          callback = function(x) { return indexOf(compare, x) > -1; };
-        }
+        });
+
+        callback = function(x) { 
+          var res = indexOf(staticList, x) > -1; 
+          for(var ix = 0; ix < dynamicList.length; ix++) {
+            if(res) { break; }
+            res = dynamicList[ix](x);
+          }
+          return res;
+        };
       } else if (_.isFun(compare)) {
         callback = function(x) { return indexOf(compare(), x) > -1; };
       } else {
@@ -465,6 +517,13 @@
       }
     }
   })();
+
+  function isArray(what) {
+    var asString = what.sort().join('');
+    return function(param) {
+      return param.sort().join('') === asString;
+    }
+  }
 
   function like(param1, param2) {
     var 
@@ -482,6 +541,9 @@
     query = query.toString().toLowerCase();
 
     compare = function(x) { 
+      if(x === null) {
+        return false;
+      }
       return x.toString().toLowerCase().search(query) > -1; 
     }
 
@@ -769,11 +831,12 @@
         var 
           agg = {}, 
           len = raw.length, 
+          skip = Math.ceil(Math.min(10, len / 3)),
           entry;
 
         for(var i = 0; 
             i < len; 
-              i += 10, 
+              i += skip, 
               entry = raw[i]
           ) {
           for(var key in entry) {
@@ -907,11 +970,15 @@
 
       each(filter, function(which) {
         if(field in which) {
-          if(! groupMap[which[field]]) {
-            groupMap[which[field]] = chain([]);
-          }
+          each(which[field], function(what) {
+            // if it's an array, then we do each one.
 
-          groupMap[which[field]].push(which);
+            if(! groupMap[what]) {
+              groupMap[what] = chain([]);
+            }
+
+            groupMap[what].push(which);
+          });
         }
       });
       
@@ -1297,10 +1364,15 @@
 
     // Assign this after initialization
     ret.__raw__ = raw;
+    
+    // Register this instance.
+    DB.all.push(ret);
+
     return ret;
   }
 
   extend(DB, {
+    all: [],
     find: find,
     diff: setdiff,
     each: eachRun,
@@ -1309,6 +1381,7 @@
     trace: trace,
     values: values,
     isin: isin,
+    isArray: isArray,
 
     // like expr but for local functions
     local: function(){

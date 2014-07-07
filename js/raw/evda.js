@@ -20,7 +20,7 @@ function EvDa (imported) {
     isString = function(obj) { return !!(obj === '' || (obj && obj.charCodeAt && obj.substr)) },
     isNumber = function(obj) { return toString.call(obj) === '[object Number]' },
     isObject = function(obj) {
-      if(isString(obj)) {
+      if(isFunction(obj) || isString(obj) || isNumber(obj) || isArray(obj)) {
         return false;
       }
 
@@ -134,7 +134,13 @@ function EvDa (imported) {
       each(slice.call(arguments, 1), function(source) {
         for (var prop in source) {
           if (source[prop] !== void 0) {
-            obj[prop] = source[prop];
+
+            // This recursively assigns
+            if ( isObject(source[prop]) && isObject(obj[prop]) ) {
+              extend(obj[prop], source[prop]);
+            } else {
+              obj[prop] = source[prop];
+            }
           }
         }
       });
@@ -144,6 +150,7 @@ function EvDa (imported) {
     // } end of underscore style functions.
 
     // Constants
+    FIRST = 'first',
     ON = 'on',
     AFTER = 'after',
 
@@ -158,8 +165,40 @@ function EvDa (imported) {
     // the backlog to execute if something is paused.
     backlog = [],
     setterMap = {},
+    globberMap = {},
     eventMap = {};
 
+  function isGlobbed(str) {
+    return str.match(/[?*]/);
+  }
+
+  // This looks to see if a key has a globbing parameter, such
+  // as ? or * and then return it
+  function glob(key, context) {
+    if(isGlobbed(key)) {
+      return select(keys(context ? context : data), function(what) {
+        return what.match(key);
+      });
+    }
+    return key;
+  }
+
+  // This uses the globbing feature and returns
+  // a "smart" map which is only one element if
+  // something matches, otherwise a map 
+  function smartMap(what, cback) {
+    var ret = {};
+    if(isArray(what)) {
+      each(what, function(field) {
+        ret[what] = cback(what);
+      });
+      return ret;
+
+    } else {
+      return cback(what);
+    }
+  }
+  
   // This is the main invocation function. After
   // you declare an instance and call that instance
   // as a function, this is what gets run.
@@ -171,7 +210,8 @@ function EvDa (imported) {
       return {
         data: data, 
         setters: setterMap, 
-        events: eventMap
+        events: eventMap,
+        globs: globberMap
       };
     }
 
@@ -215,7 +255,9 @@ function EvDa (imported) {
         return scope;
       }
 
-      return data[ scope ];
+      return smartMap(scope, function(what) { 
+        return data[ what ];
+      });
     } 
 
     // If there were two arguments and if one of them was a function, then
@@ -225,10 +267,12 @@ function EvDa (imported) {
 
   // Register callbacks for
   // test, on, after, and or.
-  each ( [ON, AFTER, 'test', 'or'], function ( stage ) {
+  each ( [FIRST, ON, AFTER, 'test', 'or'], function ( stage ) {
 
     // register the function
     pub[stage] = function ( key, callback, meta ) {
+      var map = eventMap;
+
       if ( !callback ) {
         callback = key;
         key = BASE;
@@ -238,7 +282,11 @@ function EvDa (imported) {
       // so that we can unregister it in the future.
       (callback.$ || (callback.$ = [])).push ( stage + key );
 
-      (eventMap[stage + key] || (eventMap[stage + key] = [])).push ( callback );
+      if (isGlobbed(key)) {
+        map = globberMap;
+      }
+
+      (map[stage + key] || (map[stage + key] = [])).push ( callback );
 
       return extend(callback, meta);
     }
@@ -246,7 +294,8 @@ function EvDa (imported) {
 
   function del ( handle ) {
     each ( handle.$, function( stagekey ) {
-      eventMap[ stagekey ] = without( eventMap[ stagekey ], handle );
+      var map = isGlobbed(stagekey) ? globberMap : eventMap;
+      map[ stagekey ] = without( map[ stagekey ], handle );
     });
   }
 
@@ -260,7 +309,7 @@ function EvDa (imported) {
     if ( isArray(key) ) {
       var myKey = key.pop();
 
-      return isset(myKey, function(data, meta) {
+      return isset(glob(myKey), function(data, meta) {
         var next = (key.length == 1) ? key[0] : key;
         return isset(next, callback, meta);
       }, meta);
@@ -278,7 +327,15 @@ function EvDa (imported) {
     if( isObject(key) ) {
 
       each( key, function( _key, _value ) {
-        key[_key] = isset( _key, _value, meta );
+        if(isGlobbed(_key)) {
+          extend(_key, 
+            smartMap(_key, function(_what){
+              return isset(_key, _value, meta);
+            })
+          );
+        } else {
+          key[_key] = isset( _key, _value, meta );
+        }
       });
 
       // Return the entire object as the result
@@ -491,6 +548,17 @@ function EvDa (imported) {
       }
     },
 
+    extend: function (key, value) {
+      return pub.set.apply(
+        pub.context, [
+          key, 
+          extend({}, data[key], value)
+        ].concat(
+          slice.call(arguments, 2)
+        )
+      );
+    },
+
     set: function (key, value, _meta, bypass, _noexecute) {
       var 
         testKey = 'test' + key,
@@ -545,10 +613,12 @@ function EvDa (imported) {
 
         var cback = function(){
           each(
-            (eventMap[ON + key] || []).concat
-            (eventMap[AFTER + key] || []), 
+            (eventMap[FIRST + key] || []).concat(
+              (eventMap[ON + key] || []),
+              (eventMap[AFTER + key] || []) 
+            ),
             function(callback) {
-              runCallback(callback, pub.context, value, meta);
+              meta.last = runCallback(callback, pub.context, value, meta);
             });
           return value;
         }
@@ -565,6 +635,10 @@ function EvDa (imported) {
       // 
       // This is because keys can be denied
       return data[key];
+    },
+
+    fire: function ( key ) {
+      pub.set ( key, data[key] );
     },
 
     once: function ( key, lambda, meta ) {
@@ -597,7 +671,8 @@ function EvDa (imported) {
     },
 
     setadd: function ( key, value ) {
-      return pub ( key, uniq(( data[key] || [] ).concat([value])) );
+      value = isArray(value) ? value : [value];
+      return pub ( key, uniq(( data[key] || [] ).concat(value)) );
     },
 
     setdel: function ( key, value ) {
