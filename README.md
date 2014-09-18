@@ -10,7 +10,12 @@ You can use [youtube-dl](http://rg3.github.io/youtube-dl/) with a FIFO-pipe and 
 
 ### terminal 1
 
-    $ while [ 0 ]; do mplayer audio-pipe; done
+    $ while [ 0 ]; do mplayer -quiet audio-pipe; done
+
+When you do a -quiet option, then mplayer doesn't send as many updates
+to the terminal.  For me, it actually adds about 45 minutes to my battery
+life (~11hr 30 -> ~12hr 15) when I have this on - you should see your X
+resources in top (or htop) drop a few percentage points with it - regardless of whether you have it iconified or not.
 
 ### terminal 2
 

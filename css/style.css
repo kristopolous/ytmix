@@ -152,3 +152,5 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #remove-name { 
   display: none
 }
+
+#players { visibility: hidden }
