@@ -393,7 +393,13 @@ var Timeline = (function(){
   // player so it's the backup plan.
   ev('yt-Error', function(what) {
     console.log("yt-error", what);
-    if(what != 150) {
+    if(what == 100) {
+      Toolbar.status("Video not working; skipping");
+
+      replace(Timeline.current().id, true);
+
+      Timeline.next();
+    } else if(what != 150) {
       _backup.on();
     }
   });
@@ -413,6 +419,11 @@ var Timeline = (function(){
   return {
     player: Player,
     backup: _backup,
+
+    // the current track
+    current: function() {
+      return Player.activeData;
+    },
 
     remove: function(obj){
       Toolbar.status("Removed " + obj.title);

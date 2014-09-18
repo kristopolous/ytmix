@@ -149,7 +149,8 @@ function findStatus(idList, cb, status) {
 }
 
 function replace(id, cb, attempt) {
-  var vid = _db.findFirst({id: id}),
+  var 
+    vid = _db.findFirst({id: id}),
     replaced = false,
     check = replace.clean(vid.title),
     wc = check.split(' ').length;
@@ -160,6 +161,7 @@ function replace(id, cb, attempt) {
     wc = check.split(' ').length
   }
 
+  Toolbar.status("Attempting a replace of " + vid.title);
   console.log("[" + (attempt + 1) + "] Replacing (" + id + ") " + vid.title);
   remote('query', 1, check, function(resp) {
     if(resp.vidList.length == 0 && wc > 2 && attempt != 1) {
@@ -168,7 +170,8 @@ function replace(id, cb, attempt) {
     _.each(resp.vidList, function(what) {
       if(replaced) { return; } 
 
-      var attempt = replace.clean(what.title),
+      var 
+        attempt = replace.clean(what.title),
         distance = DL(check, attempt),
         short,
         cutoff,
@@ -219,10 +222,21 @@ function replace(id, cb, attempt) {
     if(!replaced) {
       console.log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title, resp.url);
     }
-    if(cb && _.isFunction(cb)) {
-      cb(replaced);
+    if(cb) {
+      if(_.isFunction(cb)) {
+        cb(replaced);
+      } else {
+        replace.cb(replaced);
+      }
     }
   });
+}
+
+// the default callback
+replace.cb = function(success) {
+  if(success) {
+    Store.saveTracks();
+  }
 }
 
 replace.clean = function(str) {
