@@ -16,12 +16,15 @@ function pl_help($message = false) {
   result(true, $func, $message);
 }
 
+
 if(isset($_REQUEST['func']) && function_exists('pl_' . $_REQUEST['func'])) {
   $toRun = 'pl_' . $_REQUEST['func'];
   unset($_REQUEST['func']);
 
   $result = $toRun ( $_REQUEST );
-  if(! $g_error ) {
+  if(hasError()) {
+    result(false, getError());
+  } else {
     result(true, $result);
   }
 } else {

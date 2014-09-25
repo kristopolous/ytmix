@@ -1,5 +1,7 @@
 <?php 
 
+define("YTID_OFFSET", 2);
+
 // make sure that the track that comes in is in the right format
 function sanitize_track($array) {
   $array[0] = intval($array[0]);
@@ -17,7 +19,7 @@ function pl_getTracks($params) {
 
   $result = array();
   foreach($playlist as $entry) {
-    $result[] = $entry[2];
+    $result[] = $entry[YTID_OFFSET];
   }
   echo implode("\n", $result);
   exit(0);
@@ -100,7 +102,8 @@ function pl_addMethod($params) {
   }
 }
 
-function pl_addTracks($params) {
+// This adds or removes tracks to an existing playlist - this is a relatively safe method.
+function modify_tracks($params, $func) {
   $opts = getassoc($params, 'id, param');
 
   // Make sure that the object passed in is interpreted.
@@ -122,24 +125,48 @@ function pl_addTracks($params) {
 
   // Make a map of it
   $hash = Array();
+  $index = 0;
+
   foreach($playlist as $item) {
-    $hash[$item[2]] = $item;
+    $hash[$item[YTID_OFFSET]] = $index;
+    $index ++;
   }
+
+  $deleteIndexList = array();
 
   // If what we want to insert isn't there, then we process it.
   foreach($opts['param'] as $item) {
-    if(!array_key_exists($item[2], $hash)) {
-      $playlist[] = sanitize_track($item);
+    $ytid = $item[YTID_OFFSET];
+
+    if ($func == 'add') {
+      if(!array_key_exists($ytid, $hash)) {
+        // place it at the end
+        $playlist[] = sanitize_track($item);
+      }
+    } else if ($func == 'del') {
+      // If this is in the playlist, then we add that to the delete list.
+      if(isset($hash[$ytid])) {
+        // unset doesn't shift things ... really.
+        unset( $playlist[ $hash[$ytid] ] );
+      }
     }
   }
 
-  $string_playlist = mysql_real_escape_string(json_encode($playlist));
+  $string_playlist = mysql_real_escape_string(json_encode(array_values($playlist)));
   
   run('update playlist set tracklist = \'' . $string_playlist . '\' where id = ' . $id);
 
-  pl_generatePreview(Array( 'id' => $id));
+  pl_generatePreview(Array( 'id' => $id ));
 
   return true;
+}
+
+function pl_addTracks($params) {
+  return modify_tracks($params, 'add');
+}
+
+function pl_delTracks($params) {
+  return modify_tracks($params, 'del');
 }
 
 function pl_recent() {
@@ -170,6 +197,10 @@ function pl_get($params) {
 
 function pl_update($params) {
   $opts = getassoc($params, 'id, tracklist, blacklist, name');
+
+  if(isset($opts['tracklist'])) {
+    return doError("Can't update tracklist atomically like that");
+  }
 
   foreach($opts as $key => $value) {
     // skip past the id

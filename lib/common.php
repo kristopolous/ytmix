@@ -1,6 +1,5 @@
 <?php
 include ('db.php');
-$g_error = false;
 
 function trace(){
   static $which = 0;
@@ -28,11 +27,19 @@ function trace(){
   );
 }
 
+$g_error_stack = array();
+function hasError() {
+  global $g_error_stack;
+  return count($g_error_stack) > 0;
+}
 function doError($str) {
-  global $g_error;
-  $g_error = $str;
-  
-  result(false, $str);
+  global $g_error_stack;
+  $g_error_stack[] = $str;
+  return false;
+}
+function getError() {
+  global $g_error_stack;
+  return $g_error_stack;
 }
 
 function result($succeed, $message, $extra = false) {
@@ -140,7 +147,7 @@ function get($opts, $fieldList) {
 function run($mysql_string) {
   $result = mysql_query($mysql_string);
   if(!$result) {
-    doError($mysql_string);
+    return doError($mysql_string);
   }
   return $result;
 }
