@@ -102,6 +102,40 @@ function pl_addMethod($params) {
   }
 }
 
+function get_playlist($id) {
+  // Get the id playlist
+  $playlist = json_decode(
+    getdata(
+      run("select tracklist from playlist where id = $id")
+    ), true
+  );
+
+  if(!$playlist) {
+    $playlist = array();
+  }
+  return $playlist;
+}
+
+function playlist_to_hash($playlist) {
+  // Make a map of it
+  $hash = Array();
+  $index = 0;
+
+  foreach($playlist as $item) {
+    $hash[$item[YTID_OFFSET]] = $index;
+    $index ++;
+  }
+  return $hash;
+}
+
+function set_playlist($id, $playlist) {
+  $string_playlist = mysql_real_escape_string(json_encode(array_values($playlist)));
+  
+  run('update playlist set tracklist = \'' . $string_playlist . '\' where id = ' . $id);
+
+  pl_generatePreview(Array( 'id' => $id ));
+}
+
 // This adds or removes tracks to an existing playlist - this is a relatively safe method.
 function modify_tracks($params, $func) {
   $opts = getassoc($params, 'id, param');
@@ -112,27 +146,8 @@ function modify_tracks($params, $func) {
   }
   $id = $opts['id'];
 
-  // Get the current playlist
-  $playlist = json_decode(
-    getdata(
-      run("select tracklist from playlist where id = $id")
-    ), true
-  );
-
-  if(!$playlist) {
-    $playlist = array();
-  }
-
-  // Make a map of it
-  $hash = Array();
-  $index = 0;
-
-  foreach($playlist as $item) {
-    $hash[$item[YTID_OFFSET]] = $index;
-    $index ++;
-  }
-
-  $deleteIndexList = array();
+  $playlist = get_playlist($id);
+  $hash = playlist_to_hash($playlist);
 
   // If what we want to insert isn't there, then we process it.
   foreach($opts['param'] as $item) {
@@ -152,11 +167,7 @@ function modify_tracks($params, $func) {
     }
   }
 
-  $string_playlist = mysql_real_escape_string(json_encode(array_values($playlist)));
-  
-  run('update playlist set tracklist = \'' . $string_playlist . '\' where id = ' . $id);
-
-  pl_generatePreview(Array( 'id' => $id ));
+  set_playlist($id, $playlist);
 
   return true;
 }
@@ -167,6 +178,35 @@ function pl_addTracks($params) {
 
 function pl_delTracks($params) {
   return modify_tracks($params, 'del');
+}
+
+function pl_swapTracks($params) {
+  $opts = getassoc($params, 'id, param');
+
+  $oldList = $opts['param']['old'];
+  $newList = $opts['param']['new'];
+
+  $playlist = get_playlist($opts['id']);
+  $hash = playlist_to_hash($playlist);
+
+  $index = 0;
+
+  // look to see if the ytids from the old list are there.
+  foreach($oldList as $item) {
+    $ytid = $item[YTID_OFFSET];
+
+    // if they are then we replace them with the new ones.
+    if(array_key_exists($ytid, $hash)) {
+      $playlist[ $hash[$ytid] ] = sanitize_track($newList[ $index ]);
+    }
+
+    // and move our little pointer along
+    $index ++;
+  }
+
+  set_playlist($id, $playlist);
+
+  return true;
 }
 
 function pl_recent() {
