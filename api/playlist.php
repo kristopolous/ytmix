@@ -216,7 +216,7 @@ function pl_recent() {
     where 
       preview is not null and
       type = 0
-    order by id desc limit 90');
+    order by updated desc limit 90');
   $key = Array(Array('preview'));
   return toJson($res, $key);
 }
@@ -238,9 +238,11 @@ function pl_get($params) {
 function pl_update($params) {
   $opts = getassoc($params, 'id, tracklist, blacklist, name');
 
+/*
   if(isset($opts['tracklist'])) {
     return doError("Can't update tracklist atomically like that");
   }
+*/
 
   foreach($opts as $key => $value) {
     // skip past the id
@@ -257,6 +259,9 @@ function pl_update($params) {
     // livin on the edge ... you can't help yourself from fallllinnn.
     run('update playlist set ' . $key . ' = "' . $value . '" where id = ' . $opts['id']);
   }
+
+  // make sure that the recent update sends it to the top.
+  run('update playlist set updated=now() where id = ' . $opts['id']);
 
   pl_generatePreview(Array( 'id' => $opts['id']));
   return true;
