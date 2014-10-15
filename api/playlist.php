@@ -15,11 +15,16 @@ function pl_getPreview($params){
 
 function pl_getTracks($params) {
   list($id) = get($params, 'id');
+  $index = YTID_OFFSET;
   $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
+
+  if(!isset($playlist[0][$index])) {
+    $index = 'ytid';
+  }
 
   $result = array();
   foreach($playlist as $entry) {
-    $result[] = $entry[YTID_OFFSET];
+    $result[] = $entry[$index];
   }
   echo implode("\n", $result);
   exit(0);
