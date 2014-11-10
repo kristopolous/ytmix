@@ -2,7 +2,7 @@
 // EvDa Events and Data v1.0
 // https://github.com/kristopolous/EvDa
 //
-// Copyright 2011, Chris McKenzie
+// Copyright 2011 - 2014 Chris McKenzie
 // Dual licensed under the MIT or GPL Version 2 licenses.
 //
 function EvDa (imported) {
@@ -552,7 +552,7 @@ function EvDa (imported) {
       return pub.set.apply(
         pub.context, [
           key, 
-          extend({}, data[key], value)
+          extend({}, (data[key] || {}), value)
         ].concat(
           slice.call(arguments, 2)
         )
@@ -562,6 +562,10 @@ function EvDa (imported) {
     set: function (key, value, _meta, bypass, _noexecute) {
       var 
         testKey = 'test' + key,
+        result,
+        parts = key.split('.'),
+        parts_key,
+        parts_obj,
         args = slice.call(arguments),
         times = size(eventMap[ testKey ]),
         doTest = (times && !bypass),
@@ -600,6 +604,11 @@ function EvDa (imported) {
         each ( eventMap[ testKey ], function ( callback ) {
           callback.call ( pub.context, value, meta );
         });
+        // Don't return the value...
+        // return the current value of that key.
+        // 
+        // This is because keys can be denied
+        result = data[key];
       } else {
 
         each ( pub.traceList, function ( callback ) {
@@ -624,17 +633,27 @@ function EvDa (imported) {
         }
 
         if(!_noexecute) {
-          return cback.call(pub.context);
+          result = cback.call(pub.context);
         } else {
-          return cback;
+          result = cback;
         }
+      } 
+
+      // After this, we bubble up if relevant.
+      if(parts.length > 1) {
+        // This means that the key called has some parent
+        parts_key = parts.pop();
+        parts_obj = [];
+        parts_obj[parts_key] = value;
+
+        // we then extend the value into the group.
+        pub.extend(
+          parts.join('.'),
+          parts_obj
+        );
       }
 
-      // Don't return the value...
-      // return the current value of that key.
-      // 
-      // This is because keys can be denied
-      return data[key];
+      return result;
     },
 
     fire: function ( key ) {
