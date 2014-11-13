@@ -206,7 +206,7 @@ function EvDa (imported) {
 
     // If there are no arguments, and this is useful in the browser
     // debug console, return all the internal data structures.
-    if (! scope) {
+    if ( arguments.length === 0 ) {
       return {
         data: data, 
         setters: setterMap, 
@@ -251,6 +251,9 @@ function EvDa (imported) {
             scope[_key] = ret[_key]();
           }
         });
+
+        // TODO: fix this
+        bubble( keys(ret)[0] );
 
         return scope;
       }
@@ -395,6 +398,26 @@ function EvDa (imported) {
     }
   }
 
+  function bubble(key) {
+    var
+      parts = key.split('.'),
+      parts_key = parts.pop();
+      parts_obj = [];
+
+    parts_obj[parts_key] = data[key];
+
+    // we then extend the value into the group.
+    pub.extend.apply(
+      pub.context,
+      [
+        parts.join('.'),
+        parts_obj
+      ].concat(
+        slice.call(arguments, 1)
+      )
+    );
+  }
+
   extend(pub, {
     // Exposing the internal variables so that
     // extensions can be made.
@@ -492,6 +515,13 @@ function EvDa (imported) {
       });
     },
 
+    empty: function() {
+      // we want to maintain references to the object itself
+      for (var key in data) {
+        delete data[key];
+      }
+    },
+
     incr: function ( key, amount ) {
       amount = amount || 1;
       // we can't use the same trick here because if we
@@ -563,9 +593,6 @@ function EvDa (imported) {
       var 
         testKey = 'test' + key,
         result,
-        parts = key.split('.'),
-        parts_key,
-        parts_obj,
         args = slice.call(arguments),
         times = size(eventMap[ testKey ]),
         doTest = (times && !bypass),
@@ -587,6 +614,7 @@ function EvDa (imported) {
                 pub.set ( key, value, _meta, 1 );
               }
             }
+            return ok;
           }
         ) : {};
 
@@ -635,22 +663,16 @@ function EvDa (imported) {
         if(!_noexecute) {
           result = cback.call(pub.context);
         } else {
+          // if we are not executing this, then
+          // we return a set of functions that we
+          // would be executing.
           result = cback;
         }
       } 
 
       // After this, we bubble up if relevant.
-      if(parts.length > 1) {
-        // This means that the key called has some parent
-        parts_key = parts.pop();
-        parts_obj = [];
-        parts_obj[parts_key] = value;
-
-        // we then extend the value into the group.
-        pub.extend(
-          parts.join('.'),
-          parts_obj
-        );
+      if(key.length > 0) {
+        bubble.apply(pub.context, [key].concat(slice.call(arguments, 2)));
       }
 
       return result;
@@ -691,11 +713,29 @@ function EvDa (imported) {
 
     setadd: function ( key, value ) {
       value = isArray(value) ? value : [value];
-      return pub ( key, uniq(( data[key] || [] ).concat(value)) );
+
+      var 
+        before = data[key] || [],
+        after = uniq( before.concat(value) );
+
+      if ( before.length != after.length) {
+        return pub ( key, after );
+      }
+
+      return after;
     },
 
     setdel: function ( key, value ) {
-      return pub ( key, without(( data[key] || [] ), value) );
+
+      var
+        before = data[key] || [],
+        after = without( before, value);
+
+      if ( before.length != after.length) {
+        return pub ( key, after );
+      }
+
+      return after;
     },
 
     disable: function ( listName ) {
