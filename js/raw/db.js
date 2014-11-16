@@ -50,6 +50,9 @@
       isStr: function(obj) { return !!(obj === '' || (obj && obj.charCodeAt && obj.substr)) },
       isNum: function(obj) { return toString.call(obj) === '[object Number]' },
       isArr: [].isArray || function(obj) { return toString.call(obj) === '[object Array]' },
+      isBool: function(obj){
+        return obj === true || obj === false || toString.call(obj) == '[object Boolean]';
+      },
       // } end underscore.js
       // from jquery 1.5.2's type
       isObj: function( obj ){
@@ -125,7 +128,7 @@
         if (obj.length === 0) { return; }
         if (_.isArr(obj)) { 
           obj.forEach(cb);
-        } else if(_.isStr(obj)) {
+        } else if(_.isStr(obj) || _.isNum(obj) || _.isBool(obj)) {
           cb(obj);
         } else {
           for( var key in obj ) {
@@ -741,6 +744,7 @@
     'order',
     'orderBy',
     'remove',
+    'schema',
     'select',
     'slice',
     'sort',
@@ -830,15 +834,14 @@
         // makes no sense whatsoever.
         var 
           agg = {}, 
-          len = raw.length, 
+          list = _.isArr(this) ? this : ret.find(),
+          len = list.length, 
           skip = Math.ceil(Math.min(10, len / 3)),
           entry;
 
-        for(var i = 0; 
-            i < len; 
-              i += skip, 
-              entry = raw[i]
-          ) {
+        for(var i = 0; i < len; i += skip ) {
+          entry = list[i];
+
           for(var key in entry) {
             agg[key] = _u;
           }
@@ -973,7 +976,7 @@
           each(which[field], function(what) {
             // if it's an array, then we do each one.
 
-            if(! groupMap[what]) {
+            if(! (what in groupMap) ) {
               groupMap[what] = chain([]);
             }
 
