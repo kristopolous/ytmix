@@ -136,11 +136,12 @@ function EvDa (imported) {
           if (source[prop] !== void 0) {
 
             // This recursively assigns
+            /*
             if ( isObject(source[prop]) && isObject(obj[prop]) ) {
               extend(obj[prop], source[prop]);
             } else {
-              obj[prop] = source[prop];
-            }
+             */ obj[prop] = source[prop];
+            //}
           }
         }
       });
@@ -158,6 +159,8 @@ function EvDa (imported) {
     // the end of the object to notify our future-selfs
     // that we ought to remove the function.
     ONCE = {once: 1},
+
+    lockMap = {},
 
     // Internals
     data = imported || {},
@@ -590,6 +593,9 @@ function EvDa (imported) {
     },
 
     set: function (key, value, _meta, bypass, _noexecute) {
+      if(lockMap[key] > 1) { return data[key]; }
+      lockMap[key] = (lockMap[key] || 0) + 1;
+
       var 
         testKey = 'test' + key,
         result,
@@ -674,6 +680,8 @@ function EvDa (imported) {
       if(key.length > 0) {
         bubble.apply(pub.context, [key].concat(slice.call(arguments, 2)));
       }
+
+      lockMap[key] = 0;
 
       return result;
     },

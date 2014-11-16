@@ -56,4 +56,5 @@ _db.beforeAdd(function(what) {
 
 ev.sniff();
 ev.sniff('tick');
+ev.sniff('');
 

@@ -257,12 +257,14 @@ var Timeline = (function(){
       debug(stats);
     } else {
       try {
+        /*
         debug([
           "(backup)", 
           Player.active.getCurrentTime().toFixed(3),
           "/",
           Player.active.getDuration().toFixed(3)
         ]);
+        */
       } catch(ex) {
         console.log(Player.active, ex);
         debug([ "(backup) - failure" ]);
