@@ -1,6 +1,7 @@
 <?php
 function pl_related($params) {
   $ytid = $params['id'];
+  $thresh = 20000;
 
   $related_videos = Array();
   $url = 'https://gdata.youtube.com/feeds/api/videos/' . $ytid .'/related?v=2';
@@ -20,7 +21,7 @@ function pl_related($params) {
     // that have fewer views - 100k seems to be a good number
     // to avoid stupid shit.
     $vc = (int)$row->stats['viewCount'][0];
-    if ($vc < 20000) {
+    if ($vc < $thresh) {
       $related_videos[] = Array(
         'vc' => $vc,
         'ytid' => array_pop($pieces),
@@ -32,7 +33,8 @@ function pl_related($params) {
   return Array(
     'ytid' => $ytid,
     'related' => $related_videos,
-    'url' => $url
+    'url' => $url,
+    'thresh' => $thresh
   );
 }
 
