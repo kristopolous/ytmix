@@ -2,12 +2,11 @@
 // EvDa Events and Data v1.0
 // https://github.com/kristopolous/EvDa
 //
-// Copyright 2011 - 2014 Chris McKenzie
+// Copyright 2009 - 2014 Chris McKenzie
 // Dual licensed under the MIT or GPL Version 2 licenses.
 //
 function EvDa (imported) {
   var 
-    BASE = '__base',
     slice = Array.prototype.slice,  
 
     // This is mostly underscore functions here. But they are included to make sure that
@@ -58,6 +57,16 @@ function EvDa (imported) {
 
     last = function(obj) {
       return obj.length ? obj[obj.length - 1] : undefined;
+    },
+
+    values = function (obj) {
+      var ret = [];
+
+      for(var key in obj) {
+        ret.push(obj[key]);
+      }
+
+      return ret;
     },
 
     keys = ({}).keys || function (obj) {
@@ -161,9 +170,12 @@ function EvDa (imported) {
     ONCE = {once: 1},
 
     lockMap = {},
+    testLockMap = {},
 
     // Internals
     data = imported || {},
+
+    insideTest = false,
 
     // the backlog to execute if something is paused.
     backlog = [],
@@ -199,6 +211,36 @@ function EvDa (imported) {
 
     } else {
       return cback(what);
+    }
+  }
+
+  // this will try to resolve what the user
+  // is asking for.
+  function resolve ( what ) {
+    if ( what in data ) {
+      return data[ what ];
+    }
+
+    // If the key isn't set then we try to resolve it
+    // through dot notation.
+    // ex: a.b.c
+    var 
+      // [a,b,c]
+      parts = what.split('.'),
+
+      // c
+      tail = parts.pop(),
+      
+      // a.b
+      head = parts.join('.');
+
+    if (head) {
+      // we try to resolve the head
+      var res = resolve( head );
+
+      if ( isObject(res) && tail in res ) {
+        return res[tail];
+      }
     }
   }
   
@@ -261,14 +303,17 @@ function EvDa (imported) {
         return scope;
       }
 
-      return smartMap(scope, function(what) { 
-        return data[ what ];
-      });
+      return smartMap(scope, resolve);
     } 
 
     // If there were two arguments and if one of them was a function, then
     // this needs to be registered.  Otherwise, we are setting a value.
-    return pub [ isFunction ( value ) ? ON : 'set' ].apply(this, arguments);
+    //
+    // unless it's an array of functions
+    return pub [ 
+      ( isFunction ( value ) || 
+        ( isArray(value) && isFunction(value[0]) )
+      ) ? ON : 'set' ].apply(this, arguments);
   }
 
   // Register callbacks for
@@ -277,11 +322,26 @@ function EvDa (imported) {
 
     // register the function
     pub[stage] = function ( key, callback, meta ) {
-      var map = eventMap;
+
+      // if it's an array, then we register each one
+      // individually.
+      if(_.isArray(callback)) {
+        // take everything after the first two arguments
+        var args = slice.call(arguments, 2);
+        
+        // go through the callback as an array, returning
+        // its list of cbs
+        return map(callback, function(cb) {
+          // call within the oo binding context, the key, the cb,
+          // and the remaining args.
+          return pub[stage].apply(pub.context, [key, cb].concat(args));
+        });
+      }
+
+      var my_map = eventMap;
 
       if ( !callback ) {
-        callback = key;
-        key = BASE;
+        return my_map[stage + key];
       }
 
       // This is the back-reference map to this callback
@@ -289,10 +349,10 @@ function EvDa (imported) {
       (callback.$ || (callback.$ = [])).push ( stage + key );
 
       if (isGlobbed(key)) {
-        map = globberMap;
+        my_map = globberMap;
       }
 
-      (map[stage + key] || (map[stage + key] = [])).push ( callback );
+      (my_map[stage + key] || (my_map[stage + key] = [])).push ( callback );
 
       return extend(callback, meta);
     }
@@ -487,6 +547,44 @@ function EvDa (imported) {
     },
 
     when: function ( key, toTest, lambda ) {
+      // when multiple things are set in an object style.
+      if ( isObject(key) ) {
+        var 
+          cbMap = {},
+          flagMap = {},
+          // flagTest only gets run when
+          flagReset = function(val, meta) {
+            flagMap[meta.key] = false;
+            meta();
+          }, 
+          flagTest = function(val, meta) {
+            // toggle the flag
+            flagMap[meta.key] = true;
+
+            // see if there's any more false things
+            // and if there are not then we run this
+            if(values(flagMap).indexOf(false) == -1) {
+              toTest.apply(pub.context, slice.call(arguments));
+            }
+          };
+
+        each(key, function(_key, _val) {
+          // we first set up a test that will reset our flag.
+          cbMap[_key + "-test" ] = pub.test(_key, flagReset);
+
+          // then the actual test
+          cbMap[_key] = pub.when(_key, _val, flagTest);
+
+          // set the initial flagmap key
+          // value to false - this will
+          // be triggered if things succeed.
+          // This has to be initialized here.
+          flagMap[_key] = false;
+        });
+
+        return cbMap;
+      }
+
       // See if toTest makes sense as a block of code
       // This may have some drastically unexpected side-effects.
       if ( isString(toTest) ) {
@@ -513,7 +611,7 @@ function EvDa (imported) {
           // Otherwise, try a triple equals.
           ( value === toTest ) 
         ) {
-          lambda.call(pub.context, value);
+          lambda.apply(pub.context, slice.call(arguments));
         }
       });
     },
@@ -547,16 +645,11 @@ function EvDa (imported) {
     // Therein, we don't try to handle input validation
     // and just try it anyway
     push: function ( key, value ) {
-      if (size(arguments) == 1) {
-        value = key;
-        key = BASE;
-      }
-
       return pub.set ( key, [].concat(data[key] || [], [value]) );
     },
 
     pop: function ( key ) {
-      return pub.set ( key || BASE, data[key].slice(0, -1) );
+      return pub.set ( key, data[key].slice(0, -1) );
     },
 
     traceList: [],
@@ -593,7 +686,17 @@ function EvDa (imported) {
     },
 
     set: function (key, value, _meta, bypass, _noexecute) {
-      if(lockMap[key] > 1) { return data[key]; }
+      // this is when we are calling a future setter
+      if(arguments.length == 1) {
+        var ret = function() {
+          pub.set.apply(pub.context, [key].concat(slice.call(arguments)));
+        }
+        pub.set.call(pub.context, key, undefined);
+        return ret;
+      }
+
+      // recursion prevention.
+      if(lockMap[key] > 0) { return data[key]; }
       lockMap[key] = (lockMap[key] || 0) + 1;
 
       var 
@@ -634,10 +737,18 @@ function EvDa (imported) {
       });
 
       if (doTest) {
-        // This is the test handlers
-        each ( eventMap[ testKey ], function ( callback ) {
-          callback.call ( pub.context, value, meta );
-        });
+        // we permit a level of recursion for testing.
+        lockMap[key]--;
+        if (testLockMap[key] !== true) {
+          testLockMap[key] = true;
+
+          // This is the test handlers
+          each ( eventMap[ testKey ], function ( callback ) {
+            callback.call ( pub.context, value, meta );
+          });
+
+          testLockMap[key] = false;
+        }
         // Don't return the value...
         // return the current value of that key.
         // 
@@ -654,12 +765,22 @@ function EvDa (imported) {
         // through the meta
         data[key] = value;
 
-        var cback = function(){
+        var myargs = arguments, cback = function(){
           each(
             (eventMap[FIRST + key] || []).concat(
-              (eventMap[ON + key] || []),
-              (eventMap[AFTER + key] || []) 
+              (eventMap[ON + key] || [])
             ),
+            function(callback) {
+              meta.last = runCallback(callback, pub.context, value, meta);
+            });
+
+
+          // After this, we bubble up if relevant.
+          if(key.length > 0) {
+            bubble.apply(pub.context, [key].concat(slice.call(myargs, 2)));
+          }
+
+          each(eventMap[AFTER + key] || [],
             function(callback) {
               meta.last = runCallback(callback, pub.context, value, meta);
             });
@@ -676,10 +797,6 @@ function EvDa (imported) {
         }
       } 
 
-      // After this, we bubble up if relevant.
-      if(key.length > 0) {
-        bubble.apply(pub.context, [key].concat(slice.call(arguments, 2)));
-      }
 
       lockMap[key] = 0;
 
@@ -691,6 +808,20 @@ function EvDa (imported) {
     },
 
     once: function ( key, lambda, meta ) {
+      // permit once to take a bunch of callbacks and mark
+      // them all for one time
+      //
+      // if we have a 'smart map' then we actually only care
+      // about the values of it
+      if ( isObject(key) ) {
+        key = values(key);
+      }
+      if ( isArray(key) ) {
+        return map(key, function(what) {
+          pub.once.call(pub.context, what, lambda, meta);
+        });
+      }
+
       // If this is a callback, then we can register it to be called once.
       if(lambda) {
         // Through some slight recursion.
@@ -770,11 +901,6 @@ function EvDa (imported) {
     },
 
     changed: function(key, callback) {
-      if( !callback ) {
-        callback = key;
-        key = BASE;
-      }
-
       return pub.on(key, function(value, meta) {
         var 
           newlen = size(value),
