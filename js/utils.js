@@ -159,17 +159,12 @@ Queue.prototype.doshift = function(){
 };
 
 function log() {
-  console.log([
-    '@' + 
-      ((new Date() - START) / 1000).toFixed(2) + ' ' + 
-        Utils
-          .stack(2,3)
-          .split('/')
-          .pop() +
-    ':'
-  ].concat(
-    slice.call(arguments)
-  ));
+  console.log.apply(console,
+    [
+      (new Date() - START),
+      Utils.stack(2,3).split('/').pop()
+    ].concat( slice.call(arguments) )
+  );
 }
 
 function debug(list) {

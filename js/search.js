@@ -138,12 +138,12 @@ function loadRelated(obj, opts){
       // duration of the video, only the id.
       Store.addMethod('r:' + obj.ytid, function(id) {
 
-        console.log("method added: " + id);
+        log("method added: " + id);
         var stuff = Utils
           .insertAfter(match, data.related)
           .update({method: id});
 
-        console.log(stuff);
+        log(stuff);
         // Here we find the duration of the videos
         getDuration(ytidList, function(){
 

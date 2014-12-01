@@ -136,7 +136,7 @@ function findStatus(idList, cb, status) {
       "key=AIzaSyAHtzuv9cF6sdFbIvBWoXhhflxcCFz5qfA"
     ].join('&'), function(res) {
     _.each(res.items, function(row) {
-      console.log("(status) " + row.id);
+      log("(status) " + row.id);
       status.push( row );
       current++;
     });
@@ -162,7 +162,7 @@ function replace(id, cb, attempt) {
   }
 
   Toolbar.status("Attempting a replace of " + vid.title);
-  console.log("[" + (attempt + 1) + "] Replacing (" + id + ") " + vid.title);
+  log("[" + (attempt + 1) + "] Replacing (" + id + ") " + vid.title);
   remote('query', 1, check, function(resp) {
     if(resp.vidList.length == 0 && wc > 2 && attempt != 1) {
       replace(id, cb, 1);
@@ -177,7 +177,7 @@ function replace(id, cb, attempt) {
         cutoff,
         attemptWc = attempt.split(' ').length;
 
-      console.log(distance, check, attempt, vid.length, what.length);
+      log(distance, check, attempt, vid.length, what.length);
       if(distance > 5) { 
         // try again but make the word count match
         if(attemptWc != wc) {
@@ -187,7 +187,7 @@ function replace(id, cb, attempt) {
             attempt.split(' ').slice(0, cutoff).join(' ')
           ];
           distance = DL.apply(this, short);
-          console.log("--", distance, cutoff, "words", short[0], ":", short[1]);
+          log("--", distance, cutoff, "words", short[0], ":", short[1]);
         }
         if(distance < 9 && distance > 5) {
           cutoff = Math.max(Math.min(attempt.length, check.length), 18);
@@ -196,7 +196,7 @@ function replace(id, cb, attempt) {
             attempt.slice(0, cutoff)
           ];
           distance = DL.apply(this, short);
-          console.log("--", distance, cutoff, "chars", short[0], ":", short[1]);
+          log("--", distance, cutoff, "chars", short[0], ":", short[1]);
         }
       }
 
@@ -206,7 +206,7 @@ function replace(id, cb, attempt) {
       ) {
         if(distance < 5) {
           replaced = true;
-          console.log("Success >> (" + id + ") " + vid.title);
+          log("Success >> (" + id + ") " + vid.title);
           // Keep the old title in case this is a bad match.
           // I don't want to revoke all knowledge of it.
           delete what.title;
@@ -220,7 +220,7 @@ function replace(id, cb, attempt) {
       }
     });
     if(!replaced) {
-      console.log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title, resp.url);
+      log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title, resp.url);
     }
     if(cb) {
       if(_.isFunction(cb)) {
@@ -246,12 +246,12 @@ replace.clean = function(str) {
 // The great db.js... yes it is this awesome.
 function updateBlackList () {
   findStatus(_db.find().select('ytid'), function(what) { 
-    console.log(_db.find().select('ytid').length, what.length);
+    log(_db.find().select('ytid').length, what.length);
     DB()
       .insert(what)
       .find( DB(".contentDetails.regionRestriction.blocked.indexOf('US') > -1") )
       .each(function(what) {
-        console.log("remove >> ", what.id);
+        log("remove >> ", what.id);
         Timeline.remove(what);
       });
   });
@@ -288,7 +288,7 @@ function ytButton() {
 
   _.each(['load', 'mouseover', 'mouseout', 'mousedown', 'mouseup', 'complete', 'noflash', 'wrongflash', 'dataRequested'], function(what) {
     clip.on(what, function() {
-      console.log([what].concat(arguments));
+      log([what].concat(arguments));
     });
   });
 }
@@ -316,7 +316,7 @@ $(function(){
       else if(ev.keyCode == KEY.right) { Timeline.next(); }
       else if(ev.keyCode == KEY.left) { Timeline.prev(); }
       else if(ev.keyCode == KEY.space) { Timeline.pauseplay(); }
-      else console.log(ev);
+      else log(ev);
     }
   });
 

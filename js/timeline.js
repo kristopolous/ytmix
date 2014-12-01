@@ -25,7 +25,7 @@ var UserHistory = {
     return localStorage['s'] ? localStorage['s'].split(' ') : false;
   },
   reload: function(){
-    console.log("Reloading");
+    log("Reloading");
     UserHistory.view(Player.active, Player.activeData.ytid, Player.active.getCurrentTime());
   },
   view: function (object, id, offset) {
@@ -266,7 +266,7 @@ var Timeline = (function(){
         ]);
         */
       } catch(ex) {
-        console.log(Player.active, ex);
+        log(Player.active, ex);
         debug([ "(backup) - failure" ]);
       }
     }
@@ -394,7 +394,7 @@ var Timeline = (function(){
   // be used.  There's significantly less control over this
   // player so it's the backup plan.
   ev('yt-Error', function(what) {
-    console.log("yt-error", what);
+    log("yt-error", what);
     if(what == 100) {
       Toolbar.status("Video not working; skipping");
 
@@ -551,13 +551,13 @@ var Timeline = (function(){
 
       absolute = Math.max(0, absolute);
       absolute = Math.min(_totalRuntime, absolute);
-      // console.log("Seeking to ", absolute);
+      // log("Seeking to ", absolute);
 
       var track = _db.current.findFirst(function(row) { 
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
       });
 
-      // console.log("Playing ", track);
+      // log("Playing ", track);
 
       if(track) {
         clickFix.start();
@@ -594,7 +594,7 @@ var Timeline = (function(){
       ], function(what){
         stats[what] = Player.active[what]();
       });
-      console.log(stats);
+      log(stats);
     },
 
     init: function() {
