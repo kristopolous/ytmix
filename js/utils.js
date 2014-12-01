@@ -1,14 +1,13 @@
 
 var Utils = {
-  insertAfter: function(entry, list, db) {
+  insertAfter: function(_entry, list, db) {
     db = db || _db;
 
     // we don't care how entry is expressed .. it's either an id, a ytid, or an object .. baaaasically
-    entry = db.find([
-      {id: entry},
-      {ytid: entry},
-      entry
-    ]).first;
+    var entry = db.find(
+      {id: _entry.id}
+    ).first;
+
 
     // the size of things we are putting in.
     var len = list.length;

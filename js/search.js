@@ -113,20 +113,20 @@ var Search = {
 // incremental loads.
 //
 function loadRelated(obj, opts){
-  var match = _db.find({ytid: obj.ytid});
+  var match = _db.find({ytid: obj.ytid}).first;
   
   // The related entry will be null (see the template in
   // _init_.js for more info) unless this call is made
   if(
-      !match[0].related || 
-      !match[0].related.length
+      !match.related || 
+      !match.related.length
     ) {
 
-    Toolbar.status("Adding related " + match[0].title);
+    Toolbar.status("Adding related " + match.title);
 
     // The match happens to be the same as the server
     // query in this case
-    remote('related', match[0].ytid, 
+    remote('related', match.ytid, 
       function (data){
 
       var ytidList = _.pluck(data.related, 'ytid');
