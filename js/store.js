@@ -137,7 +137,7 @@ var Store = {
   ],
 
   saveTracks: function(){
-    var result = _db.find().select(Store.remoteKeys);
+    var result = _db.order('id').select(Store.remoteKeys);
     ev(
      'tracklist', 
       result
