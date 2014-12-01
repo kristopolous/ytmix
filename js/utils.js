@@ -4,21 +4,23 @@ var Utils = {
     db = db || _db;
 
     // the size of things we are putting in.
-    var len = list.length;
+    var len = list.length, start_id = entry.id;
 
     // move the things forward.
     db.find(
       { id: db('> ' + entry.id) }
     ).update(
       function(entry) {
+        log(entry.id, '>>', len + entry.id)
         entry.id += len;
       }
     );
 
-    var start_id = entry.id + 1;
+    log('starting at', start_id);
 
     return db.insert(list).update(function(entry) {
       entry.id = start_id++;
+      log('+', entry.id);
     });    
 
   },

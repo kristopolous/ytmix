@@ -66,7 +66,7 @@ ev({
         location.reload();
       } else {
         ev.unset('id','tracklist','name');
-        _db.find().remove();
+        _db.remove();
         Timeline.pause();
 
         $(".main-app").hide();

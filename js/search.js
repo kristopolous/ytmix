@@ -138,19 +138,35 @@ function loadRelated(obj, opts){
       // duration of the video, only the id.
       Store.addMethod('r:' + obj.ytid, function(id) {
 
+        // we need to make sure we only insert new things
         log("method added: " + id);
-        var stuff = Utils
-          .insertAfter(match, data.related)
-          .update({method: id});
+        var 
+          tempDB = DB(data.related),
+          ytList = tempDB.select('ytid');
 
-        log(stuff);
-        // Here we find the duration of the videos
-        getDuration(ytidList, function(){
+        // this will be the list of the new ytids
+        var newIdList = _.difference(
+            ytList,
+            _db.find({ytid: ytList}).select('ytid')
+          ), 
+          newVids = tempDB.find({ytid: newIdList});
 
-          Store.saveTracks();
-          ev.set('request_gen');
+        if(newVids.length) {
+          var stuff = Utils
+            .insertAfter(match, newVids)
+            .update({method: id});
 
-        });
+          log(stuff);
+          // Here we find the duration of the videos
+          getDuration(ytidList, function(){
+
+            Store.saveTracks();
+            ev.set('request_gen');
+
+          });
+        } else {
+          log("All related videos have already been added");
+        }
       });
     });
   } 
