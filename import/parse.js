@@ -15,7 +15,7 @@ var
   title = "(no title)",
   subtitle;
 
-  console.log(source);
+  console.log("Reading from", source);
 
 function newentry(entry) {
   if (entry.title.constructor != String) {
@@ -59,13 +59,14 @@ function api() {
       {form: param}, 
       function(error, response, body) {
         if(body == undefined) {
-          console.log("Make sure that " + base + " is accessible");
+          console.log("Error", "Make sure that " + base + " is accessible");
         } else {
           cb(body);
         }
       }
     )
   } else {
+    console.log("url", base + args.join('/'));
     easyget(base + args.join('/'), cb);
   }
 }
@@ -116,7 +117,7 @@ function addEntries(xml) {
       id: id,
       param: playlist
     }}, function(error, response, body) {
-      console.log(playlist, error, response.body, body);
+      console.log('addtracks', error, body);
 
       result.link = result.feed.link;
       next = result.link.filter(function(entry) {
