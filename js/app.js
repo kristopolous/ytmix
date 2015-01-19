@@ -202,7 +202,10 @@ function replace(id, cb, attempt) {
 
       if(
         (Math.abs(vid.length - what.length) < 35) ||
-        (Math.abs(vid.length - what.length) < 100 && distance < 3)
+        (Math.abs(vid.length - what.length) < 100 && distance < 3) ||
+        // if the video is longer and has an identical name, we'll be ok with it ... up to
+        // 4.5 minutes.
+        ((what.length - vid.length) > 0 && (what.length - vid.length) < 270 && distance < 2)
       ) {
         if(distance < 5) {
           replaced = true;
