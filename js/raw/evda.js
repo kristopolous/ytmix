@@ -850,13 +850,46 @@ function EvDa (imported) {
       return pub.list[listName];
     },
 
+    // This an M*N cost set-add that preserves list 
+    // ordinality
+    osetadd: function ( key, value ) {
+      // If what we are getting in is an array then
+      // we can concat the array, otherwise we should
+      // wrap it.
+      value = isArray(value) ? value : [value];
+
+      var 
+        before = data[key] || [],
+        after = clone(before);
+
+      each(value, function(what) {
+        if(after.indexOf(what) == -1) {
+          after.push(what);
+        }
+      });
+
+      // If we are successfully adding to the set
+      // then we run the events associated with it.
+      if ( before.length != after.length) {
+        return pub ( key, after );
+      }
+
+      return after;
+    },
+    // This is a sort + M complexity version that
+    // doesn't perserve ordinality.
     setadd: function ( key, value ) {
+      // If what we are getting in is an array then
+      // we can concat the array, otherwise we should
+      // wrap it.
       value = isArray(value) ? value : [value];
 
       var 
         before = data[key] || [],
         after = uniq( before.concat(value) );
 
+      // If we are successfully adding to the set
+      // then we run the events associated with it.
       if ( before.length != after.length) {
         return pub ( key, after );
       }
@@ -889,8 +922,30 @@ function EvDa (imported) {
       var bool = true;
       each(arguments, function(which) {
         bool &= (which in data);
+
+        // this bubbling is totally slow but it works
+        var 
+          parts = which.split('.'), 
+          key = '', 
+          len = parts.length,
+          last = parts[len - 1],
+          ix, iy, 
+          ref;
+
+        for(ix = 0; ix < len; ix++) {
+          key = parts.slice(0, ix).join('.');
+          ref = data[key];
+          if(ref) {
+            for(iy = ix; iy < (len - 1); iy++) {
+              ref = ref[parts[iy]];
+            }
+            delete ref[last];
+          }
+        }
+
         delete data[which];
       });
+
       return bool;
     },
 
@@ -954,6 +1009,7 @@ function EvDa (imported) {
   });
 
   pub.setAdd = pub.setadd;
+  pub.osetAdd = pub.osetadd;
   pub.setDel = pub.setdel;
   pub.isSet = pub.isset;
 
