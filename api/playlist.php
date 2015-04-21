@@ -8,6 +8,15 @@ function sanitize_track($array) {
   return $array;
 }
 
+function pl_names() {
+  $res = [];
+  $nameList = getall(run("select name from playlist where name like '%Uploads%'"));
+  foreach($nameList as $name) {
+    $res[] = str_replace("Uploads by ", "", $name[0]);
+  }
+  return $res;
+}
+
 function pl_getPreview($params){
   list($id) = get($params, 'id');
   return json_decode(getdata(run("select preview from playlist where id = $id")));

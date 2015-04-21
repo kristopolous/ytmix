@@ -86,6 +86,12 @@ function toJson(&$data, $decode = Array()) {
   return $data;
 }
 
+function getall($sql) {
+  $ret = [];
+  while($ret[] = mysql_fetch_row($sql));
+  return $ret;
+}
+
 function getdata($sql) {
   $row = mysql_fetch_assoc($sql);
   if($row) {
