@@ -10,9 +10,14 @@ function sanitize_track($array) {
 
 function pl_names() {
   $res = [];
-  $nameList = getall(run("select name from playlist where name like '%Uploads%'"));
+
+  $nameList = getall(run("select name from playlist where name like '%Uploads%' order by updated desc"));
+
   foreach($nameList as $name) {
-    $res[] = str_replace("Uploads by ", "", $name[0]);
+    $candidate = str_replace("Uploads by ", "", $name[0]);
+    if(strlen($candidate) > 0) {
+      $res[] = $candidate;
+    }
   }
   return $res;
 }

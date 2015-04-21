@@ -2,6 +2,18 @@ See here:
 
 http://9ol.es/yt
 
+## Updating the playlists
+
+You can update all the playlists using some kind of unix shell wizardry right now ... I should probably make it more humane.
+
+From the `${gitroot}/import` directory:
+
+    curl 'localhost/ghub/ytmix/api/entry.php?func=names'\
+      | python -mjson.tool \
+      | awk ' { if (NR > 2) print $0 } '\
+      | sed s'/[\",]//g'\
+      | xargs -n 1 node ./parse.js
+
 ## Low Bandwidth Stream Example
 
 You can use [youtube-dl](http://rg3.github.io/youtube-dl/) with a FIFO-pipe and mplayer to play things over a low-bitrate connection like so:
