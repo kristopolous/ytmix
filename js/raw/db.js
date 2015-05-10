@@ -42,6 +42,7 @@
 
     // For computing set differences
     _stainID = 0,
+    _stainKey = '_4ab92bf03191c585f182',
 
     // type checking system
     _ = {
@@ -106,20 +107,20 @@
       return ret;
     },
 
+    mapSoft = function(array, cb) {
+      var ret = [];
+
+      for ( var i = 0, len = array.length; i < len; i++ ) { 
+        ret.push(cb(array[i], i));
+      }
+
+      return ret;
+    },
+
     map = [].map ?
       function(array, cb) { 
         return array.map(cb) 
-      } : 
-
-      function(array, cb) {
-        var ret = [];
-
-        for ( var i = 0, len = array.length; i < len; i++ ) { 
-          ret.push(cb(array[i], i));
-        }
-
-        return ret;
-      },
+      } : mapSoft,
 
     // each is a complex one
     each = [].forEach ?
@@ -227,6 +228,7 @@
 
     for(var ix = 0, len = larger.length; ix < len; ix++) {
       if (isStained(larger[ix])) { 
+        unstain(larger[ix]);
         continue;
       } 
       ret.push(larger[ix]);
@@ -251,12 +253,16 @@
     _stainID++;
 
     for(var ix = 0, len = list.length; ix < len; ix++) {
-      list[ix].constructor('i', _stainID);
+      list[ix][_stainKey] = _stainID;
     }
   }
 
+  function unstain(obj) {
+    delete obj[_stainKey];
+  }
+
   function isStained(obj) {
-    return obj.constructor('i') == _stainID;
+    return obj[_stainKey] == _stainID;
   }
 
   // The first parameter, if exists, is assumed to be the value in the database,
@@ -569,16 +575,6 @@
     }
   }
 
-  // An encapsulator for hiding internal variables
-  function secret(x) {
-    var cache = {x:x};
-
-    return function(arg0, arg1){
-      if (arguments.length == 2) { cache[arg0] = arg1; }
-      return cache[arg0];
-    };
-  }
-
   function update(arg0, arg1) {
     var key, filter = this;
 
@@ -648,6 +644,8 @@
 
         if(_.isStr( arg0 )) {
           expr = arg0;
+
+          //
           // There are TWO types of lambda function here (I'm not using the
           // term 'closure' because that means something else)
           //
@@ -663,7 +661,8 @@
           // No? ok, me either. This seems practical then.
           //
           // The invocation wrapping will also make this work magically, with proper
-          // expreessive usage.
+          // expressive usage.
+          //
           if(arguments.length == 1) {
             if(!cache[expr]) {
 
@@ -711,6 +710,7 @@
 
   function eachRun(callback, arg1) {
     var 
+      context = 0,
       ret = [],
       filter;
 
@@ -722,13 +722,18 @@
     }
 
     if(_.isArr(filter)) {
-      ret = map(filter, callback);
+      ret = mapSoft(filter, callback);
     } else {
       ret = {};
 
+      if(_.isArr(callback)) {
+        context = callback[0];
+        callback = callback[1];
+      }
+
       for(var key in filter) {
         if(!_.isFun(filter[key])) {
-          ret[key] = callback.call(0, filter[key]);
+          ret[key] = callback.call(context, filter[key]);
         }
       }
     } 
@@ -749,6 +754,7 @@
     'invert',
     'isin',
     'keyBy',
+    'lazyView',
     'like',
     'missing',
     'order',
@@ -779,8 +785,17 @@
       constrainCache = {},
       syncList = [],
       syncLock = false,
+      //
+      // This is our atomic counter that
+      // gets moved forward for different
+      // operations
+      //
+      _ix = {ins:0, del:0},
       _template = false,
       ret = expression(),
+
+      // globals with respect to this self.
+      _g = {},
       raw = [];
 
     function sync() {
@@ -863,12 +878,16 @@
         return keys(agg);
       },
 
+      // 
       // This is to constrain the database.  Currently you can enforce a unique
       // key value through something like `db.constrain('unique', 'somekey')`.
       // You should probably run this early, as unlike in RDBMSs, it doesn't do
       // a historical check nor does it create a optimized hash to index by
       // this key ... it just does a lookup every time as of now.
-      constrain: function() { extend(constraints, kvarg(arguments)); },
+      //
+      constrain: function() { 
+        extend(constraints, kvarg(arguments)); 
+      },
       
       // Adds if and only if a function matches a constraint
       addIf: function( lambda ) {
@@ -907,21 +926,26 @@
       not: not,
     
       // This is a shorthand to find for when you are only expecting one result.
+      // A boolean false is returned if nothing is found
       findFirst: function(){
         var res = ret.find.apply(this, arguments);
-        return res.length ? res[0] : {};
+        return res.length ? res[0] : false;
       },
 
       has: has,
 
       // hasKey is to get records that have keys defined
       hasKey: function() {
-        return this.find(missing(slice.call(arguments))).invert();
+        var 
+          outer = _.isArr(this) ? this : this.find(),
+          inner = outer.find(missing(slice.call(arguments)));
+
+        return this.invert(inner, outer);
       },
 
       isin: isin,
       like: like,
-      invert: function(list) { return chain(setdiff(raw, list || this)); },
+      invert: function(list, second) { return chain(setdiff(second || raw, list || this)); },
 
       map: eachRun,
 
@@ -1019,6 +1043,7 @@
 
     //
     // indexBy is just a sort without a chaining of the args
+    //
     ret.indexBy = function () {
       // alias chain away
       var _chain = chain; 
@@ -1093,56 +1118,39 @@
     }
 
     //
-    // view 
-    //
-    // Views are an expensive synchronization macro that return 
-    // an object that can be indexed in order to get into the data.
-    //
-    ret.view = function(field) {
-      var obj = {};
-
-      ret.sync(function(data) {
-        var ref = {}, key;
-
-        each(data, function(row) {
-          if(field in row) {
-            ref[row[field]] = row;
-          }
-        });
-
-        for(key in ref) {
-          if( ! ( key in obj ) ) {
-            obj[key] = ref[key];
-          } else if(obj[key] !== ref[key]) {
-            obj[key] = ref[key];
-          }
-        }
-        for(key in obj) {
-          if( ! (key in ref) ) {
-            delete obj[key];
-          }
-        }
-      });
-
-      sync();
-
-      return obj;
-    }
-
-    //
     // lazyView
     //
     // lazyViews are a variation of views that have to be explicitly rebuilt
     // on demand with ()
     //
-    ret.lazyView = function(field) {
-      function update() {
+    ret.lazyView = function(field, type) {
+      // keep track
+      var 
+        myix = {del: _ix.del, ins: _ix.ins},
+        keyer;
+      
+      if(field.charAt(0) !== '[' || field.charAt(0) !== '.') {
+        field = '.' + field;
+      }
+
+      eval( "keyer = function(r,ref){try{ref[rX] = update[rX] = r;} catch(x){}}".replace(/X/g, field));
+
+      function update(whence) {
+        if(whence) {
+          // if we only care about updating our views
+          // on a new delete, then we check our atomic
+          if(whence == 'del' && myix.del == _ix.del) {
+            return;
+          } else if(whence == 'ins' && myix.ins == _ix.ins) {
+            return;
+          }
+        }
+        myix = {del: _ix.del, ins: _ix.ins};
+
         var ref = {};
 
         each(raw, function(row) {
-          if(field in row) {
-            ref[row[field]] = update[row[field]] = row;
-          }
+          keyer(row, ref);
         });
 
         for(var key in update) {
@@ -1151,9 +1159,22 @@
           }
         }
       }
+
       update();
       return update;
     },
+
+    //
+    // view 
+    //
+    // Views are an expensive synchronization macro that return 
+    // an object that can be indexed in order to get into the data.
+    //
+    ret.view = function(field, type) {
+      var fn = ret.lazyView(field, type);
+      ret.sync(fn);
+      return fn;
+    }
 
     //
     // select
@@ -1212,8 +1233,8 @@
     ret.insert = function(param) {
       var 
         ix,
+        unique = constraints.unique,
         existing = [],
-        constraintMap = {},
         toInsert = [],
         ixList = [];
 
@@ -1237,36 +1258,44 @@
 
       each(toInsert, function(which) {
         // We first check to make sure we *should* be adding this.
-        var doAdd = true;
+        var doAdd = true, data;
 
         // If the unique field has been set then we do
         // a hash search through the constraints to 
         // see if it's there.
-        if(constraints.unique) {
+        if(unique && (unique in which)) {
 
           // If the user had opted for a certain field to be unique,
           // then we find all the matches to that field and create
           // a block list from them.
-          constraintMap = {};
+          var key = 'c-' + unique, map_;
+          // We create a lazyView 
+          if(!_g[key]) {
+            _g[key] = ret.lazyView(unique);
+          } else {
+            // Only update if a delete has happened
+            _g[key]('del');
+          }
 
-          // TODO: this looks slow.
-          each(raw, function(data, index){
-            constraintMap[data[constraints.unique]] = index;
-          });
+          map_ = _g[key];
 
           // This would mean that the candidate to be inserted
           // should be rejected because it doesn't satisfy the
           // unique constraint established.
-          if(which[constraints.unique] in constraintMap){
+          if(which[unique] in map_){
 
             // Create a reference list so we know what was existing
-            existing.push(constraintMap[which[constraints.unique]]);
+            existing.push(map_[which[unique]]);
 
             // put on the existing value
-            ixList.push(constraintMap[which[constraints.unique]]);
+            ixList.push(map_[which[unique]]);
 
             // Toggle our doAdd over to false.
             doAdd = false;
+          } else {
+            // Otherwise we assume it will be added and
+            // put it in our map for future reference.
+            map_[which[unique]] = which;
           }
         }
 
@@ -1277,11 +1306,13 @@
 
         if(!doAdd) {
           return;
-        }
+        } 
+        // if we got here then we can update 
+        // our dynamic counter.
+        _ix.ins++;
 
         // If we get here, then the data is going in.
         ix = raw.length;
-        var data;
 
         // insert from a template if available
         if(_template) {
@@ -1302,20 +1333,7 @@
           which = extend(instance, which);
         }
 
-        try {
-          data = new (secret(ix))();
-          extend(data, which);
-          raw.push(data);
-        } catch(ex) {
-
-          // Embedded objects, like flash controllers
-          // will bail on extend because the properties 
-          // aren't totally enumerable.  We work around 
-          // that by slightly changing the object;
-          // hopefully in a non-destructive way.
-          which.constructor = secret(ix);
-          raw.push(which);
-        }
+        raw.push(which);
 
         ixList.push(ix);
       });
@@ -1328,6 +1346,14 @@
       );
     }
 
+    // 
+    // The quickest way to do an insert. 
+    // This checks for absolutely nothing.
+    //
+    ret.flash = function(list) {
+      ret.__raw__ = raw = raw.concat(list);
+    }
+
     //
     // remove
     // 
@@ -1336,25 +1362,38 @@
     //
     ret.remove = function(arg0, arg1) {
       var 
+        isDirty = false,
         end, start,
         list,
         save = [];
 
       if(_.isArr(this)) { list = this; } 
       else if(_.isArr(arg0)) { list = arg0; } 
-      else if(arguments.length > 0){ list = ret.find.apply(this, arguments); } 
+      else if(arguments.length > 0){ 
+        save = ret.find.apply(this, arguments);
+        if(save.length) {
+          ret.__raw__ = raw = ret.invert(save);
+          console.log(raw);
+          _ix.del++;
+          sync();
+        }
+        return chain(save.reverse());
+      } 
+
       else { list = ret.find(); }
 
       stain(list);
 
       for(var ix = raw.length - 1, end = raw.length; ix >= 0; ix--) {
         if (isStained(raw[ix])) { 
+          unstain(raw[ix]);
           save.push(raw[ix]);
           continue;
         }
         if(end - (ix + 1)) {
           start = ix + 1;
           raw.splice(start, end - start);
+          isDirty = true;
         }
         end = ix;
       }
@@ -1362,9 +1401,15 @@
       start = ix + 1;
       if(end - start) {
         raw.splice(start, end - start);
+        isDirty = true;
       }
 
-      sync();
+      if(isDirty) {
+        // If we've spliced, then we sync and update our
+        // atomic delete counter
+        _ix.del++;
+        sync();
+      }
       return chain(save.reverse());
     }
 
@@ -1398,6 +1443,7 @@
     values: values,
     isin: isin,
     isArray: isArray,
+
 
     // like expr but for local functions
     local: function(){
