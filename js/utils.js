@@ -47,7 +47,8 @@ var Utils = {
   runtime: function(obj) {
     var total = 0;
 
-    each(obj, function(which) {
+    each(Object.keys(obj), function(key) {
+      var which = obj[key];
       if(which && which.length) {
         total += parseInt(which.length);
       }

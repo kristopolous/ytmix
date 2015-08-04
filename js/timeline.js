@@ -551,13 +551,14 @@ var Timeline = (function(){
 
       absolute = Math.max(0, absolute);
       absolute = Math.min(_totalRuntime, absolute);
-      // log("Seeking to ", absolute);
+      log("Seeking to ", absolute);
+
 
       var track = _db.current.findFirst(function(row) { 
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
       });
 
-      // log("Playing ", track);
+      log("Playing ", track);
 
       if(track) {
         clickFix.start();
