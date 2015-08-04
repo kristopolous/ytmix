@@ -18,6 +18,7 @@ function EvDa (imported) {
     isFunction = function(obj) { return !!(obj && obj.constructor && obj.call && obj.apply) },
     isString = function(obj) { return !!(obj === '' || (obj && obj.charCodeAt && obj.substr)) },
     isNumber = function(obj) { return toString.call(obj) === '[object Number]' },
+    isScalar = function(obj) { return isString(obj) || isNumber(obj) },
     isObject = function(obj) {
       if(isFunction(obj) || isString(obj) || isNumber(obj) || isArray(obj)) {
         return false;
@@ -34,7 +35,9 @@ function EvDa (imported) {
 
     each = [].forEach ?
       function (obj, cb) {
-        if (isArray(obj) || obj.length) { 
+        if (isScalar(obj)) {
+          return each([obj], cb);
+        } else if (isArray(obj) || obj.length) { 
           toArray(obj).forEach(cb);
         } else {
           for( var key in obj ) {
@@ -44,7 +47,9 @@ function EvDa (imported) {
       } :
 
       function (obj, cb) {
-        if (isArray(obj)) {
+        if (isScalar(obj)) {
+          return each([obj], cb);
+        } else if (isArray(obj)) {
           for ( var i = 0, len = obj.length; i < len; i++ ) { 
             cb(obj[i], i);
           }
@@ -163,7 +168,8 @@ function EvDa (imported) {
     FIRST = 'first',
     ON = 'on',
     AFTER = 'after',
-    typeList = [FIRST, ON, AFTER, 'test', 'or'],
+    OR = 'or',
+    typeList = [FIRST, ON, AFTER, 'test', OR],
 
     // The one time callback gets a property to
     // the end of the object to notify our future-selfs
@@ -339,7 +345,7 @@ function EvDa (imported) {
 
       // if it's an array, then we register each one
       // individually.
-      if(_.isArray(callback)) {
+      if(isArray(callback)) {
         // take everything after the first two arguments
         var args = slice.call(arguments, 2);
         
@@ -367,6 +373,52 @@ function EvDa (imported) {
       }
 
       (my_map[stage + key] || (my_map[stage + key] = [])).push ( callback );
+
+      //
+      // It would be nice to do something like
+      // ev('key', function()).after(function(){})
+      //
+      // But in order for this to happen you need to proxy the first argument
+      // magically over to a reference set. This isn't that hard actually 
+      // and shouldn't be too expensive (lolz) anyway, a purely prototype-based 
+      // approach would be awesome here but we need to do this functionally so
+      // it's a bit of superfluous code where we cross our fingers and hope nobody
+      // hates us.
+      //
+      each(typeList, function (stage) {
+
+        if (!(stage in callback)) {
+          
+          callback[stage] = function(am_i_a_function) {
+            // the first argument MAY be our key from above
+            var args = slice.call(arguments);
+
+            // If this is a function then we inherit our key
+            if(isFunction(am_i_a_function)) {
+              args = [key].concat(args);
+            } 
+            // However, maybe someone didn't read the documentation closely and is
+            // trying to fuck with us, providing an entirely different set of keys here ...
+            // that bastard.  It's ok, that's what the type-checking was all about. In this
+            // case we just blindly pass everything through
+
+            // Also we want to be clever with the return of the callbacks, since we effectively 
+            // shadow the previous system. As it turns out it doesn't matter how we chain these thing
+            // it just matters what temporal time we register them.  So we make the final callback 
+            // an array like structure.
+            if(! ('len' in callback) ) {
+              // self reference
+              callback[0] = callback;
+              // seed it one past the self-reference minus our incrementer
+              callback.len = 0;
+            }
+            callback.len++;
+            callback[callback.len] = pub[stage].apply(pub.context, args);
+
+            return callback;
+          }
+        }
+      });
 
       return extend(callback, meta);
     }
@@ -622,6 +674,8 @@ function EvDa (imported) {
 
           toTest = attempt;
         } catch (ex) { }
+      } else if ( arguments.length == 2 ) {
+        return pub.isset ( key, toTest );
       }
 
       return pub(key, function(value) {
@@ -755,12 +809,13 @@ function EvDa (imported) {
         orHandler = function() {
           // If the tests fail, then this is the alternate failure
           // path that will be run
-          each ( eventMap[ "or" + key ] || [], function ( callback ) {
+          each ( eventMap[ OR + key ] || [], function ( callback ) {
             runCallback ( 
               callback, 
               pub.context, 
               hasvalue ? _opts['value'] : meta.value, 
-              meta );
+              meta,
+              meta.meta);
           });
         },
         // Invoke will also get done
@@ -801,7 +856,7 @@ function EvDa (imported) {
               testIx++;
 
               if (coroutine(meta, false)) {
-                res = eventMap[ testKey ][ testIx ].call ( pub.context, (hasvalue ? _opts['value'] : meta.value), meta );
+                res = eventMap[ testKey ][ testIx ].call ( pub.context, (hasvalue ? _opts['value'] : meta.value), meta, meta.meta );
 
                 if(res === true || res === false) {
                   meta(res);
@@ -837,7 +892,8 @@ function EvDa (imported) {
             res = eventMap[ testKey ][ testIx ].call ( 
               pub.context, 
               (hasvalue ? _opts['value'] : meta.value), 
-              meta
+              meta,
+              meta.meta
             );
 
             if(res === true || res === false) {
@@ -864,56 +920,58 @@ function EvDa (imported) {
 
         // If there's a coroutine then we call that
         // here
-        if (!coroutine(meta, true)) {
-          return result;
-        }
+        if (coroutine(meta, true)) {
 
-        value = meta.value;
+          value = meta.value;
 
-        //
-        // Set the key to the new value.
-        // The old value is being passed in
-        // through the meta
-        //
-        if(!(_opts.onlychange && value === data[key])) {
+          //
+          // Set the key to the new value.
+          // The old value is being passed in
+          // through the meta
+          //
+          if(!(_opts.onlychange && value === data[key])) {
 
-          if(!_opts.noset) {
-            data[key] = value;
+            if(!_opts.noset) {
+              data[key] = value;
 
-            if(key != '') {
-              data_ix[key] = (data_ix[key] || 0) + 1;
-            }
-          }
-
-          var myargs = arguments, cback = function(){
-            each(
-              (eventMap[FIRST + key] || []).concat(
-                (eventMap[ON + key] || [])
-              ),
-              function(callback) {
-                meta.last = runCallback(callback, pub.context, value, meta);
-              });
-
-            // After this, we bubble up if relevant.
-            if(key.length > 0) {
-              bubble.apply(pub.context, [key].concat(slice.call(myargs, 2)));
+              if(key != '') {
+                data_ix[key] = (data_ix[key] || 0) + 1;
+              }
             }
 
-            each(eventMap[AFTER + key] || [],
-              function(callback) {
-                meta.last = runCallback(callback, pub.context, value, meta);
-              });
+            var myargs = arguments, cback = function(){
+              each(
+                (eventMap[FIRST + key] || []).concat(
+                  (eventMap[ON + key] || [])
+                ),
+                function(callback) {
+                  meta.last = runCallback(callback, pub.context, value, meta);
+                });
 
-            return value;
-          }
+              // After this, we bubble up if relevant.
+              if(key.length > 0) {
+                // But we don't hit the coroutine
+                delete _opts['coroutine'];
 
-          if(!noexec) {
-            result = cback.call(pub.context);
-          } else {
-            // if we are not executing this, then
-            // we return a set of functions that we
-            // would be executing.
-            result = cback;
+                bubble.apply(pub.context, [key].concat(slice.call(myargs, 2)));
+              }
+
+              each(eventMap[AFTER + key] || [],
+                function(callback) {
+                  meta.last = runCallback(callback, pub.context, value, meta);
+                });
+
+              return value;
+            }
+
+            if(!noexec) {
+              result = cback.call(pub.context);
+            } else {
+              // if we are not executing this, then
+              // we return a set of functions that we
+              // would be executing.
+              result = cback;
+            }
           }
         }
       } 
@@ -925,7 +983,9 @@ function EvDa (imported) {
     },
 
     fire: function ( key, meta ) {
-      pub.set ( key, data[key], meta, {noset: true} );
+      each(key, function(what) {
+        pub.set ( what, data[what], meta, {noset: true} );
+      });
     },
 
     once: function ( key, lambda, meta ) {
@@ -1006,7 +1066,7 @@ function EvDa (imported) {
     // This is a sort + M complexity version that
     // doesn't perserve ordinality.
     setadd: function ( key, value, meta ) {
-      var before = data[key] || [];
+      var before = data[key] || [], v = 0;
 
       return pub( key, value, meta, {
         // this is only called if the tests pass
@@ -1021,6 +1081,11 @@ function EvDa (imported) {
           return (before.length != meta.set.length);
         }
       });
+    },
+
+    settoggle: function ( key, value, meta ) {
+      var routine = ((data[key] || []).indexOf(value) === -1) ? 'add' : 'del';
+      return pub['set' + routine](key, value, meta);
     },
 
     setdel: function ( key, value, meta ) {
@@ -1135,6 +1200,7 @@ function EvDa (imported) {
   });
 
   pub.setAdd = pub.setadd;
+  pub.setToggle = pub.settoggle;
   pub.osetAdd = pub.osetadd;
   pub.setDel = pub.setdel;
   pub.isSet = pub.isset;

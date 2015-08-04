@@ -26,7 +26,6 @@
 //    outward, plus a few other inline ones that don't get
 //    used internally.
 (function(){
-
   var 
     // undefined
     _u,
@@ -50,9 +49,11 @@
       isFun: function(obj) { return !!(obj && obj.constructor && obj.call && obj.apply) },
       isStr: function(obj) { return !!(obj === '' || (obj && obj.charCodeAt && obj.substr)) },
       isNum: function(obj) { return toString.call(obj) === '[object Number]' },
+      isUndef: function(obj) { return isNaN(obj) || (obj === null) || (obj === undefined) },
+      isScalar: function(obj) { return _.isStr(obj) || _.isNum(obj) || _.isBool(obj) },
       isArr: [].isArray || function(obj) { return toString.call(obj) === '[object Array]' },
       isBool: function(obj){
-        return obj === true || obj === false || toString.call(obj) == '[object Boolean]';
+        return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
       },
       // } end underscore.js
       // from jquery 1.5.2's type
@@ -61,8 +62,14 @@
           return false;
         }
         return obj == null ? 
-          String( obj ) == 'object' : 
+          String( obj ) === 'object' : 
           toString.call(obj) === '[object Object]' || true ;
+      }
+    },
+
+    proxy = function(what, caller) {
+      return function() {
+        caller.apply(what, slice.call(arguments));
       }
     },
 
@@ -74,14 +81,14 @@
 
       function(array, item) {
         for(var i = array.length - 1; 
-          (i != -1) && (item != array[i]);
+          (i !== -1) && (item !== array[i]);
           i--
         ) {};
 
         return i;
       },
 
-    keys = ({}).keys || function (obj) {
+    keys = Object.keys || function (obj) {
       var ret = [];
 
       for(var key in obj) {
@@ -108,6 +115,7 @@
     },
 
     mapSoft = function(array, cb) {
+      'use strict';
       var ret = [];
 
       for ( var i = 0, len = array.length; i < len; i++ ) { 
@@ -122,12 +130,46 @@
         return array.map(cb) 
       } : mapSoft,
 
+    _filterThrow = function(fun/*, thisArg*/) {
+      'use strict';
+
+      var len = this.length; 
+      for (var i = 0; i < len; i++) {
+        if (fun(this[i])) {
+          throw this[i];
+        }
+      }
+      return [];
+    },
+
+    _filter = function(fun/*, thisArg*/) {
+      'use strict';
+
+      var len = this.length, start = 0, res = [];
+
+      for (var i = 0; i < len; i++) {
+        if (!fun(this[i])) {
+          if(start !== i) {
+            //res = res.concat(this.slice(start, i));
+            res.splice.apply(res, [i,i].concat(this.slice(start, i)));
+          }
+          start = i + 1;
+        }
+      }
+      if(start !== i) {
+        res.splice.apply(res, [i,i].concat(this.slice(start, i)));
+      }
+
+      return res;
+    },
+
     // each is a complex one
     each = [].forEach ?
       function (obj, cb) {
+        'use strict';
         // Try to return quickly if there's nothing to do.
-        if (obj.length === 0) { return; }
         if (_.isArr(obj)) { 
+          if(obj.length === 0) { return; }
           obj.forEach(cb);
         } else if(_.isStr(obj) || _.isNum(obj) || _.isBool(obj)) {
           cb(obj);
@@ -159,6 +201,7 @@
 
   // This is from underscore. It's a <<shallow>> object merge.
   function extend(obj) {
+    'use strict';
     each(slice.call(arguments, 1), function(source) {
       if (source) {
         for (var prop in source) {
@@ -252,9 +295,9 @@
   function stain(list) {
     _stainID++;
 
-    for(var ix = 0, len = list.length; ix < len; ix++) {
-      list[ix][_stainKey] = _stainID;
-    }
+    each(list, function(el) {
+      el[_stainKey] = _stainID;
+    });
   }
 
   function unstain(obj) {
@@ -308,17 +351,16 @@
       filterList = slice.call(arguments),
       filter,
       filterIx,
+      filterComp,
 
       which,
       val,
 
       // The indices
-      end,
-      spliceix,
       ix,
 
       // The dataset to compare against
-      set = copy(_.isArr(this) ? this : filterList.shift());
+      set = (_.isArr(this) ? this : filterList.shift());
 
     if( filterList.length == 2 && _.isStr( filterList[0] )) {
       // This permits find(key, value)
@@ -333,54 +375,39 @@
       // if we are looking at an array, then this acts as an OR, which means
       // that we just recursively do this.
       if(_.isArr(filter)) {
-        // If we just pass the inner array, this would be wrong because
-        // then it would operate as an AND so we need to do things individually.
-        var 
-          result = [], 
-          remaining = set;
+        if(_.isScalar(filter[0]) && filterList.length == 2) {
+          var 
+            filterComp_len,
+            filterkey_list = filter, 
+            // remove it from the list so it doesn't get
+            // a further comprehension
+            filterkey_compare = filterList.pop();
 
-        // TODO: this feels wrong.
-        if (filter.length === 0) {
-          set = remaining;
+          filterComp = [function(row) {
+            for(var ix = 0; ix < filterkey_list.length; ix++) {
+              if(equal(row[filterkey_list[ix]], filterkey_compare)) {
+                return true;
+              }
+            }
+          }]
         } else {
-
-          // Wanting to do DB.find(['field1', 'field2'], condition) 
-          // seems convenient enough.
-          if(
-            !_.isObj(filter[0]) &&
-            filterList.length == 2
-          ) {
-            var _condition = filterList.pop();
-            filter = map(filter, function(row) {
-              return obj(row, _condition);
-            });
-          }
-       
-          for(ix = 0; ix < filter.length; ix++) {
-            result = result.concat(find(remaining, filter[ix]));
-            remaining = setdiff(remaining, result);
-          }
-
-          set = result;
+          filterComp = map(filter, expression());
         }
+        
+        filterComp_len = filterComp.length;
+        set = _filter.call(set, function(row) {
+          // this satisfies the base case.
+          var ret = true;
+          for (var ix = 0; ix < filterComp_len; ix++) {
+            if(filterComp[ix](row)) {
+              return true;
+            }
+            ret = false;
+          }
+          return ret;
+        });
       } else if(_.isFun(filter)) {
-        var callback = filter;
-
-        for(end = set.length, ix = end - 1; ix >= 0; ix--) {
-          which = set[ix];
-          if(!callback(which)) { continue }
-
-          if(end - (ix + 1)) {
-            spliceix = ix + 1;
-            set.splice(spliceix, end - spliceix);
-          }
-          end = ix;
-        }
-
-        spliceix = ix + 1;
-        if(end - spliceix) {
-          set.splice(spliceix, end - spliceix);
-        }
+        set = _filter.call(set, filter);
       } else {
         each(filter, function(key, value) {
           // this permits mongo-like invocation
@@ -401,9 +428,7 @@
           }
 
           if( _.isFun(value)) {
-            for(end = set.length, ix = end - 1; ix >= 0; ix--) {
-              which = set[ix];
-
+            filterComp = function(which) {
               // Check for existence
               if( key in which ) {
                 val = which[key];
@@ -411,42 +436,20 @@
                 // Permit mutator events
                 if( _.isFun(val) ) { val = val(); }
 
-                if( ! value(val, which) ) { continue }
-
-                if(end - (ix + 1)) {
-                  spliceix = ix + 1;
-                  set.splice(spliceix, end - spliceix);
-                }
-
-                end = ix;
+                return value(val, which);
               }
             }
-
           } else {
-            for(end = set.length, ix = end - 1; ix >= 0; ix--) {
-              which = set[ix];
-
+            filterComp = function(which) {
               val = which[key];
 
               if( _.isFun(val) ) { val = val(); }
 
               // Check for existence
-              if( ! (key in which && val === value ) ) {
-                continue;
-              }
-
-              if(end - (ix + 1)) {
-                spliceix = ix + 1;
-                set.splice(spliceix, end - spliceix);
-              }
-              end = ix;
-            }
+              return (key in which && val === value );
+            };
           }
-
-          spliceix = ix + 1;
-          if(end - spliceix) {
-            set.splice(spliceix, end - spliceix);
-          }
+          set = _filter.call(set, filterComp);
         });
       }
     }
@@ -529,6 +532,15 @@
     }
   })();
 
+  function equal(lhs, rhs) {
+    return (lhs === rhs) || (
+        !_.isUndef(lhs) && (
+          (lhs.join && rhs.join) &&
+          (lhs.sort().toString() === rhs.sort().toString())
+        ) || 
+        (JSON.stringify(lhs) === JSON.stringify(rhs)
+      ));
+  }
   function isArray(what) {
     var asString = what.sort().join('');
     return function(param) {
@@ -630,83 +642,87 @@
     }
   }
 
-  var expression = (function(){
-    var 
-      regex = /^\s*([=<>!]+)['"]*(.*)$/,
-      canned,
-      cache = {};
-
-    // A closure is needed here to avoid mangling pointers
-    return function (){
-
-      return function(arg0, arg1) {
-        var ret, expr;
-
-        if(_.isStr( arg0 )) {
-          expr = arg0;
-
-          //
-          // There are TWO types of lambda function here (I'm not using the
-          // term 'closure' because that means something else)
-          //
-          // We can have one that is sensitive to a specific record member and 
-          // one that is local to a record and not a specific member.  
-          //
-          // As it turns out, we can derive the kind of function intended simply
-          // because they won't ever syntactically both be valid in real use cases.
-          //
-          // I mean sure, the empty string, space, semicolon etc is valid for both, 
-          // alright sure, thanks smarty pants.  But is that what you are using? really?
-          //
-          // No? ok, me either. This seems practical then.
-          //
-          // The invocation wrapping will also make this work magically, with proper
-          // expressive usage.
-          //
-          if(arguments.length == 1) {
-            if(!cache[expr]) {
-
-              try {
-                ret = new Function("x,rec", "try { return x " + expr + "} catch(e) {}");
-              } catch(ex) {
-                ret = false;
-              }
-
-              if(!ret) {
-                try {
-                  ret = new Function("rec", "try { return " + arg0 + "} catch(e) {}");
-                } catch(ex) {}
-              }
-
-              cache[expr] = ret;
-            } else {
-              ret = cache[expr];
-            }
-          }
-
-          if(arguments.length == 2 && _.isStr(arg1)) {
-            ret = {};
-            expr = arg1;
-
-            // See if we've seen this function before
-            if(!cache[expr]) {
-
-              // If we haven't, see if we can avoid an eval
-              if((canned = expr.match(regex)) !== null) {
-                cache[expr] = _compProto[canned[1]](canned[2].replace(/['"]$/, ''));
-              } else {      
-                // if not, fall back on it 
-                cache[expr] = new Function("x,rec", "try { return x " + expr + "} catch(e) {}");
-              }
-            } 
-            ret[arg0] = cache[expr];
-          }
-
-          return ret;
-        } 
+  var _fCache = {}, _eCache = {};
+  function ewrap(arg, str) {
+    var key = str + ":" + arg;
+    if(!(key in _eCache)) {
+      try {
+        _eCache[key] = eval('(function(' + arg +'){' + str + '})');
+      } catch(ex) {
+        _eCache[key] = false;
       }
     }
-  })();
+    return _eCache[key];
+  }
+
+  function fwrap(arg, str) {
+    var key = str + ":" + arg;
+    if(!(key in _fCache)) {
+      try {
+        _fCache[key] = new Function(arg, "try{return " + str + "}catch(e){}");
+      } catch(ex) {
+        _fCache[key] = false;
+      }
+    }
+    return _fCache[key];
+  }
+
+  var expression = function () {
+
+    return function(arg0, arg1) {
+      var ret, expr;
+
+      if(_.isStr( arg0 )) {
+        expr = arg0;
+
+        //
+        // There are TWO types of lambda function here (I'm not using the
+        // term 'closure' because that means something else)
+        //
+        // We can have one that is sensitive to a specific record member and 
+        // one that is local to a record and not a specific member.  
+        //
+        // As it turns out, we can derive the kind of function intended simply
+        // because they won't ever syntactically both be valid in real use cases.
+        //
+        // I mean sure, the empty string, space, semicolon etc is valid for both, 
+        // alright sure, thanks smarty pants.  But is that what you are using? really?
+        //
+        // No? ok, me either. This seems practical then.
+        //
+        // The invocation wrapping will also make this work magically, with proper
+        // expressive usage.
+        //
+        if(arguments.length === 2 && _.isStr(arg1)) {
+          expr = arg1;
+          ret = fwrap("x,rec", "x." + arg0 + expr);
+
+          // if not, fall back on it 
+          ret[arg0] = fwrap("x,rec", "x " + expr);
+        } else {
+          ret = fwrap("x,rec", "x " + expr);
+
+          if(!ret) {
+            ret = fwrap("rec", arg0);
+          }
+        }
+
+        return ret;
+      } else if (_.isObj( arg0 )) {
+
+        var cList = [];
+        for(var key in arg0) {
+          if(_.isScalar(arg0[key])) {
+            cList.push("rec['" + key + "']==="+arg0[key]);
+          } else {
+            cList.push("equal(rec['" + key + "'],arg0[" + key + "])");
+          }
+        };
+
+        return ewrap('rec','return ' + cList.join('&&'));
+      }
+    }
+  }
 
   function eachRun(callback, arg1) {
     var 
@@ -721,15 +737,15 @@
       filter = this;
     }
 
+    if(_.isArr(callback) && callback.length == 2) {
+      context = callback[0];
+      callback = callback[1];
+    }
+
     if(_.isArr(filter)) {
       ret = mapSoft(filter, callback);
     } else {
       ret = {};
-
-      if(_.isArr(callback)) {
-        context = callback[0];
-        callback = callback[1];
-      }
 
       for(var key in filter) {
         if(!_.isFun(filter[key])) {
@@ -923,13 +939,21 @@
       },
 
       each: eachRun,
+      map: eachRun,
       not: not,
     
       // This is a shorthand to find for when you are only expecting one result.
       // A boolean false is returned if nothing is found
       findFirst: function(){
-        var res = ret.find.apply(this, arguments);
-        return res.length ? res[0] : false;
+        var realFilter = _filter, res = false;
+        _filter = _filterThrow;
+        try { 
+          res = ret.find.apply(this, arguments);
+        } catch(ex) {
+          res = ex;
+        }
+        _filter = realFilter;
+        return res;
       },
 
       has: has,
@@ -946,8 +970,6 @@
       isin: isin,
       like: like,
       invert: function(list, second) { return chain(setdiff(second || raw, list || this)); },
-
-      map: eachRun,
 
       // Missing is to get records that have keys not defined
       missing: function() { 
@@ -1079,9 +1101,9 @@
       } else if(_.isStr(arg0)) {
         key = arg0;
 
-        if(len == 1) {
+        if(len === 1) {
           order = 'x-y';
-        } else if(len == 2) {
+        } else if(len === 2) {
 
           if(_.isStr(arg1)) {
             order = {
@@ -1129,19 +1151,23 @@
         myix = {del: _ix.del, ins: _ix.ins},
         keyer;
       
-      if(field.charAt(0) !== '[' || field.charAt(0) !== '.') {
-        field = '.' + field;
-      }
+      if(field.search(/[()]/) === -1) {
+        if(field.charAt(0) !== '[' || field.charAt(0) !== '.') {
+          field = '.' + field;
+        }
 
-      eval( "keyer = function(r,ref){try{ref[rX] = update[rX] = r;} catch(x){}}".replace(/X/g, field));
+        eval( "keyer = function(r,ref){try{ref[rX] = update[rX] = r;} catch(x){}}".replace(/X/g, field));
+      } else {
+        eval( "keyer = function(r,ref){with(r) { var val = X };try{ref[val] = update[val] = r;} catch(x){}}".replace(/X/g, field));
+      }
 
       function update(whence) {
         if(whence) {
           // if we only care about updating our views
           // on a new delete, then we check our atomic
-          if(whence == 'del' && myix.del == _ix.del) {
+          if(whence === 'del' && myix.del === _ix.del) {
             return;
-          } else if(whence == 'ins' && myix.ins == _ix.ins) {
+          } else if(whence === 'ins' && myix.ins === _ix.ins) {
             return;
           }
         }
@@ -1201,7 +1227,7 @@
       fieldCount = field.length;
       
       each(field, function(column, iy) {
-        if(column == '*') {
+        if(column === '*') {
           resultList = map(filter, values);
         } else {
           for(var ix = 0, len = filter.length; ix < len; ix++) {
@@ -1373,7 +1399,6 @@
         save = ret.find.apply(this, arguments);
         if(save.length) {
           ret.__raw__ = raw = ret.invert(save);
-          console.log(raw);
           _ix.del++;
           sync();
         }
@@ -1414,7 +1439,7 @@
     }
 
     // The ability to import a database from somewhere
-    if (arguments.length == 1) {
+    if (arguments.length === 1) {
       if(_.isArr(arg0)) { ret.insert(arg0) }
       else if(_.isFun(arg0)) { ret.insert(arg0()) }
       else if(_.isStr(arg0)) { return ret.apply(this, arguments) }
@@ -1435,6 +1460,7 @@
   extend(DB, {
     all: [],
     find: find,
+    expr: expression(),
     diff: setdiff,
     each: eachRun,
     not: not,
@@ -1443,7 +1469,6 @@
     values: values,
     isin: isin,
     isArray: isArray,
-
 
     // like expr but for local functions
     local: function(){
@@ -1473,11 +1498,6 @@
       });
 
       return obj; 
-    },
-
-    findFirst: function(){
-      var res = find.apply(this, arguments);
-      return res.length ? res[0] : {};
     },
 
     // This does a traditional left-reduction on a list
