@@ -2,8 +2,10 @@
 
 var 
   PLAYLIST = 0,
+  fs = require('fs'),
   request = require('request'),
   base = 'http://localhost/ghub/ytmix/api/',
+  authkey = false,
   http = require('http'),
   xml2js = require('xml2js'),
   url = require('url'),
@@ -14,6 +16,19 @@ var
   id = 0,
   title = "(no title)",
   subtitle;
+
+fs.readFile('authkey', 'utf8', function (err,data) {
+  if(err) {
+    console.log("Unable to find an authkey. Bailing. :-(");
+    process.exit();
+  }
+  authkey = data.replace(/\s/, '');
+console.log(authkey);
+process.exit();
+});
+
+console.log("hi");
+console.log(authkey);
 
   console.log("Reading from", source);
 
