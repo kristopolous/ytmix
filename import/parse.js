@@ -9,28 +9,25 @@ var
   http = require('http'),
   xml2js = require('xml2js'),
   url = require('url'),
-  source = 'http://gdata.youtube.com/feeds/api/users/' + process.argv[2] + '/uploads';
+  source = `http://gdata.youtube.com/feeds/api/users/{process.argv[2]}/uploads`;
 
 var 
   playlist = [],
   id = 0,
   title = "(no title)",
-  subtitle;
+  subtitle,
+  auth_resolve = new Promise(function(resolve, reject) {
+    fs.readFile('authkey', 'utf8', function (err,data) {
+      if(err) {
+        console.log("Unable to find an authkey. Bailing. :-(");
+        reject(false);
+        process.exit();
+      }
+      authkey = data.replace(/\s/, '');
+      resolve(authkey);
+    })
+  });
 
-fs.readFile('authkey', 'utf8', function (err,data) {
-  if(err) {
-    console.log("Unable to find an authkey. Bailing. :-(");
-    process.exit();
-  }
-  authkey = data.replace(/\s/, '');
-console.log(authkey);
-process.exit();
-});
-
-console.log("hi");
-console.log(authkey);
-
-  console.log("Reading from", source);
 
 function newentry(entry) {
   if (entry.title.constructor != String) {
@@ -74,7 +71,7 @@ function api() {
       {form: param}, 
       function(error, response, body) {
         if(body == undefined) {
-          console.log("Error", "Make sure that " + base + " is accessible");
+          console.log("Error", `Make sure that ${base} is accessible`);
         } else {
           cb(body);
         }
@@ -155,17 +152,20 @@ function readUrl(urlstr) {
   easyget(parsed, addEntries);
 }
 
-api('createid', source, PLAYLIST, function(data) {
-  var res = JSON.parse(data);
-  id = res.result;
+auth_resolve.then(function(auth_key) {
+  console.log(`Reading from ${source}`);
 
-  request.post(
-    base + 'entry.php', 
-    {form: {
-      func: 'update',
-      id: res.result,
-      name: 'Uploads by ' + process.argv[2]
-    }});
+  api('createid', source, PLAYLIST, function(data) {
+    var res = JSON.parse(data);
+    id = res.result;
 
-  readUrl(source);
-});
+    request.post(
+      base + 'entry.php', 
+      {form: {
+        func: 'update',
+        id: res.result,
+        name: 'Uploads by ' + process.argv[2]
+      }});
+
+    readUrl(source);
+  });
