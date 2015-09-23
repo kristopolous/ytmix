@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/local/bin/node --harmony
 
 var 
   PLAYLIST = 0,
@@ -9,7 +9,7 @@ var
   http = require('http'),
   xml2js = require('xml2js'),
   url = require('url'),
-  source = `http://gdata.youtube.com/feeds/api/users/{process.argv[2]}/uploads`;
+  source = 'http://gdata.youtube.com/feeds/api/users/' + process.argv[2] + '/uploads';
 
 var 
   playlist = [],
@@ -71,7 +71,7 @@ function api() {
       {form: param}, 
       function(error, response, body) {
         if(body == undefined) {
-          console.log("Error", `Make sure that ${base} is accessible`);
+          console.log("Error", 'Make sure that ' + base + 'is accessible');
         } else {
           cb(body);
         }
@@ -153,7 +153,7 @@ function readUrl(urlstr) {
 }
 
 auth_resolve.then(function(auth_key) {
-  console.log(`Reading from ${source}`);
+  console.log('Reading from ' + source);
 
   api('createid', source, PLAYLIST, function(data) {
     var res = JSON.parse(data);
@@ -169,3 +169,4 @@ auth_resolve.then(function(auth_key) {
 
     readUrl(source);
   });
+});
