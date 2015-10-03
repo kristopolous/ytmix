@@ -1,5 +1,12 @@
 <?php
 
+function pl_try() {
+  $q = mysql_query('DESCRIBE playlist');
+  while($row = mysql_fetch_array($q)) {
+    echo "{$row['Field']} - {$row['Type']}\n";
+  }
+}
+
 function pl_setFavorite($params) {
   return run("insert into favorite " . toInsert(getAssoc($params, 'user, ytid')));
 }

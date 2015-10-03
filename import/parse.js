@@ -1,19 +1,19 @@
 #!/usr/local/bin/node --harmony
 
 var 
-  PLAYLIST = 0,
   fs = require('fs'),
   request = require('request'),
-  base = 'http://localhost/ghub/ytmix/api/',
-  authkey = false,
   http = require('http'),
   xml2js = require('xml2js'),
-  url = require('url'),
-  source = 'http://gdata.youtube.com/feeds/api/users/' + process.argv[2] + '/uploads';
+  url = require('url');
 
 var 
+  authkey = false,
+  base = 'http://localhost/ghub/ytmix/api/',
   playlist = [],
-  id = 0,
+  PLAYLIST = 0,
+  source = 'http://gdata.youtube.com/feeds/api/users/' + process.argv[2] + '/uploads',
+  ytid = 0,
   title = "(no title)",
   subtitle,
   auth_resolve = new Promise(function(resolve, reject) {
