@@ -109,21 +109,6 @@ yt.playlist = function(playlist_id, cb) {
   });
 }
 
-
-function get_auth_key() {
-  auth_resolve = new Promise(function(resolve, reject) {
-    fs.readFile('authkey', 'utf8', function (err,data) {
-      if(err) {
-        console.log("Unable to find an authkey. Bailing. :-(");
-        reject(false);
-        process.exit();
-      }
-      authkey = data.replace(/\s/, '');
-      resolve(authkey);
-    })
-  });
-}
-
 function newentry(entry) {
   if (entry.title.constructor != String) {
     entry.title = entry.title[0]['_'];
@@ -221,19 +206,31 @@ function addEntries(xml) {
 
       if(next.length > 0) {
         nextUrl = next[0]['$']['href'];
-        readUrl(nextUrl);
+        read_url(nextUrl);
         console.log({action: "reading", data: nextUrl});
       } 
    });
  });
 }
 
-function readUrl(urlstr) {
+function read_url(urlstr) {
   parsed = url.parse(urlstr);
   parsed.path = parsed.pathname + (parsed.search || "");
 
   lib.get(parsed, addEntries);
 }
+
+auth_resolve = new Promise(function(resolve, reject) {
+  fs.readFile('authkey', 'utf8', function (err,data) {
+    if(err) {
+      console.log("Unable to find an authkey. Bailing. :-(");
+      reject(false);
+      process.exit();
+    }
+    authkey = data.replace(/\s/, '');
+    resolve(authkey);
+  })
+});
 
 auth_resolve.then(function(auth_key) {
   console.log('Reading from ' + source);
@@ -250,6 +247,6 @@ auth_resolve.then(function(auth_key) {
         name: 'Uploads by ' + process.argv[2]
       }});
 
-    readUrl(source);
+    read_url(source);
   });
 });
