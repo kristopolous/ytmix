@@ -1,6 +1,7 @@
 #!/usr/local/bin/node --harmony
 
-// in the v3 version of the api we have to
+//
+// In the v3 version of the api we have to
 //
 //  1. query the user for their upload playlist id
 //  2. grab the the upload playlist to get the titles and ids
@@ -17,12 +18,12 @@ var
     user: process.argv[2],
     authkey: false,
     playlist: false,
-    id: 0
+    id: 0,
+    base: 'https://www.googleapis.com/youtube/v3/'
   },
   base = 'http://localhost/ghub/ytmix/api/',
   playlist = [],
   playlist_id = 0,
-  source = 'http://gdata.youtube.com/feeds/api/users/' + process.argv[2] + '/uploads',
   title = "(no title)",
   subtitle;
 
@@ -44,9 +45,53 @@ var lib = {
 
     }).on('error', (e) => console.error(location, e) );
   }
-  duration: function(ytid) {
-  }
 };
+
+// Returns a promise given an end point and 
+// set of parameters.
+yt.api = function(ep, params) {
+}
+
+// Returns a playlist id for a given user ... 
+// defaults uploads
+yt.upload_id = function(user, which) {
+  which = which || 'uploads';
+
+  var mypromise = yt.api(
+  ), promise_to_return = new Promise();
+
+  mypromise.then();
+
+  return promise_to_return;
+}
+
+// returns a value in seconds for a given ytid
+yt.duration = function(ytid) {
+  // ah yes, callback hell.
+  var mypromise = yt.api('videos', {
+    part: 'contentDetails',
+    id: ytid
+  }), promise_to_return = new Promise();
+
+  mypromise.then(function(data) {
+    // The duration field is for some inexplicable reason provided in some
+    // wonky format like PT7M18S ... brilliant, youtube ... just fabulous.
+    var yt_duration = data.items.contentDetails.duration, min, sec;
+    yt_duration.match(/PT(\d*)M(\d*)S/);
+    
+    return min * 60 + sec;
+  });
+
+  return promise_to_return;
+}
+
+yt.playlist = function(playlist_id, cb) {
+  return yt.api('playlistItems', {
+    part: 'snippet',
+    playlistId: playlist_id
+  });
+}
+
 
 function get_auth_key() {
   auth_resolve = new Promise(function(resolve, reject) {
