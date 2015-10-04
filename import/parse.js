@@ -65,21 +65,27 @@ yt.upload_id = function(user, which) {
   return promise_to_return;
 }
 
-// returns a value in seconds for a given ytid
-yt.duration = function(ytid) {
-  // ah yes, callback hell.
+// returns a value in seconds for a given list of ytids
+yt.duration = function(ytid_list) {
   var mypromise = yt.api('videos', {
     part: 'contentDetails',
-    id: ytid
+    id: ytid_list.join(',')
   }), promise_to_return = new Promise();
 
   mypromise.then(function(data) {
+    var duration_list = [];
+
     // The duration field is for some inexplicable reason provided in some
     // wonky format like PT7M18S ... brilliant, youtube ... just fabulous.
-    var yt_duration = data.items.contentDetails.duration, min, sec;
-    yt_duration.match(/PT(\d*)M(\d*)S/);
-    
-    return min * 60 + sec;
+    data.items.forEach(function(details) {
+      var yt_duration, min, sec;
+
+      yt_duration = details.contentDetails.duration;
+      yt_duration.match(/PT(\d*)M(\d*)S/);
+      duration_list.push([details.id, min * 60 + sec]);
+    });
+
+    promise_to_return(duration_list);
   });
 
   return promise_to_return;
