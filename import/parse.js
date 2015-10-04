@@ -4,18 +4,42 @@ var
   fs = require('fs'),
   request = require('request'),
   http = require('http'),
-  xml2js = require('xml2js'),
   url = require('url');
 
 var 
-  authkey = false,
+  yt = {
+    user: process.argv[2],
+    authkey: false,
+    playlist: false,
+    id: 0
+  },
   base = 'http://localhost/ghub/ytmix/api/',
   playlist = [],
-  PLAYLIST = 0,
+  playlist_id = 0,
   source = 'http://gdata.youtube.com/feeds/api/users/' + process.argv[2] + '/uploads',
-  ytid = 0,
   title = "(no title)",
-  subtitle,
+  subtitle;
+
+var lib = {
+  get: function (location, callback) {
+    var buffer = '';
+
+    if(location.length) {
+      location = url.parse(location);
+    }
+
+    http.get(location, function(res) {
+      res.on('data', function(d) { buffer += d; });
+      res.on('end', function(){
+        callback.call(this, buffer);
+      });
+    }).on('error', function(e) {
+      console.error(location, e);
+    });
+  }
+};
+
+function get_auth_key() {
   auth_resolve = new Promise(function(resolve, reject) {
     fs.readFile('authkey', 'utf8', function (err,data) {
       if(err) {
@@ -27,20 +51,22 @@ var
       resolve(authkey);
     })
   });
-
+}
 
 function newentry(entry) {
   if (entry.title.constructor != String) {
     entry.title = entry.title[0]['_'];
   }
-  ytid = entry['media:group']['yt:videoid'];
-  if (ytid == undefined) {
+  yt.id = entry['media:group']['yt:videoid'];
+
+  if (yt.id == undefined) {
     switch(entry.link[0].$.type) {
       case 'text/html':
-        ytid = entry.link[0].$.href.match(/v=([\w-_]*)&/)[1];
+        yt.id = entry.link[0].$.href.match(/v=([\w-_]*)&/)[1];
         break;
+
       case 'application/atom+xml':
-        ytid = entry.link[0]['$'].href.split('/').pop();
+        yt.id = entry.link[0]['$'].href.split('/').pop();
         break;
     }
   }
@@ -79,24 +105,10 @@ function api() {
     )
   } else {
     console.log("url", base + args.join('/'));
-    easyget(base + args.join('/'), cb);
+    lib.get(base + args.join('/'), cb);
   }
 }
 
-function easyget(location, callback) {
-  var buffer = '';
-  if(location.length) {
-    location = url.parse(location);
-  }
-  http.get(location, function(res) {
-    res.on('data', function(d) { buffer += d; });
-    res.on('end', function(){
-      callback.call(this, buffer);
-    });
-  }).on('error', function(e) {
-    console.error(location, e);
-  });
-}
 
 function addEntries(xml) {
   var parser = new xml2js.Parser(), ytid;
@@ -149,7 +161,7 @@ function readUrl(urlstr) {
   parsed = url.parse(urlstr);
   parsed.path = parsed.pathname + (parsed.search || "");
 
-  easyget(parsed, addEntries);
+  lib.get(parsed, addEntries);
 }
 
 auth_resolve.then(function(auth_key) {
