@@ -11,6 +11,7 @@ var
   fs = require('fs'),
   request = require('request'),
   http = require('http'),
+  querystring = require('querystring'),
   url = require('url');
 
 var 
@@ -50,6 +51,16 @@ var lib = {
 // Returns a promise given an end point and 
 // set of parameters.
 yt.api = function(ep, params) {
+  var promise_to_return = new Promise(
+    function(resolve, reject) {
+      var qparams = querystring.stringify(params);
+      lib.get(ep + '?' + qparams, function(res) {
+        resolve(res);
+      });
+    }
+  );
+
+  return promise_to_return;
 }
 
 // Returns a playlist id for a given user ... 
