@@ -1,5 +1,11 @@
 #!/usr/local/bin/node --harmony
 
+// in the v3 version of the api we have to
+//
+//  1. query the user for their upload playlist id
+//  2. grab the the upload playlist to get the titles and ids
+//  3. query each id to get the durations.
+//
 var 
   fs = require('fs'),
   request = require('request'),
@@ -29,13 +35,16 @@ var lib = {
     }
 
     http.get(location, function(res) {
-      res.on('data', function(d) { buffer += d; });
+
+      res.on('data', (d) => buffer += data);
+
       res.on('end', function(){
         callback.call(this, buffer);
       });
-    }).on('error', function(e) {
-      console.error(location, e);
-    });
+
+    }).on('error', (e) => console.error(location, e) );
+  }
+  duration: function(ytid) {
   }
 };
 
