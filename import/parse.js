@@ -55,7 +55,10 @@ yt.api = function(ep, params) {
     function(resolve, reject) {
       var qparams = querystring.stringify(params);
       lib.get(ep + '?' + qparams, function(res) {
-        resolve(res);
+
+        // We presume that there's an 'items' in
+        // the object that we are returning.
+        resolve(res.items);
       });
     }
   );
@@ -65,15 +68,46 @@ yt.api = function(ep, params) {
 
 // Returns a playlist id for a given user ... 
 // defaults uploads
+// The demo output I'm working off of (for theIDMMaster)
+// is as follows:
+//
+// {
+//  "kind": "youtube#channelListResponse",
+//  "etag": "\"oyKLwABI4napfYXnGO8jtXfIsfc/1gOoJe17fPArlXaWZoG8UTAOdMY\"",
+//  "pageInfo": {
+//   "totalResults": 1,
+//   "resultsPerPage": 5
+//  },
+//  "items": [ << this is returne by the api
+//   {
+//    "kind": "youtube#channel",
+//    "etag": "\"oyKLwABI4napfYXnGO8jtXfIsfc/gVT2AesbAfhS15aNTbDpppQEaeY\"",
+//    "id": "UChS0SPpEqGMGRim7mebedPg",
+//    "contentDetails": {
+//     "relatedPlaylists": {
+//      "likes": "LLhS0SPpEqGMGRim7mebedPg",
+//      "favorites": "FLhS0SPpEqGMGRim7mebedPg",
+//      "uploads": "UUhS0SPpEqGMGRim7mebedPg"
+//     },
+//     "googlePlusUserId": "116087028081258585111"
+//    }
+//   }
+//  ]
+// }
+//
 yt.upload_id = function(user, which) {
   which = which || 'uploads';
 
-  var mypromise = yt.api(
-  ), promise_to_return = new Promise();
-
-  mypromise.then();
-
-  return promise_to_return;
+  var mypromise = yt.api('channels', {
+    part: 'contentDetails',
+    forUsername: user
+  }); 
+    
+  return new Promise(function(resolve, reject) {
+    mypromise.then(function(data) {
+      resolve( data.contentDetails.relatedPlaylists[which] );
+    });
+  });
 }
 
 // returns a value in seconds for a given list of ytids
