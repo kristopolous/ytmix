@@ -43,8 +43,6 @@ function pl_normalize() {
         list($length, $title, $ytid) = $row;
       }
       if(!addtrack($length, $title, $ytid) ) {
-        var_dump(getError());
-        return false;
       }
     }
   } // foreach row list
