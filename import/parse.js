@@ -242,81 +242,15 @@ api.tracks = function(ytid_list) {
 }
 
 api.addTracksToPlaylist = function(tracklist) {
-    request.post(base + 'entry.php', {form: {
-      func: 'addTracks',
-      id: id,
-      param: playlist
-    }}, function(error, response, body) {
-      console.log('addtracks', error, body);
-
-      result.link = result.feed.link;
-      next = result.link.filter(function(entry) {
-        return entry['$']['rel'] == 'next';
-      });
-
-      if(next.length > 0) {
-        nextUrl = next[0]['$']['href'];
-        read_url(nextUrl);
-        console.log({action: "reading", data: nextUrl});
-      } 
-   });
+  api.do('addTracks', {id: api.id, param: tracklist});
 }
 
 api.getplaylist = function(who, cb) {
   api.do('createid', {id: who}, function(data) {
     api.id = data;
-
     api.do('update', {id: api.id, name: 'Uploads by ' + who});
     cb();
   });
-}
-
-api.addEntries = function(xml) {
-  var parser = new xml2js.Parser(), ytid;
-  playlist = [];
-
-  parser.parseString(xml, function (err, result) {
-    if(err) {
-      console.log({
-        error: err,
-        action: "parsing", 
-        data: xml.toString()
-      });
-    }
-
-    if('title' in result) {
-      title = result.title;
-      if (title.constructor != String) {
-        title = title['#'];
-      }
-      subtitle = result.subtitle;
-    }
-
-    result.entry = result.feed.entry;
-    if ("forEach" in result.entry) {
-      result.entry.forEach(newentry);
-    } else {
-      newentry(result.entry);
-    }
-    request.post(base + 'entry.php', {form: {
-      func: 'addTracks',
-      id: id,
-      param: playlist
-    }}, function(error, response, body) {
-      console.log('addtracks', error, body);
-
-      result.link = result.feed.link;
-      next = result.link.filter(function(entry) {
-        return entry['$']['rel'] == 'next';
-      });
-
-      if(next.length > 0) {
-        nextUrl = next[0]['$']['href'];
-        read_url(nextUrl);
-        console.log({action: "reading", data: nextUrl});
-      } 
-   });
- });
 }
 
 function get_playlist() {
