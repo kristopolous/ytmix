@@ -24,7 +24,6 @@ var
   },
   api = {
     base: 'http://localhost/ghub/ytmix/api/',
-    playlist: [],
     id: false
   };
 
@@ -92,6 +91,12 @@ yt.get_playlist_id = function(user, cb) {
 
 // returns a value in seconds for a given list of ytids
 yt.duration = function(ytid_list) {
+  if(!ytid_list.length) {
+    return new Promise(function(resolve, reject) {
+      resolve({});
+    });
+  }
+
   var mypromise = yt.api('videos', {
     part: 'contentDetails',
     id: ytid_list.join(',')
@@ -159,22 +164,25 @@ yt.get_playlist = function(playlist_id, cb) {
         api.tracks(id_list).then(function(existing) {
           var to_find = id_list.filter(function(i) {return existing.indexOf(i) < 0;});
           yt.duration(to_find).then(function(duration_map) {
-            api.playlist = [];
+            var playlist = [];
 
             vid_list.forEach(function(vid) {
               var id = vid[0];
 
               if(duration_map[id] !== undefined) {
-                api.playlist.push(
+                playlist.push(
                   [duration_map[id], vid[1], id]
                 );
               }
-              api.addTracksToPlaylist(api.playlist);
 
               // and then we just go to our next page.
               // this gets the next page
-              my_resolve(data.next(), final_resolve);
             });
+            if(playlist.length) {
+              console.log("adding " + playlist.length);
+              api.add_tracks_to_playlist(playlist);
+            }
+            my_resolve(data.next(), final_resolve);
           });
         });
         
@@ -195,9 +203,13 @@ api.do = function(ep, params, cb) {
     if(body == undefined) {
       console.log("Error", 'Make sure that ' + api.base + ' is accessible');
     } else {
-      var res = JSON.parse(body);
-      if(cb) {
-        cb(res.result);
+      try { 
+        var res = JSON.parse(body);
+        if(cb) {
+          cb(res.result);
+        }
+      } catch (ex) {
+        throw ["Unable to parse " + body, ep, JSON.stringify(params)];
       }
     }
   });
@@ -212,7 +224,7 @@ api.tracks = function(ytid_list) {
   }).catch(function (ex) { throw ex; });
 }
 
-api.addTracksToPlaylist = function(tracklist) {
+api.add_tracks_to_playlist = function(tracklist) {
   api.do('addTracks', {id: api.id, param: tracklist});
 }
 
