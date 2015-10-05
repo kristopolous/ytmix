@@ -24,6 +24,12 @@ function is_assoc($array) {
   return false;
 }
 
+function pl_track($params) {
+  $ytid_list = explode(',', $params['id']);
+  $sql_list = "'" . implode("','", $ytid_list) . "'";
+  return getall(run("select * from tracks where ytid in ($sql_list)"));
+}
+
 function pl_normalize() {
   $row_list = getall(run('select tracklist from playlist'));
   foreach($row_list as $row) {
