@@ -24,9 +24,7 @@ var
   },
   base = 'http://localhost/ghub/ytmix/api/',
   playlist = [],
-  playlist_id = 0,
-  title = "(no title)",
-  subtitle;
+  playlist_id = 0;
 
 var lib = {
   get: function (location, callback) {
@@ -38,13 +36,13 @@ var lib = {
 
     http.get(location, function(res) {
 
-      res.on('data', (d) => buffer += data);
+      res.on('data', function(d) { buffer += data });
 
       res.on('end', function(){
-        callback.call(this, buffer);
+        callback.call(this, JSON.parse(buffer));
       });
 
-    }).on('error', (e) => console.error(location, e) );
+    }).on('error', function(e) { console.error(location, e) });
   }
 };
 
@@ -95,7 +93,7 @@ yt.api = function(ep, params) {
 //  ]
 // }
 //
-yt.upload_id = function(user, which) {
+yt.get_playlist_id = function(user, which /* = 'uploads' */) {
   which = which || 'uploads';
 
   var mypromise = yt.api('channels', {
@@ -115,7 +113,7 @@ yt.duration = function(ytid_list) {
   var mypromise = yt.api('videos', {
     part: 'contentDetails',
     id: ytid_list.join(',')
-  }), 
+  });
 
   return new Promise(function(resolve, reject) {
     mypromise.then(function(data) {
@@ -136,10 +134,19 @@ yt.duration = function(ytid_list) {
   });
 }
 
-yt.playlist = function(playlist_id, cb) {
-  return yt.api('playlistItems', {
+yt.get_playlist = function(playlist_id, cb) {
+  // we can't do generators in a promise ... that
+  // would be nice ... oh well.
+  var my_promise = yt.api('playlistItems', {
     part: 'snippet',
     playlistId: playlist_id
+  });
+
+  return new Promise(function(resolve, reject) {
+    my_promise.then(function(data) {
+      console.log(data);
+      resolve(data);
+    });
   });
 }
 
@@ -163,7 +170,7 @@ function api() {
       {form: param}, 
       function(error, response, body) {
         if(body == undefined) {
-          console.log("Error", 'Make sure that ' + base + 'is accessible');
+          console.log("Error", 'Make sure that ' + base + ' is accessible');
         } else {
           cb(body);
         }
@@ -200,7 +207,7 @@ api.newentry = function(entry) {
   ]);
 }
 
-function addEntries(xml) {
+api.addEntries = function(xml) {
   var parser = new xml2js.Parser(), ytid;
   playlist = [];
 
@@ -212,6 +219,7 @@ function addEntries(xml) {
         data: xml.toString()
       });
     }
+
     if('title' in result) {
       title = result.title;
       if (title.constructor != String) {
@@ -254,7 +262,7 @@ function read_url(urlstr) {
   lib.get(parsed, addEntries);
 }
 
-auth_resolve = new Promise(function(resolve, reject) {
+var auth_resolve = new Promise(function(resolve, reject) {
   fs.readFile('authkey', 'utf8', function (err,data) {
     if(err) {
       console.log("Unable to find an authkey. Bailing. :-(");
@@ -268,7 +276,11 @@ auth_resolve = new Promise(function(resolve, reject) {
 
 auth_resolve.then(function(auth_key) {
   console.log('Reading from ' + source);
-
+  yt.get_playlist_id(yt.user).then(function(playlist_id) {
+    yt.get_playlist(playlist_id).then(function(playlist) {
+    });
+  });
+/*
   api('createid', source, PLAYLIST, function(data) {
     var res = JSON.parse(data);
     id = res.result;
@@ -283,4 +295,5 @@ auth_resolve.then(function(auth_key) {
 
     read_url(source);
   });
+*/
 });
