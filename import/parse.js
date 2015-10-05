@@ -28,6 +28,7 @@ var
 
 var lib = {
   get: function (location, callback) {
+    console.log("Grabbing " + location);
     var buffer = '';
 
     if(location.length) {
@@ -51,8 +52,11 @@ var lib = {
 yt.api = function(ep, params) {
   var promise_to_return = new Promise(
     function(resolve, reject) {
+      // inject the authkey into the request.
+      params.key = yt.authkey;
+
       var qparams = querystring.stringify(params);
-      lib.get(ep + '?' + qparams, function(res) {
+      lib.get(yt.base + ep + '?' + qparams, function(res) {
 
         // We presume that there's an 'items' in
         // the object that we are returning.
@@ -262,7 +266,7 @@ function read_url(urlstr) {
   lib.get(parsed, addEntries);
 }
 
-function get_playlist(auth_key) {
+function get_playlist() {
   console.log('User: ' + yt.user);
 
   yt.get_playlist_id(yt.user).then(function(playlist_id) {
@@ -287,11 +291,12 @@ function get_playlist(auth_key) {
 */
 }
 
-fs.readFile('authkey', 'utf8', function (err,data) {
+fs.readFile('authkey', 'utf8', function (err, data) {
   if(err) {
     console.log("Unable to find an authkey. Bailing. :-(");
     process.exit();
   }
-  get_playlist( data.replace(/\s/, '') );
+  yt.authkey = data.replace(/\s/, '');
+  get_playlist();
 });
 
