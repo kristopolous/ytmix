@@ -8,6 +8,48 @@ function sanitize_track($array) {
   return $array;
 }
 
+function addtrack($length, $title, $ytid) {
+  $title = mysql_real_escape_string($title);
+  return run(
+    "insert into tracks (duration, title, ytid) values ($length, '$title', '$ytid')"
+  );
+}
+
+function is_assoc($array) {
+  foreach (array_keys($array) as $k => $v) {
+    if ($k !== $v) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function pl_normalize() {
+  $row_list = getall(run('select tracklist from playlist'));
+  foreach($row_list as $row) {
+
+    if(! ($playlist_raw = $row[0]) ) {
+      continue;
+    }
+
+    if(! ($playlist = json_decode($playlist_raw, true)) ) {
+      continue;
+    }
+
+    foreach($playlist as $row) {
+      if(is_assoc($row))  {
+        extract($row);
+      } else {
+        list($length, $title, $ytid) = $row;
+      }
+      if(!addtrack($length, $title, $ytid) ) {
+        var_dump(getError());
+        return false;
+      }
+    }
+  } // foreach row list
+}
+
 function pl_names() {
   $res = [];
 
