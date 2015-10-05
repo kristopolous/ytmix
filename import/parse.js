@@ -51,22 +51,33 @@ var lib = {
 // Returns a promise given an end point and 
 // set of parameters.
 yt.api = function(ep, params) {
-  var promise_to_return = new Promise(
+  return new Promise(
     function(resolve, reject) {
       // inject the authkey into the request.
       params.key = yt.authkey;
 
       var qparams = querystring.stringify(params);
       lib.get(yt.base + ep + '?' + qparams, function(res) {
+        console.log(res);
 
         // We presume that there's an 'items' in
         // the object that we are returning.
-        resolve(res.items);
+
+        // the next function will resolve the next page using
+        // the next page token and all the rest of the query params
+        res.next = function() {
+          if(res.nextPageToken) {
+            params.pageToken = res.nextPageToken;
+            return api(ep, params);
+          } 
+          // otherwise, return that we are at the end.
+          return new Promise(function(resolve, reject) { resolve(false); });
+        }
+
+        resolve(res);
       });
     }
   );
-
-  return promise_to_return;
 }
 
 // Returns a playlist id for a given user ... 
@@ -81,7 +92,7 @@ yt.api = function(ep, params) {
 //   "totalResults": 1,
 //   "resultsPerPage": 5
 //  },
-//  "items": [ << this is returne by the api
+//  "items": [ 
 //   {
 //    "kind": "youtube#channel",
 //    "etag": "\"oyKLwABI4napfYXnGO8jtXfIsfc/gVT2AesbAfhS15aNTbDpppQEaeY\"",
@@ -107,8 +118,8 @@ yt.get_playlist_id = function(user, which /* = 'uploads' */) {
   }); 
     
   return new Promise(function(resolve, reject) {
-    mypromise.then(function(data) {
-      resolve( data.contentDetails.relatedPlaylists[which] );
+    mypromise.then(function(res) {
+      resolve( res.items.data[0].contentDetails.relatedPlaylists[which] );
     });
   });
 }
@@ -144,12 +155,13 @@ yt.get_playlist = function(playlist_id, cb) {
   // would be nice ... oh well.
   var my_promise = yt.api('playlistItems', {
     part: 'snippet',
-    playlistId: playlist_id
+    playlistId: playlist_id,
+    maxResults: 50
   });
 
   return new Promise(function(resolve, reject) {
     my_promise.then(function(data) {
-      console.log(data);
+      console.log(full);
       resolve(data);
     });
   });
