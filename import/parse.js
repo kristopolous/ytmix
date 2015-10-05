@@ -10,6 +10,7 @@
 var 
   fs = require('fs'),
   request = require('request'),
+  https = require('https'),
   http = require('http'),
   querystring = require('querystring'),
   url = require('url');
@@ -35,9 +36,9 @@ var lib = {
       location = url.parse(location);
     }
 
-    http.get(location, function(res) {
+    https.get(location, function(res) {
 
-      res.on('data', function(d) { buffer += data });
+      res.on('data', function(data) { buffer += data });
 
       res.on('end', function(){
         callback.call(this, JSON.parse(buffer));
