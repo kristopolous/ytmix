@@ -203,7 +203,7 @@ yt.get_playlist = function(playlist_id, cb) {
 
               if(duration_map[id] !== undefined) {
                 api.playlist.push(
-                  [duration, vid[1], id]
+                  [duration_map[id], vid[1], id]
                 );
               }
               api.addTracksToPlaylist(api.playlist);
