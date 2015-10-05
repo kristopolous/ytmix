@@ -63,7 +63,6 @@ yt.api = function(ep, params) {
 
       var qparams = querystring.stringify(params);
       lib.get(yt.base + ep + '?' + qparams, function(res) {
-        console.log(res);
 
         // We presume that there's an 'items' in
         // the object that we are returning.
@@ -178,18 +177,16 @@ yt.get_playlist = function(playlist_id, cb) {
 
         // we should proces the items and 
         // see if they are new or not
-        console.log(data.items);
 
         // it's absurd that there's an api cost to getting this id..
-        data.items.forEach(function(which) {
+        var vid_list = data.items.map(function(which) {
+          var res = which.snippet.thumbnails.default.url.match(re_extract);
 
-          var 
-            res = which.snippet.thumbnails.default.url.match(re_extract),
-            id = res[1]
-
-          console.log(id);
+          return [res[1], which.snippet.title];
         });
 
+        var id_list = vid_list.map(function(vid) { return vid[0]} );
+        console.log(id_list, vid_list);
         // this gets the next page
         //my_resolve(data.next(), final_resolve);
       } else {
