@@ -26,7 +26,7 @@ var
     base: 'http://localhost/ghub/ytmix/api/',
     playlist: [],
     id: false
-  },
+  };
 
 var lib = {
   get: function (location, callback) {
@@ -74,13 +74,13 @@ yt.api = function(ep, params) {
             return yt.api(ep, params);
           } 
           // otherwise, return that we are at the end.
-          return new Promise(function(resolve, reject) { resolve(false); });
+          return new Promise(function(resolve, reject) { resolve(false); }).catch(function (ex) { throw ex; });
         }
 
         resolve(res);
       });
     }
-  );
+  ).catch(function (ex) { throw ex; });
 }
 
 // Returns a playlist id for a given user ... 
@@ -124,7 +124,7 @@ yt.get_playlist_id = function(user, which /* = 'uploads' */) {
     mypromise.then(function(res) {
       resolve( res.items[0].contentDetails.relatedPlaylists[which] );
     });
-  });
+  }).catch(function (ex) { throw ex; });
 }
 
 // returns a value in seconds for a given list of ytids
@@ -158,7 +158,7 @@ yt.duration = function(ytid_list) {
 
       resolve(duration_map);
     });
-  });
+  }).catch(function (ex) { throw ex; });
 }
 
 yt.get_playlist = function(playlist_id, cb) {
@@ -222,7 +222,7 @@ yt.get_playlist = function(playlist_id, cb) {
 
   return new Promise(function(resolve, reject) {
     my_resolve(my_promise, resolve);
-  });
+  }).catch(function (ex) { throw ex; });
 }
 
 
@@ -232,7 +232,9 @@ api.do = function(ep, params, cb) {
       console.log("Error", 'Make sure that ' + api.base + ' is accessible');
     } else {
       var res = JSON.parse(body);
-      cb(res.result);
+      if(cb) {
+        cb(res.result);
+      }
     }
   });
 }
@@ -243,7 +245,7 @@ api.tracks = function(ytid_list) {
     api.do('tracks', {id: ytid_list.join(',')}, function(res) {
       resolve( res.map(function(row) { return row[0] }) );
     });
-  });
+  }).catch(function (ex) { throw ex; });
 }
 
 api.addTracksToPlaylist = function(tracklist) {
@@ -261,7 +263,7 @@ api.getPlaylist = function(who, cb) {
 function get_playlist() {
   console.log('User: ' + yt.user);
 
-  api.getplaylist(yt.user, function(){
+  api.getPlaylist(yt.user, function(){
     yt.get_playlist_id(yt.user).then(function(playlist_id) {
       yt.get_playlist(playlist_id).then(function(playlist) {
       });
