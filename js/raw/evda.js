@@ -180,7 +180,7 @@ function EvDa (imported) {
     testLockMap = {},
 
     // Internals
-    data = imported || {},
+    data = {},
     data_ix = {},
 
     insideTest = false,
@@ -1210,5 +1210,12 @@ function EvDa (imported) {
   pub.add = pub.push;
 
   pub.isArray = isArray;
+
+  // After all the mechanisms are set up, then and only then do
+  // we do the import
+  if(arguments.length > 0) {
+    pub(imported);
+  }
+
   return pub;
 }
