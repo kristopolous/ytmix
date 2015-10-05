@@ -23,20 +23,25 @@ var
     id: 0,
     base: 'https://www.googleapis.com/youtube/v3/'
   },
-  base = 'http://localhost/ghub/ytmix/api/',
+  api = {
+    base: 'http://localhost/ghub/ytmix/api/'
+  },
   playlist = [],
   playlist_id = 0;
 
 var lib = {
   get: function (location, callback) {
     console.log("Grabbing " + location);
-    var buffer = '';
+
+    var 
+      buffer = '', 
+      module = location.match(/https/) ? https : http;
 
     if(location.length) {
       location = url.parse(location);
     }
 
-    https.get(location, function(res) {
+    module.get(location, function(res) {
 
       res.on('data', function(data) { buffer += data });
 
@@ -213,6 +218,10 @@ function api() {
     console.log("url", base + args.join('/'));
     lib.get(base + args.join('/'), cb);
   }
+}
+
+// find what tracks already exist
+api.tracks = function(yt_list) {
 }
 
 api.newentry = function(entry) {
