@@ -156,12 +156,13 @@ yt.duration = function(ytid_list) {
 }
 
 yt.get_playlist = function(playlist_id, cb) {
-  // we can't do generators in a promise ... that
+  // We can't do generators in a promise ... that
   // would be nice ... oh well.
   //
-  // we'll need something that grossly resembles recursion.
+  // We'll need something that grossly resembles recursion.
   // This is the base "seed" case.
   var 
+    re_extract = /vi\/(.{11})\/default.jpg$/,
     payload = [],
     my_promise = yt.api('playlistItems', {
       part: 'snippet',
@@ -175,8 +176,22 @@ yt.get_playlist = function(playlist_id, cb) {
         // this means we can go further.
         payload = payload.concat(data.items);
 
+        // we should proces the items and 
+        // see if they are new or not
+        console.log(data.items);
+
+        // it's absurd that there's an api cost to getting this id..
+        data.items.forEach(function(which) {
+
+          var 
+            res = which.snippet.thumbnails.default.url.match(re_extract),
+            id = res[1]
+
+          console.log(id);
+        });
+
         // this gets the next page
-        my_resolve(data.next(), final_resolve);
+        //my_resolve(data.next(), final_resolve);
       } else {
         final_resolve(payload);
       }
@@ -189,7 +204,7 @@ yt.get_playlist = function(playlist_id, cb) {
 }
 
 
-function api() {
+api.do = function() {
   var 
     args = Array.prototype.slice.call(arguments),
     cb = args.pop();
@@ -204,11 +219,11 @@ function api() {
     })
 
     request.post(
-      base + 'entry.php', 
+      api.base + 'entry.php', 
       {form: param}, 
       function(error, response, body) {
         if(body == undefined) {
-          console.log("Error", 'Make sure that ' + base + ' is accessible');
+          console.log("Error", 'Make sure that ' + api.base + ' is accessible');
         } else {
           cb(body);
         }
@@ -220,7 +235,7 @@ function api() {
   }
 }
 
-// find what tracks already exist
+// Find what tracks already exist
 api.tracks = function(yt_list) {
 }
 
@@ -312,7 +327,7 @@ function get_playlist() {
     });
   });
 /*
-  api('createid', source, PLAYLIST, function(data) {
+  api.do('createid', source, PLAYLIST, function(data) {
     var res = JSON.parse(data);
     id = res.result;
 
