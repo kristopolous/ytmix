@@ -153,17 +153,33 @@ yt.duration = function(ytid_list) {
 yt.get_playlist = function(playlist_id, cb) {
   // we can't do generators in a promise ... that
   // would be nice ... oh well.
-  var my_promise = yt.api('playlistItems', {
-    part: 'snippet',
-    playlistId: playlist_id,
-    maxResults: 50
-  });
+  //
+  // we'll need something that grossly resembles recursion.
+  // This is the base "seed" case.
+  var 
+    payload = [],
+    my_promise = yt.api('playlistItems', {
+      part: 'snippet',
+      playlistId: playlist_id,
+      maxResults: 50
+    });
+
+  function my_resolve(promise, final_resolve) {
+    promise.then(function(data) {
+      if(data) {
+        // this means we can go further.
+        payload = payload.concat(data.items);
+
+        // this gets the next page
+        my_resolve(data.next(), final_resolve);
+      } else {
+        final_resolve(payload);
+      }
+    });
+  }
 
   return new Promise(function(resolve, reject) {
-    my_promise.then(function(data) {
-      console.log(full);
-      resolve(data);
-    });
+    my_resolve(my_promise, resolve);
   });
 }
 
