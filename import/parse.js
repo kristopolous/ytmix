@@ -68,7 +68,7 @@ yt.api = function(ep, params) {
         res.next = function() {
           if(res.nextPageToken) {
             params.pageToken = res.nextPageToken;
-            return api(ep, params);
+            return yt.api(ep, params);
           } 
           // otherwise, return that we are at the end.
           return new Promise(function(resolve, reject) { resolve(false); });
@@ -119,7 +119,7 @@ yt.get_playlist_id = function(user, which /* = 'uploads' */) {
     
   return new Promise(function(resolve, reject) {
     mypromise.then(function(res) {
-      resolve( res.items.data[0].contentDetails.relatedPlaylists[which] );
+      resolve( res.items[0].contentDetails.relatedPlaylists[which] );
     });
   });
 }
