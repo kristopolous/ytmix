@@ -24,7 +24,7 @@ function is_assoc($array) {
   return false;
 }
 
-function pl_track($params) {
+function pl_tracks($params) {
   $ytid_list = explode(',', $params['id']);
   $sql_list = "'" . implode("','", $ytid_list) . "'";
   return getall(run("select * from tracks where ytid in ($sql_list)"));
