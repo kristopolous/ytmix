@@ -220,12 +220,16 @@ function modify_tracks($params, $func) {
 
     if ($func == 'add') {
       if(!array_key_exists($ytid, $hash)) {
-        // place it at the end
+        // add the track to our list of known tracks
+        addtrack($item[0], $item[1], $item[2]);
+
+        // place it at the end of the playlist
         $playlist[] = sanitize_track($item);
       }
     } else if ($func == 'del') {
       // If this is in the playlist, then we add that to the delete list.
       if(isset($hash[$ytid])) {
+
         // unset doesn't shift things ... really.
         unset( $playlist[ $hash[$ytid] ] );
       }
