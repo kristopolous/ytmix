@@ -196,6 +196,8 @@ yt.get_playlist = function(playlist_id, cb) {
         api.tracks(id_list).then(function(existing) {
           var to_find = id_list.filter(function(i) {return existing.indexOf(i) < 0;});
           yt.duration(to_find).then(function(duration_map) {
+            api.playlist = [];
+
             vid_list.forEach(function(vid) {
               var id = vid[0];
 
@@ -204,11 +206,14 @@ yt.get_playlist = function(playlist_id, cb) {
                   [duration, vid[1], id]
                 );
               }
+              api.addTracksToPlaylist(api.playlist);
+
+              // and then we just go to our next page.
+              // this gets the next page
+              my_resolve(data.next(), final_resolve);
             });
           });
         });
-        // this gets the next page
-        //my_resolve(data.next(), final_resolve);
       } else {
         final_resolve(payload);
       }
@@ -245,7 +250,7 @@ api.addTracksToPlaylist = function(tracklist) {
   api.do('addTracks', {id: api.id, param: tracklist});
 }
 
-api.getplaylist = function(who, cb) {
+api.getPlaylist = function(who, cb) {
   api.do('createid', {id: who}, function(data) {
     api.id = data;
     api.do('update', {id: api.id, name: 'Uploads by ' + who});
