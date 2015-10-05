@@ -137,19 +137,27 @@ yt.duration = function(ytid_list) {
 
   return new Promise(function(resolve, reject) {
     mypromise.then(function(data) {
-      var duration_list = [];
+      var duration_map = {};
 
       // The duration field is for some inexplicable reason provided in some
       // wonky format like PT7M18S ... brilliant, youtube ... just fabulous.
       data.items.forEach(function(details) {
-        var yt_duration, min, sec;
+        var yt_duration, min, sec, res;
 
         yt_duration = details.contentDetails.duration;
-        yt_duration.match(/PT(\d*)M(\d*)S/);
-        duration_list.push([details.id, min * 60 + sec]);
+        res = yt_duration.match(/PT(\d*)M(\d*)S/);
+        if(!res) {
+          res = yt_duration.match(/PT(\d*)M/);
+          sec = 0;
+        } else {
+          sec = parseInt(res[2], 10);
+        }
+        min = parseInt(res[1], 10);
+
+        duration_map[details.id] = min * 60 + sec;
       });
 
-      resolve(duration_list);
+      resolve(duration_map);
     });
   });
 }
@@ -178,7 +186,7 @@ yt.get_playlist = function(playlist_id, cb) {
         // we should proces the items and 
         // see if they are new or not
 
-        // it's absurd that there's an api cost to getting this id..
+        // it's absurd that there's an api cost to getting this id.
         var vid_list = data.items.map(function(which) {
           var res = which.snippet.thumbnails.default.url.match(re_extract);
 
@@ -186,7 +194,12 @@ yt.get_playlist = function(playlist_id, cb) {
         });
 
         var id_list = vid_list.map(function(vid) { return vid[0]} );
-        console.log(id_list, vid_list);
+        api.tracks(id_list).then(function(existing) {
+          var to_find = id_list.filter(function(i) {return existing.indexOf(i) < 0;});
+          yt.duration(to_find).then(function(data) {
+            console.log(data);
+          });
+        });
         // this gets the next page
         //my_resolve(data.next(), final_resolve);
       } else {
@@ -233,7 +246,18 @@ api.do = function() {
 }
 
 // Find what tracks already exist
-api.tracks = function(yt_list) {
+api.tracks = function(ytid_list) {
+  return new Promise(function(resolve, reject) {
+    request.post(api.base + 'tracks', {form: {
+      id: ytid_list.join(','),
+    }}, function(error, response, body) {
+      var 
+        res = JSON.parse(body),
+        idlist = res.result.map(function(row) { return row[0] });
+
+      resolve(idlist);
+    });
+  });
 }
 
 api.newentry = function(entry) {
