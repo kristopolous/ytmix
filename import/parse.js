@@ -262,20 +262,9 @@ function read_url(urlstr) {
   lib.get(parsed, addEntries);
 }
 
-var auth_resolve = new Promise(function(resolve, reject) {
-  fs.readFile('authkey', 'utf8', function (err,data) {
-    if(err) {
-      console.log("Unable to find an authkey. Bailing. :-(");
-      reject(false);
-      process.exit();
-    }
-    authkey = data.replace(/\s/, '');
-    resolve(authkey);
-  })
-});
+function get_playlist(auth_key) {
+  console.log('User: ' + yt.user);
 
-auth_resolve.then(function(auth_key) {
-  console.log('Reading from ' + source);
   yt.get_playlist_id(yt.user).then(function(playlist_id) {
     yt.get_playlist(playlist_id).then(function(playlist) {
     });
@@ -296,4 +285,13 @@ auth_resolve.then(function(auth_key) {
     read_url(source);
   });
 */
+}
+
+fs.readFile('authkey', 'utf8', function (err,data) {
+  if(err) {
+    console.log("Unable to find an authkey. Bailing. :-(");
+    process.exit();
+  }
+  get_playlist( data.replace(/\s/, '') );
 });
+
