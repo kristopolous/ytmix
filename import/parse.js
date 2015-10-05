@@ -24,9 +24,9 @@ var
   },
   api = {
     base: 'http://localhost/ghub/ytmix/api/',
-    playlist: []
+    playlist: [],
+    id: false
   },
-  playlist_id = 0;
 
 var lib = {
   get: function (location, callback) {
@@ -262,21 +262,12 @@ api.addTracksToPlaylist = function(tracklist) {
    });
 }
 
-api.getplaylist = function(who) {
-  request.post(
-  api.do('createid', source, PLAYLIST, function(data) {
-    var res = JSON.parse(data);
-    id = res.result;
+api.getplaylist = function(who, cb) {
+  api.do('createid', {id: who}, function(data) {
+    api.id = data;
 
-    request.post(
-      base + 'entry.php', 
-      {form: {
-        func: 'update',
-        id: res.result,
-        name: 'Uploads by ' + process.argv[2]
-      }});
-
-    read_url(source);
+    api.do('update', {id: api.id, name: 'Uploads by ' + who});
+    cb();
   });
 }
 
@@ -328,36 +319,15 @@ api.addEntries = function(xml) {
  });
 }
 
-function read_url(urlstr) {
-  parsed = url.parse(urlstr);
-  parsed.path = parsed.pathname + (parsed.search || "");
-
-  lib.get(parsed, addEntries);
-}
-
 function get_playlist() {
   console.log('User: ' + yt.user);
 
-  yt.get_playlist_id(yt.user).then(function(playlist_id) {
-    yt.get_playlist(playlist_id).then(function(playlist) {
+  api.getplaylist(yt.user, function(){
+    yt.get_playlist_id(yt.user).then(function(playlist_id) {
+      yt.get_playlist(playlist_id).then(function(playlist) {
+      });
     });
   });
-/*
-  api.do('createid', source, PLAYLIST, function(data) {
-    var res = JSON.parse(data);
-    id = res.result;
-
-    request.post(
-      base + 'entry.php', 
-      {form: {
-        func: 'update',
-        id: res.result,
-        name: 'Uploads by ' + process.argv[2]
-      }});
-
-    read_url(source);
-  });
-*/
 }
 
 fs.readFile('authkey', 'utf8', function (err, data) {
