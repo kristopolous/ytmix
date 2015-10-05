@@ -55,76 +55,39 @@ var lib = {
 // Returns a promise given an end point and 
 // set of parameters.
 yt.api = function(ep, params) {
-  return new Promise(
-    function(resolve, reject) {
-      // inject the authkey into the request.
-      params.key = yt.authkey;
+  // inject the authkey into the request.
+  params.key = yt.authkey;
 
-      var qparams = querystring.stringify(params);
-      lib.get(yt.base + ep + '?' + qparams, function(res) {
-
-        // We presume that there's an 'items' in
-        // the object that we are returning.
-
-        // the next function will resolve the next page using
-        // the next page token and all the rest of the query params
-        res.next = function() {
-          if(res.nextPageToken) {
-            params.pageToken = res.nextPageToken;
-            return yt.api(ep, params);
-          } 
-          // otherwise, return that we are at the end.
-          return new Promise(function(resolve, reject) { resolve(false); }).catch(function (ex) { throw ex; });
-        }
-
-        resolve(res);
-      });
-    }
-  ).catch(function (ex) { throw ex; });
-}
-
-// Returns a playlist id for a given user ... 
-// defaults uploads
-// The demo output I'm working off of (for theIDMMaster)
-// is as follows:
-//
-// {
-//  "kind": "youtube#channelListResponse",
-//  "etag": "\"oyKLwABI4napfYXnGO8jtXfIsfc/1gOoJe17fPArlXaWZoG8UTAOdMY\"",
-//  "pageInfo": {
-//   "totalResults": 1,
-//   "resultsPerPage": 5
-//  },
-//  "items": [ 
-//   {
-//    "kind": "youtube#channel",
-//    "etag": "\"oyKLwABI4napfYXnGO8jtXfIsfc/gVT2AesbAfhS15aNTbDpppQEaeY\"",
-//    "id": "UChS0SPpEqGMGRim7mebedPg",
-//    "contentDetails": {
-//     "relatedPlaylists": {
-//      "likes": "LLhS0SPpEqGMGRim7mebedPg",
-//      "favorites": "FLhS0SPpEqGMGRim7mebedPg",
-//      "uploads": "UUhS0SPpEqGMGRim7mebedPg"
-//     },
-//     "googlePlusUserId": "116087028081258585111"
-//    }
-//   }
-//  ]
-// }
-//
-yt.get_playlist_id = function(user, which /* = 'uploads' */) {
-  which = which || 'uploads';
-
-  var mypromise = yt.api('channels', {
-    part: 'contentDetails',
-    forUsername: user
-  }); 
-    
+  var qparams = querystring.stringify(params);
   return new Promise(function(resolve, reject) {
-    mypromise.then(function(res) {
-      resolve( res.items[0].contentDetails.relatedPlaylists[which] );
+    lib.get(yt.base + ep + '?' + qparams, function(res) {
+
+      // We presume that there's an 'items' in
+      // the object that we are returning.
+
+      // the next function will resolve the next page using
+      // the next page token and all the rest of the query params
+      res.next = function() {
+        if(res.nextPageToken) {
+          params.pageToken = res.nextPageToken;
+          return yt.api(ep, params);
+        } 
+        // otherwise, return that we are at the end.
+        return new Promise(function(resolve, reject) { resolve(false); }).catch(function (ex) { throw ex; });
+      }
+
+      resolve(res);
     });
   }).catch(function (ex) { throw ex; });
+}
+
+yt.get_playlist_id = function(user, cb) {
+  yt.api('channels', {
+    part: 'contentDetails',
+    forUsername: user
+  }).then(function(res) {
+    cb( res.items[0].contentDetails.relatedPlaylists.uploads );
+  });
 }
 
 // returns a value in seconds for a given list of ytids
@@ -214,6 +177,7 @@ yt.get_playlist = function(playlist_id, cb) {
             });
           });
         });
+        
       } else {
         final_resolve(payload);
       }
@@ -252,7 +216,7 @@ api.addTracksToPlaylist = function(tracklist) {
   api.do('addTracks', {id: api.id, param: tracklist});
 }
 
-api.getPlaylist = function(who, cb) {
+api.get_playlist = function(who, cb) {
   api.do('createid', {id: who}, function(data) {
     api.id = data;
     api.do('update', {id: api.id, name: 'Uploads by ' + who});
@@ -263,10 +227,9 @@ api.getPlaylist = function(who, cb) {
 function get_playlist() {
   console.log('User: ' + yt.user);
 
-  api.getPlaylist(yt.user, function(){
-    yt.get_playlist_id(yt.user).then(function(playlist_id) {
-      yt.get_playlist(playlist_id).then(function(playlist) {
-      });
+  api.get_playlist(yt.user, function(){
+    yt.get_playlist_id(yt.user, function(playlist_id) {
+      yt.get_playlist(playlist_id);
     });
   });
 }
