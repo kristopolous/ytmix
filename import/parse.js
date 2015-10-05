@@ -19,14 +19,13 @@ var
   yt = {
     user: process.argv[2],
     authkey: false,
-    playlist: false,
     id: 0,
     base: 'https://www.googleapis.com/youtube/v3/'
   },
   api = {
-    base: 'http://localhost/ghub/ytmix/api/'
+    base: 'http://localhost/ghub/ytmix/api/',
+    playlist: []
   },
-  playlist = [],
   playlist_id = 0;
 
 var lib = {
@@ -196,8 +195,16 @@ yt.get_playlist = function(playlist_id, cb) {
         var id_list = vid_list.map(function(vid) { return vid[0]} );
         api.tracks(id_list).then(function(existing) {
           var to_find = id_list.filter(function(i) {return existing.indexOf(i) < 0;});
-          yt.duration(to_find).then(function(data) {
-            console.log(data);
+          yt.duration(to_find).then(function(duration_map) {
+            vid_list.forEach(function(vid) {
+              var id = vid[0];
+
+              if(duration_map[id] !== undefined) {
+                api.playlist.push(
+                  [duration, vid[1], id]
+                );
+              }
+            });
           });
         });
         // this gets the next page
@@ -214,75 +221,63 @@ yt.get_playlist = function(playlist_id, cb) {
 }
 
 
-api.do = function() {
-  var 
-    args = Array.prototype.slice.call(arguments),
-    cb = args.pop();
-
-  if(args.filter(function(m) {return (m.toString()).search(/\//) > -1}).length) {
-    var param = {};
-
-    ["func", "id", "param"].forEach(function(which) {
-      if(args) {
-        param[which] = args.shift();
-      }
-    })
-
-    request.post(
-      api.base + 'entry.php', 
-      {form: param}, 
-      function(error, response, body) {
-        if(body == undefined) {
-          console.log("Error", 'Make sure that ' + api.base + ' is accessible');
-        } else {
-          cb(body);
-        }
-      }
-    )
-  } else {
-    console.log("url", base + args.join('/'));
-    lib.get(base + args.join('/'), cb);
-  }
+api.do = function(ep, params, cb) {
+  request.post(api.base + ep, {form: params}, function(error, response, body) {
+    if(body == undefined) {
+      console.log("Error", 'Make sure that ' + api.base + ' is accessible');
+    } else {
+      var res = JSON.parse(body);
+      cb(res.result);
+    }
+  });
 }
 
 // Find what tracks already exist
 api.tracks = function(ytid_list) {
   return new Promise(function(resolve, reject) {
-    request.post(api.base + 'tracks', {form: {
-      id: ytid_list.join(','),
-    }}, function(error, response, body) {
-      var 
-        res = JSON.parse(body),
-        idlist = res.result.map(function(row) { return row[0] });
-
-      resolve(idlist);
+    api.do('tracks', {id: ytid_list.join(',')}, function(res) {
+      resolve( res.map(function(row) { return row[0] }) );
     });
   });
 }
 
-api.newentry = function(entry) {
-  if (entry.title.constructor != String) {
-    entry.title = entry.title[0]['_'];
-  }
-  yt.id = entry['media:group']['yt:videoid'];
+api.addTracksToPlaylist = function(tracklist) {
+    request.post(base + 'entry.php', {form: {
+      func: 'addTracks',
+      id: id,
+      param: playlist
+    }}, function(error, response, body) {
+      console.log('addtracks', error, body);
 
-  if (yt.id == undefined) {
-    switch(entry.link[0].$.type) {
-      case 'text/html':
-        yt.id = entry.link[0].$.href.match(/v=([\w-_]*)&/)[1];
-        break;
+      result.link = result.feed.link;
+      next = result.link.filter(function(entry) {
+        return entry['$']['rel'] == 'next';
+      });
 
-      case 'application/atom+xml':
-        yt.id = entry.link[0]['$'].href.split('/').pop();
-        break;
-    }
-  }
+      if(next.length > 0) {
+        nextUrl = next[0]['$']['href'];
+        read_url(nextUrl);
+        console.log({action: "reading", data: nextUrl});
+      } 
+   });
+}
 
-  playlist.push([
-    parseInt(entry['media:group'][0]['yt:duration'][0]['$']['seconds']),
-    entry.title,
-    ytid
-  ]);
+api.getplaylist = function(who) {
+  request.post(
+  api.do('createid', source, PLAYLIST, function(data) {
+    var res = JSON.parse(data);
+    id = res.result;
+
+    request.post(
+      base + 'entry.php', 
+      {form: {
+        func: 'update',
+        id: res.result,
+        name: 'Uploads by ' + process.argv[2]
+      }});
+
+    read_url(source);
+  });
 }
 
 api.addEntries = function(xml) {
