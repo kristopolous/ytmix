@@ -115,25 +115,25 @@ yt.duration = function(ytid_list) {
   var mypromise = yt.api('videos', {
     part: 'contentDetails',
     id: ytid_list.join(',')
-  }), promise_to_return = new Promise();
+  }), 
 
-  mypromise.then(function(data) {
-    var duration_list = [];
+  return new Promise(function(resolve, reject) {
+    mypromise.then(function(data) {
+      var duration_list = [];
 
-    // The duration field is for some inexplicable reason provided in some
-    // wonky format like PT7M18S ... brilliant, youtube ... just fabulous.
-    data.items.forEach(function(details) {
-      var yt_duration, min, sec;
+      // The duration field is for some inexplicable reason provided in some
+      // wonky format like PT7M18S ... brilliant, youtube ... just fabulous.
+      data.items.forEach(function(details) {
+        var yt_duration, min, sec;
 
-      yt_duration = details.contentDetails.duration;
-      yt_duration.match(/PT(\d*)M(\d*)S/);
-      duration_list.push([details.id, min * 60 + sec]);
+        yt_duration = details.contentDetails.duration;
+        yt_duration.match(/PT(\d*)M(\d*)S/);
+        duration_list.push([details.id, min * 60 + sec]);
+      });
+
+      resolve(duration_list);
     });
-
-    promise_to_return(duration_list);
   });
-
-  return promise_to_return;
 }
 
 yt.playlist = function(playlist_id, cb) {
@@ -143,30 +143,6 @@ yt.playlist = function(playlist_id, cb) {
   });
 }
 
-function newentry(entry) {
-  if (entry.title.constructor != String) {
-    entry.title = entry.title[0]['_'];
-  }
-  yt.id = entry['media:group']['yt:videoid'];
-
-  if (yt.id == undefined) {
-    switch(entry.link[0].$.type) {
-      case 'text/html':
-        yt.id = entry.link[0].$.href.match(/v=([\w-_]*)&/)[1];
-        break;
-
-      case 'application/atom+xml':
-        yt.id = entry.link[0]['$'].href.split('/').pop();
-        break;
-    }
-  }
-
-  playlist.push([
-    parseInt(entry['media:group'][0]['yt:duration'][0]['$']['seconds']),
-    entry.title,
-    ytid
-  ]);
-}
 
 function api() {
   var 
@@ -199,6 +175,30 @@ function api() {
   }
 }
 
+api.newentry = function(entry) {
+  if (entry.title.constructor != String) {
+    entry.title = entry.title[0]['_'];
+  }
+  yt.id = entry['media:group']['yt:videoid'];
+
+  if (yt.id == undefined) {
+    switch(entry.link[0].$.type) {
+      case 'text/html':
+        yt.id = entry.link[0].$.href.match(/v=([\w-_]*)&/)[1];
+        break;
+
+      case 'application/atom+xml':
+        yt.id = entry.link[0]['$'].href.split('/').pop();
+        break;
+    }
+  }
+
+  playlist.push([
+    parseInt(entry['media:group'][0]['yt:duration'][0]['$']['seconds']),
+    entry.title,
+    ytid
+  ]);
+}
 
 function addEntries(xml) {
   var parser = new xml2js.Parser(), ytid;
