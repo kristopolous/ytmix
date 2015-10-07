@@ -13,6 +13,19 @@ Demo? See here:
 
 http://9ol.es/yt
 
+## Creating a new playlist
+
+The quickest way to create a new playlist is to use the `import/poarse.js` script which uses the youtube data api v3 in order to create a list
+of the uploads of a specified user.  Unfortunately, due to v3 bullshit, You need to get an auth-key to send off the requests.  
+
+If you want to avoid this, there's a dump `db/mysql-dump.db.lzma` that is occasionally updated.  Just do 
+
+    mysql -uroot db < mysql-dump.db
+
+As far as the mysql credentials they are in [lib/db.php](https://github.com/kristopolous/ytmix/blob/master/lib/db.php).  Oh dear, now you know my localhost doesn't have a password for root.  Woe is me.
+
+Anyway, change those to whatever you want.
+
 ## Updating the playlists
 
 You can update all the playlists using some kind of unix shell wizardry right now ... I should probably make it more humane.
