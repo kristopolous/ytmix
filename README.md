@@ -1,4 +1,15 @@
-See here:
+This tool is for quickly navigating and listening to large ad-hoc playlists from youtube:
+<img src=http://i.imgur.com/Gr17F7d.png>
+
+There's special attention for looking for and adding:
+ 
+ * similar videos
+ * videos by the same uploader
+ * videos by the same "group"
+
+Where similar videos and group videos have a number of heuristic tests on them to keep the crap out.
+
+Demo? See here:
 
 http://9ol.es/yt
 
