@@ -135,9 +135,17 @@ function pl_createID($params) {
   list($source, $param) = get($params, 'id, param');
   
   if(!empty($source)) {
-    $result = getdata(run("select id from playlist where authors like '%$source%' order by id desc limit 1"));
-    if($result) { 
-      return $result; 
+    $result = getall(run("select id from playlist where authors like '%$source%' order by id desc"));
+
+    if($result) {
+      $first = array_shift($result)[0];
+      $old_ids = array_map(function($m) { return $m[0]; }, $result);
+
+      if(count($old_ids) > 0) {
+        $result = run('delete from playlist where id in (' . implode(',', $old_ids) . ')');
+      }
+
+      return $first;
     }
   }
 
