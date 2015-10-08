@@ -21,7 +21,7 @@ function loadHistory(){
         return;
       }
 
-      var play = $("<img class=play src=css/play.png />")
+      var play = $("<img class=play title=" + which.id + " src=img/play.png />")
         .click(function(){
           // Clicking it will switch us to the playlist mode and
           // get the playlist.
@@ -33,6 +33,7 @@ function loadHistory(){
           .addClass("span3")
           .html(
             Splash.template({
+              id: which.id,
               ytList: which.preview.tracks ? which.preview.tracks.slice(0, 4) : [],
               title: which.name,
               count: which.preview.count,
