@@ -100,7 +100,7 @@
     <span class="track">
       <% _.each(ytList, function(which) { %><img src="http://i4.ytimg.com/vi/<%= which.ytid || which[2] %>/default.jpg"><% }) %>
     </span>
-    <img src="css/play.png" class="play" style="display: none;">
+    <img src="img/play.png" class="play" title="<%= id %>">
     <p><%= title %>
       <br>
       <small>(<%= count %> tracks <%= duration %>)</small>
