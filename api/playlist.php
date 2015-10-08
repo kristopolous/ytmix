@@ -212,10 +212,18 @@ function set_playlist($id, $playlist) {
 // This adds or removes tracks to an existing playlist - this is a relatively safe method.
 function modify_tracks($params, $func) {
   $opts = getassoc($params, 'id, param');
+  $track_list = [];
 
   // Make sure that the object passed in is interpreted.
   if(gettype($opts['param']) == 'string') {
-    $opts['param'] = json_decode($opts['param'], true);
+    $json = json_decode($opts['param'], true);
+    if($json) {
+      $track_list = $json;
+    } else {
+      $track_list = [$opts['param']];
+    }
+  } else {
+    $track_list = $opts['param'];
   }
   $id = $opts['id'];
 
@@ -223,8 +231,12 @@ function modify_tracks($params, $func) {
   $hash = playlist_to_hash($playlist);
 
   // If what we want to insert isn't there, then we process it.
-  foreach($opts['param'] as $item) {
-    $ytid = $item[YTID_OFFSET];
+  foreach($track_list as $item) {
+    if(is_array($item)) {
+      $ytid = $item[YTID_OFFSET];
+    } else {
+      $ytid = $item;
+    }
 
     if ($func == 'add') {
       if(!array_key_exists($ytid, $hash)) {
