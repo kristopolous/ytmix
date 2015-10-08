@@ -161,8 +161,10 @@ yt.get_playlist = function(playlist_id, cb) {
         });
 
         var id_list = vid_list.map(function(vid) { return vid[0]} );
+
         api.tracks(id_list).then(function(existing) {
           var to_find = id_list.filter(function(i) {return existing.indexOf(i) < 0;});
+//          console.log([vid_list, to_find]);
           yt.duration(to_find).then(function(duration_map) {
             var playlist = [];
 
