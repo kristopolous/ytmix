@@ -353,6 +353,12 @@ function pl_update($params) {
     // livin on the edge ... you can't help yourself from fallllinnn.
     run('update playlist set ' . $key . ' = "' . $value . '" where id = ' . $opts['id']);
   }
+  if(isset($opts['blacklist'])) {
+    $blacklist = json_decode($opts['blacklist']);
+    if($blacklist) {
+      run('update tracks set blacklist = true where ytid in ("' . implode('","', $blacklist) . '")');
+    }
+  }
 
   // make sure that the recent update sends it to the top.
   run('update playlist set updated=now() where id = ' . $opts['id']);
