@@ -159,10 +159,13 @@ function get($opts, $fieldList) {
 }
 
 function run($mysql_string) {
+  file_put_contents('../logs/sql.log', date('c') . ' ' . $mysql_string . "\n", FILE_APPEND);
+
   $result = mysql_query($mysql_string);
   if(!$result) {
     return doError($mysql_string);
   }
+
   return $result;
 }
 
