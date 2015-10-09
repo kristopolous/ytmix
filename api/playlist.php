@@ -271,7 +271,7 @@ function pl_delTracks($params) {
 
 function pl_addListen($params) {
   $opts = getassoc($params, 'id');
-  return run("update tracks set views = views + 1, last = current_timestamp where ytid = '$id'");
+  return run("update tracks set views = views + 1, last = current_timestamp where ytid = '" . $opts['id'] . "'");
 }
 
 function pl_swapTracks($params) {
