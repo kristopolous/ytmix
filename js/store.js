@@ -55,7 +55,12 @@ function remote(opts) {
     dataType: "text",
     success: function(ret) {
 
-      ret = JSON.parse(ret);
+      try {
+        ret = JSON.parse(ret);
+      } catch(ex) {
+        console.log("Couldn't parse json", ret);
+        ret = {status: false};
+      }
 
       var meta = {  
         reqID: reqID,
@@ -70,14 +75,16 @@ function remote(opts) {
         }[ret.status];
       }
 
-      // convenience function of parsing the results
-      for(var key in ret.result) {
-        if(_.isString(ret.result[key])) {
-          var candidate;
-          try {
-            candidate = JSON.parse(ret.result[key]);
-            ret.result[key] = candidate;
-          } catch (ex) { }
+      if('result' in ret) {
+        // convenience function of parsing the results
+        for(var key in ret.result) {
+          if(_.isString(ret.result[key])) {
+            var candidate;
+            try {
+              candidate = JSON.parse(ret.result[key]);
+              ret.result[key] = candidate;
+            } catch (ex) { }
+          }
         }
       }
 
