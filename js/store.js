@@ -20,8 +20,13 @@ function remote(opts) {
     var list = slice.call(arguments);
     opts = {};
 
-    // the success function is the last thing
-    onSuccess = list.pop();
+    if(_.isFunction(_.last(list))) {
+      // the success function is the last thing ... it
+      // can also be omitted entirely.
+      onSuccess = list.pop();
+    } else {
+      onSuccess = function(){};
+    }
 
     ["func", "id", "param"].forEach(function(which) {
       if(list) {
