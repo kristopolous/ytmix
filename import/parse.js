@@ -248,7 +248,7 @@ function get_playlist() {
   });
 }
 
-fs.readFile('authkey', 'utf8', function (err, data) {
+fs.readFile('../secrets/authkey', 'utf8', function (err, data) {
   if(err) {
     console.log("Unable to find an authkey. Bailing. :-(");
     process.exit();
