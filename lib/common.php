@@ -86,6 +86,13 @@ function toJson(&$data, $decode = Array()) {
   return $data;
 }
 
+function yt_authkey() {
+  if(file_exists('../secrets/authkey')) {
+    return file_get_contents('../secrets/authkey');
+  } 
+  return null;
+}
+
 function getall($sql) {
   $ret = [];
   while($ret[] = mysql_fetch_row($sql));
