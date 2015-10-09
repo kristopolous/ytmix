@@ -513,6 +513,9 @@ var Timeline = (function(){
           // order to go forward.
           Player.activeData = _db.byId[dbid];
           
+          // Increment this count by 1
+          remote('addListen', Player.activeData.ytid);
+
           // After the assignment, then we add it to the userhistory
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
 
