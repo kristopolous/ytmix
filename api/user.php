@@ -1,12 +1,5 @@
 <?php
 
-function pl_try() {
-  $q = mysql_query('DESCRIBE playlist');
-  while($row = mysql_fetch_array($q)) {
-    echo "{$row['Field']} - {$row['Type']}\n";
-  }
-}
-
 function pl_setFavorite($params) {
   return run("insert into favorite " . toInsert(getAssoc($params, 'user, ytid')));
 }
@@ -21,16 +14,17 @@ function pl_delFavorite($params) {
 
 function pl_getUser($params) {
   list($id) = get($params, 'id');
+
   if($id) {
-    $result = run('select * from playlist where name="' . $id . '"');
+    $result = run("select * from playlist where name='$id'");
     $data = mysql_fetch_assoc($result);
     if($data) {
-      return toJson($data, Array('tracklist', 'preview', 'blacklist'));
-    } else {
-      return Array();
-    }
-  } else {
-    return uniqid('', true);
-  }
+      return toJson($data, ['tracklist', 'preview', 'blacklist']);
+    } 
+
+    return [];
+  } 
+
+  return uniqid('', true);
 }
 

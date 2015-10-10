@@ -7,7 +7,7 @@ include ('ytsearch.php');
 
 function pl_help($message = false) {
   $list = get_defined_functions()['user'];
-  $func = array();
+  $func = [];
   foreach($list as $name) {
     if(preg_match('/^pl_/', $name)) {
       $func[] = substr($name, 3);

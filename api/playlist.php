@@ -149,13 +149,13 @@ function pl_addMethod($params) {
 
   if(array_key_exists($param, $method)) {
     return $method[$param];
-  } else {
-    $value = base_convert(count($method) + 1, 10, 36);
-    $method[$param] = $value;
-    $string_method = mysql_real_escape_string(json_encode($method));
-    run('update playlist set method = \'' . $string_method . '\' where id = ' . $id);
-    return $value;
-  }
+  } 
+
+  $value = base_convert(count($method) + 1, 10, 36);
+  $method[$param] = $value;
+  $string_method = mysql_real_escape_string(json_encode($method));
+  run('update playlist set method = \'' . $string_method . '\' where id = ' . $id);
+  return $value;
 }
 
 function pl_addTracks($params) {
