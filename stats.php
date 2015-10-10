@@ -5,7 +5,7 @@ $ret = run_assoc("select * from playlist where tracklist is not NULL");
 
 // It's almost as if PHP was intended to be a templating language ... lol
 ?>
-
+<title>ytmix stats</title>
 <style> th, td { background: #eee; padding: 0 2em 0 0.5em} table{ background: #687 } </style>
 
 <table>
