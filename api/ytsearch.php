@@ -4,6 +4,7 @@ function pl_related($params) {
   $thresh = 20000;
 
   $related_videos = Array();
+//  $url = 'https://www.googleapis.com/youtube/v3/search'
   $url = 'https://gdata.youtube.com/feeds/api/videos/' . $ytid .'/related?v=2';
 
   // simple_xml breaks down with namespaces ... you need to register xmlns documents
