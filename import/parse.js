@@ -29,7 +29,7 @@ var
 
 var lib = {
   get: function (location, callback) {
-    console.log("Grabbing " + location);
+    console.log(" > ..." + location.slice(-90));
 
     var 
       buffer = '', 
@@ -181,7 +181,7 @@ yt.get_playlist = function(playlist_id, cb) {
               // this gets the next page
             });
             if(playlist.length) {
-              console.log("adding " + playlist.length);
+              console.log(" +++ adding " + playlist.length);
               api.add_tracks_to_playlist(playlist);
             }
             my_resolve(data.next(), final_resolve);
