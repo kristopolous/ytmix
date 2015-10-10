@@ -65,12 +65,11 @@ function pl_getTracks($params) {
     $index = 'ytid';
   }
 
-  $result = array();
+  $result = [];
   foreach($playlist as $entry) {
     $result[] = $entry[$index];
   }
-  echo implode("\n", $result);
-  exit(0);
+  return $result;
 }
 
 function pl_generatePreview($params) {
@@ -79,8 +78,9 @@ function pl_generatePreview($params) {
   $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
 
   if($playlist && sizeof($playlist) > 0) {
-    $preview = Array();
+    $preview = [];
     $preview['tracks'] = $firstFour = array_slice($playlist, 0, 4);
+
     $length = 0;
     foreach($playlist as $entry) {
       if(!empty($entry[0])) {
@@ -89,9 +89,11 @@ function pl_generatePreview($params) {
         $length += $entry['length'];
       }
     }
+
     $preview['length'] = $length;
     $preview['count'] = count($playlist);
     $preview = mysql_real_escape_string(json_encode($preview));
+
     return run('update playlist set preview="' . $preview . '" where id=' . $id);
   } else {
     return ("ok");
@@ -100,13 +102,13 @@ function pl_generatePreview($params) {
 
 function pl_clear($params) {
   list($id) = get($params, 'id');
-  $result = run('update playlist set tracklist=null where id=' . $id);
+  $result = run("update playlist set tracklist=null where id=$id");
   return $result;
 }
 
 function pl_remove($params) {
   list($id) = get($params, 'id');
-  $result = run('delete from playlist where id=' . $id);
+  $result = run("delete from playlist where id=$id");
   return $result;
 }
 
@@ -218,9 +220,9 @@ function pl_get($params) {
   if($id) {
     //run('update playlist set viewcount = viewcount + 1 where id=' . $id);
 
-    $result = run('select * from playlist where id=' . $id);
+    $result = run("select * from playlist where id=$id");
     $data = mysql_fetch_assoc($result);
-    return toJson($data, Array('tracklist', 'preview', 'blacklist', 'method'));
+    return toJson($data, ['tracklist', 'preview', 'blacklist', 'method']);
   } else {
     return run_assoc('select id, name from playlist where preview is not null');
   }
@@ -260,7 +262,7 @@ function pl_update($params) {
   // make sure that the recent update sends it to the top.
   run('update playlist set updated=now() where id = ' . $opts['id']);
 
-  pl_generatePreview(Array( 'id' => $opts['id']));
+  pl_generatePreview(['id' => $opts['id']]);
   return true;
 }
 
