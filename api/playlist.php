@@ -210,7 +210,7 @@ function pl_recent() {
       preview is not null and
       type = 0
     order by updated desc limit 90');
-  $key = Array(Array('preview'));
+  $key = [['preview']];
   return toJson($res, $key);
 }
 

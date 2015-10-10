@@ -1,5 +1,5 @@
 <?php
-include ('../lib/common.php');
+include ('lib/common.php');
 
 $ret = run_assoc("select * from playlist where tracklist is not NULL");
 
@@ -16,14 +16,14 @@ $ret = run_assoc("select * from playlist where tracklist is not NULL");
     <tr>
 
     <?
-    foreach(Array(
+    foreach([
       'id',
       'name',
       'tracklist bytes',
       'count',
       'density',
       'blacklist bytes',
-      'count') as $row) { ?>
+      'count'] as $row) { ?>
 
       <th><?= $row ?></th>
 
@@ -47,14 +47,14 @@ $ret = run_assoc("select * from playlist where tracklist is not NULL");
     <tr>
 
     <?
-    foreach(Array(
+    foreach([
       $row['id'],
       $row['name'],
       strlen($row['tracklist']),
       count($track),
       floor(strlen($row['tracklist']) / count($track)),
       strlen($row['blacklist']),
-      count($black)) as $el) { ?> 
+      count($black)] as $el) { ?> 
 
       <td><?= $el ?></td>
 
