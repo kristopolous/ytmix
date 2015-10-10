@@ -7,6 +7,9 @@ function pl_tracks($params) {
   return getall(run("select * from tracks where ytid in ($sql_list)"));
 }
 
+//
+// Adds tracks in a playlist to the tracks table.
+//
 function pl_normalize() {
   $row_list = getall(run('select tracklist from playlist'));
   foreach($row_list as $row) {
@@ -31,6 +34,9 @@ function pl_normalize() {
   } // foreach row list
 }
 
+// 
+// Get the names of all the playlists
+//
 function pl_names() {
   $res = [];
 

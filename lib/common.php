@@ -44,22 +44,17 @@ function getError() {
 
 function result($succeed, $message, $extra = false) {
   if(!$extra) {
-    echo json_encode(
-      Array(
-        'status' => $succeed,
-        'result' => $message
-      )
-    );
+    return [
+      'status' => $succeed,
+      'result' => $message
+    ];
   } else {
-    echo json_encode(
-      Array(
-        'status' => $succeed,
-        'result' => $message,
-        'message' => $extra
-      )
-    );
+    return [
+      'status' => $succeed,
+      'result' => $message,
+      'message' => $extra
+    ];
   }
-  exit(0);
 }
 
 function sanitize($opts) {

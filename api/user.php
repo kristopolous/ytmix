@@ -30,7 +30,7 @@ function pl_getUser($params) {
       return Array();
     }
   } else {
-    result('true', uniqid('', true));
+    return uniqid('', true);
   }
 }
 
