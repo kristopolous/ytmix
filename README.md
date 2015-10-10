@@ -79,6 +79,20 @@ The JSON results return
 Where `status` is either True or False, depending on whether the call succeeded or failed. 
 If the call fails, then the result will hold an error string.
 
+There's also an "extension" support for the api call which, if the result is an array, will return it as a list with newlines,
+appropriate for scripting.  For instance, you could do
+
+    api/names
+
+to get all the names of the playlists as json or
+
+    api/names.txt
+
+to get them as text.  Then if you want to update the playlists you could do
+
+    curl localhos/api/names.txt | xargs -n 1 import/parse.js
+
+
 ### (JSON) help 
 List the supported functions (enumerated below).
 
