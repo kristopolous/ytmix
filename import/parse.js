@@ -248,12 +248,16 @@ function get_playlist() {
   });
 }
 
-fs.readFile('../secrets/authkey', 'utf8', function (err, data) {
-  if(err) {
-    console.log("Unable to find an authkey. Bailing. :-(");
-    process.exit();
-  }
-  yt.authkey = data.replace(/\s/, '');
-  get_playlist();
-});
+if(yt.user) {
+  fs.readFile(__dirname + '/../secrets/authkey', 'utf8', function (err, data) {
+    if(err) {
+      console.log("Unable to find an authkey. Bailing. :-(");
+      process.exit();
+    }
+    yt.authkey = data.replace(/\s/, '');
+    get_playlist();
+  });
+} else {
+  console.log("Specify the youtube user name as the first argument");
+}
 
