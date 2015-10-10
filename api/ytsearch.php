@@ -12,7 +12,7 @@ function pl_related($params) {
     'part' => 'snippet',
     'maxResults' => 15,
     'relatedToVideoId' => $ytid,
-    'videoEmbeddable' => true,
+    'videoEmbeddable' => 'true',
     'type' => 'video'
   ]);
 
