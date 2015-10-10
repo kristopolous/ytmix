@@ -1,42 +1,41 @@
 <?php
 function pl_related($params) {
   $ytid = $params['id'];
-  $thresh = 20000;
-
-  $related_videos = Array();
-//  $url = 'https://www.googleapis.com/youtube/v3/search'
-  $url = 'https://gdata.youtube.com/feeds/api/videos/' . $ytid .'/related?v=2';
-
-  // simple_xml breaks down with namespaces ... you need to register xmlns documents
-  // and then do xpath queries and find parent nodes and lots of utter nonsense because
-  // colons aren't supported.  Soooo lets just removed the fucking colons.
-  $raw_data = preg_replace('/yt:statistics/', 'stats', file_get_contents($url));
-  $xml = simplexml_load_string($raw_data);
-
-  foreach($xml->entry as $row) {
-    $pieces = explode(':', $row->id);
-
-    // youtube related videos have turned to crap recently,
-    // trying to suggest things with a bazillion views that
-    // have zero relation whatsoever - so we only include things
-    // that have fewer views - 100k seems to be a good number
-    // to avoid stupid shit.
-    $vc = (int)$row->stats['viewCount'][0];
-    if ($vc < $thresh) {
-      $related_videos[] = Array(
-        'vc' => $vc,
-        'ytid' => array_pop($pieces),
-        'title' => strval($row->title)
-      ); 
-    }
+  $related_videos = [];
+  
+  if( !($auth_key = yt_authkey()) ) {
+    return false;
   }
 
-  return Array(
+  $params = http_build_query([
+    'key' => $auth_key,
+    'part' => 'snippet',
+    'maxResults' => 15,
+    'relatedToVideoId' => $ytid,
+    'videoEmbeddable' => true,
+    'type' => 'video'
+  ]);
+
+  $url = "https://www.googleapis.com/youtube/v3/search?$params";
+
+  $raw = file_get_contents($url);
+
+  if ( !($res = @json_decode($raw, true)) ) {
+    return false;
+  }
+
+  foreach($res['items'] as $item) {
+    $related_videos[] = [
+      'ytid' => $item['id']['videoId'],
+      'title' => $item['snippet']['title']
+    ]; 
+  }
+
+  return [
     'ytid' => $ytid,
     'related' => $related_videos,
-    'url' => $url,
-    'thresh' => $thresh
-  );
+    'url' => $url
+  ];
 }
 
 function pl_query($params) {
