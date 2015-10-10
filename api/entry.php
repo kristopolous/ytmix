@@ -40,7 +40,7 @@ if(function_exists($to_run)) {
     $res = result(true, $result);
   }
   if($extension === 'json') {
-    echo $res;
+    echo json_encode($res);
   } else {
     echo implode("\n", $res['result']);
   }
