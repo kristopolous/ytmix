@@ -15,6 +15,32 @@ function addtrack($length, $title, $ytid) {
   );
 }
 
+function yt_query($opts = []) {
+
+  $ep = 'search';
+  if(isset($opts['ep'])) {
+    $ep = $opts['ep'];
+    unset($opts['ep']);
+  }
+
+  if( !($auth_key = yt_authkey()) ) {
+    return false;
+  }
+
+  $opts['key'] = $auth_key;
+
+  $params = http_build_query($opts);
+  $url = "https://www.googleapis.com/youtube/v3/$ep?$params";
+
+  $raw = file_get_contents($url);
+
+  if ( !($res = @json_decode($raw, true)) ) {
+    return false;
+  }
+
+  return $res;
+}
+
 function is_assoc($array) {
   foreach (array_keys($array) as $k => $v) {
     if ($k !== $v) {
