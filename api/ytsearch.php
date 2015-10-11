@@ -40,12 +40,27 @@ function pl_related($params) {
 
 function pl_query($params) {
   $qstr = $params['param'];
+
   $query = preg_replace('/%u\d{4}/','', utf8_decode($qstr));
   $query = preg_replace('/%u\d{4}/','', urldecode($query));
   $query = preg_replace('/\(.*/','', urldecode($query));
 
-  $url = 'https://gdata.youtube.com/feeds/api/videos?alt=json&q='.urlencode($query).'&orderby=relevance&max-results=20&v=2';
+  if( !($auth_key = yt_authkey()) ) {
+    return false;
+  }
+
+  $params = http_build_query([
+    'key' => $auth_key,
+    'part' => 'snippet',
+    'maxResults' => 30,
+    'q' => $query,
+    'videoEmbeddable' => 'true',
+    'type' => 'video'
+  ]);
+
   $results = json_decode(file_get_contents($url), true);
+  var_dump($results);
+  exit(0);
   $resList = Array();
 
   if(!empty($results['feed']['entry'])) {
