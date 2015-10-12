@@ -27,7 +27,8 @@ function pl_related($params) {
 }
 
 function pl_query($params) {
-  $qstr = $params['id'];
+  $qstr = $params['param'] ?: $params['id'];
+  $id = $params['id'];
 
   $query = preg_replace('/%u\d{4}/','', utf8_decode($qstr));
   $query = preg_replace('/%u\d{4}/','', urldecode($query));
@@ -53,6 +54,7 @@ function pl_query($params) {
 
   return [
     'query' => $qstr,
-    'vidList' => $resList
+    'vidList' => $resList,
+    'id' => $id
   ];
 }
