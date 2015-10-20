@@ -515,6 +515,9 @@ var Timeline = (function(){
           // is the only line that activley loads the id and offset into
           // the player. This is because there has to be an activeData in
           // order to go forward.
+          if(Player.activeData) {
+            remote('updateDuration', Player.activeData.ytid, parseInt(Player.listen_total, 10));
+          }
           Player.activeData = _db.byId[dbid];
           Player.listen_total = 0;
           
