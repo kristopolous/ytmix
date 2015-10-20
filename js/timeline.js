@@ -331,7 +331,11 @@ var Timeline = (function(){
             if ( ev.incr('deadair', CLOCK_FREQ) > RELOAD_THRESHOLD ) {
               UserHistory.reload();
             }
-          } 
+          } else {
+            // this means we are playing so we should increment the total
+            // time we are listening
+            Player.listen_total += CLOCK_FREQ / 1000;
+          }
         }
       }
     }
@@ -512,6 +516,7 @@ var Timeline = (function(){
           // the player. This is because there has to be an activeData in
           // order to go forward.
           Player.activeData = _db.byId[dbid];
+          Player.listen_total = 0;
           
           // Increment this count by 1
           remote('addListen', Player.activeData.ytid);
