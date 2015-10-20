@@ -168,6 +168,11 @@ function pl_delTracks($params) {
   return modify_tracks($params, 'del');
 }
 
+function pl_updateDuration($params) {
+  $opts = getassoc($params, 'id, param');
+  return run("update tracks set total_listen = total_listen + " . $opts['param'] . " where ytid = '" . $opts['id'] . "'");
+}
+
 function pl_addListen($params) {
   $opts = getassoc($params, 'id');
   return run("update tracks set views = views + 1, last = current_timestamp where ytid = '" . $opts['id'] . "'");
