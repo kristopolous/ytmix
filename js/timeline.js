@@ -516,14 +516,15 @@ var Timeline = (function(){
           // the player. This is because there has to be an activeData in
           // order to go forward.
           if(Player.activeData) {
+            // Increment this count by 1 -- we only want to do it on the case of moving to a new track.
+            // This is so there's no misreporting of average listen time of view count based on the reloads
+            // that happen during development
+            remote('addListen', Player.activeData.ytid);
             remote('updateDuration', Player.activeData.ytid, parseInt(Player.listen_total, 10));
           }
           Player.activeData = _db.byId[dbid];
           Player.listen_total = 0;
           
-          // Increment this count by 1
-          remote('addListen', Player.activeData.ytid);
-
           // After the assignment, then we add it to the userhistory
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
 
