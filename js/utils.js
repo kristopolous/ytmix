@@ -107,7 +107,21 @@ var Utils = {
     var w2 = $('div', div).innerWidth();
     $(div).remove();
     return (w1 - w2);
+  },
+
+  tuple: function (what, fn0, fn1) {
+    var res = [];
+    if(!fn0) {
+      fn0 = function(m) { return m };
+    }
+
+    _.each(what, function(key, value) {
+      res.push(fn0(key), fn1(value));
+    });
+
+    return res;
   }
+    
 };
 
 function Queue() { }
@@ -161,6 +175,14 @@ function log() {
       Utils.stack(2,3).split('/').pop()
     ].concat( slice.call(arguments) )
   );
+}
+
+function stats() {
+  _db.find().each(function(what) { what.artist = what.title.split(' - ')[0] });
+  var 
+    artist = _db.group('artist'),
+    
+  tuple(artist, false, function(m) { return m.length });
 }
 
 function debug(list) {
