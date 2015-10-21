@@ -15,10 +15,27 @@ http://9ol.es/yt
 
 ## Creating a new playlist
 
-The quickest way to create a new playlist is to use the `import/poarse.js` script which uses the youtube data api v3 in order to create a list
+The quickest way to create a new playlist is to use the `import/parse.js` script which uses the youtube data api v3 in order to create a list
 of the uploads of a specified user.  Unfortunately, due to v3 bullshit, You need to get an auth-key to send off the requests.  
 
-If you want to avoid this, there's a dump `db/mysql-dump.db.lzma` that is occasionally updated.  Just do 
+An example would be
+
+    $ import/parse.js TheIDMMaster
+    User: TheIDMMaster
+     > ...s?part=contentDetails&forUsername=TheIDMMaster&key=super-secret << Find out the playlistid of the user
+     > ...ylistId=UUhS0SPpEqGMGRim7mebedPg&maxResults=50&key=super-secret << Get the playlist
+     > ...e/v3/videos?part=contentDetails&id=-U8rJlH_1y8&key=super-secret << Find the duration of a track found
+     +++ adding 1
+     > ...qGMGRim7mebedPg&maxResults=50&key=super-secret&pageToken=CDIQAA << Get the next page ...
+     > ...qGMGRim7mebedPg&maxResults=50&key=super-secret&pageToken=CGQQAA
+     > ...GMGRim7mebedPg&maxResults=50&key=super-secret&pageToken=CJYBEAA
+     > ...GMGRim7mebedPg&maxResults=50&key=super-secret&pageToken=CMgBEAA
+    ...
+    $
+
+There's a "quota" system on youtube (and each of these requests have a "cost").  I'm pretty conscious of this since I use this thing every day.  I try my hardest to be as thrifty as feasible.
+
+If you want to avoid all the quota and key nonsense, there's a dump `db/mysql-dump.db.lzma` that is occasionally updated.  Just do 
 
     mysql -uroot yt < mysql-dump.db
 
@@ -31,8 +48,7 @@ There's two tables ... one that has the playlist and one that has a normalized s
  * storing when the track was added to the system
  * storing the last time it was listened to
  * having an internal view count of them.
-
-Anyway, change those to whatever you want.
+ * knowing how much of the track was listened to as a metric of whether I actually liked the content or unfortunately just ran into it frequently.
 
 ## Updating the playlists
 
