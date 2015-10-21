@@ -26,6 +26,14 @@ function pl_related($params) {
   ];
 }
 
+function intget($what) {
+  $ret = [];
+  for($ix = 1; $ix < count($what); $ix++) {
+    $ret[] = intval($what[$ix]);
+  }
+  return $ret;
+}
+
 function pl_query($params) {
   $qstr = $params['param'] ?: $params['id'];
   $id = $params['id'];
@@ -69,36 +77,20 @@ function pl_query($params) {
     $ytid = $video['id'];
     $duration = $video['contentDetails']['duration'];
 
-    do {
-      $res = preg_match('/PT(\d*)M(\d*)S/', $duration, $matches);
-      if($res) {
-        $minute = intval($res[1]);
-        $second = intval($res[2]);
-        break;
-      } 
+    if($res = preg_match('/PT(\d*)M(\d*)S/', $duration, $matches)) {
+      list( $minute, $second ) = intget($matches);
+    } else if($res = preg_match('/PT(\d*)M$/', $duration, $matches)) {
+      list( $minute ) = intget($matches);
+    } else if($res = preg_match('/PT(\d*)H(\d*)M(\d*)S/', $duration, $matches)) {
+      list( $hour, $minute, $second ) = intget($matches);
+    }
 
-      $res = preg_match('/PT(\d*)M$/', $duration, $matches);
-      if($res) {
-        $minute = intval($res[1]);
-        break;
-      }
-
-      $res = preg_match('/PT(\d*)H(\d*)M(\d*)S/', $duration, $matches);
-      if($res) {
-        $hour = intval($res[1]);
-        $minute = intval($res[2]);
-        $second = intval($res[3]);
-      }
-    } while(0);
-
-    var_dump([$duration, $matches]);
+    $resList[$ytid]['length'] = ($hour * 60 + $minute) * 60 + $second;
   }
-
-  yt_duration(array_keys($resList));
 
   return [
     'query' => $qstr,
-    'vidList' => $resList,
+    'vidList' => array_values($resList),
     'id' => $id
   ];
 }
