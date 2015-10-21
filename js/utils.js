@@ -115,8 +115,8 @@ var Utils = {
       fn0 = function(m) { return m };
     }
 
-    _.each(what, function(key, value) {
-      res.push(fn0(key), fn1(value));
+    _.each(what, function(value, key) {
+      res.push([fn0(key), fn1(value)]);
     });
 
     return res;
@@ -177,12 +177,25 @@ function log() {
   );
 }
 
-function stats() {
-  _db.find().each(function(what) { what.artist = what.title.split(' - ')[0] });
+function stats(count) {
+  if(!count) {
+    count = 20;
+  }
+  _db.update({
+    artist: function(m) { 
+      return m.title.split(' - ')[0];
+    }
+  })
+
   var 
     artist = _db.group('artist'),
-    
-  tuple(artist, false, function(m) { return m.length });
+    tuple = Utils.tuple(artist, false, function(m) { return m.length });
+
+  console.table(
+    tuple.sort(function(a, b) {
+      return b[1] - a[1];
+    }).slice(0, count)
+  );
 }
 
 function debug(list) {
