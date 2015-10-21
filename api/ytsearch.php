@@ -26,6 +26,17 @@ function pl_related($params) {
   ];
 }
 
+function yt_duration($list) {
+  if( !($res = yt_query([
+    'ep' => 'videos',
+    'part' => 'contentDetails',
+    'id' => implode(',', $list)
+  ]) ) ) {
+    return false;
+  }
+  var_dump($res);
+}
+
 function pl_query($params) {
   $qstr = $params['param'] ?: $params['id'];
   $id = $params['id'];
@@ -46,11 +57,14 @@ function pl_query($params) {
 
   foreach($res['items'] as $video){
 
-    $resList[] = [
+    $ytid = $video['id']['videoId'];
+    $resList[$ytid] = [
       'title' => $video['snippet']['title'],
-      'ytid' => $video['id']['videoId']
+      'ytid' => $ytid
     ];
   }
+
+  yt_duration(array_keys($resList));
 
   return [
     'query' => $qstr,
