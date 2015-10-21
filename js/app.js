@@ -165,6 +165,7 @@ function replace(id, cb, attempt) {
   Toolbar.status("Attempting a replace of " + vid.title);
   log("[" + (attempt + 1) + "] Replacing (" + id + ") " + vid.title);
   remote('query', 1, check, function(resp) {
+    console.log(resp);
     if(resp.vidList.length == 0 && wc > 2 && attempt != 1) {
       replace(id, cb, 1);
     }
@@ -244,6 +245,9 @@ replace.cb = function(success) {
 }
 
 replace.clean = function(str) {
+  if(str.charAt(str.length - 1) == ')' && str.length > 20) {
+    str = str.replace(/\([^\)]*\)$/,'');
+  }
   return str.replace(/[\-0-9\(\)]/g, '').replace(/\./g, ' ').replace(/\s+/g, ' ').toLowerCase();
 }
 
