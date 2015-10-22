@@ -34,10 +34,7 @@ function intget($what) {
   return $ret;
 }
 
-function pl_query($params) {
-  $qstr = $params['param'] ?: $params['id'];
-  $id = $params['id'];
-
+function yt_search($qstr) {
   $query = preg_replace('/%u\d{4}/','', utf8_decode($qstr));
   $query = preg_replace('/%u\d{4}/','', urldecode($query));
   $query = preg_replace('/\(.*/','', urldecode($query));
@@ -50,6 +47,26 @@ function pl_query($params) {
     'type' => 'video'
   ]) ) ) {
     return false;
+  }
+  return $res;
+}
+
+function pl_query($params) {
+  $qstr = $params['param'] ?: $params['id'];
+  $id = $params['id'];
+
+  $res = yt_search($qstr);
+  if(!$res) {
+    return false;
+  }
+  if(count($res['items']) == 0) {
+    $parts = explode(' ',$qstr);
+    array_pop($parts);
+    $qstr = implode(' ', $parts);
+    $res = yt_search($qstr);
+    if(!$res) {
+      return false;
+    }
   }
 
   foreach($res['items'] as $video){
