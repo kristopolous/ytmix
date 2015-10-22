@@ -54,6 +54,7 @@ function yt_search($qstr) {
 function pl_query($params) {
   $qstr = $params['param'] ?: $params['id'];
   $id = $params['id'];
+  $resList = [];
 
   $res = yt_search($qstr);
   if(!$res) {
