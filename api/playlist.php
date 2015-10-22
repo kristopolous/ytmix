@@ -271,3 +271,17 @@ function pl_update($params) {
   return true;
 }
 
+function pl_exists($params) {
+  $res = [];
+  stream_context_set_default(['http' => [ 'method' => 'HEAD' ]]);
+
+  extract($params);
+  $id_list = explode(',', $id);
+
+  foreach($id_list as $id) {
+    $header = get_headers("http://i4.ytimg.com/vi/$id/default.jpg");
+    $res[$id] = (substr($header[0], 9, 3) != '404');
+  }
+  return $res;
+}
+

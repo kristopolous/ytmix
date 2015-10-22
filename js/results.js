@@ -102,6 +102,14 @@ var Results = {
             $("<div class=timeline-inner />")
           )
         );
+      var img = new Image();
+      img.onerror = function(){
+        console.log("Error loading");
+      }
+      img.onload = function(){
+        console.log("Success loading");
+      }
+      img.src = "http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg";
 
       // inlining html has fallen out of fashion for templates I know...
       var 

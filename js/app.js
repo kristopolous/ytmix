@@ -124,9 +124,10 @@ function getDuration(idList, cb) {
 }
 
 function findStatus(idList, cb, status) {
-  var count = idList.length,
-      subgroup,
-      current = 0;
+  var 
+    count = idList.length,
+    subgroup,
+    current = 0;
 
   status = status || [];
 
