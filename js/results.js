@@ -102,14 +102,6 @@ var Results = {
             $("<div class=timeline-inner />")
           )
         );
-      var img = new Image();
-      img.onerror = function(){
-        console.log("Error loading");
-      }
-      img.onload = function(){
-        console.log("Success loading");
-      }
-      img.src = "http://i4.ytimg.com/vi/" + obj.ytid + "/default.jpg";
 
       // inlining html has fallen out of fashion for templates I know...
       var 
@@ -281,7 +273,10 @@ var Results = {
       // display on the screen (it returns a jquery element
       // with a back reference to the ytid).
       _db.transaction.start(); {
-        each(map(set.slice(start,stop), Results.draw), function(which) {
+        var view_list = set.slice(start, stop);
+        self.view_list = view_list;
+
+        each(map(view_list, Results.draw), function(which) {
 
           // And then we create our map based on ytid
           // of the jquery and the dom reference. This

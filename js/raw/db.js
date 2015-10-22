@@ -1149,6 +1149,7 @@
       // keep track
       var 
         myix = {del: _ix.del, ins: _ix.ins},
+        res = {},
         keyer;
       
       if(field.search(/[()]/) === -1) {
@@ -1156,12 +1157,12 @@
           field = '.' + field;
         }
 
-        eval( "keyer = function(r,ref){try{ref[rX] = update[rX] = r;} catch(x){}}".replace(/X/g, field));
+        eval( "keyer = function(r,ref){try{ref[rX] = res[rX] = r;} catch(x){}}".replace(/X/g, field));
       } else {
-        eval( "keyer = function(r,ref){with(r) { var val = X };try{ref[val] = update[val] = r;} catch(x){}}".replace(/X/g, field));
+        eval( "keyer = function(r,ref){with(r) { var val = X };try{ref[val] = res[val] = r;} catch(x){}}".replace(/X/g, field));
       }
 
-      function update(whence) {
+      res.update = function(whence) {
         if(whence) {
           // if we only care about updating our views
           // on a new delete, then we check our atomic
@@ -1179,16 +1180,16 @@
           keyer(row, ref);
         });
 
-        for(var key in update) {
-          if( ! (key in ref) ) {
-            delete update[key];
+        for(var key in res) {
+          if( ! (key in ref) && key != 'update') {
+            delete res[key];
           }
         }
-        update.length = Object.keys(update).length;
+        res.length = Object.keys(res).length - 1;
       }
 
-      update();
-      return update;
+      res.update();
+      return res;
     },
 
     //
@@ -1199,7 +1200,7 @@
     //
     ret.view = function(field, type) {
       var fn = ret.lazyView(field, type);
-      ret.sync(fn);
+      ret.sync(fn.update);
       return fn;
     }
 
@@ -1301,7 +1302,7 @@
             _g[key] = ret.lazyView(unique);
           } else {
             // Only update if a delete has happened
-            _g[key]('del');
+            _g[key].update('del');
           }
 
           map_ = _g[key];
