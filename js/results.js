@@ -91,10 +91,10 @@ var Results = {
           UserHistory.star(obj.ytid);
           $(this).toggleClass('active');
         }),
-        reload = $("<a>&#x21bb;</a>").addClass('reload').click(function(){
+        reload = $("<a class='reload fa fa-refresh'></a>").click(function(){
           replace(obj.id, true);
         }),
-        remove = $("<a>X</a>").addClass("remove").click(function(){
+        remove = $("<a class='remove fa fa-times'></a>").click(function(){
           Timeline.remove(obj);
         }),
         timeline = $("<div class=timeline-container />").addClass('hover').append(
