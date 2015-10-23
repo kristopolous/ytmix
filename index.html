@@ -98,9 +98,9 @@
       ></embed>
     </script>
 
-    <script id='T-Card' type="text/template">
+    <script id='T-Result' type="text/template">
 
-    <span class="result active">
+    <span class="result">
       <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i4.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
       <span>
         <p>
@@ -114,7 +114,7 @@
           </a>
         </p>
       </span>
-    <div style="display: block;" class="timeline-container hover active"><div style="opacity: 0.5;" class="timeline-outer"><div class="timeline-inner"></div></div><div class="scrubber" id="real-scrubber"></div></div><a class="remove fa fa-times"></a><a class="reload fa fa-refresh"></a><a class="star">\u2605</a></span>
+    <div class="timeline-container"><div style="opacity: 0.5;" class="timeline-outer"><div class="timeline-inner"></div></div><div class="scrubber" id="real-scrubber"></div></div><a onclick="Timeline.remove('<%= ytid %>')" class="remove fa fa-times"></a><a onclick="replace(<%= id %>,true)" class="reload fa fa-refresh"></a><a onclick="Result.star('<%= ytid %>',this)" class="star">&#x2605;</a></span>
     </script>
 
     <script id="T-Preview" type="text/template">
@@ -130,21 +130,6 @@
       </span>
     </script>
 
-    <script id="T-Result" type="text/template">
-      <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img onerror="console.log('hello world')" src="http://i4.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
-      <span>
-        <p>
-          <em>
-            <a onclick="Search.artist('<%= artist %>')">
-              <%= artist %>
-            </a>
-          </em>
-          <a onclick="Search.related('<%= ytid %>')">
-            <%= title %>
-          </a>
-        </p>
-      </span>
-    </script>
   </div>
 
   </body>
