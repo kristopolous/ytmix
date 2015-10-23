@@ -87,7 +87,7 @@ var Results = {
     } else {
 
       var 
-        star = $("<a>&#9733;</a>").addClass("star").click(function(){
+        star = $("<a class='star'>&#9733;</a>").click(function(){
           UserHistory.star(obj.ytid);
           $(this).toggleClass('active');
         }),
@@ -161,11 +161,10 @@ var Results = {
         dom.addClass('new');
       }
     }
+
     if (UserHistory.isStarred(obj.ytid)) {
       dom.star.addClass('active');
-    } else {
-      dom.star.removeClass('active');
-    }
+    } 
 
     // This is important. There's a mapper in
     // the generator that relies on the output
