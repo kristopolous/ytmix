@@ -256,14 +256,6 @@ var Timeline = (function(){
       debug(stats);
     } else {
       try {
-        /*
-        debug([
-          "(backup)", 
-          Player.active.getCurrentTime().toFixed(3),
-          "/",
-          Player.active.getDuration().toFixed(3)
-        ]);
-        */
       } catch(ex) {
         log(Player.active, ex);
         debug([ "(backup) - failure" ]);
@@ -430,7 +422,9 @@ var Timeline = (function(){
       return Player.activeData;
     },
 
-    remove: function(obj){
+    remove: function(ytid){
+      var obj = _db.findFirst('ytid', ytid);
+
       Toolbar.status("Removed " + obj.title);
       Scrubber.real.remove();
 
