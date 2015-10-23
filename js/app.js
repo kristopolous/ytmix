@@ -303,12 +303,12 @@ function ytButton() {
 }
 
 $(function(){
-//  Splash.template = _.template( $("#T-Preview").html() );
-//  ev.when('app_state', 'main', ytButton).once = true;
-//  Results.init();
-//  Toolbar.init();
-//  Timeline.init();
-//  Search.init();
+  Splash.template = _.template( $("#T-Preview").html() );
+  ev.when('app_state', 'main', ytButton).once = true;
+  Results.init();
+  Toolbar.init();
+  Timeline.init();
+  Search.init();
 
   var KEY = {
     space: 32,
