@@ -98,14 +98,16 @@
   </script>
 
   <script id="T-Preview" type="text/template">
-    <span class="track">
-      <% _.each(ytList, function(which) { %><img src="http://i4.ytimg.com/vi/<%= which.ytid || which[2] %>/default.jpg"><% }) %>
+    <span class="splash-container span3">
+      <span class="track">
+        <% _.each(ytList, function(which) { %><img src="http://i4.ytimg.com/vi/<%= which.ytid || which[2] %>/default.jpg"><% }) %>
+      </span>
+      <img src="img/play.png" class="play" title="<%= id %>">
+      <p><%= title %>
+        <br>
+        <small>(<%= count %> tracks <%= duration %>)</small>
+      </p>
     </span>
-    <img src="img/play.png" class="play" title="<%= id %>">
-    <p><%= title %>
-      <br>
-      <small>(<%= count %> tracks <%= duration %>)</small>
-    </p>
   </script>
 
   <script id="T-Result" type="text/template">

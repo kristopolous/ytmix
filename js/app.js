@@ -28,18 +28,15 @@ function loadHistory(){
           ev('app_state', 'main');
           Store.get(which.id);
         }),
-        container = $("<span />")
-          .addClass("splash-container")
-          .addClass("span3")
-          .html(
-            Splash.template({
-              id: which.id,
-              ytList: which.preview.tracks ? which.preview.tracks.slice(0, 4) : [],
-              title: which.name,
-              count: which.preview.count,
-              duration: Utils.secondsToTime(which.preview.length)
-            })
-          );
+        container = $(
+          Splash.template({
+            id: which.id,
+            ytList: which.preview.tracks ? which.preview.tracks.slice(0, 4) : [],
+            title: which.name,
+            count: which.preview.count,
+            duration: Utils.secondsToTime(which.preview.length)
+          })
+        );
 
       container.hover(
         function() { play.fadeIn() },
@@ -279,6 +276,8 @@ function volumeDown() {
 // ytButton initializes the "youtube-dl" button
 // to get the copy/pasta for a command line downloading
 function ytButton() {
+  return true;
+  /*
   var clip = new ZeroClipboard(
     $('#clipboard-button'),
     {
@@ -300,6 +299,7 @@ function ytButton() {
       log([what].concat(arguments));
     });
   });
+  */
 }
 
 $(function(){
