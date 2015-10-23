@@ -77,54 +77,75 @@
   <object id="backupPlayer" width="420" height="315">
   </object>
 
-  <script id="T-Backup" type="text/template">
-    <param 
-      name="movie" 
-      value="http://www.youtube.com/v/<%=ytid%>?autoplay=1&amp;start=<%=offset%>&amp;version=3&amp;hl=en_US" 
-    ></param>
+  <div id='template'>
+    <script id="T-Backup" type="text/template">
+      <param 
+        name="movie" 
+        value="http://www.youtube.com/v/<%=ytid%>?autoplay=1&amp;start=<%=offset%>&amp;version=3&amp;hl=en_US" 
+      ></param>
 
-    <param 
-      name="allowscriptaccess" 
-      value="always"
-    ></param>
+      <param 
+        name="allowscriptaccess" 
+        value="always"
+      ></param>
 
-    <embed 
-      src="http://www.youtube.com/v/<%=ytid%>?autoplay=1&amp;start=<%=offset%>&amp;version=3&amp;hl=en_US" 
-      type="application/x-shockwave-flash" 
-      width="420" 
-      height="315" 
-      allowscriptaccess="always"
-    ></embed>
-  </script>
+      <embed 
+        src="http://www.youtube.com/v/<%=ytid%>?autoplay=1&amp;start=<%=offset%>&amp;version=3&amp;hl=en_US" 
+        type="application/x-shockwave-flash" 
+        width="420" 
+        height="315" 
+        allowscriptaccess="always"
+      ></embed>
+    </script>
 
-  <script id="T-Preview" type="text/template">
-    <span class="splash-container span3">
-      <span class="track">
-        <% _.each(ytList, function(which) { %><img src="http://i4.ytimg.com/vi/<%= which.ytid || which[2] %>/default.jpg"><% }) %>
-      </span>
-      <img src="img/play.png" class="play" title="<%= id %>">
-      <p><%= title %>
-        <br>
-        <small>(<%= count %> tracks <%= duration %>)</small>
-      </p>
-    </span>
-  </script>
+    <script id='T-Card' type="text/template">
 
-  <script id="T-Result" type="text/template">
-    <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img onerror="console.log('hello world')" src="http://i4.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
-    <span>
-      <p>
-        <em>
-          <a onclick="Search.artist('<%= artist %>')">
-            <%= artist %>
+    <span class="result active">
+      <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i4.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
+      <span>
+        <p>
+          <em>
+            <a onclick="Search.artist('<%= artist %>')">
+              <%= artist %>
+            </a>
+          </em>
+          <a onclick="Search.related('<%= ytid %>')">
+            <%= title %>
           </a>
-        </em>
-        <a onclick="Search.related('<%= ytid %>')">
-          <%= title %>
-        </a>
-      </p>
-    </span>
-  </script>
+        </p>
+      </span>
+    <div style="display: block;" class="timeline-container hover active"><div style="opacity: 0.5;" class="timeline-outer"><div class="timeline-inner"></div></div><div class="scrubber" id="real-scrubber"></div></div><a class="remove fa fa-times"></a><a class="reload fa fa-refresh"></a><a class="star">\u2605</a></span>
+    </script>
+
+    <script id="T-Preview" type="text/template">
+      <span class="splash-container span3">
+        <span class="track">
+          <% _.each(ytList, function(which) { %><img src="http://i4.ytimg.com/vi/<%= which.ytid || which[2] %>/default.jpg"><% }) %>
+        </span>
+        <img src="img/play.png" class="play" title="<%= id %>">
+        <p><%= title %>
+          <br>
+          <small>(<%= count %> tracks <%= duration %>)</small>
+        </p>
+      </span>
+    </script>
+
+    <script id="T-Result" type="text/template">
+      <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img onerror="console.log('hello world')" src="http://i4.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
+      <span>
+        <p>
+          <em>
+            <a onclick="Search.artist('<%= artist %>')">
+              <%= artist %>
+            </a>
+          </em>
+          <a onclick="Search.related('<%= ytid %>')">
+            <%= title %>
+          </a>
+        </p>
+      </span>
+    </script>
+  </div>
 
   </body>
 
