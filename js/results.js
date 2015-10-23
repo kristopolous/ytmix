@@ -66,6 +66,11 @@ var Results = {
     ev.set('request_gen');
   },
 
+  star: function(ytid, elem) {
+    UserHistory.star(ytid);
+    $(elem).toggleClass('active');
+  },
+
   draw: function(obj) {
 
     // Look to see if we have generated this before.
@@ -86,73 +91,52 @@ var Results = {
       dom = dbReference[0].jqueryObject;
     } else {
 
-      var 
-        star = $("<a class='star'>&#9733;</a>").click(function(){
-          UserHistory.star(obj.ytid);
-          $(this).toggleClass('active');
-        }),
-        reload = $("<a class='reload fa fa-refresh'></a>").click(function(){
-          replace(obj.id, true);
-        }),
-        remove = $("<a class='remove fa fa-times'></a>").click(function(){
-          Timeline.remove(obj);
-        }),
-        timeline = $("<div class=timeline-container />").addClass('hover').append(
-          $("<div class=timeline-outer />").css('opacity', 0.5).append( 
-            $("<div class=timeline-inner />")
-          )
-        );
-
-      // inlining html has fallen out of fashion for templates I know...
-      var 
-        splitup = obj.title.split(' - '),
+      var splitup = obj.title.split(' - '),
         title = splitup.pop(),
         artist = splitup.join(' - '),
-        result = $("<span class=result/>")
-        .hover(
-          function(){ 
-            timeline.css('display','block') 
-          }, 
-          function(){ 
-            if (timeline.hasClass('active')) {
-              return;
-            }
-            timeline.css('display','none') 
-          }
-        )
-        .append(Results.template({
+        result = $(Results.template({
           id: obj.id,
           ytid: obj.ytid,
           title: title,
           artist: artist
-        }))
-        .append(timeline)
-        .append(remove)
-        .append(reload)
-        .append(star)
-        .appendTo($("#video-viewport"));
+        })),
 
-        timeline
-          .hover(function(){
-            Scrubber.phantom.dom.detach().appendTo(timeline);
-            Scrubber.phantom.id = obj.ytid;
-            Scrubber.phantom.container = timeline;
-          }, function(){
-            Scrubber.phantom.dom.detach().appendTo("#offscreen");
-            Scrubber.phantom.container = false;
-          })
-          .mousemove(function(e) {
-            var point = (e.clientX - 8) - result.offset().left;
-            point = Math.max(5, point);
-            point = Math.min(255, point);
-            Scrubber.phantom.offset = ((point - 5) / 255);
-            Scrubber.phantom.dom.css("left", point + "px");
-          });
+        timeline = $(".timeline-container", result);
+
+      result.hover(
+        function(){ timeline.css('display','block') }, 
+        function(){ 
+          if (timeline.hasClass('active')) {
+            return;
+          }
+          timeline.css('display','none') 
+        }
+      );
+
+      // inlining html has fallen out of fashion for templates I know...
+      result.appendTo($("#video-viewport"));
+
+      timeline
+        .hover(function(){
+          Scrubber.phantom.dom.detach().appendTo(timeline);
+          Scrubber.phantom.id = obj.ytid;
+          Scrubber.phantom.container = timeline;
+        }, function(){
+          Scrubber.phantom.dom.detach().appendTo("#offscreen");
+          Scrubber.phantom.container = false;
+        })
+        .mousemove(function(e) {
+          var point = (e.clientX - 8) - result.offset().left;
+          point = Math.max(5, point);
+          point = Math.min(255, point);
+          Scrubber.phantom.offset = ((point - 5) / 255);
+          Scrubber.phantom.dom.css("left", point + "px");
+        });
 
       // back reference of what we are generating
       result.get(0).ytid = obj.ytid;
       result.timeline = timeline;
-      result.star = star;
+      // result.star = star;
 
       _db.find({ytid: obj.ytid}).update({jqueryObject: result});
 
