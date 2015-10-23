@@ -123,7 +123,6 @@ var Timeline = (function(){
     };
 
   Player.Quality.set();
-  eval(_inject('t'));
 
   // The "current" list of videos is the same as all.
   // the current could point to some other database entirely
