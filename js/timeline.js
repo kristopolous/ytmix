@@ -536,9 +536,11 @@ var Timeline = (function(){
 
     next: function(){
       Timeline.seekTo(_db.byId[Player.activeData.next].offset + 1);
+      Scrubber.real.dom.css({ left: 0 });
     },
     prev: function(){ 
       Timeline.seekTo(_db.byId[Player.activeData.previous].offset + 1);
+      Scrubber.real.dom.css({ left: 0 });
     },
     seekTo: function(offset, isRelative) {
       if(!offset) {
