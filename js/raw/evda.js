@@ -262,6 +262,7 @@ function EvDa (imported) {
       return {
         data: data, 
         events: eventMap,
+        lockMap: lockMap,
         globs: globberMap
       };
     }
@@ -791,193 +792,204 @@ function EvDa (imported) {
       }
 
       // recursion prevention.
-      if(lockMap[key] > 0) { return data[key]; }
+      if(lockMap[key] > 0) { 
+        each ( pub.traceList, function ( callback ) {
+          callback.call ( pub.context, extend({locked: key}, args) );
+        });
+
+        return data[key]; 
+      }
       lockMap[key] = (lockMap[key] || 0) + 1;
 
-      var 
-        testKey = 'test' + key,
-        result,
-        args = slice.call(arguments),
-        times = size(eventMap[ testKey ]),
+      try {
+        var 
+          testKey = 'test' + key,
+          result,
+          args = slice.call(arguments),
+          times = size(eventMap[ testKey ]),
 
-        // Tests are run sequentially, not
-        // in parallel.
-        testIx = 0,
-        doTest = (times && !bypass),
-        failure,
+          // Tests are run sequentially, not
+          // in parallel.
+          testIx = 0,
+          doTest = (times && !bypass),
+          failure,
 
-        orHandler = function() {
-          // If the tests fail, then this is the alternate failure
-          // path that will be run
-          each ( eventMap[ OR + key ] || [], function ( callback ) {
-            runCallback ( 
-              callback, 
-              pub.context, 
-              hasvalue ? _opts['value'] : meta.value, 
-              meta,
-              meta.meta);
-          });
-        },
-        // Invoke will also get done
-        // but it will have no semantic
-        // meaning, so it's fine.
-        meta = doTest ? (
-          function ( ok ) {
-            failure |= (ok === false);
+          orHandler = function() {
+            // If the tests fail, then this is the alternate failure
+            // path that will be run
+            each ( eventMap[ OR + key ] || [], function ( callback ) {
+              runCallback ( 
+                callback, 
+                pub.context, 
+                hasvalue ? _opts['value'] : meta.value, 
+                meta,
+                meta.meta);
+            });
+          },
+          // Invoke will also get done
+          // but it will have no semantic
+          // meaning, so it's fine.
+          meta = doTest ? (
+            function ( ok ) {
+              failure |= (ok === false);
 
-            if ( ! --times ) { 
-              if ( failure ) { 
-                orHandler();
+              if ( ! --times ) { 
+                if ( failure ) { 
+                  orHandler();
+                } else {
+
+                  //
+                  // The actual setter gets the real value.
+                  //
+                  // If a "coroutine" is set then this will be
+                  // called before the final setter goes through.
+                  //
+                  if (coroutine(meta, true)) {
+
+                    //
+                    // Since the setter normally wraps the meta through a layer
+                    // of indirection and we have done that already, we need
+                    // to pass the meta this time as the wrapped version.
+                    //
+                    // Otherwise the calling convention of the data getting
+                    // passed through would magically change if a test gets
+                    // placed in the chain.
+                    //
+                    pub.set ( key, meta.value, meta.meta, {bypass: 1} );
+                  } else {
+                    orHandler();
+                  }
+                }
               } else {
+                testIx++;
 
-                //
-                // The actual setter gets the real value.
-                //
-                // If a "coroutine" is set then this will be
-                // called before the final setter goes through.
-                //
-                if (coroutine(meta, true)) {
+                if (coroutine(meta, false)) {
+                  res = eventMap[ testKey ][ testIx ].call ( pub.context, (hasvalue ? _opts['value'] : meta.value), meta, meta.meta );
 
-                  //
-                  // Since the setter normally wraps the meta through a layer
-                  // of indirection and we have done that already, we need
-                  // to pass the meta this time as the wrapped version.
-                  //
-                  // Otherwise the calling convention of the data getting
-                  // passed through would magically change if a test gets
-                  // placed in the chain.
-                  //
-                  pub.set ( key, meta.value, meta.meta, {bypass: 1} );
+                  if(res === true || res === false) {
+                    meta(res);
+                  }
                 } else {
                   orHandler();
                 }
               }
-            } else {
-              testIx++;
 
-              if (coroutine(meta, false)) {
-                res = eventMap[ testKey ][ testIx ].call ( pub.context, (hasvalue ? _opts['value'] : meta.value), meta, meta.meta );
-
-                if(res === true || res === false) {
-                  meta(res);
-                }
-              } else {
-                orHandler();
-              }
+              return ok;
             }
+          ) : {};
 
-            return ok;
-          }
-        ) : {};
+        meta.old = clone(data[key]);
 
-      meta.old = clone(data[key]);
-
-      extend(meta, {
-        meta: _meta || {},
-        done: meta, 
-        result: meta,
-        key: key,
-        // the value to set ... or change.
-        value: value
-      });
-
-      if (doTest) {
-        // we permit a level of recursion for testing.
-        lockMap[key]--;
-        if (testLockMap[key] !== true) {
-          testLockMap[key] = true;
-
-          // This is the test handlers
-          if(coroutine(meta, false)) {
-            res = eventMap[ testKey ][ testIx ].call ( 
-              pub.context, 
-              (hasvalue ? _opts['value'] : meta.value), 
-              meta,
-              meta.meta
-            );
-
-            if(res === true || res === false) {
-              meta(res);
-            }
-          } else {
-            orHandler();
-          }
-
-          testLockMap[key] = false;
-        }
-
-        //
-        // Don't return the value...
-        // return the current value of that key.
-        // 
-        // This is because keys can be denied
-        result = data[key];
-      } else {
-
-        each ( pub.traceList, function ( callback ) {
-          callback.call ( pub.context, args );
+        extend(meta, {
+          meta: _meta || {},
+          done: meta, 
+          result: meta,
+          key: key,
+          // the value to set ... or change.
+          value: value
         });
 
-        // If there's a coroutine then we call that
-        // here
-        if (coroutine(meta, true)) {
+        if (doTest) {
+          // we permit a level of recursion for testing.
+          lockMap[key]--;
+          if (testLockMap[key] !== true) {
+            testLockMap[key] = true;
 
-          value = meta.value;
+            // This is the test handlers
+            if(coroutine(meta, false)) {
+              res = eventMap[ testKey ][ testIx ].call ( 
+                pub.context, 
+                (hasvalue ? _opts['value'] : meta.value), 
+                meta,
+                meta.meta
+              );
 
-          //
-          // Set the key to the new value.
-          // The old value is being passed in
-          // through the meta
-          //
-          if(!(_opts.onlychange && value === data[key])) {
-
-            if(!_opts.noset) {
-              data[key] = value;
-
-              if(key != '') {
-                data_ix[key] = (data_ix[key] || 0) + 1;
+              if(res === true || res === false) {
+                meta(res);
               }
-            }
-
-            var myargs = arguments, cback = function(){
-              each(
-                (eventMap[FIRST + key] || []).concat(
-                  (eventMap[ON + key] || [])
-                ),
-                function(callback) {
-                  meta.last = runCallback(callback, pub.context, value, meta);
-                });
-
-              // After this, we bubble up if relevant.
-              if(key.length > 0) {
-                // But we don't hit the coroutine
-                delete _opts['coroutine'];
-
-                bubble.apply(pub.context, [key].concat(slice.call(myargs, 2)));
-              }
-
-              each(eventMap[AFTER + key] || [],
-                function(callback) {
-                  meta.last = runCallback(callback, pub.context, value, meta);
-                });
-
-              return value;
-            }
-
-            if(!noexec) {
-              result = cback.call(pub.context);
             } else {
-              // if we are not executing this, then
-              // we return a set of functions that we
-              // would be executing.
-              result = cback;
+              orHandler();
+            }
+
+            testLockMap[key] = false;
+          }
+
+          //
+          // Don't return the value...
+          // return the current value of that key.
+          // 
+          // This is because keys can be denied
+          result = data[key];
+        } else {
+
+          each ( pub.traceList, function ( callback ) {
+            callback.call ( pub.context, args );
+          });
+
+          // If there's a coroutine then we call that
+          // here
+          if (coroutine(meta, true)) {
+
+            value = meta.value;
+
+            //
+            // Set the key to the new value.
+            // The old value is being passed in
+            // through the meta
+            //
+            if(!(_opts.onlychange && value === data[key])) {
+
+              if(!_opts.noset) {
+                data[key] = value;
+
+                if(key != '') {
+                  data_ix[key] = (data_ix[key] || 0) + 1;
+                }
+              }
+
+              var myargs = arguments, cback = function(){
+                each(
+                  (eventMap[FIRST + key] || []).concat(
+                    (eventMap[ON + key] || [])
+                  ),
+                  function(callback) {
+                    meta.last = runCallback(callback, pub.context, value, meta);
+                  });
+
+                // After this, we bubble up if relevant.
+                if(key.length > 0) {
+                  // But we don't hit the coroutine
+                  delete _opts['coroutine'];
+
+                  bubble.apply(pub.context, [key].concat(slice.call(myargs, 2)));
+                }
+
+                each(eventMap[AFTER + key] || [],
+                  function(callback) {
+                    meta.last = runCallback(callback, pub.context, value, meta);
+                  });
+
+                return value;
+              }
+
+              if(!noexec) {
+                result = cback.call(pub.context);
+              } else {
+                // if we are not executing this, then
+                // we return a set of functions that we
+                // would be executing.
+                result = cback;
+              }
             }
           }
-        }
-      } 
+        } 
 
+      } catch(err) {
+        throw err;
 
-      lockMap[key] = 0;
+      } finally {
+        lockMap[key] = 0;
+      }
 
       return result;
     },
