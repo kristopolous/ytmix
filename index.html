@@ -101,7 +101,7 @@
     <script id='T-Result' type="text/template">
 
     <span class="result">
-      <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i4.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
+      <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
       <span>
         <p>
           <em>
@@ -120,7 +120,7 @@
     <script id="T-Preview" type="text/template">
       <span class="splash-container span3">
         <span class="track">
-          <% _.each(ytList, function(which) { %><img src="http://i4.ytimg.com/vi/<%= which.ytid || which[2] %>/default.jpg"><% }) %>
+          <% _.each(ytList, function(which) { %><img src="http://i.ytimg.com/vi/<%= which.ytid || which[2] %>/default.jpg"><% }) %>
         </span>
         <img src="img/play.png" class="play" title="<%= id %>">
         <p><%= title %>

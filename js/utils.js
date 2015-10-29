@@ -47,6 +47,8 @@ var Utils = {
   runtime: function(obj) {
     var total = 0;
 
+    if(obj.length == 0) { return 0; }
+
     each(Object.keys(obj), function(key) {
       var which = obj[key];
       if(which && which.length) {
