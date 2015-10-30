@@ -271,10 +271,6 @@ function volumeDown() {
   ev.incr("volume", -10);
 }
 
-
-//
-// ytButton initializes the "youtube-dl" button
-// to get the copy/pasta for a command line downloading
 function ytButton(el) {
   $(el)
     .val('youtube-dl -f 140 -t -- ' + ev('active_track').ytid)
@@ -285,6 +281,8 @@ function ytButton(el) {
   $(el)
     .val('Youtube-dl')
     .blur();
+
+  Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
 }
 
 $(function(){
