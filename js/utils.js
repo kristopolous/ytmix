@@ -129,6 +129,7 @@ var Utils = {
 function copy(str) {
   var sandbox = $('#sandbox').val(str).select();
   document.execCommand('copy');
+  Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
   sandbox.val('');
 }
 

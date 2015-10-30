@@ -276,35 +276,11 @@ function volumeDown() {
 // ytButton initializes the "youtube-dl" button
 // to get the copy/pasta for a command line downloading
 function ytButton() {
-  return true;
-  /*
-  var clip = new ZeroClipboard(
-    $('#clipboard-button'),
-    {
-      forceHandCursor: true, 
-      moviePath: "js/min/ZeroClipboard.swf"
-    }
-  );
-
-  // I swear, this shit is sooo buggy.
- // _.each(['mouseup', 'dataRequested', 'complete'], function(what) {
-    clip.on('mousedown', function() {
-      Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
-      clip.setText('youtube-dl -f 140 -t -- ' + ev('active_track').ytid);
-    });
- // });
-
-  _.each(['load', 'mouseover', 'mouseout', 'mousedown', 'mouseup', 'complete', 'noflash', 'wrongflash', 'dataRequested'], function(what) {
-    clip.on(what, function() {
-      log([what].concat(arguments));
-    });
-  });
-  */
+  copy('youtube-dl -f 140 -t -- ' + ev('active_track').ytid);
 }
 
 $(function(){
   Splash.template = _.template( $("#T-Preview").html() );
-  ev.when('app_state', 'main', ytButton).once = true;
   Results.init();
   Toolbar.init();
   Timeline.init();
