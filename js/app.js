@@ -275,8 +275,16 @@ function volumeDown() {
 //
 // ytButton initializes the "youtube-dl" button
 // to get the copy/pasta for a command line downloading
-function ytButton() {
-  copy('youtube-dl -f 140 -t -- ' + ev('active_track').ytid);
+function ytButton(el) {
+  $(el)
+    .val('youtube-dl -f 140 -t -- ' + ev('active_track').ytid)
+    .select();
+
+  document.execCommand('copy');
+
+  $(el)
+    .val('Youtube-dl')
+    .blur();
 }
 
 $(function(){
@@ -362,5 +370,6 @@ $(function(){
     Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
   });
   ev.set('init');
+copy("anything");
 });
 

@@ -126,13 +126,6 @@ var Utils = {
     
 };
 
-function copy(str) {
-  var sandbox = $('#sandbox').val(str).select();
-  document.execCommand('copy');
-  Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
-  sandbox.val('');
-}
-
 function Queue() { }
 Queue.prototype = new Array();
 each(['Push', 'Pop', 'Shift', 'Unshift'], function(which) {
