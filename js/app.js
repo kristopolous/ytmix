@@ -151,51 +151,62 @@ function replace(id, cb, attempt) {
   var 
     vid = _db.findFirst({id: id}),
     replaced = false,
+
     // do the terms in alphabetical order
-    check = replace.clean(vid.title).split(' ').sort().join(' '),
-    wc = check.split(' ').length;
+    check = replace.clean(vid.title),
+    check_sorted = check.split(' ').sort().join(' '),
+    check_wc = check.split(' ').length;
 
   attempt = attempt || 0;
   if(attempt) {
     check = check.split(' ').slice(0, -1);
-    wc = check.split(' ').length
+    check_wc = check.split(' ').length
   }
 
   Toolbar.status("Attempting a replace of " + vid.title);
   log("[" + (attempt + 1) + "] Replacing (" + id + ") " + vid.title);
 
   remote('query', 1, check, function(resp) {
-    console.log(resp);
-    if(resp.vidList.length == 0 && wc > 2 && attempt != 1) {
+
+    if(resp.vidList.length == 0 && check_wc > 2 && attempt != 1) {
       replace(id, cb, 1);
     }
     _.each(resp.vidList, function(what) {
       if(replaced) { return; } 
 
       var 
-        // make sure that the attempt is the words in alphabetical order
-        attempt = replace.clean(what.title)
-          .split(' ').sort().join(' '),
+        attempt = replace.clean(what.title),
+        attempt_sorted = attempt.split(' ').sort().join(),
+        attempt_wc = attempt.split(' ').length,
+
         distance = DL(check, attempt),
         distance_attempt,
         short,
-        cutoff,
-        attemptWc = attempt.split(' ').length;
+        cutoff;
 
       log("no truncation", distance, check, attempt, vid.length, what.length);
 
+      // we try to take the best of the three attempts ... the first one uses a
+      // sorted set of the words.
       if(distance > 5) { 
+
+        // the second one makes sure that we are comparing the same amount of words between the two.
         // try again but make the word count match
-        if(attemptWc != wc) {
-          cutoff = Math.max(Math.min(attemptWc, wc), 3);
+        if(attemptWc != check_wc) {
+          cutoff = Math.max(Math.min(attempt_wc, check_wc), 3);
           short = [
             check.split(' ').slice(0, cutoff).join(' '),
             attempt.split(' ').slice(0, cutoff).join(' ')
           ];
-          distance = DL.apply(this, short);
+          distance_attempt = DL.apply(this, short);
+
+          // choose the best of the 2
+          distance = Math.min(distance, distance_attempt);
+
           log("word match:" + cutoff, distance, short[0], ":", short[1]);
         }
-        if(distance < 9 && distance > 5) {
+
+        if(distance < 9) {
           cutoff = Math.max(Math.min(attempt.length, check.length), 18);
           short = [
             check.slice(0, cutoff),
