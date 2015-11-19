@@ -181,21 +181,19 @@ function replace(id, cb, attempt) {
         attempt_sorted = attempt.split(' ').sort().join(),
         attempt_wc = attempt.split(' ').length,
 
-        // this is our lowest distance in our three techniques
-        // that we try,
+        // this is our lowest distance of all of our techniques
         distance_lowest, 
         
-        // this is the most recent result of a technique.  We'll
-        // replace distance_lowest with distance_attempt if it's
-        // lower.
-        distance_attempt,
-
         length_difference,
-        short,
+        params,
         cutoff;
 
-      // we first check the sorted titles
-      distance_lowest = DL(check_sorted, attempt_sorted);
+      // We check the sorted and unsorted titles and choose the best of the two.
+      distance_lowest = Math.min(
+        DL(check_sorted, attempt_sorted),
+        DL(check, attempt)
+      );
+
       log("no truncation", distance_lowest, check, attempt, vid.length, what.length);
 
       // we try to take the best of the three attempts ... the first one uses a
@@ -209,17 +207,13 @@ function replace(id, cb, attempt) {
 
           // now we use the same number of words in a truncated manner between the two.
           // This is using the unsorted versions.
-          short = [
+          params = [
             check.split(' ').slice(0, cutoff).join(' '),
             attempt.split(' ').slice(0, cutoff).join(' ')
           ];
 
-          distance_attempt = DL.apply(this, short);
-
-          // choose the best of the 2
-          distance_lowest = Math.min(distance_lowest, distance_attempt);
-
-          log("word match:" + cutoff, distance_lowest, short[0], ":", short[1]);
+          distance_lowest = Math.min(distance_lowest, DL.apply(this, params));
+          log("word match:" + cutoff, distance_lowest, params[0], ":", params[1]);
         }
 
         // If we have a reasonable chance of expecting them to match with a little
@@ -227,28 +221,25 @@ function replace(id, cb, attempt) {
         if(distance_lowest < 9) {
           cutoff = Math.max(Math.min(attempt.length, check.length), 18);
 
-          short = [
+          params = [
             check.slice(0, cutoff),
             attempt.slice(0, cutoff)
           ];
 
-          distance_attempt = DL.apply(this, short);
           // choose the best of the 2
-          distance_lowest = Math.min(distance_lowest, distance_attempt);
-          log("characters:" + cutoff, distance_lowest, short[1], ":", short[1]);
+          distance_lowest = Math.min(distance_lowest, DL.apply(this, params));
+          log("characters:" + cutoff, distance_lowest, params[1], ":", params[1]);
         }
       }
 
       length_difference = Math.abs(vid.length - what.length);
 
+      // Essentially what we do is we are more acceptable of video length differences so 
+      // long as the titles are more similar to each other.
       if(
-        // if the length is really really close then we can be more forgiving on the distance
-        (Math.abs(vid.length - what.length) < 4 && distance_lowest < 12) ||
-
-        (Math.abs(vid.length - what.length) < 35 && distance_lowest < 5) ||
-
-
-        (Math.abs(vid.length - what.length) < 100 && distance_lowest < 3) ||
+        (length_difference < 4   && distance_lowest < 12) ||
+        (length_difference < 35  && distance_lowest < 5) ||
+        (length_difference < 100 && distance_lowest < 3) ||
         // if the video is longer and has an identical name, we'll be ok with it ... up to
         // 4.5 minutes.
         ((what.length - vid.length) > 0 && (what.length - vid.length) < 270 && distance_lowest < 2)
