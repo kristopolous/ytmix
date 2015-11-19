@@ -151,17 +151,19 @@ function replace(id, cb, attempt) {
   var 
     vid = _db.findFirst({id: id}),
     replaced = false,
-    check = replace.clean(vid.title),
+    // do the terms in alphabetical order
+    check = replace.clean(vid.title).split(' ').sort().join(' '),
     wc = check.split(' ').length;
 
   attempt = attempt || 0;
   if(attempt) {
-    check = check.split(' ').slice(0, -1).join(' ');
+    check = check.split(' ').slice(0, -1);
     wc = check.split(' ').length
   }
 
   Toolbar.status("Attempting a replace of " + vid.title);
   log("[" + (attempt + 1) + "] Replacing (" + id + ") " + vid.title);
+
   remote('query', 1, check, function(resp) {
     console.log(resp);
     if(resp.vidList.length == 0 && wc > 2 && attempt != 1) {
@@ -171,8 +173,11 @@ function replace(id, cb, attempt) {
       if(replaced) { return; } 
 
       var 
-        attempt = replace.clean(what.title),
+        // make sure that the attempt is the words in alphabetical order
+        attempt = replace.clean(what.title)
+          .split(' ').sort().join(' '),
         distance = DL(check, attempt),
+        distance_attempt,
         short,
         cutoff,
         attemptWc = attempt.split(' ').length;
@@ -195,13 +200,19 @@ function replace(id, cb, attempt) {
             check.slice(0, cutoff),
             attempt.slice(0, cutoff)
           ];
-          distance = DL.apply(this, short);
+          distance_attempt = DL.apply(this, short);
+          // choose the best of the 2
+          distance = Math.min(distance, distance_attempt);
           log("--", distance, cutoff, "chars", short[0], ":", short[1]);
         }
       }
 
       if(
         (Math.abs(vid.length - what.length) < 35) ||
+
+        // if the length is really really close then we can be more forgiving on the distance
+        (Math.abs(vid.length - what.length) < 4 && distance < 12) ||
+
         (Math.abs(vid.length - what.length) < 100 && distance < 3) ||
         // if the video is longer and has an identical name, we'll be ok with it ... up to
         // 4.5 minutes.
