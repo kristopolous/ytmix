@@ -182,7 +182,8 @@ function replace(id, cb, attempt) {
         cutoff,
         attemptWc = attempt.split(' ').length;
 
-      log(distance, check, attempt, vid.length, what.length);
+      log("no truncation", distance, check, attempt, vid.length, what.length);
+
       if(distance > 5) { 
         // try again but make the word count match
         if(attemptWc != wc) {
@@ -192,7 +193,7 @@ function replace(id, cb, attempt) {
             attempt.split(' ').slice(0, cutoff).join(' ')
           ];
           distance = DL.apply(this, short);
-          log("--", distance, cutoff, "words", short[0], ":", short[1]);
+          log("word match:" + cutoff, distance, short[0], ":", short[1]);
         }
         if(distance < 9 && distance > 5) {
           cutoff = Math.max(Math.min(attempt.length, check.length), 18);
@@ -203,7 +204,7 @@ function replace(id, cb, attempt) {
           distance_attempt = DL.apply(this, short);
           // choose the best of the 2
           distance = Math.min(distance, distance_attempt);
-          log("--", distance, cutoff, "chars", short[0], ":", short[1]);
+          log("characters:" + cutoff, distance, short[1], ":", short[1]);
         }
       }
 
