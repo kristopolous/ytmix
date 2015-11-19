@@ -233,6 +233,7 @@ function replace(id, cb, attempt) {
       // long as the titles are more similar to each other.
       if(
         (length_difference < 4   && distance_lowest < 12) ||
+        (length_difference < 9   && distance_lowest < 7) ||
         (length_difference < 35  && distance_lowest < 5) ||
         (length_difference < 100 && distance_lowest < 3) ||
         // if the video is longer and has an identical name, we'll be ok with it ... up to
@@ -240,6 +241,7 @@ function replace(id, cb, attempt) {
         ((what.length - vid.length) > 0 && (what.length - vid.length) < 270 && distance_lowest < 2)
       ) {
         replaced = true;
+
         log("Success >> (" + id + ") " + check_title);
         // Keep the old title in case this is a bad match.
         // I don't want to revoke all knowledge of it.
@@ -276,11 +278,11 @@ replace.clean = function(str) {
   if(str.charAt(str.length - 1) == ')' && str.length > 20) {
     str = str.replace(/\([^\)]*\)$/,'');
   }
-  return str.replace(/[\-0-9\(\)]/g, '')
+  return $.trim(str.replace(/[\-0-9\(\)]/g, '')
     .replace(/[^\w\s]/g, '')
     .replace(/\./g, ' ')
     .replace(/\s+/g, ' ')
-    .toLowerCase();
+    .toLowerCase());
 }
 
 // The great db.js... yes it is this awesome.
