@@ -154,6 +154,9 @@ function replace(id, cb, attempt) {
 
     // do the terms in alphabetical order
     check = replace.clean(vid.title),
+    // we alias this for cleanliness,
+    check_title = vid.title,
+    check_video_length = vid.length,
     check_sorted = check.split(' ').sort().join(' '),
     check_wc = check.split(' ').length;
 
@@ -163,8 +166,8 @@ function replace(id, cb, attempt) {
     check_wc = check.split(' ').length
   }
 
-  Toolbar.status("Attempting a replace of " + vid.title);
-  log("[" + (attempt + 1) + "] Replacing (" + id + ") " + vid.title);
+  Toolbar.status("Attempting a replace of " + check_title);
+  log("[" + (attempt + 1) + "] Replacing (" + id + ") " + check_title);
 
   remote('query', 1, check, function(resp) {
 
@@ -179,12 +182,20 @@ function replace(id, cb, attempt) {
         attempt_sorted = attempt.split(' ').sort().join(),
         attempt_wc = attempt.split(' ').length,
 
-        distance = DL(check, attempt),
+        // this is our lowest distance in our three techniques
+        // that we try,
+        distance_lowest, 
+        
+        // this is the most recent result of a technique.  We'll
+        // replace distance_lowest with distance_attempt if it's
+        // lower.
         distance_attempt,
         short,
         cutoff;
 
-      log("no truncation", distance, check, attempt, vid.length, what.length);
+      // we first check the unsorted titles
+      distance_lowest = DL(check, attempt);
+      log("no truncation", distance_lowest, check, attempt, check_video_length, what.length);
 
       // we try to take the best of the three attempts ... the first one uses a
       // sorted set of the words.
@@ -220,7 +231,7 @@ function replace(id, cb, attempt) {
       }
 
       if(
-        (Math.abs(vid.length - what.length) < 35) ||
+        (Math.abs(check_video_length - what.length) < 35) ||
 
         // if the length is really really close then we can be more forgiving on the distance
         (Math.abs(vid.length - what.length) < 4 && distance < 12) ||
@@ -232,7 +243,7 @@ function replace(id, cb, attempt) {
       ) {
         if(distance < 5) {
           replaced = true;
-          log("Success >> (" + id + ") " + vid.title);
+          log("Success >> (" + id + ") " + check_title);
           // Keep the old title in case this is a bad match.
           // I don't want to revoke all knowledge of it.
           delete what.title;
