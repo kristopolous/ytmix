@@ -2,7 +2,7 @@ var
   _db = DB(), 
   START = (+new Date()),
   Splash = {},
-  DL = DamerauLevenshtein({}, false),
+  DL_real = DamerauLevenshtein({}, false),
   CLOCK_FREQ = 150,
   QUALITY_LEVELS = ['large', 'medium', 'small', 'tiny'],
   // How long to wait before forcing a reload of a video
@@ -40,6 +40,12 @@ var
   _remote = {
     active: false
   };
+
+function DL(title_array, lhs, rhs) {
+  var ret = DL_real(lhs, rhs);
+  console.log(title_array.join(':') + "(" + ret + ")", lhs, ':', rhs);
+  return ret;
+}
 
 _db.constrain('unique', 'ytid');
 _db.template.create({

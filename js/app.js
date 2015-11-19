@@ -147,6 +147,10 @@ function findStatus(idList, cb, status) {
   });
 }
 
+function word_cut(what, howmany) {
+  return what.split(' ').slice(0, howmany).join(' ');
+}
+
 function replace(id, cb, attempt) {
   var 
     vid = _db.findFirst({id: id}),
@@ -173,28 +177,27 @@ function replace(id, cb, attempt) {
     if(resp.vidList.length == 0 && check_wc > 2 && attempt != 1) {
       replace(id, cb, 1);
     }
-    _.each(resp.vidList, function(what) {
+    _.each(resp.vidList, function(what, index) {
       if(replaced) { return; } 
 
       var 
         attempt = replace.clean(what.title),
-        attempt_sorted = attempt.split(' ').sort().join(),
+        attempt_sorted = attempt.split(' ').sort().join(' '),
         attempt_wc = attempt.split(' ').length,
 
         // this is our lowest distance of all of our techniques
         distance_lowest, 
         
-        length_difference,
+        // the duration difference between the two in seconds.
+        length_difference = Math.abs(vid.length - what.length),
         params,
         cutoff;
 
       // We check the sorted and unsorted titles and choose the best of the two.
       distance_lowest = Math.min(
-        DL(check_sorted, attempt_sorted),
-        DL(check, attempt)
+        DL([index, "no-truncation", distance_lowest], check_sorted, attempt_sorted),
+        DL([index, "no-truncation", distance_lowest], check, attempt)
       );
-
-      log("no truncation", distance_lowest, check, attempt, vid.length, what.length);
 
       // we try to take the best of the three attempts ... the first one uses a
       // sorted set of the words.
@@ -206,33 +209,25 @@ function replace(id, cb, attempt) {
           cutoff = Math.max(Math.min(attempt_wc, check_wc), 3);
 
           // now we use the same number of words in a truncated manner between the two.
-          // This is using the unsorted versions.
-          params = [
-            check.split(' ').slice(0, cutoff).join(' '),
-            attempt.split(' ').slice(0, cutoff).join(' ')
-          ];
-
-          distance_lowest = Math.min(distance_lowest, DL.apply(this, params));
-          log("word match:" + cutoff, distance_lowest, params[0], ":", params[1]);
+          distance_lowest = Math.min(distance_lowest, 
+            DL([index, "words", distance_lowest], word_cut(check, cutoff), word_cut(attempt, cutoff)),
+            DL([index, "words", distance_lowest], word_cut(check_sorted, cutoff), word_cut(attempt_sorted, cutoff))
+          );
         }
 
         // If we have a reasonable chance of expecting them to match with a little
         // more effort, then we try to just consider the first X number of characters
-        if(distance_lowest < 9) {
+        if(distance_lowest < 15) {
           cutoff = Math.max(Math.min(attempt.length, check.length), 18);
 
-          params = [
-            check.slice(0, cutoff),
-            attempt.slice(0, cutoff)
-          ];
-
-          // choose the best of the 2
-          distance_lowest = Math.min(distance_lowest, DL.apply(this, params));
-          log("characters:" + cutoff, distance_lowest, params[1], ":", params[1]);
+          distance_lowest = Math.min(distance_lowest, 
+            DL([index, 'chars', distance_lowest], check.slice(0, cutoff), attempt.slice(0, cutoff)),
+            DL([index, 'chars', distance_lowest], check_sorted.slice(0, cutoff), attempt_sorted.slice(0, cutoff))
+          );
         }
       }
 
-      length_difference = Math.abs(vid.length - what.length);
+      console.log('final', length_difference, distance_lowest);
 
       // Essentially what we do is we are more acceptable of video length differences so 
       // long as the titles are more similar to each other.
@@ -244,19 +239,17 @@ function replace(id, cb, attempt) {
         // 4.5 minutes.
         ((what.length - vid.length) > 0 && (what.length - vid.length) < 270 && distance_lowest < 2)
       ) {
-        if(distance_lowest < 5) {
-          replaced = true;
-          log("Success >> (" + id + ") " + check_title);
-          // Keep the old title in case this is a bad match.
-          // I don't want to revoke all knowledge of it.
-          delete what.title;
+        replaced = true;
+        log("Success >> (" + id + ") " + check_title);
+        // Keep the old title in case this is a bad match.
+        // I don't want to revoke all knowledge of it.
+        delete what.title;
 
-          _db.find({id: id})
-            .update(what)
-            .unset('jqueryObject');
+        _db.find({id: id})
+          .update(what)
+          .unset('jqueryObject');
 
-          ev.set('request_gen');
-        }
+        ev.set('request_gen');
       }
     });
     if(!replaced) {
@@ -283,7 +276,11 @@ replace.clean = function(str) {
   if(str.charAt(str.length - 1) == ')' && str.length > 20) {
     str = str.replace(/\([^\)]*\)$/,'');
   }
-  return str.replace(/[\-0-9\(\)]/g, '').replace(/\./g, ' ').replace(/\s+/g, ' ').toLowerCase();
+  return str.replace(/[\-0-9\(\)]/g, '')
+    .replace(/[^\w\s]/g, '')
+    .replace(/\./g, ' ')
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
 }
 
 // The great db.js... yes it is this awesome.
