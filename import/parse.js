@@ -3,9 +3,9 @@
 //
 // In the v3 version of the api we have to
 //
-//  1. query the user for their upload playlist id
-//  2. grab the the upload playlist to get the titles and ids
-//  3. query each id to get the durations.
+//  1. Query the user for their upload playlist id
+//  2. Grab the the upload playlist to get the titles and ids
+//  3. Query each id to get the durations.
 //
 var 
   fs = require('fs'),
@@ -50,7 +50,6 @@ var lib = {
       res.on('data', function(data) { buffer += data });
 
       res.on('end', function(){
-        console.log(buffer);
         callback.call(this, JSON.parse(buffer));
       });
 
@@ -126,10 +125,14 @@ yt.duration = function(ytid_list) {
         var yt_duration, min, sec, res;
 
         if(details.contentDetails.regionRestriction) {
+          // Oh noes! We can't view this video in our country because free speech and free
+          // press doesn't actually cover the private sector.
           if(details.contentDetails.regionRestriction.blocked.indexOf(mylocale) != -1) {
             return;
           }
         }
+
+        console.log(details);
         yt_duration = details.contentDetails.duration;
         res = yt_duration.match(/PT(\d*)M(\d*)S/);
         if(!res) {
@@ -143,6 +146,7 @@ yt.duration = function(ytid_list) {
         duration_map[details.id] = min * 60 + sec;
       });
 
+      console.log("map", duration_map);
       resolve(duration_map);
     });
   }).catch(function (ex) { throw ex; });
