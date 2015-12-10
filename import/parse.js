@@ -120,11 +120,9 @@ yt.duration = function(ytid_list) {
       var duration_map = {};
 
       //console.log(data.items);
-      var ix = 0;
       // The duration field is for some inexplicable reason provided in some
       // wonky format like PT7M18S ... brilliant, youtube ... just fabulous.
       data.items.forEach(function(details) {
-        console.log(ix ++);
         /*
         console.log("----------------------------");
         console.log(details);
@@ -213,10 +211,10 @@ yt.get_playlist = function(playlist_id, cb) {
 
         api.tracks(id_list).then(function(existing) {
           var to_find = id_list.filter(function(i) {return existing.indexOf(i) < 0;});
-//          console.log([vid_list, to_find]);
+          // console.log([vid_list, to_find]);
           // We need to separately get the duration of each track
           yt.duration(to_find).then(function(duration_map) {
-            console.log('duration', duration_map);
+            //console.log('duration', duration_map);
             var playlist = [];
 
             vid_list.forEach(function(vid) {
