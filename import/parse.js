@@ -119,15 +119,28 @@ yt.duration = function(ytid_list) {
     mypromise.then(function(data) {
       var duration_map = {};
 
+      console.log(data.items);
+      var ix = 0;
       // The duration field is for some inexplicable reason provided in some
       // wonky format like PT7M18S ... brilliant, youtube ... just fabulous.
       data.items.forEach(function(details) {
+        console.log(ix ++);
+        /*
+        console.log("----------------------------");
+        console.log(details);
+        console.log("----------------------------");
+        */
         var yt_duration, min, sec, res;
 
         if(details.contentDetails.regionRestriction) {
           // Oh noes! We can't view this video in our country because free speech and free
           // press doesn't actually cover the private sector.
-          if(details.contentDetails.regionRestriction.blocked.indexOf(mylocale) != -1) {
+          var restriction = details.contentDetails.regionRestriction;
+          if('blocked' in restriction) {
+            if(restriction.blocked.indexOf(mylocale) != -1) {
+              return;
+            }
+          } else if(restriction.allowed.indexOf(mylocale) == -1) {
             return;
           }
         }
@@ -141,6 +154,7 @@ yt.duration = function(ytid_list) {
         hasSec = false;
         hasHour = false;
 
+        /*
         res = yt_duration.match(/^PT(\d*)S$/);
         if(res) {
           sec = parseInt(res[1], 10);
@@ -172,6 +186,7 @@ yt.duration = function(ytid_list) {
         if(duration !== 0) {
           duration_map[details.id] = duration;
         }
+        */
       });
 
       console.log("map", duration_map);
