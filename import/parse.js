@@ -12,6 +12,12 @@ var
   request = require('request'),
   https = require('https'),
   http = require('http'),
+
+  // This is for excluding videos that are blocked in our country because you know,
+  // we have to make sure that the content distributor gets to limit their marketing 
+  // as per their contractual license agreement!
+  mylocale = 'US',
+
   querystring = require('querystring'),
   url = require('url');
 
@@ -29,7 +35,7 @@ var
 
 var lib = {
   get: function (location, callback) {
-    console.log(" > ..." + location.slice(-90));
+    console.log(" > " + location);
 
     var 
       buffer = '', 
@@ -44,10 +50,13 @@ var lib = {
       res.on('data', function(data) { buffer += data });
 
       res.on('end', function(){
+        console.log(buffer);
         callback.call(this, JSON.parse(buffer));
       });
 
-    }).on('error', function(e) { console.error(location, e) });
+    }).on('error', function(e) { 
+      console.error(location, e) 
+    });
   }
 };
 
@@ -116,6 +125,11 @@ yt.duration = function(ytid_list) {
       data.items.forEach(function(details) {
         var yt_duration, min, sec, res;
 
+        if(details.contentDetails.regionRestriction) {
+          if(details.contentDetails.regionRestriction.blocked.indexOf(mylocale) != -1) {
+            return;
+          }
+        }
         yt_duration = details.contentDetails.duration;
         res = yt_duration.match(/PT(\d*)M(\d*)S/);
         if(!res) {
@@ -170,7 +184,9 @@ yt.get_playlist = function(playlist_id, cb) {
         api.tracks(id_list).then(function(existing) {
           var to_find = id_list.filter(function(i) {return existing.indexOf(i) < 0;});
 //          console.log([vid_list, to_find]);
+          // We need to separately get the duration of each track
           yt.duration(to_find).then(function(duration_map) {
+            console.log('duration', duration_map);
             var playlist = [];
 
             vid_list.forEach(function(vid) {
