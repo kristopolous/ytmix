@@ -134,16 +134,44 @@ yt.duration = function(ytid_list) {
 
         console.log(details);
         yt_duration = details.contentDetails.duration;
-        res = yt_duration.match(/PT(\d*)M(\d*)S/);
-        if(!res) {
-          res = yt_duration.match(/PT(\d*)M/);
-          sec = 0;
-        } else {
-          sec = parseInt(res[2], 10);
-        }
-        min = parseInt(res[1], 10);
 
-        duration_map[details.id] = min * 60 + sec;
+        hr = 0;
+        min = 0;
+        sec = 0;
+        hasSec = false;
+        hasHour = false;
+
+        res = yt_duration.match(/^PT(\d*)S$/);
+        if(res) {
+          sec = parseInt(res[1], 10);
+        } else {
+          res = yt_duration.match(/^PT(\d*)M$/);
+          if(!res) {
+            res = yt_duration.match(/^PT(\d*)M(\d*)S$/);
+            hasSec = true;
+          }
+          if(!res) {
+            res = yt_duration.match(/^PT(\d*)H(\d*)M(\d*)S$/);
+            hasHour = true;
+          }
+
+          if(res) {
+            if(hasHour) {
+              hr = parseInt(res.shift(), 10);
+            }
+
+            min = parseInt(res[1], 10);
+
+            if(hasSec) {
+              sec = parseInt(res.pop(), 10);
+            }
+          }
+        }
+
+        duration = hr * 3600 + min * 60 + sec;
+        if(duration !== 0) {
+          duration_map[details.id] = duration;
+        }
       });
 
       console.log("map", duration_map);
