@@ -119,7 +119,7 @@ yt.duration = function(ytid_list) {
     mypromise.then(function(data) {
       var duration_map = {};
 
-      console.log(data.items);
+      //console.log(data.items);
       var ix = 0;
       // The duration field is for some inexplicable reason provided in some
       // wonky format like PT7M18S ... brilliant, youtube ... just fabulous.
@@ -145,7 +145,7 @@ yt.duration = function(ytid_list) {
           }
         }
 
-        console.log(details);
+        //console.log(details);
         yt_duration = details.contentDetails.duration;
 
         var 
@@ -172,7 +172,7 @@ yt.duration = function(ytid_list) {
         }
       });
 
-      console.log("map", duration_map);
+      //console.log("map", duration_map);
       resolve(duration_map);
     });
   }).catch(function (ex) { throw ex; });
