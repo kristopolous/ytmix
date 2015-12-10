@@ -85,7 +85,12 @@ yt.get_playlist_id = function(user, cb) {
     part: 'contentDetails',
     forUsername: user
   }).then(function(res) {
-    cb( res.items[0].contentDetails.relatedPlaylists.uploads );
+    try {
+      cb( res.items[0].contentDetails.relatedPlaylists.uploads );
+    } catch(ex) {
+      console.log("Unable to read playlist. Output follows", ex);
+      console.log(res);
+    }
   });
 }
 
