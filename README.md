@@ -38,7 +38,7 @@ You'll eventually get something that looks like this:
 This string of letters and numbers, we'll call the "key" has be in a file located at `secrets/authkey`.  In order to create the file,
 after you've pulled down the code, go to the git root directory and do the following:
 
-  (git root)$ echo "Your 'key'" > secrets/authkey
+    (git root)$ echo "Your 'key'" > secrets/authkey
 
 That means that the file contains just your key, no other code, format, or syntax ... it's the simplest format imaginable.
 
