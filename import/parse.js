@@ -260,7 +260,7 @@ api.do = function(ep, params, cb) {
           cb(res.result);
         }
       } catch (ex) {
-        throw ["Unable to parse " + body, ep, JSON.stringify(params)];
+        throw ["Unable to parse " + body, ep, params ? JSON.stringify(params) : ''];
       }
     }
   });
