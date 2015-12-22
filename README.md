@@ -23,22 +23,25 @@ of the uploads of a specified user.  Unfortunately, due to v3 bullshit, You need
  1. Go to [registering an application](https://developers.google.com/youtube/registering_an_application?hl=en).
  2. In the "developer console" you need to click on a few things. 
  
-#### The image is slightly wrong ... you need a **server** key then click on **api**
- <img src=http://i.imgur.com/mtN0Zns.png>.  
+ <img src=http://i.imgur.com/CD4ttnN.png>
 
-Just leave everything blank.
+When you finish step 3 a dialog will pop up:
+
+<img src=http://i.imgur.com/wSvcj7L.png>
+
+After clicking you'll be directed to this form.  Just leave everything blank.
 
  <img src=http://i.imgur.com/G8C4q56.png>
 
+After clicking you'll get a spinner and be asked to wait a few seconds.  
 You'll eventually get something that looks like this:
 
  <img src=http://i.imgur.com/RI9TvVF.png>
 
-
-This string of letters and numbers, we'll call the "key" has be in a file located at `secrets/authkey`.  In order to create the file,
+This string of letters and numbers, we'll call the "auth key" has be in a file located at `secrets/authkey`.  In order to create the file,
 after you've pulled down the code, go to the git root directory and do the following:
 
-    (git root)$ echo "Your 'key'" > secrets/authkey
+    (git root)$ echo "Your 'auth key'" > secrets/authkey
 
 That means that the file contains just your key, no other code, format, or syntax ... it's the simplest format imaginable.
 
