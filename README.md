@@ -16,7 +16,35 @@ http://9ol.es/yt
 ## Creating a new playlist
 
 The quickest way to create a new playlist is to use the `import/parse.js` script which uses the youtube data api v3 in order to create a list
-of the uploads of a specified user.  Unfortunately, due to v3 bullshit, You need to get an auth-key to send off the requests.  
+of the uploads of a specified user.  Unfortunately, due to v3 bullshit, You need to get an auth-key to send off the requests. 
+
+### * sigh * obtaining an auth key
+
+ 1. Go to [registering an application](https://developers.google.com/youtube/registering_an_application?hl=en).
+ 2. In the "developer console" you need to click on a few things. 
+ 
+#### The image is slightly wrong ... you need a **server** key then click on **api**
+ <img src=http://i.imgur.com/mtN0Zns.png>.  
+
+Just leave everything blank.
+
+ <img src=http://i.imgur.com/G8C4q56.png>
+
+You'll eventually get something that looks like this:
+
+ <img src=http://i.imgur.com/RI9TvVF.png>
+
+
+This string of letters and numbers, we'll call the "key" has be in a file located at `secrets/authkey`.  In order to create the file,
+after you've pulled down the code, go to the git root directory and do the following:
+
+  (git root)$ echo "Your 'key'" > secrets/authkey
+
+That means that the file contains just your key, no other code, format, or syntax ... it's the simplest format imaginable.
+
+*phew* now you can import.
+
+### Importing
 
 An example would be
 
