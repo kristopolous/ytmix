@@ -1,5 +1,5 @@
 <?php 
-
+ini_set('mbstring.substitute_character', "none"); 
 
 function pl_tracks($params) {
   $ytid_list = explode(',', $params['id']);
@@ -252,11 +252,19 @@ function pl_update($params) {
     if(empty($value)) {
       continue;
     }
+    if($key == 'tracklist') {
+      $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8'); 
+      $attempt = json_decode(stripslashes($value));
+      if(!$attempt) {
+        continue;
+      }
+    }
   
     // this sounds totally unsafe, let's do it anyway. WEEEEEE, 
     // livin on the edge ... you can't help yourself from fallllinnn.
     run('update playlist set ' . $key . ' = "' . $value . '" where id = ' . $opts['id']);
   }
+
   if(isset($opts['blacklist'])) {
     $blacklist = json_decode($opts['blacklist']);
     if($blacklist) {
