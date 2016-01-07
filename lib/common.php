@@ -1,5 +1,6 @@
 <?php
 include ('db.php');
+$g_uniq = uniqid();
 
 function trace(){
   static $which = 0;
@@ -154,9 +155,9 @@ function get($opts, $fieldList) {
 }
 
 function run($mysql_string) {
-  file_put_contents(__dir__ . '/../logs/sql.log', date('c') . ' ' . $mysql_string . "\n", FILE_APPEND);
-
   $result = mysql_query($mysql_string);
+  file_put_contents(__dir__ . '/../logs/sql.log', date('c') . ' | ' . ($result ? '1' : '0') . ' | ' . substr($mysql_string, 0, 200) . "\n", FILE_APPEND);
+
   if(!$result) {
     return doError($mysql_string);
   }
