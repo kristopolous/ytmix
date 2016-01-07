@@ -1,6 +1,7 @@
 <?php
 include ('db.php');
 $g_uniq = uniqid();
+$g_error_stack = array();
 
 function trace(){
   static $which = 0;
@@ -28,7 +29,6 @@ function trace(){
   );
 }
 
-$g_error_stack = array();
 function hasError() {
   global $g_error_stack;
   return count($g_error_stack) > 0;
@@ -155,8 +155,17 @@ function get($opts, $fieldList) {
 }
 
 function run($mysql_string) {
+  global $g_uniq;
+
   $result = mysql_query($mysql_string);
-  file_put_contents(__dir__ . '/../logs/sql.log', date('c') . ' | ' . ($result ? '1' : '0') . ' | ' . substr($mysql_string, 0, 200) . "\n", FILE_APPEND);
+
+  file_put_contents(__dir__ . '/../logs/sql.log', 
+    implode(' | ', [
+      $g_uniq,
+      date('c'),
+      $result ? '1' : '0',
+      substr($mysql_string, 0, 200)
+    ]) . "\n", FILE_APPEND);
 
   if(!$result) {
     return doError($mysql_string);
