@@ -176,7 +176,23 @@ yt.duration = function(ytid_list) {
   }).catch(function (ex) { throw ex; });
 }
 
-yt.get_playlist = function(playlist_id, cb) {
+yt.get_playlist = function(channel_id, cb) {
+  var my_promise = yt.api('playlist', {
+    channelId: channel_id
+  });
+
+  function my_resolve(promise, final_resolve) {
+    promise.then(function(data) {
+      console.log(data);
+    });
+  }
+
+  return new Promise(function(resolve, reject) {
+    my_resolve(my_promise, resolve);
+  }).catch(function (ex) { throw ex; });
+}
+
+yt.get_playlist_items = function(playlist_id, cb) {
   // We can't do generators in a promise ... that
   // would be nice ... oh well.
   //
@@ -290,11 +306,14 @@ api.get_playlist = function(who, cb) {
 function get_playlist() {
   console.log('User: ' + yt.user);
 
+  yt.get_playlist('UCcZu7E7TIoJR_hDweg4xTTA');
+  /*
   api.get_playlist(yt.user, function(){
     yt.get_playlist_id(yt.user, function(playlist_id) {
-      yt.get_playlist(playlist_id);
+      yt.get_playlist_items(playlist_id);
     });
   });
+  */
 }
 
 if(yt.user) {

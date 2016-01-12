@@ -82,6 +82,7 @@ ev({
       }, 1000);
 
       $("#splash").css('display','none');
+      window.scrollTo(0,0);
       document.body.style.overflow = 'hidden';
     }
   },
