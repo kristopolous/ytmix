@@ -9,7 +9,16 @@ There's special attention for looking for and adding:
 
 Where similar videos and group videos have a number of heuristic tests on them to keep the crap out.
 
-This isn't a fly-by-night project.  I've been using it consistently for 8 years - constantly updating and refining it.
+This isn't a fly-by-night project.  I've been using it consistently for 8 years - constantly updating and refining it. It's been through many iterations over the years and done many UI pivots.
+
+The space for long-tail thematic grouping of music has certainly grown since my inception, but the solutions don't cut it because:
+
+ * They require too much effort on my part to curate and follow hundreds of people, then unfollow ones that post junk
+ * If things are 'automated', they aren't very good at guessing how I listen to music (I focus on things I haven't heard).
+ * Many systems rightly weigh a songs popularity as part of the likelihood that I want to listen to it.  This is wrong.  If it's popular, I've already heard it and moved on.
+ * These for-profit commercial services end up pitching promoted artists through some kind of revenue model in a way that disrupts the customer experience.
+
+This software may not be for you. That's fine. Widespread general utility wasn't on my roadmap. 
 
 Demo? See here:
 
