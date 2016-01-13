@@ -742,7 +742,7 @@
       filter = callback;
       callback = arg1;
     } else {
-      filter = this;
+      filter = _.isArr(this) ? this : this.find();
     }
 
     if(_.isArr(callback) && callback.length == 2) {
@@ -765,8 +765,9 @@
     return ret;
   }
 
-  // the list of functions to chain
+  // The list of functions to chain
   var chainList = hash([
+    'distinct',
     'each',
     'find',
     'findFirst',
@@ -947,6 +948,8 @@
       },
 
       each: eachRun,
+      isFunction: _.isFun,
+      isString: _.isStr,
       map: eachRun,
       not: not,
     
@@ -1001,11 +1004,9 @@
         return ret;
       },
 
-      template: {
-        create: function(opt) { _template = opt; },
-        update: function(opt) { extend(_template || {}, opt); },
-        get: function() { return _template },
-        destroy: function() { _template = false }
+      template: function(opt) {
+        _template = opt; 
+        return ret; 
       },
 
       // Update allows you to set newvalue to all
@@ -1026,6 +1027,13 @@
 
     });
 
+    extend(ret.template, {
+      create: ret.template,
+      update: function(opt) { extend(_template || {}, opt); return ret; },
+      get: function() { return _template },
+      destroy: function() { _template = false; return ret; }
+    });
+
     //
     // group
     //
@@ -1033,24 +1041,32 @@
     // return them as a hash where the keys are the field values and the results are an array
     // of the rows that match that value.
     //
-    ret.group = function(field) {
+    ret.group = function() {
       var 
+        args = slice.call(arguments || []),
+        field = args.shift(),
         groupMap = {},
         filter = _.isArr(this) ? this : ret.find();                 
 
       each(filter, function(which) {
-        if(field in which) {
-          each(which[field], function(what) {
-            // if it's an array, then we do each one.
+        // undefined is a valid thing.
+        var entry = (field in which) ? which[field] : [undefined];
+        each(entry, function(what) {
+          // if it's an array, then we do each one.
 
-            if(! (what in groupMap) ) {
-              groupMap[what] = chain([]);
-            }
+          if(! (what in groupMap) ) {
+            groupMap[what] = chain([]);
+          }
 
-            groupMap[what].push(which);
-          });
-        }
+          groupMap[what].push(which);
+        });
       });
+
+      if(args.length) {
+        each(groupMap, function(key, value) {
+          groupMap[key] = ret.group.apply(value, args);
+        });
+      }
       
       return groupMap;
     } 
@@ -1070,6 +1086,15 @@
 
       return groupResult;
     } 
+
+    //
+    // distinct
+    //
+    // get an array of the distinct values for a particular key.
+    //
+    ret.distinct = function(field) {
+      return keys(ret.keyBy(field));
+    }
 
     //
     // indexBy is just a sort without a chaining of the args
@@ -1139,7 +1164,7 @@
     ret.where = ret.find = function() {
       var args = slice.call(arguments || []);
 
-      // Addresses test 23 (Finding: Find all elements cascarded, 3 times)
+      // Addresses test 23 (Finding: Find all elements cascaded, 3 times)
       if(!_.isArr(this)) {
         args = [raw].concat(args);
       }
@@ -1464,7 +1489,19 @@
       if(_.isArr(arg0)) { ret.insert(arg0) }
       else if(_.isFun(arg0)) { ret.insert(arg0()) }
       else if(_.isStr(arg0)) { return ret.apply(this, arguments) }
-      else if(_.isObj(arg0)) { ret.insert(arg0) }
+      else if(_.isObj(arg0)) { 
+        // This is so hokey...
+        var fails = false;
+        each(arg0, function(what, args) {
+          if(!ret[what]) { fails = true }
+          if(!fails) {
+            ret[what](args); 
+          }
+        });
+        if(fails) {
+          ret.insert(arg0);
+        }
+      }
     } else if(arguments.length > 1) {
       ret.insert(slice.call(arguments));
     }
@@ -1484,6 +1521,7 @@
     expr: expression(),
     diff: setdiff,
     each: eachRun,
+    map: map,
     not: not,
     like: like,
     trace: trace,
@@ -1525,14 +1563,18 @@
     // as popular in list comprehension suites common in 
     // functional programming.
     reduceLeft: function(memo, callback) {
+      if(arguments.length == 1) {
+        callback = memo;
+        memo = 0;
+      }
       var lambda = _.isStr(callback) ? new Function("y,x", "return y " + callback) : callback;
 
-      return function(list) {
+      return function(list, opt) {
         var reduced = memo;
 
         for(var ix = 0, len = list.length; ix < len; ix++) {
           if(list[ix]) {
-            reduced = lambda(reduced, list[ix]);
+            reduced = lambda(reduced, list[ix], opt);
           }
         }
 
@@ -1545,7 +1587,11 @@
     // functional programming.
     //
     reduceRight: function(memo, callback) {
-      var callback = DB.reduceLeft(memo, callback);
+      if(arguments.length == 1) {
+        callback = memo;
+        memo = 0;
+      }
+      callback = DB.reduceLeft(memo, callback);
 
       return function(list) {
         return callback(list.reverse());
