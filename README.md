@@ -1,4 +1,4 @@
-This tool is for quickly navigating and listening to large ad-hoc playlists from youtube:
+This tool (in development since 2008!) is for quickly navigating and listening to large ad-hoc playlists from youtube:
 <img src=http://i.imgur.com/Gr17F7d.png>
 
 There's special attention for looking for and adding:
@@ -9,13 +9,15 @@ There's special attention for looking for and adding:
 
 Where similar videos and group videos have a number of heuristic tests on them to keep the crap out.
 
+This isn't a fly-by-night project.  I've been using it consistently for 8 years - constantly updating and refining it.
+
 Demo? See here:
 
 http://9ol.es/yt
 
 ## Creating a new playlist
 
-The quickest way to create a new playlist is to use the `import/parse.js` script which uses the youtube data api v3 in order to create a list
+The quickest way to create a new playlist is to use the `import/parse.js` script which uses the YouTube data api v3 in order to create a list
 of the uploads of a specified user.  Unfortunately, due to v3 bullshit, You need to get an auth-key to send off the requests. 
 
 ### * sigh * obtaining an auth key
