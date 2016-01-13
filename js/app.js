@@ -405,6 +405,5 @@ $(function(){
     Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
   });
   ev.set('init');
-copy("anything");
 });
 
