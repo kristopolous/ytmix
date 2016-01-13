@@ -6,7 +6,7 @@ p{margin:0}
 a:active{color:#000;background:#ccc}
 a{color:#cccccf;text-decoration:none;cursor:pointer}
 input{
-  font-size:24px;background:#545;color:#fff;border:2px solid;padding:0 2px;border-color:#434 #989 #989 #434}
+  font-size:20px;background:#545;color:#fff;border:1px solid;padding:2px;border-color:#ccc}
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #playlist-name{margin:0;display:inline-block}
 
