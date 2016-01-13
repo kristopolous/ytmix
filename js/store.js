@@ -12,6 +12,8 @@ function remote(opts) {
   
   var 
     reqID = remote.id ++,
+    url = 'api/entry.php?',
+    exposedParams = [],
     onSuccess,
     onFailure;
 
@@ -47,8 +49,15 @@ function remote(opts) {
     delete opts.onFailure;
   }
 
+  ["func", "id"].forEach(function(which) {
+    if(opts[which]) {
+      exposedParams.push([which, opts[which]].join('='));
+      delete opts[which];
+    }
+  });
+
   $.ajax({
-    url: "api/entry.php",
+    url: url + exposedParams.join('&'),
     data: opts,
     type: "POST",
     timeout: 7500,
