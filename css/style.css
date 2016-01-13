@@ -5,7 +5,8 @@ p{margin:0}
 .button:hover,a:hover{text-decoration:none;color:#000;background:#fff}
 a:active{color:#000;background:#ccc}
 a{color:#cccccf;text-decoration:none;cursor:pointer}
-input{font-size:17px;background:#545;color:#fff;border:2px solid;padding:0 2px;border-color:#434 #989 #989 #434}
+input{
+  font-size:24px;background:#545;color:#fff;border:2px solid;padding:0 2px;border-color:#434 #989 #989 #434}
 h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #playlist-name{margin:0;display:inline-block}
 
@@ -82,6 +83,10 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 .button.sunken{background:#323}
 .button.disabled{color:#555}
 .button.disabled:hover{background:transparent;color:#555;cursor:default;text-shadow:0}
+
+#search .button {
+  font-size: 24px;
+}
 
 #clipboard-button.zeroclipboard-is-hover{cursor:pointer;background-color:#fff;color:#000}
 #clipboard-button.zeroclipboard-is-active{cursor:pointer;background-color:#ccc}
