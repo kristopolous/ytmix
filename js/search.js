@@ -35,6 +35,9 @@ var Search = {
     $("#normal-search").val(who);
   },
   related: function(ytid) {
+    if(!ytid) {
+      ytid = Timeline.current().ytid;
+    }
     loadRelated(_db.findFirst('ytid', ytid));
   },
   init: function(){
