@@ -306,14 +306,12 @@ api.get_playlist = function(who, cb) {
 function get_playlist() {
   console.log('User: ' + yt.user);
 
-  yt.get_playlist('UCcZu7E7TIoJR_hDweg4xTTA');
-  /*
+  //yt.get_playlist('UCcZu7E7TIoJR_hDweg4xTTA');
   api.get_playlist(yt.user, function(){
     yt.get_playlist_id(yt.user, function(playlist_id) {
       yt.get_playlist_items(playlist_id);
     });
   });
-  */
 }
 
 if(yt.user) {
