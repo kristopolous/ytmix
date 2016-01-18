@@ -43,6 +43,8 @@ var Results = {
     // We need to scroll the video selector to put this
     // in the right place.
     $("#scroll-to").click(Results.scrollTo);
+
+    $("#related").click(Search.related);
   },
 
   scrollTo: function(){
