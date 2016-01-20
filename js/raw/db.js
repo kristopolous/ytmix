@@ -244,15 +244,42 @@
   });
 
   function trace(obj, cb) {
+    // if no parameters are provided, then trace all the 
+    // databases which have been registered.
+    if(!obj) {
+      each(DB.all, function(which) {
+        trace(which);
+      });
+      return true;
+    }
     obj.__trace__ = {};
+    var level = 0;
 
-    each(obj, function(key, value) {
+    each(obj, function(func, value) {
       if(_.isFun(value)) {
-        obj.__trace__[key] = value;
-        obj[key] = function() {
-          console.log([key + ":" ].concat(slice.call(arguments)));
-          if(cb) { cb.apply(this, arguments); }
-          return obj.__trace__[key].apply(this, arguments);
+        obj.__trace__[func] = value;
+
+        obj[func] = function() {
+          level ++;
+          var args = slice.call(arguments);
+          if(cb) { 
+            cb({
+              "this": this, 
+              "args": args,
+              "func": func,
+              "level": level
+            }); 
+          } else {
+            console.log([
+              new Array(level - 1).join('.'),
+              func 
+            ].join(' '), args);
+          }
+
+          var res = obj.__trace__[func].apply(this, args);
+
+          level --;
+          return res;
         }
       }
     });
@@ -1426,6 +1453,11 @@
       ret.__raw__ = raw = raw.concat(list);
     }
 
+    // trace self.
+    ret.trace = function(cb) {
+      DB.trace(ret, cb);
+    }
+
     //
     // remove
     // 
@@ -1508,6 +1540,7 @@
 
     // Assign this after initialization
     ret.__raw__ = raw;
+    ret.__ix__ = DB.all.length;
     
     // Register this instance.
     DB.all.push(ret);
@@ -1534,6 +1567,10 @@
       return '(function(){ return ' + 
         DB.apply(this, arguments).toString() + 
       ';})()';
+    },
+
+    unregister: function(which) {
+      DB.all.splice(which.__ix__, 1);
     },
 
     // expensive basic full depth copying.
@@ -1600,3 +1637,4 @@
   });
 
 })();
+DB.__version__='0.0.2-reorg-14-ge1adc14';
