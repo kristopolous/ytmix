@@ -43,7 +43,7 @@ download() {
   while [ $# -gt 0 ]; do
     file=$1
 
-    if [ ! -e $DIR/$file ]; then 
+    if [ ! -s $DIR/$file ]; then 
       echo "Getting $2 > $DIR/$file"
       $wget $2 -O $DIR/$file
     fi
