@@ -512,8 +512,12 @@ var Timeline = (function(){
             // Increment this count by 1 -- we only want to do it on the case of moving to a new track.
             // This is so there's no misreporting of average listen time of view count based on the reloads
             // that happen during development
-            remote('addListen', Player.activeData.ytid);
-            remote('updateDuration', Player.activeData.ytid, parseInt(Player.listen_total, 10));
+            var duration_listened = parseInt(Player.listen_total, 10);
+            // if it's zero, we listened to none of it, so we should ignore it.
+            if(duration_listened > 0) {
+              remote('addListen', Player.activeData.ytid);
+              remote('updateDuration', Player.activeData.ytid, duration_listened);
+            }
           }
           Player.activeData = _db.byId[dbid];
           Player.listen_total = 0;
