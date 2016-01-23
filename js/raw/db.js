@@ -215,12 +215,12 @@
   function kvarg(which){
     var ret = {};
 
-    if(which.length == 2) {
+    if(which.length === 2) {
       ret[which[0]] = which[1];
       return ret;
     }
 
-    if(which.length == 1) {
+    if(which.length === 1) {
       return which[0];
     }
   }
@@ -261,7 +261,8 @@
 
         obj[func] = function() {
           level ++;
-          var args = slice.call(arguments);
+
+          var args = slice.call(arguments), log = [func].concat(args);
           if(cb) { 
             cb({
               "this": this, 
@@ -270,10 +271,9 @@
               "level": level
             }); 
           } else {
-            console.log([
-              new Array(level - 1).join('.'),
-              func 
-            ].join(' '), args);
+            // trying to deperately make useful output
+            console.log(trace.l, log);
+            trace[trace.l++] = log;
           }
 
           var res = obj.__trace__[func].apply(this, args);
@@ -284,6 +284,7 @@
       }
     });
   }
+  trace.l = 0;
 
   function copy(obj) {
     // we need to call slice for array-like objects, such as the dom
@@ -332,7 +333,7 @@
   }
 
   function isStained(obj) {
-    return obj[_stainKey] == _stainID;
+    return obj[_stainKey] === _stainID;
   }
 
   // The first parameter, if exists, is assumed to be the value in the database,
@@ -341,7 +342,7 @@
   function has(param1, param2) {
     var 
       len = arguments.length,
-      compare = len == 1 ? param1 : param2,
+      compare = len === 1 ? param1 : param2,
       callback,
       obj = {};
 
@@ -364,7 +365,7 @@
       }
     }
 
-    if(len == 2) {
+    if(len === 2) {
       obj = {};
       obj[param1] = callback;
       return obj;
@@ -389,7 +390,7 @@
       // The dataset to compare against
       set = (_.isArr(this) ? this : filterList.shift());
 
-    if( filterList.length == 2 && _.isStr( filterList[0] )) {
+    if( filterList.length === 2 && _.isStr( filterList[0] )) {
       // This permits find(key, value)
       which = {};
       which[filterList[0]] = filterList[1];
@@ -402,7 +403,8 @@
       // if we are looking at an array, then this acts as an OR, which means
       // that we just recursively do this.
       if(_.isArr(filter)) {
-        if(_.isScalar(filter[0]) && filterList.length == 2) {
+        // If there are two arguments, and the first one isn't a function
+        if(_.isScalar(filter[0]) && filterList.length === 2) {
           var 
             filterComp_len,
             filterkey_list = filter, 
@@ -518,7 +520,7 @@
       var 
         callback,
         len = arguments.length,
-        compare = len == 1 ? param1 : (param2 || []),
+        compare = len === 1 ? param1 : (param2 || []),
         dynamicList = [],
         staticList = [],
         obj = {};
@@ -551,7 +553,7 @@
         callback = compare;
       }
 
-      if(len == 2) {
+      if(len === 2) {
         obj = {};
         obj[param1] = callback;
         return obj;
@@ -562,13 +564,18 @@
   })();
 
   function equal(lhs, rhs) {
+    // If they are strictly equal or
     return (lhs === rhs) || (
-        !_.isUndef(lhs) && (
-          (lhs.join && rhs.join) &&
-          (lhs.sort().toString() === rhs.sort().toString())
-        ) || 
-        (JSON.stringify(lhs) === JSON.stringify(rhs)
-      ));
+        // if it's a function and using the parameter of
+        // lhs makes the rhs function return true
+           (_.isFun(rhs) && rhs(lhs))
+        // or if they are arrays and equal
+        || !_.isUndef(lhs) && (
+            (lhs.join && rhs.join) &&
+            (lhs.sort().toString() === rhs.sort().toString())
+          ) 
+        || (JSON.stringify(lhs) === JSON.stringify(rhs))
+      );
   }
   function isArray(what) {
     var asString = what.sort().join('');
@@ -585,9 +592,9 @@
       queryRE,
       obj = {};
 
-    if(len == 1) {
+    if(len === 1) {
       query = param1;
-    } else if(len == 2){
+    } else if(len === 2){
       query = param2;
     } 
 
@@ -607,7 +614,7 @@
       return x.toString().search(queryRE) > -1;
     }
 
-    if(len == 2) {
+    if(len === 2) {
       obj = {};
       obj[param1] = compare;
       return obj;
@@ -765,14 +772,14 @@
       ret = [],
       filter;
 
-    if(arguments.length == 2) {
+    if(arguments.length === 2) {
       filter = callback;
       callback = arg1;
     } else {
       filter = _.isArr(this) ? this : this.find();
     }
 
-    if(_.isArr(callback) && callback.length == 2) {
+    if(_.isArr(callback) && callback.length === 2) {
       context = callback[0];
       callback = callback[1];
     }
@@ -1600,7 +1607,7 @@
     // as popular in list comprehension suites common in 
     // functional programming.
     reduceLeft: function(memo, callback) {
-      if(arguments.length == 1) {
+      if(arguments.length === 1) {
         callback = memo;
         memo = 0;
       }
@@ -1624,7 +1631,7 @@
     // functional programming.
     //
     reduceRight: function(memo, callback) {
-      if(arguments.length == 1) {
+      if(arguments.length === 1) {
         callback = memo;
         memo = 0;
       }
@@ -1637,4 +1644,4 @@
   });
 
 })();
-DB.__version__='0.0.2-reorg-14-ge1adc14';
+DB.__version__='0.0.2-reorg-25-g6c45e7c';
