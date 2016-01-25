@@ -18,7 +18,7 @@ rawURLList="\
  db.js https://github.com/kristopolous/db.js/raw/master/release/db.js\
  jquery.js http://code.jquery.com/jquery-${version_jq}.js\
  underscore.js https://raw.github.com/documentcloud/underscore/master/underscore.js\
- evda.js https://raw.github.com/kristopolous/EvDa/master/evda.js"
+ evda.js https://raw.github.com/kristopolous/EvDa/master/release/evda.js"
 
 minURLList="\
  damerau-levenshtein.js https://raw.github.com/cbaatz/damerau-levenshtein/master/damerau-levenshtein.js\
@@ -26,7 +26,7 @@ minURLList="\
  db.js https://github.com/kristopolous/db.js/raw/master/release/db.min.js\
  jquery.js http://code.jquery.com/jquery-${version_jq}.min.js\
  underscore.js https://raw.github.com/documentcloud/underscore/master/underscore-min.js\
- evda.js https://raw.github.com/kristopolous/EvDa/master/evda.min.js"
+ evda.js https://raw.github.com/kristopolous/EvDa/master/release/evda.min.js"
 
 ARGS=$#
 DIR=""
