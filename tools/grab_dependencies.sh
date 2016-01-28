@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+[ -e tools ] && cd tools
+
 while [ $# -gt 0 ]; do
   if [ -e ../js/min/$1 ]; then
     echo "Removing $1"
     rm ../js/min/$1 ../js/raw/$1
+  else
+    echo "Can't find $1"
   fi
   shift
 done
