@@ -7,10 +7,8 @@
 // Copyright 2008 - 2016 Chris McKenzie
 // Dual licensed under the MIT or GPL Version 2 licenses.
 //
-var EvDa = (function(){
-  if(self.EvDa) {
-    return EvDa;
-  }
+(function(){
+  if(self.EvDa) { return; }
 
   var 
     slice = Array.prototype.slice,  
@@ -614,7 +612,7 @@ var EvDa = (function(){
           pub.isPaused = false;
 
           // now we make a mock evda
-          var mock = EvDa();
+          var mock = e();
 
           // unswap out our dummy functions
           pub.set = pub._.set;
@@ -1205,7 +1203,7 @@ var EvDa = (function(){
 
       sniff: function () {
         var 
-          ignoreMap = {},
+          ignoreMap = {"":1},
           startTime = +new Date(),
           // Use a few levels of indirection to be
           // able to toggle the sniffing on or off.
@@ -1231,12 +1229,12 @@ var EvDa = (function(){
               key,
               ret = [];
 
-          while(key = args.shift()) {
+          each(args, function(key) {
             if(isString(key)) {
               if(ignoreMap[key]) {
                 delete ignoreMap[key];
               } else {
-                ignoreMap[key] = true;
+                ignoreMap[key] = 1;
               }
               ret.push([key, ignoreMap[key]]);
 
@@ -1248,7 +1246,7 @@ var EvDa = (function(){
               sniffProxy = key ? sniffConsole : dummy;
               ret.push(key);
             }
-          } 
+          });
 
           return args.length ? ret : keys(ignoreMap);
         }
@@ -1292,7 +1290,7 @@ var EvDa = (function(){
   // exposing some internals (mostly for the helper)
   e.isArray = isArray;
 
-  return e;
+  self.EvDa = e;
 
 })();
-EvDa.__version__='0.1-versioning-added-36-gd926c84';
+EvDa.__version__='0.1-versioning-added-40-g2eea875';
