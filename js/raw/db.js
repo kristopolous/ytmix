@@ -245,13 +245,21 @@
 
   function trace(obj, cb) {
     // if no parameters are provided, then trace all the 
-    // databases which have been registered.
-    if(!obj) {
-      each(DB.all, function(which) {
-        trace(which);
-      });
-      return true;
+    // databases from this point onward.
+    if(!obj || _.isBool(obj)) {
+      trace.active = (arguments.length === 0) ? !trace.active : obj;
+      if(cb) {
+        trace.cb = cb;
+      }
+      return trace.active;
     }
+    // This prevents trace from being called on
+    // one object twice, which would lead to infinite
+    // recursion.
+    if(obj.__trace__) {
+      return;
+    }
+
     obj.__trace__ = {};
     var level = 0;
 
@@ -262,7 +270,10 @@
         obj[func] = function() {
           level ++;
 
-          var args = slice.call(arguments), log = [func].concat(args);
+          var 
+            args = slice.call(arguments), 
+            log = [func].concat(args);
+
           if(cb) { 
             cb({
               "this": this, 
@@ -271,7 +282,8 @@
               "level": level
             }); 
           } else {
-            // trying to deperately make useful output
+            // trying to desperately make useful output
+            trace.l %= 500;
             console.log(trace.l, log);
             trace[trace.l++] = log;
           }
@@ -285,6 +297,7 @@
     });
   }
   trace.l = 0;
+  trace.active = false;
 
   function copy(obj) {
     // we need to call slice for array-like objects, such as the dom
@@ -805,6 +818,7 @@
     'each',
     'find',
     'findFirst',
+    'first',
     'group',
     'has',
     'hasKey',
@@ -870,7 +884,6 @@
         list[func] = ret[func];
       }
 
-      list.first = list[0];
       list.last = list[list.length - 1];
 
       return list;
@@ -990,15 +1003,22 @@
       // This is a shorthand to find for when you are only expecting one result.
       // A boolean false is returned if nothing is found
       findFirst: function(){
-        var realFilter = _filter, res;
+        var 
+          realFilter = _filter, 
+          matched = false,
+          res;
         _filter = _filterThrow;
         try { 
           res = ret.find.apply(this, arguments);
         } catch(ex) {
           res = ex;
+          matched = true;
         }
         _filter = realFilter;
-        return res;
+
+        // If we matched, then we did an assignment,
+        // otherwise we can assume that we got an array back.
+        return matched ? res : (res.length ? res[0] : false);
       },
 
       has: has,
@@ -1067,6 +1087,8 @@
       get: function() { return _template },
       destroy: function() { _template = false; return ret; }
     });
+
+    ret.first = ret.findFirst;
 
     //
     // group
@@ -1547,16 +1569,20 @@
 
     // Assign this after initialization
     ret.__raw__ = raw;
-    ret.__ix__ = DB.all.length;
-    
-    // Register this instance.
-    DB.all.push(ret);
+
+    // we don't register this instance unless
+    // we are tracing. The reason is because it's
+    // convenient to use DB as a powerful filtering
+    // syntax.  There shouldn't be a memory cost
+    // for that convenience.
+    if(trace.active) {
+      ret.trace(trace.cb);
+    }
 
     return ret;
   }
 
   extend(DB, {
-    all: [],
     find: find,
     expr: expression(),
     diff: setdiff,
@@ -1574,10 +1600,6 @@
       return '(function(){ return ' + 
         DB.apply(this, arguments).toString() + 
       ';})()';
-    },
-
-    unregister: function(which) {
-      DB.all.splice(which.__ix__, 1);
     },
 
     // expensive basic full depth copying.
@@ -1644,4 +1666,4 @@
   });
 
 })();
-DB.__version__='0.0.2-reorg-25-g6c45e7c';
+DB.__version__='0.0.2-reorg-43-g27139bd';
