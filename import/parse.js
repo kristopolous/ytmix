@@ -98,6 +98,8 @@ yt.get_playlist_id = function(user, cb) {
     } catch(ex) {
       console.log("Unable to read playlist. Output follows", ex);
       console.log(res);
+      // try to just assume that the user IS a playlist
+      cb( user );
     }
   });
 }
@@ -309,6 +311,7 @@ function get_playlist() {
   //yt.get_playlist('UCcZu7E7TIoJR_hDweg4xTTA');
   api.get_playlist(yt.user, function(){
     yt.get_playlist_id(yt.user, function(playlist_id) {
+      console.log(playlist_id);
       yt.get_playlist_items(playlist_id);
     });
   });

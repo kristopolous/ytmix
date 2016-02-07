@@ -159,7 +159,8 @@ function run($mysql_string) {
 
   $result = mysql_query($mysql_string);
 
-  file_put_contents(__dir__ . '/../logs/sql.log', 
+  // it's ok if this fails, I still want valid JSON output
+  @file_put_contents(__dir__ . '/../logs/sql.log', 
     implode(' | ', [
       $g_uniq,
       date('c'),
