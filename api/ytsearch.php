@@ -35,9 +35,11 @@ function intget($what) {
 }
 
 function yt_search($qstr) {
-  $query = preg_replace('/%u\d{4}/','', utf8_decode($qstr));
-  $query = preg_replace('/%u\d{4}/','', urldecode($query));
-  $query = preg_replace('/\(.*/','', urldecode($query));
+  //$query = preg_replace('/%u\d{4}/','', utf8_decode($qstr));
+  //$query = preg_replace('/%u\d{4}/','', urldecode($query));
+  //$query = preg_replace('/\(.*/','', urldecode($query));
+  //var_dump($query);exit(0);
+  $query = $qstr;
 
   if( !($res = yt_query([
     'part' => 'snippet',
@@ -61,7 +63,7 @@ function pl_query($params) {
     return false;
   }
   if(count($res['items']) == 0) {
-    $parts = explode(' ',$qstr);
+    $parts = explode(' ', $qstr);
     array_pop($parts);
     $qstr = implode(' ', $parts);
     $res = yt_search($qstr);
