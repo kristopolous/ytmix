@@ -1,5 +1,8 @@
 <?php
 function pl_related($params) {
+  if(!isset($params['id'])) {
+    return doError("Id isn't set.");
+  }
   $ytid = $params['id'];
   $related_videos = [];
   
