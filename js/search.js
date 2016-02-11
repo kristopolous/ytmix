@@ -116,7 +116,8 @@ var Search = {
 // incremental loads.
 //
 function loadRelated(obj, opts){
-  var match = _db.find({ytid: obj.ytid}).first;
+  console.log(obj, opts);
+  var match = _db.findFirst({ytid: obj.ytid});
   
   // The related entry will be null (see the template in
   // _init_.js for more info) unless this call is made
@@ -129,6 +130,7 @@ function loadRelated(obj, opts){
 
     // The match happens to be the same as the server
     // query in this case
+    console.log('related', match.ytid);
     remote('related', match.ytid, 
       function (data){
 
