@@ -168,49 +168,50 @@
     
     // } end of underscore style functions.
 
+    isGlobbed = function(str) {
+      return str.match(/[?*]/);
+    },
+
+    // This looks to see if a key has a globbing parameter, such
+    // as ? or * and then return it
+    glob = function (key, context) {
+      if(isGlobbed(key)) {
+        return select(keys(context ? context : data), function(what) {
+          return what.match(key);
+        });
+      }
+      return key;
+    },
+
+    // This uses the globbing feature and returns
+    // a "smart" map which is only one element if
+    // something matches, otherwise a map 
+    smartMap = function(what, cback) {
+      var ret = {};
+      if(isArray(what)) {
+        each(what, function(field) {
+          ret[field] = cback(field);
+        });
+        return ret;
+
+      } else {
+        return cback(what);
+      }
+    },
+
     // Constants
     FIRST = 'first',
     ON = 'on',
     AFTER = 'after',
+    TEST = 'test',
     OR = 'or',
-    typeList = [FIRST, ON, AFTER, 'test', OR],
+    SET = "set",
+    typeList = [FIRST, ON, AFTER, TEST, OR],
 
     // The one time callback gets a property to
     // the end of the object to notify our future-selfs
     // that we ought to remove the function.
     ONCE = {once: 1};
-
-  function isGlobbed(str) {
-    return str.match(/[?*]/);
-  }
-
-  // This looks to see if a key has a globbing parameter, such
-  // as ? or * and then return it
-  function glob(key, context) {
-    if(isGlobbed(key)) {
-      return select(keys(context ? context : data), function(what) {
-        return what.match(key);
-      });
-    }
-    return key;
-  }
-
-  // This uses the globbing feature and returns
-  // a "smart" map which is only one element if
-  // something matches, otherwise a map 
-  function smartMap(what, cback) {
-    var ret = {};
-    if(isArray(what)) {
-      each(what, function(field) {
-        ret[field] = cback(field);
-      });
-      return ret;
-
-    } else {
-      return cback(what);
-    }
-  }
-
     
   var e = function (imported) {
     var
@@ -354,7 +355,7 @@
       return pub [ 
         ( isFunction ( value ) || 
           ( isArray(value) && isFunction(value[0]) )
-        ) ? ON : 'set' ].apply(this, args);
+        ) ? ON : SET ].apply(this, args);
     }
 
     // Register callbacks for
@@ -496,7 +497,7 @@
 
       } 
 
-      var setKey = 'set' + key;
+      var setKey = SET + key;
       // If I know how to set this key but
       // I just haven't done it yet, run through
       // that function now.
@@ -584,7 +585,7 @@
           return eventMap[type + name];
         }
         if(name) {
-          return smartMap(typeList.concat(['set']), function(type) {
+          return smartMap(typeList.concat([SET]), function(type) {
             return eventMap[type + name];
           });
         }
@@ -599,7 +600,7 @@
           pub.isPaused = true;
           pub._.set = pub.set;
           pub.set = function() {
-            backlog.push(['set', arguments]);
+            backlog.push([SET, arguments]);
           }
           return true;
         }
@@ -635,7 +636,7 @@
       // Unlike much of the reset of the code,
       // setters have single functions.
       setter: function ( key, callback ) {
-        eventMap['set' + key] = callback;
+        eventMap[SET + key] = callback;
 
         // If I am setting a setter and
         // a function is already waiting on it,
@@ -827,7 +828,7 @@
 
         try {
           var 
-            testKey = 'test' + key,
+            testKey = TEST + key,
             result,
             args = slice.call(arguments),
             times = size(eventMap[ testKey ]),
@@ -1126,11 +1127,10 @@
 
       settoggle: function ( key, value, meta ) {
         var routine = ((data[key] || []).indexOf(value) === -1) ? 'add' : 'del';
-        return pub['set' + routine](key, value, meta);
+        return pub[SET + routine](key, value, meta);
       },
 
       setdel: function ( key, value, meta ) {
-
         var
           before = data[key] || [],
           after = without( before, value);
@@ -1204,13 +1204,12 @@
       sniff: function () {
         var 
           ignoreMap = {"":1},
-          startTime = +new Date(),
           // Use a few levels of indirection to be
           // able to toggle the sniffing on or off.
           sniffConsole = function(args) {
             // If we are to ignore this then we do nothing,
             // otherwise we console.log when this occurs.
-            return ignoreMap[args[0]] || console.log(new Date() - startTime, args);
+            return ignoreMap[args[0]] || console.log(args);
           },
           dummy = function() {},
           sniffProxy = sniffConsole;
@@ -1293,4 +1292,4 @@
   self.EvDa = e;
 
 })();
-EvDa.__version__='0.1-versioning-added-40-g2eea875';
+EvDa.__version__='0.1-versioning-added-45-g263b719';
