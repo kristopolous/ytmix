@@ -3,11 +3,13 @@
 [ -e tools ] && cd tools
 
 while [ $# -gt 0 ]; do
-  if [ -e ../js/min/$1 ]; then
-    echo "Removing $1"
-    rm ../js/min/$1 ../js/raw/$1
+  name=$1
+  [ -e ../js/min/$name ] || name=$name.js
+  if [ -e ../js/min/$name ]; then
+    echo "Removing $name"
+    rm ../js/min/$name ../js/raw/$name
   else
-    echo "Can't find $1"
+    echo "Can't find $name or $1"
   fi
   shift
 done
