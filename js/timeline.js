@@ -398,6 +398,9 @@ var Timeline = (function(){
       Timeline.next();
     } else if(what != 150) {
       _backup.on();
+    } else {
+      Toolbar.status("Copyright issue; skipping");
+      Timeline.next();
     }
   });
 
