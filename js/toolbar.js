@@ -1,5 +1,7 @@
 var Toolbar = {
   status: function(message) {
+    log("status", message);
+
     $("#status .message")
       .html(message)
       .css({
