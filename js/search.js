@@ -8,11 +8,13 @@ var Search = {
     remote('query', ++Search._id, query, function(res) {
       // add the method of this search string being the
       // way these were found
-      Store.addMethod('q:' + query, function(id) {
-        // inject the id into all the results.
-        _db.insert(res.vidList).update({method: id});
-        ev.set('request_gen', {force: true});
-      })
+      if(ev('id')) {
+        Store.addMethod('q:' + query, function(id) {
+          // inject the id into all the results.
+          _db.insert(res.vidList).update({method: id});
+          ev.set('request_gen', {force: true});
+        })
+      }
     });
   },
   reset: function() {
@@ -59,6 +61,9 @@ var Search = {
 
       input.val(this.value);
 
+      // make it so that we're using the net.
+      Search._useNet = true;
+
       ev.isset('search.results', function(results) { 
         ev.isset('id', function(){
           ev.push('tracklist', results[0]); 
@@ -75,10 +80,8 @@ var Search = {
       var query = input.val();
 
       if(query != lastSearch) {
-
         ev('search_query', query);
         lastSearch = query;
-
       }
 
       if(Search._useNet) {
