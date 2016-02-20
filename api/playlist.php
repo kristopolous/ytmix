@@ -179,7 +179,8 @@ function pl_addListen($params) {
 }
 
 function pl_updateTrack($params) {
-  list($id, $param, $value) = get($params, 'id, param, value');
+  list($id, $param, $value) = get($params, 'id, param, extra');
+  $value = $value[0];
 
   if(!is_numeric($value) && $value != 'true' && $value != 'false') {
     $value = "'$value'";
