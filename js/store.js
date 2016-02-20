@@ -34,7 +34,10 @@ function remote(opts) {
       if(list) {
         opts[which] = list.shift();
       }
-    })
+    });
+    if(list) {
+      opts['extra'] = list;
+    }
 
   } else {
     onFailure = opts.onFailure;

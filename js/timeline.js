@@ -400,6 +400,9 @@ var Timeline = (function(){
       _backup.on();
     } else {
       Toolbar.status("Copyright issue; skipping");
+
+      // set the current track as unplayable
+      remote('updateTrack', Timeline.current().ytid, 'playable', false);
       Timeline.next();
     }
   });
