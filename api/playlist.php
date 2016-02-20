@@ -178,6 +178,15 @@ function pl_addListen($params) {
   return run("update tracks set views = views + 1, last = current_timestamp where ytid = '" . $opts['id'] . "'");
 }
 
+function pl_updateTrack($params) {
+  list($id, $param, $value) = get($params, 'id, param, value');
+
+  if(!is_numeric($value) && $value != 'true' && $value != 'false') {
+    $value = "'$value'";
+  }
+  return run("update tracks set $param = $value, last = current_timestamp where ytid = '$id'");
+}
+
 function pl_swapTracks($params) {
   $opts = getassoc($params, 'id, param');
 
