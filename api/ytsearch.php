@@ -37,7 +37,39 @@ function intget($what) {
   return $ret;
 }
 
+function yt_by_id($id_list) {
+  // if we have a string make it an array
+  if(is_string($id_list)) {
+    $id_list = [$id_list];
+  }
+
+  // if it's a hash, make it an array
+  if(!array_key_exists('0', $id_list)) {
+    $id_list = array_keys($id_list);
+  }
+
+  if( !($res = yt_query([
+    'ep' => 'videos',
+    'part' => 'contentDetails',
+    'id' => implode(',', $id_list)
+  ]) ) ) {
+    return false;
+  }
+
+}
+
 function yt_search($qstr) {
+  // If we are being sent a ytid then we just use a different path.
+  if(strpos($qstr, "http") === 0) {
+    if( !($res = yt_query([
+      'ep' => 'videos',
+      'part' => 'contentDetails',
+      'id' => implode(',', array_keys($resList))
+    ]) ) ) {
+      return false;
+    }
+  }
+
   //$query = preg_replace('/%u\d{4}/','', utf8_decode($qstr));
   //$query = preg_replace('/%u\d{4}/','', urldecode($query));
   //$query = preg_replace('/\(.*/','', urldecode($query));
