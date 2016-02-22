@@ -116,8 +116,12 @@ function pl_query($params) {
     ];
   }
 
-  if( !($res = yt_by_id($resList)) ) {
-    return $res;
+  if( !($res = yt_query([
+    'ep' => 'videos',
+    'part' => 'contentDetails',
+    'id' => implode(',', array_keys($resList))
+  ]) ) ) {
+    return false;
   }
 
   foreach($res['items'] as $video) {
