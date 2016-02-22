@@ -172,7 +172,7 @@ function run($mysql_string) {
 
   $result = mysql_query($mysql_string);
 
-  dolog($mysql_string, $res);
+  dolog($mysql_string, $result);
 
   if(!$result) {
     return doError($mysql_string);
