@@ -37,6 +37,24 @@ function intget($what) {
   return $ret;
 }
 
+function yt_parse_duration($video) {
+  $minute = 0;
+  $second = 0;
+  $hour = 0;
+
+  $duration = $video['contentDetails']['duration'];
+
+  if($res = preg_match('/PT(\d*)M(\d*)S/', $duration, $matches)) {
+    list( $minute, $second ) = intget($matches);
+  } else if($res = preg_match('/PT(\d*)M$/', $duration, $matches)) {
+    list( $minute ) = intget($matches);
+  } else if($res = preg_match('/PT(\d*)H(\d*)M(\d*)S/', $duration, $matches)) {
+    list( $hour, $minute, $second ) = intget($matches);
+  }
+  return  ($hour * 60 + $minute) * 60 + $second;
+}
+
+
 function yt_by_id($id_list) {
   // if we have a string make it an array
   if(is_string($id_list)) {
@@ -54,6 +72,8 @@ function yt_by_id($id_list) {
     $id_list = array_keys($id_list);
   }
 
+  // we need to get both the duration and the 
+  // name
   if( !($res = yt_query([
     'ep' => 'videos',
     'part' => 'contentDetails',
@@ -125,22 +145,8 @@ function pl_query($params) {
   }
 
   foreach($res['items'] as $video) {
-    $minute = 0;
-    $second = 0;
-    $hour = 0;
-
     $ytid = $video['id'];
-    $duration = $video['contentDetails']['duration'];
-
-    if($res = preg_match('/PT(\d*)M(\d*)S/', $duration, $matches)) {
-      list( $minute, $second ) = intget($matches);
-    } else if($res = preg_match('/PT(\d*)M$/', $duration, $matches)) {
-      list( $minute ) = intget($matches);
-    } else if($res = preg_match('/PT(\d*)H(\d*)M(\d*)S/', $duration, $matches)) {
-      list( $hour, $minute, $second ) = intget($matches);
-    }
-
-    $resList[$ytid]['length'] = ($hour * 60 + $minute) * 60 + $second;
+    $resList[$ytid]['length'] = yt_parse_duration($video);
   }
 
   return [
