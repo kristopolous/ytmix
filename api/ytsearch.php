@@ -98,17 +98,11 @@ function yt_by_id($id_list) {
 
 }
 
-function yt_search($qstr) {
+function yt_search($query) {
   // If we are being sent a ytid then we just use a different path.
-  if(strpos($qstr, "http") === 0) {
-    return yt_by_id($qstr);
+  if(strpos($query, "http") === 0) {
+    return yt_by_id($query);
   }
-
-  //$query = preg_replace('/%u\d{4}/','', utf8_decode($qstr));
-  //$query = preg_replace('/%u\d{4}/','', urldecode($query));
-  //$query = preg_replace('/\(.*/','', urldecode($query));
-  //var_dump($query);exit(0);
-  $query = $qstr;
 
   if( !($res = yt_query([
     'part' => 'snippet',
