@@ -154,11 +154,11 @@ function get($opts, $fieldList) {
   return $stack;
 }
 
-function dolog($str, $res = true, $path= '/../logs/sql.log') {
+function dolog($str, $res = true, $path = 'sql.log') {
   global $g_uniq;
 
   // it's ok if this fails, I still want valid JSON output
-  @file_put_contents(__dir__ . $path, 
+  @file_put_contents(__dir__ . '/../logs/' . $path, 
     implode(' | ', [
       $g_uniq,
       date('c'),

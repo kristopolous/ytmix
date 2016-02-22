@@ -35,8 +35,10 @@ function yt_query($opts = []) {
   $raw = file_get_contents($url);
 
   if ( !($res = @json_decode($raw, true)) ) {
-    return false;
+    $res = false;
   }
+
+  dolog($url, $res, 'curl.log');
 
   return $res;
 }
