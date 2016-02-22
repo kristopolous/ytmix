@@ -154,19 +154,25 @@ function get($opts, $fieldList) {
   return $stack;
 }
 
+function dolog($str, $res = true, $path= '/../logs/sql.log') {
+  global $g_uniq;
+
+  // it's ok if this fails, I still want valid JSON output
+  @file_put_contents(__dir__ . $path, 
+    implode(' | ', [
+      $g_uniq,
+      date('c'),
+      $res ? '1' : '0',
+      substr($str, 0, 200)
+    ]) . "\n", FILE_APPEND);
+}
+
 function run($mysql_string) {
   global $g_uniq;
 
   $result = mysql_query($mysql_string);
 
-  // it's ok if this fails, I still want valid JSON output
-  @file_put_contents(__dir__ . '/../logs/sql.log', 
-    implode(' | ', [
-      $g_uniq,
-      date('c'),
-      $result ? '1' : '0',
-      substr($mysql_string, 0, 200)
-    ]) . "\n", FILE_APPEND);
+  dolog($mysql_string, $res);
 
   if(!$result) {
     return doError($mysql_string);
