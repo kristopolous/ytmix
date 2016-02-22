@@ -61,13 +61,7 @@ function yt_by_id($id_list) {
 function yt_search($qstr) {
   // If we are being sent a ytid then we just use a different path.
   if(strpos($qstr, "http") === 0) {
-    if( !($res = yt_query([
-      'ep' => 'videos',
-      'part' => 'contentDetails',
-      'id' => implode(',', array_keys($resList))
-    ]) ) ) {
-      return false;
-    }
+    return yt_by_id($qstr);
   }
 
   //$query = preg_replace('/%u\d{4}/','', utf8_decode($qstr));
@@ -93,10 +87,10 @@ function pl_query($params) {
   $id = $params['id'];
   $resList = [];
 
-  $res = yt_search($qstr);
-  if(!$res) {
+  if( !($res = yt_search($qstr)) ) {
     return false;
   }
+
   if(count($res['items']) == 0) {
     $parts = explode(' ', $qstr);
     array_pop($parts);
@@ -116,12 +110,8 @@ function pl_query($params) {
     ];
   }
 
-  if( !($res = yt_query([
-    'ep' => 'videos',
-    'part' => 'contentDetails',
-    'id' => implode(',', array_keys($resList))
-  ]) ) ) {
-    return false;
+  if( !($res = yt_by_id($resList)) ) {
+    return $res;
   }
 
   foreach($res['items'] as $video) {
