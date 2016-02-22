@@ -71,16 +71,30 @@ function yt_by_id($id_list) {
   if(!array_key_exists('0', $id_list)) {
     $id_list = array_keys($id_list);
   }
+  $id_str = implode(',', $id_list);
 
   // we need to get both the duration and the 
   // name
-  if( !($res = yt_query([
+  /*
+  if( !($duration = yt_query([
     'ep' => 'videos',
     'part' => 'contentDetails',
-    'id' => implode(',', $id_list)
+    'id' => $id_str
   ]) ) ) {
-    return false;
+    return $duration;
   }
+   */
+
+  if( !($title = yt_query([
+    'ep' => 'videos',
+    'part' => 'snippet',
+    'id' => $id_str
+  ]) ) ) {
+    return $title;
+  }
+
+  return $title;
+  //var_dump([$duration, $title]);
 
 }
 
@@ -129,12 +143,14 @@ function pl_query($params) {
 
   foreach($res['items'] as $video){
 
-    $ytid = $video['id']['videoId'];
+    $ytid = is_string($video['id']) ? $video['id'] : $video['id']['videoId'];
     $resList[$ytid] = [
       'title' => $video['snippet']['title'],
       'ytid' => $ytid
     ];
   }
+
+  var_dump($resList);exit(0);
 
   if( !($res = yt_query([
     'ep' => 'videos',
