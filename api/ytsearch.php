@@ -40,7 +40,13 @@ function intget($what) {
 function yt_by_id($id_list) {
   // if we have a string make it an array
   if(is_string($id_list)) {
-    $id_list = [$id_list];
+    if(strpos($id_list, "http") === 0) {
+      $parts = parse_url($id_list);
+      parse_str($parts['query'], $opts);
+      $id_list = [$opts['v']];
+    } else {
+      $id_list = [$id_list];
+    }
   }
 
   // if it's a hash, make it an array
