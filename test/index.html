@@ -23,8 +23,9 @@ body {
 <script src=../js/min/jquery.js></script>
 <script>
 $(function(){
-    $("#query").val('').focus();
-  });
+  $("#query").val('').focus();
+});
+
 function query(what) {
   $("#query").val(what.innerHTML);
   request();
@@ -38,6 +39,8 @@ function request() {
     return;
   }
   $("#query").val("loading ...");
+  query = query.replace(/\ /, '/')
+
   $.get('../api/' + query, function(data) {
     var html;
     try {
