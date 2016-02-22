@@ -510,9 +510,12 @@
         // reliably check if the code explicitly set things after the function
         // returns.
         
-        /* var ThisIsWorthless = */ eventMap[setKey](function(value) {
-          pub.set.call(pub.context, key, value, meta);
-        });
+        // We only call this if we aren't set yet.
+        if(! (key in data) ) {
+          /* var ThisIsWorthless = */ eventMap[setKey](function(value) {
+            pub.set.call(pub.context, key, value, meta);
+          });
+        }
 
         delete eventMap[setKey];
       }
@@ -1292,4 +1295,4 @@
   self.EvDa = e;
 
 })();
-EvDa.__version__='0.1-versioning-added-45-g263b719';
+EvDa.__version__='0.1-versioning-added-51-g3cfe6c1';
