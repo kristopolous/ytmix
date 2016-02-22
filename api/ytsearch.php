@@ -142,15 +142,12 @@ function pl_query($params) {
   }
 
   foreach($res['items'] as $video){
-
     $ytid = is_string($video['id']) ? $video['id'] : $video['id']['videoId'];
     $resList[$ytid] = [
       'title' => $video['snippet']['title'],
       'ytid' => $ytid
     ];
   }
-
-  var_dump($resList);exit(0);
 
   if( !($res = yt_query([
     'ep' => 'videos',

@@ -64,7 +64,7 @@ var Search = {
       // make it so that we're using the net.
       Search._useNet = true;
 
-      ev.isset('search.results', function(results) { 
+      ev.isset('search_results', function(results) { 
         ev.isset('id', function(){
           ev.push('tracklist', results[0]); 
         });
