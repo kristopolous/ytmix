@@ -25,6 +25,7 @@ var Toolbar = {
       ev("name", this.value);
       input.replaceWith(dom);
       $("#edit-name").html("edit");
+      $("#remove-name").hide();
     });
 
     $("#reload").click(UserHistory.reload);
