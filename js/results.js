@@ -93,7 +93,7 @@ var Results = {
       dom = dbReference[0].jqueryObject;
     } else {
 
-      var splitup = obj.title.split(' - '),
+      var splitup = obj.title.split(/ -+ /),
         title = splitup.pop(),
         artist = splitup.join(' - '),
         result = $(Results.template({
