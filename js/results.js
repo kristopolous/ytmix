@@ -93,8 +93,16 @@ var Results = {
       dom = dbReference[0].jqueryObject;
     } else {
 
-      var splitup = obj.title.split(/ -+ /),
-        title = splitup.pop(),
+      var splitup = obj.title.split(/ -+ /);
+
+      if(splitup.length == 1) {
+        splitup = splitup[0].split(/-+ /);
+      }
+      if(splitup.length == 1) {
+        splitup = splitup[0].split(/ @ /);
+      }
+
+      var title = splitup.pop(),
         artist = splitup.join(' - '),
         result = $(Results.template({
           id: obj.id,
