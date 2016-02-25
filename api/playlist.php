@@ -7,6 +7,10 @@ function pl_tracks($params) {
   return getall(run("select * from tracks where ytid in ($sql_list)"));
 }
 
+// 
+function pl_convert() {
+}
+
 //
 // Adds tracks in a playlist to the tracks table.
 //
