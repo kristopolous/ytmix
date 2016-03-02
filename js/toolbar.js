@@ -45,8 +45,8 @@ var Toolbar = {
         input.focus();
       } else {
         $("#remove-name").hide();
-        ev("name", input.val());
         input.replaceWith(dom);
+        ev("name", input.val());
         this.innerHTML = "edit";
       }
     });
