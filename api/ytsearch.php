@@ -19,7 +19,9 @@ function pl_related($params) {
   foreach($res['items'] as $item) {
     $related_videos[] = [
       'ytid' => $item['id']['videoId'],
-      'title' => $item['snippet']['title']
+      'title' => $item['snippet']['title'],
+      'uploader' => $item['snippet']['channelTitle'],
+      'cid' => $item['snippet']['channelId']
     ]; 
   }
 
