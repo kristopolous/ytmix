@@ -8,6 +8,8 @@
 // Dual licensed under the MIT or GPL Version 2 licenses.
 //
 (function(){
+  "use strict";
+
   if(self.EvDa) { return; }
 
   var 
@@ -570,7 +572,7 @@
     function bubble(key) {
       var
         parts = key.split('.'),
-        parts_key = parts.pop();
+        parts_key = parts.pop(),
         parts_obj = [];
 
       parts_obj[parts_key] = data[key];
@@ -1239,9 +1241,10 @@
         // neuter this function but don't populate
         // the users keyspace.
         pub.sniff = function() {
-          var args = slice.call(arguments), 
-              key,
-              ret = [];
+          var 
+            args = slice.call(arguments), 
+            key,
+            ret = [];
 
           each(args, function(key) {
             if(isString(key)) {
@@ -1307,4 +1310,4 @@
   self.EvDa = e;
 
 })();
-EvDa.__version__='0.1-versioning-added-62-ga712156';
+EvDa.__version__='0.1-versioning-added-67-g9d67e55';
