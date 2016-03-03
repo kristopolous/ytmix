@@ -141,7 +141,9 @@ function pl_query($params) {
     $ytid = is_string($video['id']) ? $video['id'] : $video['id']['videoId'];
     $resList[$ytid] = [
       'title' => $video['snippet']['title'],
-      'ytid' => $ytid
+      'ytid' => $ytid,
+      'uploader' => $video['snippet']['channelTitle'],
+      'cid' => $video['snippet']['channelId']
     ];
   }
 
