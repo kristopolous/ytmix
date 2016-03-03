@@ -24,6 +24,41 @@ Demo? See here:
 
 http://9ol.es/yt
 
+(note: This isn't consistantly updated).
+
+### News
+Recently (2016), I normalized the database to have a table of tracks.  This table keeps track of whether a video can be played or not, how many times its been played and the total time listened throughout those plays.  It also keeps track of the uploader and channel.  
+
+The eventual goal is to use this as data to discover more content.  There's a number of floating dimensions in this analysis which can lead to bad inferences, but the general idea is that if content is frequented often, listened to almost completely, and by the same uploader, then more content from that uploader would probably be good.
+
+The fundamental flaw in this analysis is the volume versus curation problem with any follow system.  Pretend Alice and Bob upload videos.  You like 100 of Alice's videos and 10 of Bob's.  
+
+The question is given a video you haven't seen `Y` from user `X`, what is the qualitative likelihood `p` that you will like it?
+
+If both Alice and Bob upload a video say, tomorrow, which one are you more likely to enjoy?
+
+The answer is actually indeterminant without additional info because total volume of assets hasn't been looked at.  
+
+If we add an additional field, say "number of videos uploaded":
+
+            Liked   Uploaded  probability
+    Alice     100      10000  0.01
+    Bob        10         20  0.50
+
+All of a sudden Bob looks like a good candidate.  
+
+But wait, there's more! We haven't looked at individual exposure yet. Let's say I haven't seen all 10k uploads from Alice or 20 from Bob.
+
+            Liked   Seen   Uploaded  probability
+    Alice     100    100      10000  1.00
+    Bob        10     20         20  0.50
+
+Now things have swapped yet again! And this only takes into consideration binary classification I have to choose whether I think something is the greatest thing ever or completely intolerable.  This classifier doesn't accomodate for or differentiate the in-between.
+
+As I've suggested above, using the opinion of others *collectively in aggregate* is not a useful indicator otherwise I'd just hit up the local clearchannel station KRAP and listen to that all day. What most people like is total garbage and nonsense. If that metric is to be used at all, it's to discard anything that's past a certain popularity threshold. 
+
+For a while that was done as youtube would inject the latest garbage from some teen pop sensation in videos related to say, john coltrane.  Ah yes, youtube, that's right; it's John Coltrane, Pharoah Sanders, Miles Davis, and Ke$ha.  That's totally sensible. 
+
 ## Creating a new playlist
 
 The quickest way to create a new playlist is to use the `import/parse.js` script which uses the YouTube data api v3 in order to create a list
