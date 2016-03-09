@@ -26,6 +26,7 @@
 //    outward, plus a few other inline ones that don't get
 //    used internally.
 (function(){
+  'use strict';
   var 
     // undefined
     _u,
@@ -115,7 +116,6 @@
     },
 
     mapSoft = function(array, cb) {
-      'use strict';
       var ret = [];
 
       for ( var i = 0, len = array.length; i < len; i++ ) { 
@@ -131,7 +131,6 @@
       } : mapSoft,
 
     _filterThrow = function(fun/*, thisArg*/) {
-      'use strict';
 
       var len = this.length; 
       for (var i = 0; i < len; i++) {
@@ -143,7 +142,6 @@
     },
 
     _filter = function(fun/*, thisArg*/) {
-      'use strict';
 
       var len = this.length, start = 0, res = [];
 
@@ -166,7 +164,6 @@
     // each is a complex one
     each = [].forEach ?
       function (obj, cb) {
-        'use strict';
         // Try to return quickly if there's nothing to do.
         if (_.isArr(obj)) { 
           if(obj.length === 0) { return; }
@@ -201,7 +198,6 @@
 
   // This is from underscore. It's a <<shallow>> object merge.
   function extend(obj) {
-    'use strict';
     each(slice.call(arguments, 1), function(source) {
       if (source) {
         for (var prop in source) {
@@ -397,9 +393,6 @@
       which,
       val,
 
-      // The indices
-      ix,
-
       // The dataset to compare against
       set = (_.isArr(this) ? this : filterList.shift());
 
@@ -525,8 +518,6 @@
   // This is like the SQL "in" operator, which is a reserved JS word.  You can invoke it either
   // with a static array or a callback
   var isin = (function() {
-    // It has a cache for optimization
-    var cache = {};
 
     // todo: typecheck each element and then extract functions 
     return function (param1, param2) {
@@ -979,9 +970,9 @@
           )
       },
 
-      unset: function(key) {
+      unset: function callee(key) {
         if(_.isArr(key)) {
-          return each(key, arguments.callee);
+          return each(key, callee)
         } else {
           var list = _.isArr(this) ? this : ret.find();
           each(list, function(what) {
@@ -1133,7 +1124,7 @@
     // This is like group above but it just maps as a K/V tuple, with 
     // the duplication policy of the first match being preferred.
     //
-    ret.keyBy = function(field) {
+    ret.keyBy = function() {
       var groupResult = ret.group.apply(this, arguments);
 
       each(groupResult, function(key, value) {
@@ -1246,9 +1237,9 @@
           field = '.' + field;
         }
 
-        eval( "keyer = function(r,ref){try{ref[rX] = res[rX] = r;} catch(x){}}".replace(/X/g, field));
+        eval( "keyer=function(r,ref){try{ref[rX]=res[rX]=r;}catch(x){}}".replace(/X/g, field));
       } else {
-        eval( "keyer = function(r,ref){with(r) { var val = X };try{ref[val] = res[val] = r;} catch(x){}}".replace(/X/g, field));
+        eval( "keyer=function(r,ref){var val=r.X;try{ref[val]=res[val]=r;}catch(x){}}".replace(/X/g, field));
       }
 
       Object.defineProperty(res, 'update', {
@@ -1333,7 +1324,7 @@
           resultList = map(filter, values);
         } else {
           for(var ix = 0, len = filter.length; ix < len; ix++) {
-            row = filter[ix];
+            var row = filter[ix];
 
             if(column in row){
               if(fieldCount > 1) {
@@ -1386,7 +1377,7 @@
 
       each(toInsert, function(which) {
         // We first check to make sure we *should* be adding this.
-        var doAdd = true, data;
+        var doAdd = true;
 
         // If the unique field has been set then we do
         // a hash search through the constraints to 
@@ -1493,7 +1484,7 @@
     // This will remove the entries from the database but also return them if
     // you want to manipulate them.  You can invoke this with a constraint.
     //
-    ret.remove = function(arg0, arg1) {
+    ret.remove = function(arg0) {
       var 
         isDirty = false,
         end, start,
@@ -1666,4 +1657,4 @@
   });
 
 })();
-DB.__version__='0.0.2-reorg-43-g27139bd';
+DB.__version__='0.0.2-reorg-52-g12fd715';

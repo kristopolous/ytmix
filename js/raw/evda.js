@@ -8,7 +8,7 @@
 // Dual licensed under the MIT or GPL Version 2 licenses.
 //
 (function(){
-  "use strict";
+  'use strict';
 
   if(self.EvDa) { return; }
 
@@ -223,8 +223,6 @@
       // Internals
       data = {},
       data_ix = {},
-
-      insideTest = false,
 
       // the backlog to execute if something is paused.
       backlog = [],
@@ -1125,7 +1123,7 @@
       // This is a sort + M complexity version that
       // doesn't perserve ordinality.
       setadd: function ( key, value, meta ) {
-        var before = data[key] || [], v = 0;
+        var before = data[key] || [];
 
         return pub( key, value, meta, {
           // this is only called if the tests pass
@@ -1243,7 +1241,6 @@
         pub.sniff = function() {
           var 
             args = slice.call(arguments), 
-            key,
             ret = [];
 
           each(args, function(key) {
@@ -1310,4 +1307,4 @@
   self.EvDa = e;
 
 })();
-EvDa.__version__='0.1-versioning-added-67-g9d67e55';
+EvDa.__version__='0.1-versioning-added-71-g06f648e';
