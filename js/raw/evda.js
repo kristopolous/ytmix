@@ -7,10 +7,10 @@
 // Copyright 2008 - 2016 Chris McKenzie
 // Dual licensed under the MIT or GPL Version 2 licenses.
 //
-(function(){
+var 
+  module = module || {},
+  EvDa = module.exports = (function(){
   'use strict';
-
-  if(self.EvDa) { return; }
 
   var 
     slice = Array.prototype.slice,  
@@ -1304,7 +1304,6 @@
   // exposing some internals (mostly for the helper)
   e.isArray = isArray;
 
-  self.EvDa = e;
-
+  return e;
 })();
-EvDa.__version__='0.1-versioning-added-71-g06f648e';
+EvDa.__version__='0.1-versioning-added-74-g8bb17d6';
