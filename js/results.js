@@ -104,6 +104,15 @@ var Results = {
       if(splitup.length == 1) {
         splitup = splitup[0].split(/ @ /);
       }
+      if(splitup.length == 1) {
+        splitup = splitup[0].split(/-/);
+        // if the first group is small then we can
+        // presume that this might have been a hyphen
+        // and abort
+        if(splitup[0].length < 8) {
+          splitup.join('-');
+        }
+      }
 
       var title = splitup.pop(),
         artist = splitup.join(' - '),
