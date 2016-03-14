@@ -128,8 +128,20 @@ function remote(opts) {
 
   return reqID;
 }
-remote.queue = [];
+remote.queue = new Priority();
 remote.id = 0;
+remote.prioritize = function() {
+  // We make sure that we don't hammer the server unnecessarily.
+  // If more than one request is happening at a time, we build a
+  // queue of the requests.
+  if(remote.lock) {
+    log("deferring(priority). Queue size:", remote.queue.length);
+    remote.queue.push(arguments, 10);
+    return;
+  }
+
+  return remote.apply(this, arguments); 
+}
 
 var Store = {
   //
