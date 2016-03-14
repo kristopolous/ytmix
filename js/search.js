@@ -127,7 +127,7 @@ function loadRelated(obj, opts){
     // The match happens to be the same as the server
     // query in this case
     console.log('related', match.ytid);
-    remote('related', match.ytid, 
+    remote.prioritize('related', match.ytid, 
       function (data){
 
       var ytidList = _.pluck(data.related, 'ytid');
