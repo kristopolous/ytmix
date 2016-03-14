@@ -203,3 +203,62 @@ function stats(count) {
 function debug(list) {
   document.getElementById('debug').innerHTML = list.join(' ');
 }
+
+var Priority = (function(){
+
+  function sort(pri) {
+    if(pri.dirty) {
+      var sorted = pri.sort(function(a, b) {
+        return 1000000 * (b.priority - a.priority) + 0.0001 * (a.id - b.id);
+      });
+
+      pri.dirty = false;
+      pri.splice.apply([], [0, 0].concat(sorted));
+    }
+  }
+
+  function element(what) {
+    return !what || what.arg;
+  }
+
+  function Priority() {
+    Object.defineProperty(this, 'id', {
+      enumerable: false, 
+      writable: true,
+      value: 0
+    });
+
+    Object.defineProperty(this, 'dirty', {
+      enumerable: false, 
+      writable: true,
+      value: false
+    });
+  }
+
+  Priority.prototype = Object.create(Array.prototype);
+  Priority.constructor = Priority;
+
+  Priority.prototype.push = function(arg, priority) {
+    Array.prototype.push.call(this, {arg: arg, id: this.id++, priority: priority || 0});
+    this.dirty = true;
+  }
+
+  Priority.prototype.unshift = function(arg, priority) {
+    Array.prototype.unshift.call(this, {arg: arg, id: -(this.id++), priority: priority || 0});
+    this.dirty = true;
+  }
+
+  Priority.prototype.shift = function() {
+    sort(this);
+    return element(Array.prototype.shift.call(this));
+  }
+
+  Priority.prototype.pop = function() {
+    sort(this);
+    return element(Array.prototype.pop.call(this));
+  }
+
+  return Priority;
+})();
+
+
