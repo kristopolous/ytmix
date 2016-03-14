@@ -226,7 +226,10 @@ var Results = {
     // These are the two buffers of non-generation that are kept
     // at the top and the bottom of the query results. These
     // help preserve the scroll bar order.
-    $("#bottom-buffer").css('height', (total - stop) / perline * _video.height + "px");
+    // 
+    // We also always have at least one empty row on the bottom 
+    // to make sure that the last row is always visible.
+    $("#bottom-buffer").css('height', Math.max(_video.height / 2, (total - stop) / perline * _video.height) + "px");
     $("#top-buffer").css('height', top - topmodoffset + "px");
 
     // These are sanity checks to see if we need to regenerate
