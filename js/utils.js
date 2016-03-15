@@ -163,8 +163,8 @@ Queue.prototype.doshift = function(){
       // an update
       ev('tracklist',
         _db
-          .hasKey('playlistid')
-          .order('playlistid', 'asc')
+          .hasKey('id')
+          .order('id', 'asc')
       );
     }
   }

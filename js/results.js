@@ -212,7 +212,7 @@ var Results = {
       set = _db.find(constraints, {ytid: _db.isin(unique)});
     } else {
       set = _db.find(constraints).sort(function(a, b) { 
-        return a.playlistid - b.playlistid;
+        return a.id - b.id;
       });
 
       set = ev('search_results').concat(set);
