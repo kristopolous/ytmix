@@ -408,7 +408,7 @@ var Timeline = (function(){
   });
 
   ev('volume', function(volume){
-    Toolbar.status("Set volume to " + volume);
+    Toolbar.status("Set volume to " + volume.toFixed());
     Player.active.setVolume(volume);
   });
 

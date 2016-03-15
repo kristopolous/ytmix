@@ -301,11 +301,11 @@ function updateBlackList () {
 }
 
 function volumeUp() {
-  ev.incr("volume", 10);
+  ev.incr("volume", "*(11/10)");
 }
 
 function volumeDown() {
-  ev.incr("volume", -10);
+  ev.incr("volume", "*(10/11)");
 }
 
 function ytButton(el) {
