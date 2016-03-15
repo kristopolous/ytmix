@@ -587,6 +587,15 @@ var
       );
     }
 
+    function mod( key, cb, arg, meta ) {
+      var val = isNumber(data[key]) ? data[key] : 0;
+      return pub.set ( key, cb(val, arg), meta );
+    }
+    mod.add = function(val, amount) {
+      return val + amount;
+    }
+
+        
     extend(pub, {
       // Exposing the internal variables so that
       // extensions can be made.
@@ -741,10 +750,13 @@ var
       },
 
       incr: function ( key, amount, meta ) {
-        amount = amount || 1;
+        var 
+          cb = isString(amount) ? 
+            new Function("val", "return val" + amount) :
+            mod.add;
         // we can't use the same trick here because if we
         // hit 0, it will auto-increment to amount
-        return pub.set ( key, isNumber(data[key]) ? (data[key] + amount) : amount, meta );
+        return mod ( key, cb, amount || 1, meta );
       },
 
       decr: function ( key, amount, meta ) {
@@ -1306,4 +1318,4 @@ var
 
   return e;
 })();
-EvDa.__version__='0.1-versioning-added-74-g8bb17d6';
+EvDa.__version__='0.1-versioning-added-81-gcacb020';
