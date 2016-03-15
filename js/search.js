@@ -37,10 +37,10 @@ var Search = {
     $("#normal-search").val(who);
   },
   related: function(ytid) {
-    if(!ytid) {
+    if(!_.isString(ytid)) {
       ytid = Timeline.current().ytid;
     }
-    loadRelated(_db.findFirst('ytid', ytid));
+    loadRelated( _db.findFirst('ytid', ytid) );
   },
   init: function(){
     var 
@@ -122,7 +122,7 @@ function loadRelated(obj, opts){
       !match.related.length
     ) {
 
-    Toolbar.status("Adding related " + match.title);
+    Toolbar.status("Adding Related: " + match.title);
 
     // The match happens to be the same as the server
     // query in this case
