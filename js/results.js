@@ -114,8 +114,9 @@ var Results = {
         }
       }
 
-      var title = splitup.pop(),
-        artist = splitup.join(' - '),
+      var 
+        artist = splitup.shift(),
+        title = splitup.join(' - '),
         result = $(Results.template({
           id: obj.id,
           ytid: obj.ytid,
