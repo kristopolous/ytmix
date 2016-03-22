@@ -204,7 +204,7 @@ yt.get_playlist = function(channel_id, cb) {
   }).catch(function (ex) { throw ex; });
 }
 
-yt.get_playlist_items = function(params = {}) {
+yt.get_playlist_items = function(params) {
   // We can't do generators in a promise ... that
   // would be nice ... oh well.
   //
@@ -329,7 +329,7 @@ function get_playlist() {
   api.get_playlist(yt.user, function(){
     yt.get_playlist_id(yt.user, function(playlist_id) {
       console.log(playlist_id);
-      yt.get_playlist_items(playlist_id, {ep: 'playlistItems', playlistId: playlist_id});
+      yt.get_playlist_items({ep: 'playlistItems', playlistId: playlist_id});
     });
   });
 }
