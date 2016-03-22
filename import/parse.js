@@ -88,6 +88,15 @@ yt.api = function(ep, params) {
   }).catch(function (ex) { throw ex; });
 }
 
+yt.search = function(channel, cb) {
+  yt.api('search', {
+    part: 'snippet',
+    channelId: channel,
+    maxResults: 50,
+    type: 'video'
+  })
+}
+
 yt.get_playlist_id = function(user, cb) {
   yt.api('channels', {
     part: 'contentDetails',
@@ -96,6 +105,7 @@ yt.get_playlist_id = function(user, cb) {
     try {
       cb( res.items[0].contentDetails.relatedPlaylists.uploads );
     } catch(ex) {
+      // This means we probably got a channel id ... 
       console.log("Unable to read playlist. Output follows", ex);
       console.log(res);
       // try to just assume that the user IS a playlist
@@ -194,20 +204,27 @@ yt.get_playlist = function(channel_id, cb) {
   }).catch(function (ex) { throw ex; });
 }
 
-yt.get_playlist_items = function(playlist_id, cb) {
+yt.get_playlist_items = function(params = {}) {
   // We can't do generators in a promise ... that
   // would be nice ... oh well.
   //
   // We'll need something that grossly resembles recursion.
   // This is the base "seed" case.
   var 
-    re_extract = /vi\/(.{11})\/default.jpg$/,
-    payload = [],
-    my_promise = yt.api('playlistItems', {
+    // This handles two types: the channel based scraper (works through
+    // the search api) and the user based scraper (works through playlistItems)
+    opts = {
       part: 'snippet',
-      playlistId: playlist_id,
       maxResults: 50
-    });
+    },
+    re_extract = /vi\/(.{11})\/default.jpg$/,
+    payload = [];
+
+  if(params.playlistId) {
+    opts.playlistId = params.playlist_id;
+  }
+
+  var my_promise = yt.api(params.ep, opts);
 
   function my_resolve(promise, final_resolve) {
     promise.then(function(data) {
@@ -312,7 +329,7 @@ function get_playlist() {
   api.get_playlist(yt.user, function(){
     yt.get_playlist_id(yt.user, function(playlist_id) {
       console.log(playlist_id);
-      yt.get_playlist_items(playlist_id);
+      yt.get_playlist_items(playlist_id, {ep: 'playlistItems', playlistId: playlist_id});
     });
   });
 }
