@@ -89,12 +89,10 @@ yt.api = function(ep, params) {
 }
 
 yt.search = function(channel, cb) {
-  yt.api('search', {
-    part: 'snippet',
+  yt.get_playlist_items('search', {
     channelId: channel,
-    maxResults: 50,
     type: 'video'
-  })
+  });
 }
 
 yt.get_playlist_id = function(user, cb) {
@@ -204,7 +202,7 @@ yt.get_playlist = function(channel_id, cb) {
   }).catch(function (ex) { throw ex; });
 }
 
-yt.get_playlist_items = function(params) {
+yt.get_playlist_items = function(ep, params) {
   // We can't do generators in a promise ... that
   // would be nice ... oh well.
   //
@@ -220,11 +218,11 @@ yt.get_playlist_items = function(params) {
     re_extract = /vi\/(.{11})\/default.jpg$/,
     payload = [];
 
-  if(params.playlistId) {
-    opts.playlistId = params.playlist_id;
+  for(var key in params) {
+    opts[key] = params[key];
   }
 
-  var my_promise = yt.api(params.ep, opts);
+  var my_promise = yt.api(ep, opts);
 
   function my_resolve(promise, final_resolve) {
     promise.then(function(data) {
@@ -329,7 +327,7 @@ function get_playlist() {
   api.get_playlist(yt.user, function(){
     yt.get_playlist_id(yt.user, function(playlist_id) {
       console.log(playlist_id);
-      yt.get_playlist_items({ep: 'playlistItems', playlistId: playlist_id});
+      yt.get_playlist_items('playlistItems', {playlistId: playlist_id});
     });
   });
 }
