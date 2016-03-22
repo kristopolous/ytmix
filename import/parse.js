@@ -88,13 +88,6 @@ yt.api = function(ep, params) {
   }).catch(function (ex) { throw ex; });
 }
 
-yt.search = function(channel, cb) {
-  yt.get_playlist_items('search', {
-    channelId: channel,
-    type: 'video'
-  });
-}
-
 yt.get_playlist_id = function(user, cb) {
   yt.api('channels', {
     part: 'contentDetails',
@@ -104,10 +97,10 @@ yt.get_playlist_id = function(user, cb) {
       cb( res.items[0].contentDetails.relatedPlaylists.uploads );
     } catch(ex) {
       // This means we probably got a channel id ... 
-      console.log("Unable to read playlist. Output follows", ex);
-      console.log(res);
+      console.log("Unable to read playlist. Trying by channel", ex);
+      //console.log(res);
       // try to just assume that the user IS a playlist
-      cb( user );
+      cb( false );
     }
   });
 }
@@ -323,11 +316,14 @@ api.get_playlist = function(who, cb) {
 function get_playlist() {
   console.log('User: ' + yt.user);
 
-  //yt.get_playlist('UCcZu7E7TIoJR_hDweg4xTTA');
   api.get_playlist(yt.user, function(){
     yt.get_playlist_id(yt.user, function(playlist_id) {
-      console.log(playlist_id);
-      yt.get_playlist_items('playlistItems', {playlistId: playlist_id});
+      if(playlist_id === false) {
+        // this means that we were maye fed a channel. We grab that in another way
+        yt.get_playlist_items('search', {channelId: yt.user, type: 'video'});
+      } else {
+        yt.get_playlist_items('playlistItems', {playlistId: playlist_id});
+      }
     });
   });
 }
