@@ -127,6 +127,8 @@ There's two tables ... one that has the playlist and one that has a normalized s
  * having an internal view count of them.
  * knowing how much of the track was listened to as a metric of whether I actually liked the content or unfortunately just ran into it frequently.
 
+> Note: Youtube also has Google+ accounts which don't have any YouTube user ids... this is fine! Just pass the channel id.  For Example, the [Berlin School and Ambient](https://www.youtube.com/channel/UCqOkOS00m2lRud_sJSa96Mw) channel isn't associated with a youtube id.  You can pass the channel id, in this case `UCqOkOS00m2lRud_sJSa96Mw`, and the tool will figure it out and do the import.
+
 ## Low Bandwidth Streaming
 
 You can use [youtube-dl](http://rg3.github.io/youtube-dl/) with a FIFO-pipe and mplayer to play things over a low-bitrate connection like so:
