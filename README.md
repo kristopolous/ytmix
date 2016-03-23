@@ -127,7 +127,7 @@ There's two tables ... one that has the playlist and one that has a normalized s
  * having an internal view count of them.
  * knowing how much of the track was listened to as a metric of whether I actually liked the content or unfortunately just ran into it frequently.
 
-## Low Bandwidth Stream Example
+## Low Bandwidth Streaming
 
 You can use [youtube-dl](http://rg3.github.io/youtube-dl/) with a FIFO-pipe and mplayer to play things over a low-bitrate connection like so:
 
@@ -148,7 +148,15 @@ resources in top (or htop) drop a few percentage points with it - regardless of 
       | shuf \
       | xargs -n 1 youtube-dl -q -o audio-pipe -f 140 --
 
-format 140 is an audio-only format that about 95% or so of youtube videos support.
+format 140 is an audio-only format.
+
+## Offline Listening
+
+There's a much more obvious thing you can do to listen to your playlist offline.  Again, using xargs and its parallel magic...
+
+    $ curl localhost/ytmix/api/gettracks/(id) | xargs -n 1 -P 8 youtube-dl -q -f 140 --
+
+Can allow you to go off and get a large assortment of m4as.
 
 ## API
 
