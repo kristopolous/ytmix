@@ -33,6 +33,8 @@ var
     id: false
   };
 
+yt.user = yt.user.replace(/\//g, '');
+
 var lib = {
   get: function (location, callback) {
     console.log(" > " + location);
@@ -305,6 +307,7 @@ api.add_tracks_to_playlist = function(tracklist) {
   api.do('addTracks', {id: api.id, param: tracklist});
 }
 
+// createid Creates a playlist on the yt side.
 api.get_playlist = function(who, cb) {
   api.do('createid', {id: who}, function(data) {
     api.id = data;
