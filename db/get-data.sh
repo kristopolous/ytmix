@@ -3,9 +3,9 @@
 
 echo "Dumping"
 if [ -z "$password" ]; then
-  mysqldump -u $user yt > mysql-dump.db
+  mysqldump -h $host -u $user yt > mysql-dump.db
 else 
-  mysqldump -u $user -p$password yt > mysql-dump.db
+  mysqldump -h $host -u $user -p$password yt > mysql-dump.db
 fi
 
 echo "Compressing"

@@ -2,7 +2,7 @@
 . ../secrets/db.ini
 
 if [ -z "$password" ]; then
-  mysqldump -u root --no-data yt > schema  
+  mysqldump -h $host -u root --no-data yt > schema  
 else 
-  mysqldump -u $user --no-data -p$password yt > schema
+  mysqldump -h $host -u $user --no-data -p$password yt > schema
 fi
