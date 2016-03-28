@@ -116,7 +116,7 @@ If you want to avoid all the quota and key nonsense, there's a dump `db/mysql-du
 
     mysql -uroot yt < mysql-dump.db
 
-As far as the mysql credentials they are in [lib/db.php](https://github.com/kristopolous/ytmix/blob/master/lib/db.php).  Oh dear, now you know my localhost doesn't have a password for root.  Woe is me.
+As far as the mysql credentials they are in [secrets/db.ini](https://github.com/kristopolous/ytmix/blob/master/secrets/db.ini).  Oh dear, now you know my localhost doesn't have a password for root.  Woe is me. Also, there's some notes in the [parent directory's readme](https://github.com/kristopolous/ytmix/blob/master/secrets).
 
 There's two tables ... one that has the playlist and one that has a normalized set of the tracks.  The tracks table is used for 
 
