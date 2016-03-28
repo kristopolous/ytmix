@@ -1,8 +1,10 @@
-Place your authkey from google here.
+This directory has two files
 
-Name the file authkey and make it just a single line of the key.
+ * db.ini - this is the username and password for your mysql database.
+   Please note to INTENTIONALLY OMIT THE SPACE surrounding the equals as this is used also by bash scripts and directly interpreted. (tricky tricky and also simple simple)
 
-such as:
+ * authkey - (you have to provide this yourself.) Place your authkey from google here.  Make it just a single line of the key.
+   example:
 
     echo 'your key' > authkey
 
