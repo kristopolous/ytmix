@@ -557,7 +557,7 @@ var Timeline = (function(){
         offset = _offset;
       }
       if (isRelative) {
-        offset += Player.activeData.offset;
+        offset += _offset;
       }
 
       Timeline.updateOffset();

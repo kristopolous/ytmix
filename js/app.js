@@ -348,8 +348,8 @@ $(function(){
       else if(kc == KEY.space) { Timeline.pauseplay(); }
       else log(ev);
     } else if (!KEY.disable) {
-      if(kc == KEY.left) { Timeline.seekTo(-10, true); }
-      else if(kc == KEY.right) { Timeline.seekTo(10, true); }
+      if(kc == KEY.left) { Timeline.seekTo(-30, true); }
+      else if(kc == KEY.right) { Timeline.seekTo(30, true); }
     }
   });
   $("#normal-search").focus(function(){
