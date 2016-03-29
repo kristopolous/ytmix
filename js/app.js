@@ -330,6 +330,7 @@ $(function(){
   Search.init();
 
   var KEY = {
+    disable: false,
     space: 32,
     up: 38,
     down: 40,
@@ -338,15 +339,26 @@ $(function(){
   };
 
   $(window).keydown( function(ev) {
+    var kc = ev.keyCode;
     if(ev.ctrlKey) {
-      if(ev.keyCode == KEY.up) { volumeUp(); }
-      else if(ev.keyCode == KEY.down) { volumeDown(); }
-      else if(ev.keyCode == KEY.right) { Timeline.next(); }
-      else if(ev.keyCode == KEY.left) { Timeline.prev(); }
-      else if(ev.keyCode == KEY.space) { Timeline.pauseplay(); }
+      if(kc == KEY.up) { volumeUp(); }
+      else if(kc == KEY.down) { volumeDown(); }
+      else if(kc == KEY.right) { Timeline.next(); }
+      else if(kc == KEY.left) { Timeline.prev(); }
+      else if(kc == KEY.space) { Timeline.pauseplay(); }
       else log(ev);
+    } else if (!KEY.disable) {
+      if(kc == KEY.left) { Timeline.seekTo(-10, true); }
+      else if(kc == KEY.right) { Timeline.seekTo(10, true); }
     }
   });
+  $("#normal-search").focus(function(){
+    KEY.disable = true;
+  });
+  $("#normal-search").blur(function(){
+    KEY.disable = false;
+  });
+
 
   ev.test('volume', function(what, cb) {
     $("#volume-down")[
