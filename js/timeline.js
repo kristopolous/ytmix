@@ -133,7 +133,7 @@ var Timeline = (function(){
     start: 0,
 
     off: function(){
-      if(has_flash()) {
+      if(hasFlash()) {
         if(Player.active.off) {
           $("#backupPlayer").html('');
           Player.active = Player.controls[0];

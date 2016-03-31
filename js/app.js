@@ -322,6 +322,13 @@ function ytButton(el) {
   Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
 }
 
+function noflashapi(){
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/player_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
+
 $(function(){
   Splash.template = _.template( $("#T-Preview").html() );
   Results.init();
@@ -388,7 +395,7 @@ $(function(){
     localStorage['uid'] = uid;
   });
 
-  window.Scrubber = {
+  self.Scrubber = {
     real: { 
       dom: $("#real-scrubber"),
       attach: function(where) {
@@ -416,6 +423,7 @@ $(function(){
     var entry = _db.findFirst({ ytid: Scrubber.phantom.id });
     Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
   });
+
   ev.set('init');
 });
 
