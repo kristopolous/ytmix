@@ -342,6 +342,24 @@ var Timeline = (function(){
     }
   });
 
+  function ytDebugHook(id) {
+    _.each(Player.eventList, function(what) {
+      Player.controls[id].addEventListener("on" + what, 'ytDebug_' + what);
+    });
+  }
+
+  self.onYouTubePlayerAPIReady = function() {
+    Player.controls[0] = new YT.Player('player-iframe', {
+      height: '390',
+      width: '640'
+    });
+    ytDebugHook(0);
+
+    setTimeout(function() { 
+      ev.set('player_load'); 
+    }, 1);
+  }
+
   self.onYouTubePlayerReady = function(playerId) {
     var id = parseInt(playerId.substr(-1));
 
@@ -350,9 +368,7 @@ var Timeline = (function(){
 
       Player.controls[id] = document.getElementById(playerId);
 
-      _.each(Player.eventList, function(what) {
-        Player.controls[id].addEventListener("on" + what, 'ytDebug_' + what);
-      });
+      ytDebugHook(id);
 
       if(_loaded == _maxPlayer) {
         // This slight indirection is needed for IE.
@@ -632,8 +648,10 @@ var Timeline = (function(){
             {allowScriptAccess: "always"}, {id: 'player-' + ix});
         }
       } else {
-        _backup.on();
-        ev.set('player_load');
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/player_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       }
 
       // This doesn't reflect the filtered view ... it would be nice to know what the

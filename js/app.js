@@ -322,13 +322,6 @@ function ytButton(el) {
   Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
 }
 
-function noflashapi(){
-  var tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/player_api";
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-}
-
 $(function(){
   Splash.template = _.template( $("#T-Preview").html() );
   Results.init();
