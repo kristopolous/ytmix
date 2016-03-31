@@ -31,7 +31,7 @@ var
       }
 
       return obj == null ? 
-        String( obj ) == 'object' : 
+        String( obj ) === 'object' : 
         toString.call(obj) === '[object Object]' || true ;
     },
 
@@ -228,13 +228,18 @@ var
       backlog = [],
       globberMap = {},
       traceList = [],
+      // previous values 
+      logSize = 10,
+      logMap = {},
       // last return
       lastMap = {},
       eventMap = {},
       dbg = {
         data: data, 
         events: eventMap,
+        log: logMap,
         locks: lockMap,
+        testLocks: testLockMap,
         last: lastMap,
         trace: traceList,
         globs: globberMap
@@ -344,7 +349,7 @@ var
 
       // This will return all the handlers associated with
       // this event.
-      if ( args.length == 1 ) {
+      if ( args.length === 1 ) {
         return smartMap(scope, resolve);
       } 
 
@@ -356,6 +361,18 @@ var
         ( isFunction ( value ) || 
           ( isArray(value) && isFunction(value[0]) )
         ) ? ON : SET ].apply(this, args);
+    }
+
+    function log(key, value) {
+      if(!logMap[key]) {
+        logMap[key] = [];
+      }
+
+      logMap[key].push([value, new Date()]);
+
+      if(logMap[key].length > logSize) {
+        logMap[key].shift();
+      }
     }
 
     // Register callbacks for
@@ -473,7 +490,7 @@ var
         var myKey = key.pop();
 
         return isset(glob(myKey), function(data, meta) {
-          var next = (key.length == 1) ? key[0] : key;
+          var next = (key.length === 1) ? key[0] : key;
           return isset(next, callback, meta);
         }, meta);
         // ^^ this should recurse nicely.
@@ -695,7 +712,7 @@ var
 
               // see if there's any more false things
               // and if there are not then we run this
-              if(values(flagMap).indexOf(false) == -1) {
+              if(values(flagMap).indexOf(false) === -1) {
                 toTest.apply(pub.context, slice.call(arguments));
               }
             };
@@ -730,7 +747,7 @@ var
 
             toTest = attempt;
           } catch (ex) { }
-        } else if ( arguments.length == 2 ) {
+        } else if ( arguments.length === 2 ) {
           return pub.isset ( key, toTest );
         }
 
@@ -750,10 +767,22 @@ var
         });
       },
 
-      empty: function() {
+      empty: function(key) {
         // we want to maintain references to the object itself
-        for (var key in data) {
-          delete data[key];
+        if(arguments.length === 0) {
+          for (var key in data) {
+            delete data[key];
+          }
+        } else {
+          each(arguments, function(key) {
+            if(key in data) {
+              if(isArray(data[key])) {
+                pub.set(key, [], {}, {bypass:1, noexec:1});
+              } else {
+                pub.set(key, null, {}, {bypass:1, noexec:1});
+              }
+            }
+          });
         }
       },
 
@@ -843,7 +872,7 @@ var
           noexec = _opts['noexec'];
 
         // this is when we are calling a future setter
-        if(arguments.length == 1) {
+        if(arguments.length === 1) {
           var ret = function() {
             pub.set.apply(pub.context, [key].concat(slice.call(arguments)));
           }
@@ -999,9 +1028,12 @@ var
               // The old value is being passed in
               // through the meta
               //
+              // SETTER: This is the actual setting code
+              //
               if(!(_opts.onlychange && value === data[key])) {
 
                 if(!_opts.noset) {
+                  log(key, value);
                   data[key] = value;
 
                   if(key != '') {
@@ -1040,6 +1072,7 @@ var
                 if(!noexec) {
                   result = cback.call(pub.context);
                 } else {
+                  bubble.apply(pub.context, [key].concat(slice.call(myargs, 2)));
                   // if we are not executing this, then
                   // we return a set of functions that we
                   // would be executing.
@@ -1105,7 +1138,7 @@ var
             delete callback.$.norun[listName];
           }
 
-          if ( size(callback.$.norun) == 0 ) {
+          if ( size(callback.$.norun) === 0 ) {
             delete callback.$.norun;
           }
         });
@@ -1126,7 +1159,7 @@ var
             meta.set = clone(before);
 
             each(valArray, function(what) {
-              if(meta.set.indexOf(what) == -1) {
+              if(meta.set.indexOf(what) === -1) {
                 meta.set.push(what);
               }
             });
@@ -1134,6 +1167,7 @@ var
             if(isFinal) {
               meta.value = meta.set; 
             }
+            meta.oper = {name:'osetadd', value:value};
 
             return (before.length != meta.set.length);
           }
@@ -1154,6 +1188,7 @@ var
             if(isFinal) {
               meta.value = meta.set; 
             }
+            meta.oper = {name:'setadd', value:value};
 
             return (before.length != meta.set.length);
           }
@@ -1171,7 +1206,14 @@ var
           after = without( before, value);
 
         if ( before.length != after.length) {
-          return pub ( key, after, meta, {value: value} );
+          return pub ( key, after, meta, {
+            coroutine: function(meta, isFinal) {
+                if(isFinal) {
+                  meta.oper = {name:'setdel', value:value};
+                }
+                return true;
+              },
+            value: value} );
         }
 
         return after;
@@ -1228,7 +1270,7 @@ var
             newlen = size(value),
             oldlen = size(meta.old);
           
-          if(newlen - oldlen == 1) {
+          if(newlen - oldlen === 1) {
             callback.call( pub.context, last(value) );
           } else if (newlen > oldlen) { 
             callback.call( pub.context, toArray(value).slice(oldlen) );
@@ -1294,6 +1336,8 @@ var
     pub.setAdd = pub.setadd;
     pub.setToggle = pub.settoggle;
     pub.osetAdd = pub.osetadd;
+    pub.osetdel = pub.setdel;
+    pub.osetDel = pub.setdel;
     pub.setDel = pub.setdel;
     pub.isSet = pub.isset;
     pub.mod = pub.incr;
@@ -1327,4 +1371,4 @@ var
 
   return e;
 })();
-EvDa.__version__='0.1-versioning-added-87-g7501f1a';
+EvDa.__version__='0.1-versioning-added-113-gc8337c5';
