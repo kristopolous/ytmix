@@ -112,7 +112,7 @@ var Timeline = (function(){
       },
 
       Play: function(){
-        ev.isset('flash_load', function(){
+        ev.isset('player_load', function(){
           if(!_isPlaying) {
             _isPlaying = true;
             Player.active.playVideo();
@@ -133,11 +133,13 @@ var Timeline = (function(){
     start: 0,
 
     off: function(){
-      if(Player.active.off) {
-        $("#backupPlayer").html('');
-        Player.active = Player.controls[0];
+      if(has_flash()) {
+        if(Player.active.off) {
+          $("#backupPlayer").html('');
+          Player.active = Player.controls[0];
+        }
+        return Player.active;
       }
-      return Player.active;
     },
 
     getCurrentTime: function(){
@@ -355,7 +357,7 @@ var Timeline = (function(){
       if(_loaded == _maxPlayer) {
         // This slight indirection is needed for IE.
         setTimeout(function() { 
-          ev.set('flash_load'); 
+          ev.set('player_load'); 
         }, 1);
       }
     }
@@ -380,7 +382,7 @@ var Timeline = (function(){
         Timeline.seekTo((0.001 * (-_epoch + (+new Date()))) % _totalRuntime);
       }
 
-      ev.isset("flash_load", Results.scrollTo);
+      ev.isset("player_load", Results.scrollTo);
     }
   });
 
@@ -412,7 +414,7 @@ var Timeline = (function(){
     Player.active.setVolume(volume);
   });
 
-  ev.isset('flash_load', function(){
+  ev.isset('player_load', function(){
     Player.active = Player.controls[0];
     setInterval(updateytplayer, CLOCK_FREQ);
   });
@@ -445,7 +447,7 @@ var Timeline = (function(){
     },
 
     pause: function(){
-      ev.isset('flash_load', function(){
+      ev.isset('player_load', function(){
         _isPlaying = false;
         Player.active.pauseVideo();
         $("#pause-play").html('<i class="fa fa-play"></i>');
@@ -503,7 +505,7 @@ var Timeline = (function(){
       offset = offset || 0;
 
       // Only run when the flash controller has been loaded
-      ev.isset('flash_load', function(){
+      ev.isset('player_load', function(){
         if(!_db.byId[dbid]) {
           Timeline.pause();
         } else if(Player.activeData != _db.byId[dbid]) {
@@ -570,7 +572,6 @@ var Timeline = (function(){
       absolute = Math.min(_totalRuntime, absolute);
       log("Seeking to ", absolute);
 
-
       var track = _db.current.findFirst(function(row) { 
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
       });
@@ -621,13 +622,18 @@ var Timeline = (function(){
 
       // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
       // videos we which to play.
-      for(var ix = 0; ix < _maxPlayer; ix++) {
-        $("<div id=vidContainer-" + ix + ">").appendTo("#players");
+      if(hasFlash()) {
+        for(var ix = 0; ix < _maxPlayer; ix++) {
+          $("<div id=vidContainer-" + ix + ">").appendTo("#players");
 
-        swfobject.embedSWF("http://www.youtube.com/apiplayer?" +
-          "version=3&enablejsapi=1&playerapiid=player-" + ix,
-          "vidContainer-" + ix, "80", "60", "9", null, null, 
-          {allowScriptAccess: "always"}, {id: 'player-' + ix});
+          swfobject.embedSWF("http://www.youtube.com/apiplayer?" +
+            "version=3&enablejsapi=1&playerapiid=player-" + ix,
+            "vidContainer-" + ix, "80", "60", "9", null, null, 
+            {allowScriptAccess: "always"}, {id: 'player-' + ix});
+        }
+      } else {
+        _backup.on();
+        ev.set('player_load');
       }
 
       // This doesn't reflect the filtered view ... it would be nice to know what the
