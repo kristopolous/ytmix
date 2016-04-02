@@ -51,9 +51,7 @@ ev({
       $(".main-app").css({
         opacity: 0,
         display: 'inline-block'
-      }).animate({
-        opacity: 1
-      }, 1000);
+      });
 
       $("#splash").css('display','none');
       window.scrollTo(0,0);
