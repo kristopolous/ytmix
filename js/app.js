@@ -5,46 +5,35 @@ function loadHistory(){
   // The 'recent' has a setter that this will
   // trigger; see store.js.  
   ev.isset(['init', 'recent'], function(data, meta) {
+    var start = new Date();
     var row;
 
-    data = ev('recent');
-
-    each(data, function(which, ix) {
-      // This is the horizontal row of results.
-      // Each row will contain 4 playlist links.
-      if(!(ix % 4)) {
-        row = $("<div />").addClass("row").appendTo("#splash-history");
-      }
-
+    each(ev('recent').slice(0, 25), function(which, ix) {
       // If there is no preview for this playlist, then skip it.
       if(!which.preview) {
         return;
       }
 
-      var play = $("<img class=play title=" + which.id + " src=img/play.png />")
-        .click(function(){
-          // Clicking it will switch us to the playlist mode and
-          // get the playlist.
-          ev('app_state', 'main');
-          Store.get(which.id);
-        }),
-        container = $(
-          Splash.template({
-            id: which.id,
-            ytList: which.preview.tracks ? which.preview.tracks.slice(0, 4) : [],
-            title: which.name,
-            count: which.preview.count,
-            duration: Utils.secondsToTime(which.preview.length)
-          })
-        );
+      // This is the horizontal row of results.
+      // Each row will contain 4 playlist links.
+      if(!(ix % 4)) {
+        if(row) {
+          row.appendTo("#splash-history");
+        }
+        row = $("<div />").addClass("row");
+      }
 
-      container.hover(
-        function() { play.fadeIn() },
-        function() { play.fadeOut() }
-      ).append(play).appendTo(row);
+      row.append(Splash.template({
+        id: which.id,
+        ytList: which.preview.tracks,
+        title: which.name,
+        count: which.preview.count,
+        duration: Utils.secondsToTime(which.preview.length)
+      }));
+      console.log('history', new Date() - start);
     });
 
-    $("#history").fadeIn();
+    $("#history").show();
   });
 }
 
@@ -60,13 +49,9 @@ ev({
     if(state == 'splash') {
       // If we go to the splash page ... realistically, "back" to it,
       // then we just force a reload
-      if (ev.isset('tracklist')) {
+      if (meta.old) {
         location.reload();
       } else {
-        ev.unset('id','tracklist','name');
-        _db.remove();
-        Timeline.pause();
-
         $(".main-app").hide();
         $("#splash").show();
 
