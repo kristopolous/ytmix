@@ -30,18 +30,16 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 
 #deck-control .button { width: 65px; text-align: center}
 #deck-control #quality-up, #deck-control #quality-down { width: auto }
-.splash-container{cursor:pointer;border:2px solid #a9a;background:#434;margin:0 0.5em 0.5em 0;text-shadow:0 0 0;width:11.5em;text-align:center;vertical-align:top;padding-bottom:0.5em;position:relative}
-.splash-container .play{position:absolute;top:8px;left:4px;display:none}
-.splash-container p{font-size:0.85em;white-space:nowrap;overflow:hidden;margin:0 8px}
+.splash-container{display:inline-block;padding:0.25em;border:2px solid #a9a;background:#434;margin:0 0.25em 0.75em 0;width:18em;vertical-align:top;padding-bottom:0.5em}
+.splash-container p{width:75%;float:right;margin:0.25em -20px 0 auto;font-size:0.85em}
 .splash-container small{
   font-size:0.7em
 }
 
-#splash{text-align:center;color:#cbc;text-shadow:0px 0px 2px #212;font-size:1.25em}
-#splash-history{margin-top:0.25em}
+#splash{text-align:left;color:#cbc;font-size:1.25em;margin-left:2em}
+#splash-history{margin-top:0.25em;text-align:left}
 #splash input{font-size:1.5em;box-shadow:0 0 0px 2px #fff;margin:0}
-#splash .track{height:9em;line-height:0;text-align:center;width:100%;margin-top:0.25em;box-shadow:none}
-#splash .track img{width:5em;margin:0.25em;border:1px solid #878}
+#splash img{width:100px;margin:0 5px 0 0;border:1px solid #878;float:left}
 
 .main-app{display:none;width:100%}
 
@@ -100,7 +98,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 .button{border:0;cursor:pointer;display:inline-block;font-size:13px;color:#ccc;background:transparent;padding:7px 9px}
 .button.sunken{background:#323}
 .button.disabled{color:#555}
-.button.disabled:hover{background:transparent;color:#555;cursor:default;text-shadow:0}
+.button.disabled:hover{background:transparent;color:#555;cursor:default}
 
 #search .button {
   font-size: 24px;
@@ -113,7 +111,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 
 #normal-search{width:18em}
 #search{position:absolute;right:6px}
-#history{display:none}
+#history{display:none;text-align:center;}
 
 #main-menu{position:fixed;top:0;right:0}
 #header{background:#323;padding:6px}
@@ -176,7 +174,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   padding: 0.1em 0.4em;
 }
 
-.hero-unit { margin-top:0 }
+.hero-unit { margin-top:0;margin-bottom:2em; text-indent:1em }
 .hero-unit h1{
   display: inline-block;
   margin:0 1em 0 0;
