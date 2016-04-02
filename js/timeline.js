@@ -441,6 +441,11 @@ var Timeline = (function(){
     player: Player,
     backup: _backup,
 
+    load: function(id) {
+      ev('app_state', 'main');
+      Store.get(id);
+    },
+
     // the current track
     current: function() {
       return Player.activeData;
