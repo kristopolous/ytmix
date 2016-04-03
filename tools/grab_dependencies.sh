@@ -16,7 +16,7 @@ done
 
 wget="wget --quiet --no-check-certificate"
 
-version_jq=1.11.3
+version_jq=2.2.2
 
 rawURLList="\
  damerau-levenshtein.js https://raw.github.com/cbaatz/damerau-levenshtein/master/damerau-levenshtein.js\
