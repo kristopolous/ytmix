@@ -562,7 +562,7 @@ var Timeline = (function(){
           Player.Play();
           log("Playing ", Player.activeData.ytid, Player.activeData.title);
         } else {
-          Timeline.seekTo(offset, "relative");
+          Timeline.seekTo(offset, {isTrackRelative:true});
         }
       });
     },

@@ -316,8 +316,8 @@ $(function(){
       else if(kc == KEY.space) { Timeline.pauseplay(); }
       else log(ev);
     } else if (!KEY.disable) {
-      if(kc == KEY.left) { Timeline.seekTo(-30, true); }
-      else if(kc == KEY.right) { Timeline.seekTo(30, true); }
+      if(kc == KEY.left) { Timeline.seekTo(-30, {isOffsetRelative:true}); }
+      else if(kc == KEY.right) { Timeline.seekTo(30, {isOffsetRelative:true}); }
     }
   });
   $("#normal-search").focus(function(){
