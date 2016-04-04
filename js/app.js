@@ -303,7 +303,9 @@ $(function(){
     up: 38,
     down: 40,
     right: 39, 
-    left: 37
+    left: 37,
+    '1': 49,
+    '9': 57
   };
 
   $(window).keydown( function(ev) {
@@ -318,6 +320,11 @@ $(function(){
     } else if (!KEY.disable) {
       if(kc == KEY.left) { Timeline.seekTo(-30, {isOffsetRelative:true}); }
       else if(kc == KEY.right) { Timeline.seekTo(30, {isOffsetRelative:true}); }
+      else if(kc >= KEY['1'] && kc <= KEY['9']) {
+        // Go to x% into the track with 1 = 10% and 9 = 90%
+        console.log((kc - KEY['1']) / 10 * Player.activeData.length, {isTrackRelative: true});
+        Timeline.seekTo((kc - KEY['1']) / 10 * Player.activeData.length, {isTrackRelative: true});
+      }
     }
   });
   $("#normal-search").focus(function(){
