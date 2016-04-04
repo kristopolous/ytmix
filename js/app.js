@@ -323,7 +323,7 @@ $(function(){
       else if(kc >= KEY['1'] && kc <= KEY['9']) {
         // Go to x% into the track with 1 = 10% and 9 = 90%
         console.log((kc - KEY['1']) / 10 * Player.activeData.length, {isTrackRelative: true});
-        Timeline.seekTo((kc - KEY['1']) / 10 * Player.activeData.length, {isTrackRelative: true});
+        Timeline.seekTo((kc - KEY['1']) / 10 * Player.activeData.length + 0.5, {isTrackRelative: true});
       }
     }
   });
