@@ -575,11 +575,15 @@ var Timeline = (function(){
       Timeline.seekTo(_db.byId[Player.activeData.previous].offset + 1);
       Scrubber.real.dom.css({ left: 0 });
     },
-    seekTo: function(offset, isRelative) {
+    seekTo: function(offset, opts) {
+      opts = opts || {};
       if(!offset) {
         offset = _offset;
       }
-      if (isRelative) {
+      if (opts.isTrackRelative) {
+        offset += Player.activeData.offset;
+      }
+      if (opts.isOffsetRelative) {
         offset += _offset;
       }
 
