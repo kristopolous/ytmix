@@ -48,11 +48,7 @@ ev({
         document.body.style.overflow = 'auto';
       }
     } else if (state == 'main') {
-      $(".main-app").css({
-        opacity: 0,
-        display: 'inline-block'
-      });
-
+      $(".main-app").css('display', 'inline-block');
       $("#splash").css('display','none');
       window.scrollTo(0,0);
       document.body.style.overflow = 'hidden';
