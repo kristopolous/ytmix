@@ -30,7 +30,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 
 #deck-control .button { width: 65px; text-align: center}
 #deck-control #quality-up, #deck-control #quality-down { width: auto }
-.splash-container{display:inline-block;padding:0.25em;border:2px solid #a9a;background:#434;margin:0 0.25em 0.75em 0;width:18em;vertical-align:top;padding-bottom:0.5em}
+.splash-container{display:inline-block;padding:0.25em;border:2px solid #a9a;background:#434;margin:0 0.25em 0.75em 0;width:18em;vertical-align:top}
 .splash-container p{width:75%;float:right;margin:0.25em -20px 0 auto;font-size:0.85em}
 .splash-container small{
   font-size:0.7em
