@@ -114,7 +114,11 @@ function pl_clear($params) {
 
 function pl_remove($params) {
   list($id) = get($params, 'id');
-  $result = run("delete from playlist where id=$id");
+  if(is_numeric($id)) {
+    $result = run("delete from playlist where id=$id");
+  } else {
+    $result = run("delete from playlist where authors='$id'");
+  }
   return $result;
 }
 
