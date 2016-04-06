@@ -61,7 +61,7 @@ function result($succeed, $message, $extra = false) {
 function sanitize($opts) {
   foreach ($opts as $k => $v) {
     if(gettype($v) == 'string') {
-      $opts[$k] = mysqli_real_escape_string($v);
+      $opts[$k] = mysqli_real_escape_string(get_db(), $v);
     }
   }
   return $opts;
@@ -170,7 +170,7 @@ function dolog($str, $res = true, $path = 'sql.log') {
 function run($mysql_string) {
   global $g_uniq;
 
-  $result = mysqli_query($mysql_string);
+  $result = mysqli_query(get_db(), $mysql_string);
 
   dolog($mysql_string, $result);
 
