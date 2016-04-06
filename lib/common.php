@@ -61,7 +61,7 @@ function result($succeed, $message, $extra = false) {
 function sanitize($opts) {
   foreach ($opts as $k => $v) {
     if(gettype($v) == 'string') {
-      $opts[$k] = mysql_real_escape_string($v);
+      $opts[$k] = mysqli_real_escape_string($v);
     }
   }
   return $opts;
@@ -91,13 +91,13 @@ function yt_authkey() {
 
 function getall($sql) {
   $ret = [];
-  while($ret[] = mysql_fetch_row($sql));
+  while($ret[] = mysqli_fetch_row($sql));
   array_pop($ret);
   return $ret;
 }
 
 function getdata($sql) {
-  $row = mysql_fetch_assoc($sql);
+  $row = mysqli_fetch_assoc($sql);
   if($row) {
     foreach($row as $key => $value) {
       return $value;
@@ -170,7 +170,7 @@ function dolog($str, $res = true, $path = 'sql.log') {
 function run($mysql_string) {
   global $g_uniq;
 
-  $result = mysql_query($mysql_string);
+  $result = mysqli_query($mysql_string);
 
   dolog($mysql_string, $result);
 
@@ -185,7 +185,7 @@ function run_assoc($mysql_string) {
   $result = run($mysql_string);
 
   $ret = array();
-  while($ret[] = mysql_fetch_assoc($result));
+  while($ret[] = mysqli_fetch_assoc($result));
   array_pop($ret);
   return $ret;
 }
