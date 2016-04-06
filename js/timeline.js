@@ -653,7 +653,7 @@ var Timeline = (function(){
 
           swfobject.embedSWF("http://www.youtube.com/apiplayer?" +
             "version=3&enablejsapi=1&playerapiid=player-" + ix,
-            "vidContainer-" + ix, "80", "60", "9", null, null, 
+            "vidContainer-" + ix, "300", "200", "9", null, null, 
             {allowScriptAccess: "always"}, {id: 'player-' + ix});
         }
       } else {
