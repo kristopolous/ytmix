@@ -38,9 +38,7 @@ function pl_normalize() {
   } // foreach row list
 }
 
-// 
 // Get the names of all the playlists
-//
 function pl_names() {
   $res = [];
 
@@ -53,6 +51,12 @@ function pl_names() {
     }
   }
   return $res;
+}
+
+function pl_authors() {
+  return array_map(function($m) { return $m[0]; }, 
+    getall(run("select authors from playlist where name like '%Uploads%' order by updated desc"))
+  );
 }
 
 function pl_getPreview($params){
