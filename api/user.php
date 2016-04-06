@@ -17,7 +17,7 @@ function pl_getUser($params) {
 
   if($id) {
     $result = run("select * from playlist where name='$id'");
-    $data = mysql_fetch_assoc($result);
+    $data = mysqli_fetch_assoc($result);
     if($data) {
       return toJson($data, ['tracklist', 'preview', 'blacklist']);
     } 
