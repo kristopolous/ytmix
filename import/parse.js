@@ -238,7 +238,7 @@ yt.get_playlist_items = function(ep, params) {
         var id_list = vid_list.map(function(vid) { return vid[0]} );
 
         api.tracks(id_list).then(function(existing) {
-          var to_find = id_list.filter(function(i) {return existing.indexOf(i) < 0;});
+          var to_find = id_list.filter(function(i) {return !(i in existing);});
           // console.log([vid_list, to_find]);
           // We need to separately get the duration of each track
           yt.duration(to_find).then(function(duration_map) {
@@ -257,6 +257,10 @@ yt.get_playlist_items = function(ep, params) {
               // and then we just go to our next page.
               // this gets the next page
             });
+            for(var key in existing) {
+              playlist.push(existing[key]);
+            }
+
             if(playlist.length) {
               console.log(" +++ adding " + playlist.length);
               api.add_tracks_to_playlist(playlist);
@@ -278,6 +282,7 @@ yt.get_playlist_items = function(ep, params) {
 
 
 api.do = function(ep, params, cb) {
+  console.log(" > " + ep + JSON.stringify(params).slice(0,250));
   request.post(api.base + ep, {form: params}, function(error, response, body) {
     if(body == undefined) {
       console.log("Error", 'Make sure that ' + api.base + ' is accessible');
@@ -288,7 +293,7 @@ api.do = function(ep, params, cb) {
           cb(res.result);
         }
       } catch (ex) {
-        throw ["Unable to parse " + body, ep, params ? JSON.stringify(params) : ''];
+        throw [ex, "Unable to parse " + body, ep, params ? JSON.stringify(params) : ''];
       }
     }
   });
@@ -298,7 +303,11 @@ api.do = function(ep, params, cb) {
 api.tracks = function(ytid_list) {
   return new Promise(function(resolve, reject) {
     api.do('tracks', {id: ytid_list.join(',')}, function(res) {
-      resolve( res.map(function(row) { return row[0] }) );
+      var trackMap = {};
+      res.forEach(function(row) {
+        trackMap[row[0]] = [row[1], row[3], row[0]];
+      });
+      resolve( trackMap );
     });
   }).catch(function (ex) { throw ex; });
 }
