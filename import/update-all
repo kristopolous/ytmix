@@ -1,0 +1,2 @@
+#!/bin/sh
+curl localhost/ghub/ytmix/api/names.txt | xargs -P 4 -n 1 node ./parse.js
