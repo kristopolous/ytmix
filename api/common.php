@@ -9,7 +9,7 @@ function sanitize_track($array) {
 }
 
 function addtrack($length, $title, $ytid) {
-  $title = mysql_real_escape_string($title);
+  $title = mysqli_real_escape_string($title);
   return run(
     "insert into tracks (duration, title, ytid) values ($length, '$title', '$ytid')"
   );
@@ -61,7 +61,7 @@ function get_playlist($id) {
   );
 
   if(!$playlist) {
-    $playlist = array();
+    $playlist = [];
   }
   return $playlist;
 }
@@ -79,11 +79,11 @@ function playlist_to_hash($playlist) {
 }
 
 function set_playlist($id, $playlist) {
-  $string_playlist = mysql_real_escape_string(json_encode(array_values($playlist)));
+  $string_playlist = mysqli_real_escape_string(json_encode(array_values($playlist)));
   
   run('update playlist set tracklist = \'' . $string_playlist . '\' where id = ' . $id);
 
-  pl_generatePreview(Array( 'id' => $id ));
+  pl_generatePreview([ 'id' => $id ]);
 }
 
 // This adds or removes tracks to an existing playlist - this is a relatively safe method.
