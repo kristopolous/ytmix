@@ -13,6 +13,8 @@ var Search = {
           // inject the id into all the results.
           _db.insert(res.vidList).update({method: id});
           ev.set('request_gen', {force: true});
+          // we need to redo the search
+          ev.fire('search_query');
         })
       });
     });
