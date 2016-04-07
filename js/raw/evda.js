@@ -287,6 +287,10 @@ var
         return dbg;
       }
 
+      if ( scope === undefined ) {
+        throw "Undefined passed in as first argument.";
+      }
+
       // If there was one argument, then this is
       // either a getter or the object style
       // invocation.
@@ -410,7 +414,13 @@ var
         // so that we can unregister it in the future.
         callback.$.ref.push( stage + key );
         // And so we can know where things were registered.
-        callback.$.line.push( (new Error).stack );
+        if(isString(callback.$.line)) {
+          callback.$.line = [callback.$.line];
+        }
+        callback.$.line.push ( (new Error).stack );
+        if(callback.$.line.length === 1) {
+          callback.$.line = callback.$.line[0];
+        }
 
         if (isGlobbed(key)) {
           my_map = globberMap;
@@ -866,10 +876,10 @@ var
 
         var 
           res,
-          bypass = _opts['bypass'], 
+          bypass = _opts.bypass, 
           coroutine = _opts['coroutine'] || function(){ return true },
           hasvalue = ('value' in _opts),
-          noexec = _opts['noexec'];
+          noexec = _opts.noexec;
 
         // this is when we are calling a future setter
         if(arguments.length === 1) {
@@ -913,6 +923,7 @@ var
                   hasvalue ? _opts['value'] : meta.value, 
                   meta,
                   meta.meta);
+                meta.order++;
               });
             },
             // Invoke will also get done
@@ -920,6 +931,7 @@ var
             // meaning, so it's fine.
             meta = doTest ? (
               function ( ok ) {
+                meta.order++;
                 failure |= (ok === false);
 
                 if ( ! --times ) { 
@@ -944,7 +956,7 @@ var
                       // passed through would magically change if a test gets
                       // placed in the chain.
                       //
-                      pub.set ( key, meta.value, meta.meta, {bypass: 1} );
+                      pub.set ( key, meta.value, meta.meta, {bypass: 1, order: meta.order} );
                     } else {
                       orHandler();
                     }
@@ -970,6 +982,10 @@ var
           meta.old = clone(data[key]);
 
           extend(meta, {
+            // During testing, the setter gets called on success.  We should
+            // make sure that our order is continually accumulated if this
+            // is part of a re-ingestion
+            order: _opts.order || 0,
             meta: _meta || {},
             done: meta, 
             result: meta,
@@ -1048,6 +1064,7 @@ var
                     ),
                     function(callback) {
                       meta.last = runCallback(callback, pub.context, value, meta);
+                      meta.order++;
                     });
 
                   // After this, we bubble up if relevant.
@@ -1061,6 +1078,7 @@ var
                   each(eventMap[AFTER + key] || [],
                     function(callback) {
                       meta.last = runCallback(callback, pub.context, value, meta);
+                      meta.order++;
                     });
 
                   // Record this as the last value.
@@ -1371,4 +1389,4 @@ var
 
   return e;
 })();
-EvDa.__version__='0.1-versioning-added-113-gc8337c5';
+EvDa.__version__='0.1-versioning-added-125-gb1aec03';

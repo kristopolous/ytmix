@@ -57,7 +57,12 @@ ev({
 
   'name': function(name, meta) { 
     document.title = name + " on Audisco";
-    $("#playlist-name").html(name);
+    console.log(meta);
+    if(meta.dom) {
+      meta.dom.html(name);
+    } else {
+      $("#playlist-name").html(name);
+    }
 
     if(meta.old) {
       remote({
