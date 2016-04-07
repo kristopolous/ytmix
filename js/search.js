@@ -89,7 +89,7 @@ var Search = {
       Search._useNet = true;
     });
 
-    _get('initial-search').focus();
+    $('initial-search').focus();
   }
 };
 

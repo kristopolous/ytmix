@@ -259,7 +259,7 @@ setInterval(function(){
 
     ev.unset('remote_data');
   }
-}, 4000);
+}, 1200);
 
 // ********************
 //

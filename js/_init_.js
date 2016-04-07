@@ -23,15 +23,6 @@ var
     'active_track': {}
   }),
   _epoch = 1334106009061,
-  _get = function(id){ 
-    try {
-      return document.getElementById(id);
-    } catch (ex) {
-      var div = document.body.appendChild(document.createElement('div'));
-      div.setAttribute('id', id);
-      return div;
-    }
-  },
   _video = {
     width: 260 + 8 * 2 + 4 * 2,
     height: 77 + 8 * 2 + 4 * 2,
