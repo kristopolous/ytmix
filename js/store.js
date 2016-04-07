@@ -238,7 +238,7 @@ ev({
 ev.setter('recent', function(){
   remote('recent', function(data) {
     data = _.without(data, false);
-    each(data, function(which) {
+    _.each(data, function(which) {
       if(which.preview) {
         which.count = which.preview.count;
       } else {

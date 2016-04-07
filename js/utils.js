@@ -49,7 +49,7 @@ var Utils = {
 
     if(obj.length == 0) { return 0; }
 
-    each(Object.keys(obj), function(key) {
+    _.each(Object.keys(obj), function(key) {
       var which = obj[key];
       if(which && which.length) {
         total += parseInt(which.length);
@@ -128,7 +128,7 @@ var Utils = {
 
 function Queue() { }
 Queue.prototype = new Array();
-each(['Push', 'Pop', 'Shift', 'Unshift'], function(which) {
+_.each(['Push', 'Pop', 'Shift', 'Unshift'], function(which) {
   var 
     protoName = which.toLowerCase(),
     stackName = protoName + 'Stack';

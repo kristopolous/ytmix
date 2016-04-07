@@ -1,13 +1,12 @@
 var 
   _db = DB(), 
-  START = (+new Date()),
+  START = +new Date(),
   Splash = {},
   DL_real = DamerauLevenshtein({}, false),
   CLOCK_FREQ = 150,
   QUALITY_LEVELS = ['large', 'medium', 'small', 'tiny'],
   // How long to wait before forcing a reload of a video
   RELOAD_THRESHOLD = 6500,
-  each = _.each,
   slice = Array.prototype.slice,
   UNIQ = 0,
   ev = EvDa({

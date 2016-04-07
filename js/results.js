@@ -285,7 +285,7 @@ var Results = {
         var view_list = set.slice(start, stop);
         self.view_list = view_list;
 
-        each(_.map(view_list, Results.draw), function(which) {
+        _.each(_.map(view_list, Results.draw), function(which) {
 
           // And then we create our map based on ytid
           // of the jquery and the dom reference. This

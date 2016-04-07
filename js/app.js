@@ -7,7 +7,7 @@ function loadHistory(){
   ev.isset(['init', 'recent'], function(data, meta) {
     var start = new Date();
 
-    each(ev('recent').slice(0, 25), function(which, ix) {
+    _.each(ev('recent').slice(0, 25), function(which, ix) {
       // If there is no preview for this playlist, then skip it.
       if(!which.preview) {
         return;
