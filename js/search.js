@@ -61,7 +61,6 @@ var Search = {
 
       // make it so that we're using the net.
       Search._useNet = true;
-      input.val(this.value);
     });
 
     input.focus(function(){ this.select(); });

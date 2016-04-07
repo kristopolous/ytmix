@@ -37,7 +37,7 @@ yt.user = yt.user.replace(/\//g, '');
 
 var lib = {
   get: function (location, callback) {
-    console.log(" > " + location);
+    console.log(" > " + location.slice(0, 120));
 
     var 
       buffer = '', 
@@ -282,7 +282,7 @@ yt.get_playlist_items = function(ep, params) {
 
 
 api.do = function(ep, params, cb) {
-  console.log(" > " + ep + JSON.stringify(params).slice(0,250));
+  console.log(" > " + (ep + JSON.stringify(params)).slice(0,120));
   request.post(api.base + ep, {form: params}, function(error, response, body) {
     if(body == undefined) {
       console.log("Error", 'Make sure that ' + api.base + ' is accessible');

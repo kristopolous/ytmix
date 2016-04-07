@@ -80,7 +80,7 @@ function playlist_to_hash($playlist) {
 
 function set_playlist($id, $playlist) {
   $string_playlist = mysqli_real_escape_string(get_db(), json_encode(array_values($playlist)));
-  if($string_playlist && len($string_playlist) > 0)  {
+  if($string_playlist && strlen($string_playlist) > 0)  {
     run('update playlist set tracklist = \'' . $string_playlist . '\' where id = ' . $id);
     pl_generatePreview([ 'id' => $id ]);
   }
