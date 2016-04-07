@@ -252,7 +252,7 @@ ev.setter('recent', function(){
 setInterval(function(){
   if(ev.isset('remote_data')) {
 
-    remote(extend({ 
+    remote(_.extend({ 
       func: 'update' ,
       id: ev('id')
     }, ev('remote_data')));

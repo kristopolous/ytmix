@@ -48,7 +48,7 @@ var Hash = (function(){
   }
 
   function set(opts) {
-    return setHash(extend(
+    return setHash(_.extend(
       getHash(),
       opts
     ));
