@@ -1,6 +1,6 @@
 var Hash = (function(){
   ev({
-    'id': function(id) { 
+    id: function(id) { 
       if(ev('name')) {
         set({
           name: ev('name'),
@@ -8,7 +8,7 @@ var Hash = (function(){
         }); 
       }
     },
-    'name': function(name) { 
+    name: function(name) { 
       if(ev('id')) {
         set({
           id: ev('id'),
@@ -16,7 +16,7 @@ var Hash = (function(){
         }); 
       }
     },
-    'hash': function(hash) {
+    hash: function(hash) {
       if(hash.id) {
         if(hash.id != ev('id')) {
           Store.get(parseInt(hash.id));
