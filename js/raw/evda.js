@@ -9,7 +9,7 @@
 //
 var 
   module = module || {},
-  EvDa = module.exports = (function(){
+  EvDa = module.exports = (function (){
   'use strict';
 
   var 
@@ -20,33 +20,33 @@ var
     //
     // underscore {
     toString = Object.prototype.toString,
-    isArray = [].isArray || function(obj) { return toString.call(obj) === '[object Array]' },
-    isFunction = function(obj) { return !!(obj && obj.constructor && obj.call && obj.apply) },
-    isString = function(obj) { return !!(obj === '' || (obj && obj.charCodeAt && obj.substr)) },
-    isNumber = function(obj) { return toString.call(obj) === '[object Number]' },
-    isScalar = function(obj) { return isString(obj) || isNumber(obj) },
-    isObject = function(obj) {
-      if(isFunction(obj) || isString(obj) || isNumber(obj) || isArray(obj)) {
+    isArray = [].isArray || function (obj) { return toString.call(obj) === '[object Array]' },
+    isFunction = function (obj) { return !!(obj && obj.constructor && obj.call && obj.apply) },
+    isString = function (obj) { return !!(obj === '' || (obj && obj.charCodeAt && obj.substr)) },
+    isNumber = function (obj) { return toString.call(obj) === '[object Number]' },
+    isScalar = function (obj) { return isString(obj) || isNumber(obj) },
+    isObject = function (obj) {
+      if ( isFunction(obj) || isString(obj) || isNumber(obj) || isArray(obj)) {
         return false;
       }
 
       return obj == null ? 
-        String( obj ) === 'object' : 
+        String ( obj ) === 'object' : 
         toString.call(obj) === '[object Object]' || true ;
     },
 
-    toArray = function(obj) {
+    toArray = function (obj) {
       return slice.call(obj);
     },
 
     each = [].forEach ?
       function (obj, cb) {
-        if (isScalar(obj)) {
+        if ( isScalar(obj)) {
           return each([obj], cb);
-        } else if (isArray(obj) || obj.length) { 
+        } else if ( isArray(obj) || obj.length ) { 
           toArray(obj).forEach(cb);
         } else {
-          for( var key in obj ) {
+          for ( var key in obj ) {
             cb(key, obj[key]);
           }
         }
@@ -60,20 +60,20 @@ var
             cb(obj[i], i);
           }
         } else {
-          for( var key in obj ) {
+          for ( var key in obj ) {
             cb(key, obj[key]);
           }
         }
       },
 
-    last = function(obj) {
+    last = function (obj) {
       return obj.length ? obj[obj.length - 1] : undefined;
     },
 
     values = function (obj) {
       var ret = [];
 
-      for(var key in obj) {
+      for (var key in obj) {
         ret.push(obj[key]);
       }
 
@@ -81,35 +81,35 @@ var
     },
 
     keys = ({}).keys || function (obj) {
-      if(isArray(obj)) { 
+      if ( isArray(obj) ) { 
         return obj;
       }
       var ret = [];
 
-      for(var key in obj) {
+      for ( var key in obj ) {
         ret.push(key);
       }
 
       return ret;
     },
 
-    without = function(collection, item) {
+    without = function (collection, item) {
       var ret = [];
-      each(collection, function(which) {
-        if(which !== item) {
+      each(collection, function (which) {
+        if (which !== item) {
           ret.push(which);
         }
       });
       return ret;
     },
 
-    uniq = function(obj) {
+    uniq = function (obj) {
       var 
         old, 
         ret = [];
 
-      each(keys(obj).sort(), function(which) {
-        if(which != old) {
+      each(keys(obj).sort(), function (which) {
+        if (which != old) {
           old = which;
           ret.push(which);
         }
@@ -117,24 +117,24 @@ var
       return ret;
     },
 
-    select = function(obj, test) {
+    select = function (obj, test) {
       var ret = [];
-      each(obj, function(which) {
-        if(test(which)) { ret.push (which); }
+      each(obj, function (which) {
+        if (test(which)) { ret.push (which); }
       });
       return ret;
     },
 
-    size = function(obj) {
+    size = function (obj) {
       return (obj && 'length' in obj) ? obj.length : 0;
     },
 
     map = [].map ?
-      function(array, cb) { 
+      function (array, cb) { 
         return array.map(cb) 
       } : 
 
-      function(array, cb) {
+      function (array, cb) {
         var ret = [];
 
         for ( var i = 0, len = array.length; i < len; i++ ) { 
@@ -144,14 +144,14 @@ var
         return ret;
       },
 
-    clone = function(obj) {
-      if(isArray(obj)) { return slice.call(obj); }
-      if(isObject(obj)) { return extend(obj, {}); }
+    clone = function (obj) {
+      if (isArray(obj)) { return slice.call(obj); }
+      if (isObject(obj)) { return extend(obj, {}); }
       return obj;
     },
 
-    extend = function(obj) {
-      each(slice.call(arguments, 1), function(source) {
+    extend = function (obj) {
+      each(slice.call(arguments, 1), function (source) {
         for (var prop in source) {
           if (source[prop] !== void 0) {
 
@@ -170,15 +170,15 @@ var
     
     // } end of underscore style functions.
 
-    isGlobbed = function(str) {
+    isGlobbed = function (str) {
       return str.match(/[?*]/);
     },
 
     // This looks to see if a key has a globbing parameter, such
     // as ? or * and then return it
     glob = function (key, context) {
-      if(isGlobbed(key)) {
-        return select(keys(context ? context : data), function(what) {
+      if (isGlobbed(key)) {
+        return select(keys(context ? context : data), function (what) {
           return what.match(key);
         });
       }
@@ -188,10 +188,10 @@ var
     // This uses the globbing feature and returns
     // a "smart" map which is only one element if
     // something matches, otherwise a map 
-    smartMap = function(what, cback) {
+    smartMap = function (what, cback) {
       var ret = {};
-      if(isArray(what)) {
-        each(what, function(field) {
+      if (isArray(what)) {
+        each(what, function (field) {
           ret[field] = cback(field);
         });
         return ret;
@@ -279,7 +279,7 @@ var
     // you declare an instance and call that instance
     // as a function, this is what gets run.
     function pub ( scope, value, meta, opts ) {
-      var args = slice.call(arguments);
+      var args = slice.call( arguments );
 
       // If there are no arguments, and this is useful in the browser
       // debug console, return all the internal data structures.
@@ -298,7 +298,7 @@ var
         // remove the scope argument.
         args.shift();
 
-        return map(scope, function(which) {
+        return map(scope, function (which) {
           return pub.apply(pub.context, [which].concat(args));
         });
       }
@@ -308,7 +308,7 @@ var
       // went in. There *could* be a mix and match
       // of callbacks and setters, but that would
       // be fine I guess...
-      if( isObject(scope) ) {
+      if ( isObject(scope) ) {
         if ( args.length === 1 && scope.constructor.toString().search(/{\s+\[native code\]\s+}/) === -1 ) {
           pub.context = scope;
           return;
@@ -329,7 +329,7 @@ var
         meta = value;
         opts.noexec = 1;
 
-        each( scope, function( _key, _value ) {
+        each( scope, function ( _key, _value ) {
           ret[_key] = pub ( _key, _value, meta, opts );
         });
 
@@ -337,9 +337,9 @@ var
         // run all of them a second time, this time the
         // dependency graphs from the object style transactional
         // invocation should be satisfied
-        if(!opts.bypass) {
-          each( ret, function( _key, _value ) {
-            if(isFunction(ret[_key]) && !isFunction(scope[_key])) {
+        if (!opts.bypass) {
+          each( ret, function ( _key, _value ) {
+            if (isFunction(ret[_key]) && !isFunction(scope[_key])) {
               scope[_key] = ret[_key]();
             }
           });
@@ -368,13 +368,13 @@ var
     }
 
     function log(key, value) {
-      if(!logMap[key]) {
+      if (!logMap[key]) {
         logMap[key] = [];
       }
 
       logMap[key].push([value, new Date()]);
 
-      if(logMap[key].length > logSize) {
+      if (logMap[key].length > logSize) {
         logMap[key].shift();
       }
     }
@@ -388,13 +388,13 @@ var
 
         // if it's an array, then we register each one
         // individually.
-        if(isArray(callback)) {
+        if (isArray(callback)) {
           // take everything after the first two arguments
           var args = slice.call(arguments, 2);
           
           // go through the callback as an array, returning
           // its list of cbs
-          return map(callback, function(cb) {
+          return map(callback, function (cb) {
             // call within the oo binding context, the key, the cb,
             // and the remaining args.
             return pub[stage].apply(pub.context, [key, cb].concat(args));
@@ -407,34 +407,25 @@ var
           return my_map[stage + key];
         }
 
-        if(!callback.$) {
+        if ( !callback.$ ) {
           callback.$ = {ref: [], ix: 0, last: false, line: []} 
         }
         // This is the back-reference map to this callback
         // so that we can unregister it in the future.
         callback.$.ref.push( stage + key );
-        // And so we can know where things were registered.
-        if(isString(callback.$.line)) {
-          callback.$.line = [callback.$.line];
-        }
-        callback.$.line.push ( (new Error).stack );
-        if(callback.$.line.length === 1) {
-          callback.$.line = callback.$.line[0];
-        }
 
-        if (isGlobbed(key)) {
+        // For debugging purposes we register where this is being registered at.
+        callback.$.line.push ( (new Error).stack );
+
+        if ( isGlobbed(key) ) {
           my_map = globberMap;
         }
-
-        // 
-        // For debugging purposes we register where this is being registered at.
-        //
 
         (my_map[stage + key] || (my_map[stage + key] = [])).push ( callback );
 
         //
         // It would be nice to do something like
-        // ev('key', function()).after(function(){})
+        // ev('key', function ()).after(function (){})
         //
         // But in order for this to happen you need to proxy the first argument
         // magically over to a reference set. This isn't that hard actually 
@@ -447,12 +438,12 @@ var
 
           if (!(stage in callback)) {
             
-            callback[stage] = function(am_i_a_function) {
+            callback[stage] = function (am_i_a_function) {
               // the first argument MAY be our key from above
               var args = slice.call(arguments);
 
               // If this is a function then we inherit our key
-              if(isFunction(am_i_a_function)) {
+              if (isFunction(am_i_a_function)) {
                 args = [key].concat(args);
               } 
               // However, maybe someone didn't read the documentation closely and is
@@ -464,7 +455,7 @@ var
               // shadow the previous system. As it turns out it doesn't matter how we chain these thing
               // it just matters what temporal time we register them.  So we make the final callback 
               // an array like structure.
-              if(! ('len' in callback) ) {
+              if (! ('len' in callback) ) {
                 // self reference
                 callback[0] = callback;
                 // seed it one past the self-reference minus our incrementer
@@ -483,7 +474,7 @@ var
     });
 
     function del ( handle ) {
-      each ( handle.$.ref, function( stagekey ) {
+      each ( handle.$.ref, function ( stagekey ) {
         var map = isGlobbed(stagekey) ? globberMap : eventMap;
         map[ stagekey ] = without( map[ stagekey ], handle );
       });
@@ -499,7 +490,7 @@ var
       if ( isArray(key) ) {
         var myKey = key.pop();
 
-        return isset(glob(myKey), function(data, meta) {
+        return isset(glob(myKey), function (data, meta) {
           var next = (key.length === 1) ? key[0] : key;
           return isset(next, callback, meta);
         }, meta);
@@ -514,12 +505,12 @@ var
       //   key1: something,
       //   key2: something
       // })
-      if( isObject(key) ) {
+      if ( isObject(key) ) {
 
-        each( key, function( _key, _value ) {
-          if(isGlobbed(_key)) {
+        each ( key, function ( _key, _value ) {
+          if (isGlobbed(_key)) {
             extend(_key, 
-              smartMap(_key, function(_what){
+              smartMap(_key, function (_what){
                 return isset(_key, _value, meta);
               })
             );
@@ -537,7 +528,7 @@ var
       // If I know how to set this key but
       // I just haven't done it yet, run through
       // that function now.
-      if( eventMap[setKey] ) {
+      if ( eventMap[setKey] ) {
         // If someone explicitly sets the k/v in the setter
         // that is fine, that means this function isn't run.
         //
@@ -547,8 +538,8 @@ var
         // returns.
         
         // We only call this if we aren't set yet.
-        if(! (key in data) ) {
-          /* var ThisIsWorthless = */ eventMap[setKey](function(value) {
+        if (! (key in data) ) {
+          /* var ThisIsWorthless = */ eventMap[setKey](function (value) {
             pub.set.call(pub.context, key, value, meta);
           });
         }
@@ -575,12 +566,14 @@ var
     };
 
     function runCallback(callback, context, value, meta) {
-      if( ! callback.$.norun) {
+      if ( ! callback.$.norun) {
         // our ingested meta was folded into our callback
+        meta.order++;
         var res = callback.call ( 
           context, 
           value, 
-          meta
+          meta,
+          meta.meta
         );
 
         if ( callback.once ) {
@@ -619,17 +612,16 @@ var
     function mod( key, cb, arg, meta, initial ) {
       initial = initial || 0;
 
-      var res = map(isArray(key) ? key : [key], function(which) {
+      var res = map(isArray(key) ? key : [key], function (which) {
         var val = isNumber(data[which]) ? data[which] : initial;
         return pub.set ( which, cb(val, arg), meta );
       });
       return isArray(key) ? res : res[0];
     }
 
-    mod.add = function(val, amount) {
+    mod.add = function (val, amount) {
       return val + amount;
     }
-
         
     extend(pub, {
       // Exposing the internal variables so that
@@ -639,12 +631,12 @@ var
       list: {},
       isPaused: false,
       db: data,
-      events: function(name, type){
-        if(type) {
+      events: function (name, type){
+        if (type) {
           return eventMap[type + name];
         }
-        if(name) {
-          return smartMap(typeList.concat([SET]), function(type) {
+        if (name) {
+          return smartMap(typeList.concat([SET]), function (type) {
             return eventMap[type + name];
           });
         }
@@ -654,11 +646,11 @@ var
       whenSet: isset,
       isset: isset,
 
-      pause: function() {
-        if(!pub.isPaused) {
+      pause: function () {
+        if (!pub.isPaused) {
           pub.isPaused = true;
           pub._.set = pub.set;
-          pub.set = function() {
+          pub.set = function () {
             backlog.push([SET, arguments]);
           }
           return true;
@@ -666,8 +658,8 @@ var
         return false;
       }, 
 
-      play: function() {
-        if(pub.isPaused) {
+      play: function () {
+        if (pub.isPaused) {
           // first we take it off being paused
           pub.isPaused = false;
 
@@ -678,7 +670,7 @@ var
           pub.set = pub._.set;
 
           // And we run the backlog on it (with no events firing of course)
-          each(backlog, function(row) {
+          each(backlog, function (row) {
             mock[row[0]].apply(mock, row[1]);
           });
           // clear the backlog
@@ -700,8 +692,8 @@ var
         // If I am setting a setter and
         // a function is already waiting on it,
         // then run it now.
-        if (eventMap[ON + key]) {
-          return isset( key );
+        if ( eventMap[ON + key] ) {
+          return isset ( key );
         }
       },
 
@@ -712,22 +704,22 @@ var
             cbMap = {},
             flagMap = {},
             // flagTest only gets run when
-            flagReset = function(val, meta) {
+            flagReset = function (val, meta) {
               flagMap[meta.key] = false;
               meta();
             }, 
-            flagTest = function(val, meta) {
+            flagTest = function (val, meta) {
               // toggle the flag
               flagMap[meta.key] = true;
 
               // see if there's any more false things
               // and if there are not then we run this
-              if(values(flagMap).indexOf(false) === -1) {
+              if (values(flagMap).indexOf(false) === -1) {
                 toTest.apply(pub.context, slice.call(arguments));
               }
             };
 
-          each(key, function(_key, _val) {
+          each ( key, function (_key, _val) {
             // we first set up a test that will reset our flag.
             cbMap[_key + "-test" ] = pub.test(_key, flagReset);
 
@@ -761,8 +753,8 @@ var
           return pub.isset ( key, toTest );
         }
 
-        return pub(key, function(value) {
-          if(
+        return pub(key, function (value) {
+          if (
             // Look for identical arrays by comparing their string values.
             ( isArray(toTest)    && toTest.sort().join('') === value.sort().join('') ) ||
 
@@ -777,16 +769,16 @@ var
         });
       },
 
-      empty: function(key) {
+      empty: function (key) {
         // we want to maintain references to the object itself
-        if(arguments.length === 0) {
-          for (var key in data) {
+        if ( arguments.length === 0) {
+          for ( var key in data) {
             delete data[key];
           }
         } else {
-          each(arguments, function(key) {
-            if(key in data) {
-              if(isArray(data[key])) {
+          each ( arguments, function (key) {
+            if ( key in data) {
+              if ( isArray(data[key])) {
                 pub.set(key, [], {}, {bypass:1, noexec:1});
               } else {
                 pub.set(key, null, {}, {bypass:1, noexec:1});
@@ -836,14 +828,14 @@ var
 
         ( pub.list[list] || (pub.list[list] = []) );
 
-        if(isFunction(ret)) {
+        if ( isFunction(ret)) {
           pub.list[list].push(ret);
         } else {
-          each(ret, function(value, key) {
+          each(ret, function (value, key) {
             pub.list[list].push(value);
           });
         } 
-        return function() {
+        return function () {
           return pub.group.apply(0, [list].concat(toArray(arguments)));
         }
       },
@@ -859,15 +851,15 @@ var
         );
       },
 
-      count: function(key) {
-        if(arguments.length === 0) {
+      count: function (key) {
+        if ( arguments.length === 0) {
           return Math.max.apply(this, values(data_ix));
         } else {
           return data_ix[key];
         }
       },
 
-      setContext: function(what) {
+      setContext: function (what) {
         pub.context = what;
       },
 
@@ -877,13 +869,13 @@ var
         var 
           res,
           bypass = _opts.bypass, 
-          coroutine = _opts['coroutine'] || function(){ return true },
+          coroutine = _opts.coroutine || function (){ return true },
           hasvalue = ('value' in _opts),
           noexec = _opts.noexec;
 
         // this is when we are calling a future setter
-        if(arguments.length === 1) {
-          var ret = function() {
+        if ( arguments.length === 1) {
+          var ret = function () {
             pub.set.apply(pub.context, [key].concat(slice.call(arguments)));
           }
           pub.set.call(pub.context, key, undefined);
@@ -891,7 +883,7 @@ var
         }
 
         // recursion prevention.
-        if(lockMap[key] > 0) { 
+        if ( lockMap[key] > 0) { 
           each ( traceList, function ( callback ) {
             callback.call ( pub.context, extend({locked: key}, args) );
           });
@@ -913,7 +905,7 @@ var
             doTest = (times && !bypass),
             failure,
 
-            orHandler = function() {
+            orHandler = function () {
               // If the tests fail, then this is the alternate failure
               // path that will be run
               each ( eventMap[ OR + key ] || [], function ( callback ) {
@@ -921,9 +913,8 @@ var
                   callback, 
                   pub.context, 
                   hasvalue ? _opts['value'] : meta.value, 
-                  meta,
-                  meta.meta);
-                meta.order++;
+                  meta
+                );
               });
             },
             // Invoke will also get done
@@ -931,7 +922,8 @@ var
             // meaning, so it's fine.
             meta = doTest ? (
               function ( ok ) {
-                meta.order++;
+                var res;
+
                 failure |= (ok === false);
 
                 if ( ! --times ) { 
@@ -965,9 +957,14 @@ var
                   testIx++;
 
                   if (coroutine(meta, false)) {
-                    res = eventMap[ testKey ][ testIx ].call ( pub.context, (hasvalue ? _opts['value'] : meta.value), meta, meta.meta );
+                    res = runCallback(
+                      eventMap[ testKey ][ testIx ], 
+                      pub.context, 
+                      (hasvalue ? _opts['value'] : meta.value), 
+                      meta
+                    );
 
-                    if(res === true || res === false) {
+                    if ( res === true || res === false) {
                       meta(res);
                     }
                   } else {
@@ -984,8 +981,9 @@ var
           extend(meta, {
             // During testing, the setter gets called on success.  We should
             // make sure that our order is continually accumulated if this
-            // is part of a re-ingestion
-            order: _opts.order || 0,
+            // is part of a re-ingestion.  We make it -1 because we front-load
+            // how this is incremented.
+            order: ('order' in _opts) ? _opts.order : -1,
             meta: _meta || {},
             done: meta, 
             result: meta,
@@ -1001,15 +999,15 @@ var
               testLockMap[key] = true;
 
               // This is the test handlers
-              if(coroutine(meta, false)) {
-                res = eventMap[ testKey ][ testIx ].call ( 
+              if ( coroutine(meta, false)) {
+                res = runCallback(
+                  eventMap[ testKey ][ testIx ], 
                   pub.context, 
                   (hasvalue ? _opts['value'] : meta.value), 
-                  meta,
-                  meta.meta
+                  meta
                 );
 
-                if(res === true || res === false) {
+                if (res === true || res === false) {
                   meta(res);
                 }
               } else {
@@ -1046,39 +1044,37 @@ var
               //
               // SETTER: This is the actual setting code
               //
-              if(!(_opts.onlychange && value === data[key])) {
+              if (!(_opts.onlychange && value === data[key])) {
 
-                if(!_opts.noset) {
+                if (!_opts.noset) {
                   log(key, value);
                   data[key] = value;
 
-                  if(key != '') {
+                  if (key != '') {
                     data_ix[key] = (data_ix[key] || 0) + 1;
                   }
                 }
 
-                var myargs = arguments, cback = function(){
+                var myargs = arguments, cback = function (){
                   each(
                     (eventMap[FIRST + key] || []).concat(
                       (eventMap[ON + key] || [])
                     ),
-                    function(callback) {
+                    function (callback) {
                       meta.last = runCallback(callback, pub.context, value, meta);
-                      meta.order++;
                     });
 
                   // After this, we bubble up if relevant.
-                  if(key.length > 0) {
+                  if (key.length > 0) {
                     // But we don't hit the coroutine
-                    delete _opts['coroutine'];
+                    delete _opts.coroutine;
 
                     bubble.apply(pub.context, [key].concat(slice.call(myargs, 2)));
                   }
 
                   each(eventMap[AFTER + key] || [],
-                    function(callback) {
+                    function (callback) {
                       meta.last = runCallback(callback, pub.context, value, meta);
-                      meta.order++;
                     });
 
                   // Record this as the last value.
@@ -1087,7 +1083,7 @@ var
                   return value;
                 }
 
-                if(!noexec) {
+                if (!noexec) {
                   result = cback.call(pub.context);
                 } else {
                   bubble.apply(pub.context, [key].concat(slice.call(myargs, 2)));
@@ -1111,7 +1107,7 @@ var
       },
 
       fire: function ( key, meta ) {
-        each(key, function(what) {
+        each(key, function (what) {
           pub.set ( what, data[what], meta, {noset: true} );
         });
       },
@@ -1129,13 +1125,13 @@ var
           key = values(key);
         }
         if ( isArray(key) ) {
-          return map(key, function(what) {
+          return map(key, function (what) {
             pub.once.call(pub.context, what, lambda, meta);
           });
         }
 
         // If this is a callback, then we can register it to be called once.
-        if(lambda) {
+        if (lambda) {
           // Through some slight recursion.
           return pub.once( 
             // First we register it as normal.
@@ -1151,7 +1147,7 @@ var
       },
 
       enable: function ( listName ) {
-        each(pub.list[listName], function(callback) {
+        each(pub.list[listName], function (callback) {
           if ( callback.$.norun && callback.$.norun[listName] ) {
             delete callback.$.norun[listName];
           }
@@ -1171,18 +1167,18 @@ var
         // If we are successfully adding to the set
         // then we run the events associated with it.
         return pub ( key, value, meta, {
-          coroutine: function(meta, isFinal) {
+          coroutine: function (meta, isFinal) {
             var valArray = isArray(meta.value) ? meta.value : [meta.value];
 
             meta.set = clone(before);
 
-            each(valArray, function(what) {
-              if(meta.set.indexOf(what) === -1) {
+            each(valArray, function (what) {
+              if (meta.set.indexOf(what) === -1) {
                 meta.set.push(what);
               }
             });
 
-            if(isFinal) {
+            if (isFinal) {
               meta.value = meta.set; 
             }
             meta.oper = {name:'osetadd', value:value};
@@ -1199,11 +1195,11 @@ var
 
         return pub( key, value, meta, {
           // this is only called if the tests pass
-          coroutine: function(meta, isFinal) {
+          coroutine: function (meta, isFinal) {
             var valArray = isArray(meta.value) ? meta.value : [meta.value];
             meta.set = uniq( before.concat(valArray) );
 
-            if(isFinal) {
+            if (isFinal) {
               meta.value = meta.set; 
             }
             meta.oper = {name:'setadd', value:value};
@@ -1225,8 +1221,8 @@ var
 
         if ( before.length != after.length) {
           return pub ( key, after, meta, {
-            coroutine: function(meta, isFinal) {
-                if(isFinal) {
+            coroutine: function (meta, isFinal) {
+                if (isFinal) {
                   meta.oper = {name:'setdel', value:value};
                 }
                 return true;
@@ -1238,7 +1234,7 @@ var
       },
 
       disable: function ( listName ) {
-        each(pub.list[listName], function(callback) {
+        each(pub.list[listName], function (callback) {
           ( callback.$.norun || (callback.$.norun = {}) ) [ listName ] = true;
         });
 
@@ -1247,7 +1243,7 @@ var
 
       unset: function () { 
         var bool = true;
-        each(arguments, function(which) {
+        each(arguments, function (which) {
           bool &= (which in data);
 
           // This bubbling is totally slow but it works
@@ -1259,11 +1255,11 @@ var
             ix, iy, 
             ref;
 
-          for(ix = 0; ix < len; ix++) {
+          for (ix = 0; ix < len; ix++) {
             key = parts.slice(0, ix).join('.');
             ref = data[key];
-            if(ref) {
-              for(iy = ix; iy < (len - 1); iy++) {
+            if (ref) {
+              for (iy = ix; iy < (len - 1); iy++) {
                 ref = ref[parts[iy]];
               }
               delete ref[last];
@@ -1277,18 +1273,18 @@ var
       },
 
       find: function ( regex ) {
-        return select( keys(data), function(toTest) {
+        return select( keys(data), function (toTest) {
           return toTest.match(regex);
         });
       },
 
-      changed: function(key, callback) {
-        return pub.on(key, function(value, meta) {
+      changed: function (key, callback) {
+        return pub.on(key, function (value, meta) {
           var 
             newlen = size(value),
             oldlen = size(meta.old);
           
-          if(newlen - oldlen === 1) {
+          if (newlen - oldlen === 1) {
             callback.call( pub.context, last(value) );
           } else if (newlen > oldlen) { 
             callback.call( pub.context, toArray(value).slice(oldlen) );
@@ -1301,31 +1297,31 @@ var
           ignoreMap = {"":1},
           // Use a few levels of indirection to be
           // able to toggle the sniffing on or off.
-          sniffConsole = function(args) {
+          sniffConsole = function (args) {
             // If we are to ignore this then we do nothing,
             // otherwise we console.log when this occurs.
             return ignoreMap[args[0]] || console.log(args);
           },
-          dummy = function() {},
+          dummy = function () {},
           sniffProxy = sniffConsole;
 
         // sniffProxy either points to sniffConsole
         // when it's on or dummy when it's off.
-        traceList.unshift(function(args){
+        traceList.unshift(function (args){
           // That's why we can't call the proxy directly.
           sniffProxy(args);
         });
            
         // neuter this function but don't populate
         // the users keyspace.
-        pub.sniff = function() {
+        pub.sniff = function () {
           var 
             args = slice.call(arguments), 
             ret = [];
 
-          each(args, function(key) {
-            if(isString(key)) {
-              if(ignoreMap[key]) {
+          each(args, function (key) {
+            if (isString(key)) {
+              if (ignoreMap[key]) {
                 delete ignoreMap[key];
               } else {
                 ignoreMap[key] = 1;
@@ -1364,15 +1360,15 @@ var
     pub.change = pub.on;
     pub.add = pub.push;
 
-    each(e._ext, function(key, cb) {
-      pub[key] = function() {
+    each(e._ext, function (key, cb) {
+      pub[key] = function () {
         cb.apply(pub.context, [pub].concat(slice.call(arguments)));
       }
     });
 
     // After all the mechanisms are set up, then and only then do
     // we do the import
-    if(arguments.length > 0) {
+    if (arguments.length > 0) {
       pub(imported);
     }
 
@@ -1380,7 +1376,7 @@ var
   }
 
   e._ext = {};
-  e.extend = function(name, cb) {
+  e.extend = function (name, cb) {
     e._ext[name] = cb;
   }
 
@@ -1389,4 +1385,4 @@ var
 
   return e;
 })();
-EvDa.__version__='0.1-versioning-added-125-gb1aec03';
+EvDa.__version__='0.1-versioning-added-146-gb35d4b5';
