@@ -129,6 +129,7 @@ function remote(opts) {
   return reqID;
 }
 remote.queue = new Priority();
+remote.delay = 900;
 remote.id = 0;
 remote.prioritize = function() {
   // We make sure that we don't hammer the server unnecessarily.
@@ -259,7 +260,7 @@ setInterval(function(){
 
     ev.unset('remote_data');
   }
-}, 1200);
+}, remote.delay);
 
 // ********************
 //
