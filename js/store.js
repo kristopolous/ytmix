@@ -123,7 +123,7 @@ function remote(opts) {
         log("Queue pop!", remote.queue.length);
         remote.apply(0, remote.queue.shift());
       }
-    }, 5000);
+    }, remote.delay);
   });
 
   return reqID;
