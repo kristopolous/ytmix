@@ -113,6 +113,17 @@ var Results = {
           splitup.join('-');
         }
       }
+      if(splitup.length == 1) {
+        splitup = splitup[0].split(/ by /i);
+
+        // The logic of [artist, title] has been reverse on us 
+        // Those wily tricksters!
+        if(splitup.length > 1) {
+          var tmp = splitup[1];
+          splitup[1] = splitup[0];
+          splitup[0] = tmp;
+        }
+      }
 
       var 
         artist = splitup.shift(),
