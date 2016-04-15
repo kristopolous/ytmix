@@ -172,6 +172,9 @@ Queue.prototype.doshift = function(){
 
 // http://stackoverflow.com/questions/998245/how-can-i-detect-if-flash-is-installed-and-if-not-display-a-hidden-div-that-inf
 function hasFlash() {
+  // as of april 15, 2016, flash started breaking
+  return false;
+
   var hasFlash = false;
   try {
     var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
