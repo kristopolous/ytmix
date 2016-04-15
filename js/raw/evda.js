@@ -208,8 +208,7 @@ var
     TEST = 'test',
     OR = 'or',
     SET = "set",
-    REMOVED = 'removed',
-    typeList = [FIRST, ON, AFTER, TEST, OR, REMOVED],
+    typeList = [FIRST, ON, AFTER, TEST, OR],
 
     // The one time callback gets a property to
     // the end of the object to notify our future-selfs
@@ -235,9 +234,11 @@ var
       logMap = {},
       // last return
       eventMap = {},
+      removedMap = {},
       dbg = {
         data: data, 
         events: eventMap,
+        removed: removedMap,
         log: logMap,
         lastReturn: lastReturnMap,
         locks: lockMap,
@@ -362,14 +363,11 @@ var
         ) ? ON : SET ].apply(this, args);
     }
 
-    function remove(what) {
-      var key = REMOVED + what;
-      if(!eventMap[key]) {
-        eventMap[key] = [];
+    function remove_reg(key, cb) {
+      if(!removedMap[key]) {
+        removedMap[key] = [];
       }
-      eventMap[key].push(eventMap[what]);
-
-      delete eventMap[what];
+      removedMap[key].push(cb || eventMap[key]);
     }
 
     function log(key, value) {
@@ -482,6 +480,7 @@ var
       each ( handle.$.ref, function ( stagekey ) {
         var map = isGlobbed(stagekey) ? globberMap : eventMap;
         map[ stagekey ] = without( map[ stagekey ], handle );
+        remove_reg(stagekey, handle);
       });
     }
 
@@ -549,7 +548,9 @@ var
           });
         }
 
-        remove(setKey);
+        // register the setter if it existed.
+        remove_reg(setKey);
+        delete eventMap[setKey];
       }
 
       if ( callback ) {
@@ -650,9 +651,13 @@ var
 
         if (type) {
           res.events = eventMap[type + name];
+          res.removed = removedMap[type + name];
         } else {
           res.events = smartMap(typeList.concat([SET]), function (type) {
             return eventMap[type + name];
+          });
+          res.removed = smartMap(typeList.concat([SET]), function (type) {
+            return removedMap[type + name];
           });
         } 
 
@@ -1400,4 +1405,4 @@ var
 
   return e;
 })();
-EvDa.__version__='0.2-unified-debugging-3-g67360b2';
+EvDa.__version__='0.2-unified-debugging-6-g4c54d8f';
