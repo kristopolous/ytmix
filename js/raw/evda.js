@@ -208,7 +208,8 @@ var
     TEST = 'test',
     OR = 'or',
     SET = "set",
-    typeList = [FIRST, ON, AFTER, TEST, OR],
+    REMOVED = 'removed',
+    typeList = [FIRST, ON, AFTER, TEST, OR, REMOVED],
 
     // The one time callback gets a property to
     // the end of the object to notify our future-selfs
@@ -359,6 +360,16 @@ var
         ( isFunction ( value ) || 
           ( isArray(value) && isFunction(value[0]) )
         ) ? ON : SET ].apply(this, args);
+    }
+
+    function remove(what) {
+      var key = REMOVED + what;
+      if(!eventMap[key]) {
+        eventMap[key] = [];
+      }
+      eventMap[key].push(eventMap[what]);
+
+      delete eventMap[what];
     }
 
     function log(key, value) {
@@ -538,7 +549,7 @@ var
           });
         }
 
-        delete eventMap[setKey];
+        remove(setKey);
       }
 
       if ( callback ) {
@@ -1389,4 +1400,4 @@ var
 
   return e;
 })();
-EvDa.__version__='0.2-unified-debugging-1-gc8fb598';
+EvDa.__version__='0.2-unified-debugging-3-g67360b2';
