@@ -230,17 +230,17 @@ var
       traceList = [],
       // previous values 
       logSize = 10,
+      lastReturnMap = {},
       logMap = {},
       // last return
-      lastMap = {},
       eventMap = {},
       dbg = {
         data: data, 
         events: eventMap,
         log: logMap,
+        lastReturn: lastReturnMap,
         locks: lockMap,
         testLocks: testLockMap,
-        last: lastMap,
         trace: traceList,
         globs: globberMap
       };
@@ -280,12 +280,6 @@ var
     // as a function, this is what gets run.
     function pub ( scope, value, meta, opts ) {
       var args = slice.call( arguments );
-
-      // If there are no arguments, and this is useful in the browser
-      // debug console, return all the internal data structures.
-      if ( args.length === 0 ) {
-        return dbg;
-      }
 
       if ( scope === undefined ) {
         throw "Undefined passed in as first argument.";
@@ -631,16 +625,27 @@ var
       list: {},
       isPaused: false,
       db: data,
-      events: function (name, type){
-        if (type) {
-          return eventMap[type + name];
+      debug: function (name, type) {
+        if(!name) {
+          return dbg;
         }
-        if (name) {
-          return smartMap(typeList.concat([SET]), function (type) {
+
+        var res = {
+          lastReturn: lastReturnMap[name],
+          lock: lockMap[name],
+          log: logMap[name],
+          value: data[name]
+        };
+
+        if (type) {
+          res.events = eventMap[type + name];
+        } else {
+          res.events = smartMap(typeList.concat([SET]), function (type) {
             return eventMap[type + name];
           });
-        }
-        return eventMap;
+        } 
+
+        return res;
       },
       del: del,
       whenSet: isset,
@@ -1077,8 +1082,7 @@ var
                       meta.last = runCallback(callback, pub.context, value, meta);
                     });
 
-                  // Record this as the last value.
-                  lastMap[key] = meta.last;
+                  lastReturnMap[key] = meta.last;
 
                   return value;
                 }
@@ -1385,4 +1389,4 @@ var
 
   return e;
 })();
-EvDa.__version__='0.1-versioning-added-146-gb35d4b5';
+EvDa.__version__='0.2-unified-debugging-1-gc8fb598';
