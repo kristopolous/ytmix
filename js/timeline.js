@@ -330,6 +330,7 @@ var Timeline = (function(){
   }
 
   self.onYouTubePlayerAPIReady = function() {
+    console.log('called');
     Player.controls[0] = new YT.Player('player-iframe', {
       height: '390',
       width: '640'
@@ -339,25 +340,6 @@ var Timeline = (function(){
     setTimeout(function() { 
       ev.set('player_load'); 
     }, 1);
-  }
-
-  self.onYouTubePlayerReady = function(playerId) {
-    var id = parseInt(playerId.substr(-1));
-
-    if(_loaded < _maxPlayer) {
-      _loaded ++;
-
-      Player.controls[id] = document.getElementById(playerId);
-
-      ytDebugHook(id);
-
-      if(_loaded == _maxPlayer) {
-        // This slight indirection is needed for IE.
-        setTimeout(function() { 
-          ev.set('player_load'); 
-        }, 1);
-      }
-    }
   }
 
   // When the flash player is loaded all the way
