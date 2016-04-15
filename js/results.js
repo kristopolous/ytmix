@@ -170,7 +170,6 @@ var Results = {
       // back reference of what we are generating
       result.get(0).ytid = obj.ytid;
       result.timeline = timeline;
-      // result.star = star;
 
       _db.find({ytid: obj.ytid}).update({jqueryObject: result});
 
@@ -179,10 +178,6 @@ var Results = {
         dom.addClass('new');
       }
     }
-
-    if (UserHistory.isStarred(obj.ytid)) {
-      dom.star.addClass('active');
-    } 
 
     // This is important. There's a mapper in
     // the generator that relies on the output
