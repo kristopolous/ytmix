@@ -2,27 +2,8 @@ var UserHistory = {
   isViewed: function(id) {
     return localStorage['v'] ? localStorage["v"].search(id) > -1 : false;
   },
-  isStarred: function(id) {
-    return localStorage["s"] ? localStorage['s'].search(id) > -1 : false;
-  },
-  star: function(id) {
-    if(!localStorage['s']) {
-      localStorage["s"] = id;
-    } else {
-      if(UserHistory.isStarred(id)) {
-        localStorage['s'] = localStorage['s'].replace(' ' + id, '');
-      } else {
-        localStorage["s"] += " " + id;
-      }
-    }
-    ev.set('request_gen', {force: true});
-    return UserHistory.isStarred(id);
-  },
   getViewed: function(){
     return localStorage['v'] ? localStorage['v'].split(' ') : false;
-  },
-  getFavorites: function(){
-    return localStorage['s'] ? localStorage['s'].split(' ') : false;
   },
   reload: function(){
     log("Reloading");
