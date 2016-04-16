@@ -1,7 +1,9 @@
 var UserHistory = {
   reload: function(){
+    /*
     log("Reloading");
     UserHistory.view(Player.active, Player.activeData.ytid, Player.active.getCurrentTime());
+    */
   },
   view: function (object, id, offset) {
     var opts = {
@@ -194,11 +196,13 @@ var Timeline = (function(){
     if(Player.active && !Player.active.on && Player.active.getVideoBytesLoaded && Player.activeData) {
       var rateStart = 1e10,
           stats,
+          dtime = Player.active.getDuration() || 0,
+          ctime = Player.active.getCurrentTime() || 0,
           rateEnd = Player.active.getVideoBytesLoaded();
 
       stats = [
-        Player.active.getDuration(),
-        Player.active.getCurrentTime().toFixed(3),
+        dtime.toFixed(3),
+        ctime.toFixed(3),
         Player.activeData.length,
 
         Player.active.getPlayerState(),
@@ -328,7 +332,7 @@ var Timeline = (function(){
     });
     ytDebugHook(0);
 
-    ev.fire('player_load'); 
+    ev.set('player_load'); 
   }
 
   // When the flash player is loaded all the way
@@ -479,6 +483,7 @@ var Timeline = (function(){
 
       // Only run when the flash controller has been loaded
       ev.isset('player_load', function(){
+        console.log(dbid);
         if(!_db.byId[dbid]) {
           Timeline.pause();
         } else if(Player.activeData != _db.byId[dbid]) {
@@ -503,6 +508,7 @@ var Timeline = (function(){
           Player.activeData = _db.byId[dbid];
           Player.listen_total = 0;
           
+          console.log(">>> user history <<<");
           // After the assignment, then we add it to the userhistory
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
 
@@ -547,7 +553,7 @@ var Timeline = (function(){
 
       absolute = Math.max(0, absolute);
       absolute = Math.min(_totalRuntime, absolute);
-      log("Seeking to ", absolute);
+      log("Seeking to " + absolute);
 
       var track = _db.current.findFirst(function(row) { 
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
@@ -556,7 +562,7 @@ var Timeline = (function(){
       log("Playing ", track);
 
       if(track) {
-        clickFix.start();
+        //clickFix.start();
         if(!Player.activeData || (track.id != Player.activeData.id)) {
           Timeline.play(track.id, absolute - track.offset);
         } else {
