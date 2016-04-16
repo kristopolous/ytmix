@@ -68,11 +68,6 @@ var Results = {
     ev.set('request_gen');
   },
 
-  star: function(ytid, elem) {
-    UserHistory.star(ytid);
-    $(elem).toggleClass('active');
-  },
-
   draw: function(obj) {
 
     // Look to see if we have generated this before.
@@ -174,9 +169,6 @@ var Results = {
       _db.find({ytid: obj.ytid}).update({jqueryObject: result});
 
       dom = result;
-      if (!UserHistory.isViewed(obj.ytid)) {
-        dom.addClass('new');
-      }
     }
 
     // This is important. There's a mapper in

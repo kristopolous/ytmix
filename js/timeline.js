@@ -1,31 +1,22 @@
 var UserHistory = {
-  isViewed: function(id) {
-    return localStorage['v'] ? localStorage["v"].search(id) > -1 : false;
-  },
-  getViewed: function(){
-    return localStorage['v'] ? localStorage['v'].split(' ') : false;
-  },
   reload: function(){
     log("Reloading");
     UserHistory.view(Player.active, Player.activeData.ytid, Player.active.getCurrentTime());
   },
   view: function (object, id, offset) {
-    if(localStorage['v']) {
-      localStorage['v'] += " " + id;
-    } else {
-      localStorage['v'] = id;
-    }
+    var opts = {
+      videoId: id, 
+      startSeconds: offset,
+      suggestedQuality: ev('quality')
+    };
+    console.log(">> ", opts);
 
     Player.offset = offset;
 
     Timeline
       .backup
       .off(object)
-      .loadVideoById({
-        videoId: id, 
-        startSeconds: offset,
-        suggestedQuality: ev('quality')
-      });
+      .loadVideoById(opts);
 
     // TODO: This feels like a bad place to do this.
     // There should probably be a more abstract and less 
@@ -114,6 +105,8 @@ var Timeline = (function(){
     start: 0,
 
     off: function(){
+      return Player.active;
+      /*
       if(hasFlash()) {
         if(Player.active.off) {
           $("#backupPlayer").html('');
@@ -121,6 +114,7 @@ var Timeline = (function(){
         }
         return Player.active;
       }
+      */
     },
 
     getCurrentTime: function(){
@@ -330,16 +324,13 @@ var Timeline = (function(){
   }
 
   self.onYouTubePlayerAPIReady = function() {
-    console.log('called');
     Player.controls[0] = new YT.Player('player-iframe', {
       height: '390',
       width: '640'
     });
     ytDebugHook(0);
 
-    setTimeout(function() { 
-      ev.set('player_load'); 
-    }, 1);
+    ev.fire('player_load'); 
   }
 
   // When the flash player is loaded all the way
@@ -378,7 +369,7 @@ var Timeline = (function(){
 
       Timeline.next();
     } else if(what != 150) {
-      _backup.on();
+      //_backup.on();
     } else {
       Toolbar.status("Copyright issue; skipping");
 
