@@ -1,7 +1,9 @@
 var UserHistory = {
   reload: function(){
+    /*
     log("Reloading");
     UserHistory.view(Player.active, Player.activeData.ytid, Player.active.getCurrentTime());
+    */
   },
   view: function (object, id, offset) {
     var opts = {
