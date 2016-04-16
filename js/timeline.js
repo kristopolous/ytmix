@@ -1,9 +1,7 @@
 var UserHistory = {
   reload: function(){
-    /*
     log("Reloading");
     UserHistory.view(Player.active, Player.activeData.ytid, Player.active.getCurrentTime());
-    */
   },
   view: function (object, id, offset) {
     var opts = {
@@ -46,7 +44,7 @@ var Timeline = (function(){
     _quality, 
 
     Player = {
-      controls: [],
+      controls: false,
 
       eventList: [ 
         'StateChange',
@@ -104,16 +102,11 @@ var Timeline = (function(){
     start: 0,
 
     off: function(){
-      return Player.active;
-      /*
-      if(hasFlash()) {
-        if(Player.active.off) {
-          $("#backupPlayer").html('');
-          Player.active = Player.controls[0];
-        }
-        return Player.active;
+      if(Player.active.off) {
+        $("#backupPlayer").html('');
+        Player.active = Player.controls;
       }
-      */
+      return Player.active;
     },
 
     getCurrentTime: function(){
@@ -152,36 +145,10 @@ var Timeline = (function(){
     },
 
     on: function() {
-      /*
       Player.offset = Player.offset || 0;
 
       Player.active = _backup;
       Player.active.playVideo();
-      */
-    }
-  };
-
-  // This changes the volume down and back up
-  // to fix the annoying click sound
-  var clickFix = {
-    _set: false,
-    start: function(){
-      if(Player.active) {
-        if(Player.active.setVolume) {
-          Player.active.setVolume(0);
-        }
-        clickFix.set = true;
-      }
-    },
-    end: function(){
-      if(clickFix.set) {
-        setTimeout(function() {
-          if(Player.active.setVolume) {
-            Player.active.setVolume(ev('volume'));
-          }
-        }, 500);
-        clickFix.set = false;
-      }
     }
   };
 
@@ -252,8 +219,6 @@ var Timeline = (function(){
 
       if (time > 0 && Player.activeData) {
 
-        //clickFix.end();
-
         // This generates the scrubber in the results tab below.
         // We first check to see if the video is in the viewport window
         if(Results.viewable[Player.activeData.ytid]) {
@@ -321,21 +286,26 @@ var Timeline = (function(){
     }
   });
 
-  function ytDebugHook(id) {
+  function ytDebugHook() {
     _.each(Player.eventList, function(what) {
-      Player.controls[id].addEventListener("on" + what, 'ytDebug_' + what);
+      Player.controls.addEventListener("on" + what, 'ytDebug_' + what);
     });
   }
 
   self.onYouTubePlayerAPIReady = function() {
-    Player.controls[0] = new YT.Player('player-iframe', {
+    Player.controls = new YT.Player('player-iframe', {
       height: '390',
       width: '640'
     });
-    ytDebugHook(0);
 
-    console.log("Here");
-    ev.set('player_load', true); 
+    when(function(){
+      return Player.controls.loadVideoById;
+    }).run(function(){
+      ytDebugHook();
+      Player.active = Player.controls;
+      setInterval(updateytplayer, CLOCK_FREQ);
+      ev.set('player_load'); 
+    });
   }
 
   // When the flash player is loaded all the way
@@ -387,11 +357,6 @@ var Timeline = (function(){
   ev('volume', function(volume){
     Toolbar.status("Set volume to " + volume.toFixed());
     Player.active.setVolume(volume);
-  });
-
-  ev.isset('player_load', function(){
-    Player.active = Player.controls[0];
-    setInterval(updateytplayer, CLOCK_FREQ);
   });
 
   self.Player = Player;
@@ -486,7 +451,6 @@ var Timeline = (function(){
 
       // Only run when the flash controller has been loaded
       ev.isset('player_load', function(){
-        console.log(dbid);
         if(!_db.byId[dbid]) {
           Timeline.pause();
         } else if(Player.activeData != _db.byId[dbid]) {
@@ -511,7 +475,6 @@ var Timeline = (function(){
           Player.activeData = _db.byId[dbid];
           Player.listen_total = 0;
           
-          console.log(">>> user history <<<");
           // After the assignment, then we add it to the userhistory
           UserHistory.view(Player.active, Player.activeData.ytid, offset);
 
@@ -561,11 +524,13 @@ var Timeline = (function(){
       var track = _db.current.findFirst(function(row) { 
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
       });
+      if(!track) {
+        track = _db.current.findFirst();
+      }
 
       log("Playing ", track);
 
       if(track) {
-        //clickFix.start();
         if(!Player.activeData || (track.id != Player.activeData.id)) {
           Timeline.play(track.id, absolute - track.offset);
         } else {

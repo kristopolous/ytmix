@@ -561,9 +561,10 @@ var
         // that the setter is inherently asynchronous since
         // the execution of this function is continued to be
         // blocked until the key is set.
+        meta = meta || {};
         return key in data ?
           callback.call ( pub.context, data[key], meta ) :
-          pub ( key, callback, extend( meta || {}, ONCE ) );
+          pub[meta.first ? 'first' : 'on' ] ( key, callback, extend( meta , ONCE ) );
       }
 
       // Otherwise, if there is no callback, just return
@@ -1405,4 +1406,3 @@ var
 
   return e;
 })();
-EvDa.__version__='0.2-unified-debugging-6-g4c54d8f';

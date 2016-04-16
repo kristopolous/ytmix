@@ -48,5 +48,5 @@ _db.beforeAdd(function(what) {
   what.length = parseInt(what.length, 10);
 });
 
-ev.sniff('tick', 'deadair');
+//ev.sniff('tick', 'deadair');
 

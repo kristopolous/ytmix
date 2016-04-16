@@ -1,4 +1,18 @@
 
+function when(condition) {
+  var _cb, _ival = setInterval(function(){
+
+    if(condition()) {
+      _cb();
+      clearInterval(_ival);
+    }
+  }, 20);
+
+  return {
+    run: function(cb) { _cb = cb; }
+  }
+}
+
 var Utils = {
   insertAfter: function(entry, list, db) {
     db = db || _db;

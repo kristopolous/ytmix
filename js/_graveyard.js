@@ -1,4 +1,27 @@
 
+  // This changes the volume down and back up
+  // to fix the annoying click sound
+  var clickFix = {
+    _set: false,
+    start: function(){
+      if(Player.active) {
+        if(Player.active.setVolume) {
+          Player.active.setVolume(0);
+        }
+        clickFix.set = true;
+      }
+    },
+    end: function(){
+      if(clickFix.set) {
+        setTimeout(function() {
+          if(Player.active.setVolume) {
+            Player.active.setVolume(ev('volume'));
+          }
+        }, 500);
+        clickFix.set = false;
+      }
+    }
+  };
   /*
   function build(){
     if(arguments.length) {
