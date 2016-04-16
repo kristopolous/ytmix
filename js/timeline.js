@@ -11,7 +11,6 @@ var UserHistory = {
       startSeconds: offset,
       suggestedQuality: ev('quality')
     };
-    console.log(">> ", opts);
 
     Player.offset = offset;
 
@@ -153,10 +152,12 @@ var Timeline = (function(){
     },
 
     on: function() {
+      /*
       Player.offset = Player.offset || 0;
 
       Player.active = _backup;
       Player.active.playVideo();
+      */
     }
   };
 
@@ -198,6 +199,7 @@ var Timeline = (function(){
           stats,
           dtime = Player.active.getDuration() || 0,
           ctime = Player.active.getCurrentTime() || 0,
+          frac = Player.active.getVideoLoadedFraction() || 0,
           rateEnd = Player.active.getVideoBytesLoaded();
 
       stats = [
@@ -214,7 +216,7 @@ var Timeline = (function(){
         ).toFixed(3),
 
         // How much do we have
-        Player.active.getVideoLoadedFraction().toFixed(3)
+        frac.toFixed(3)
       ];
 
       _rateWindow.push(rateEnd);
@@ -250,7 +252,7 @@ var Timeline = (function(){
 
       if (time > 0 && Player.activeData) {
 
-        clickFix.end();
+        //clickFix.end();
 
         // This generates the scrubber in the results tab below.
         // We first check to see if the video is in the viewport window
@@ -332,7 +334,8 @@ var Timeline = (function(){
     });
     ytDebugHook(0);
 
-    ev.set('player_load'); 
+    console.log("Here");
+    ev.set('player_load', true); 
   }
 
   // When the flash player is loaded all the way
