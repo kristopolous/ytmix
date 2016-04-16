@@ -36,7 +36,6 @@ var Timeline = (function(){
     _totalRuntime,
 
     _isPlaying = true,
-    _loaded = 0,
 
     _backup = {},
     _template = {},
