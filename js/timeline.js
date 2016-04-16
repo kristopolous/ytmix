@@ -35,7 +35,6 @@ var Timeline = (function(){
     // to be played.
     _totalRuntime,
 
-    _maxPlayer = 1,
     _isPlaying = true,
     _loaded = 0,
 
@@ -599,8 +598,6 @@ var Timeline = (function(){
 
       _template.backup = _.template($("#T-Backup").html());
 
-      // we instantiate [maxPlayers] swfobjects which will hold the ytids of the
-      // videos we which to play.
       if(hasFlash()) {
         Flash.init();
       } else {
