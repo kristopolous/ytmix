@@ -7,6 +7,11 @@ function pl_tracks($params) {
   return getall(run("select * from tracks where ytid in ($sql_list)"));
 }
 
+function pl_find($params) {
+  $qstr = mysqli_real_escape_string(get_db(), $params['id']);
+  return getall(run("select ytid from tracks where title like '%$qstr%'"));
+}
+
 // 
 function pl_convert() {
 }
