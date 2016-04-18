@@ -1,4 +1,3 @@
-
 function when(condition) {
   var _cb, _ival = setInterval(function(){
 
@@ -183,12 +182,6 @@ Queue.prototype.doshift = function(){
     }
   }
 };
-
-// http://stackoverflow.com/questions/998245/how-can-i-detect-if-flash-is-installed-and-if-not-display-a-hidden-div-that-inf
-function hasFlash() {
-  // as of april 15, 2016, flash started breaking - look at Flash.detect to see the legacy code.
-  return false;
-}
 
 function log() {
   console.log.apply(console,

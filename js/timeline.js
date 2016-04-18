@@ -310,7 +310,7 @@ var Timeline = (function(){
     });
   }
 
-  // When the flash player is loaded all the way
+  // When the player is loaded all the way
   // then we can set the first player to be called
   // the active player, which is the one that we will
   // use for the most part.
@@ -451,7 +451,7 @@ var Timeline = (function(){
 
       offset = offset || 0;
 
-      // Only run when the flash controller has been loaded
+      // Only run when the controller has been loaded
       ev.isset('player_load', function(){
         if(!_db.byId[dbid]) {
           Timeline.pause();
@@ -573,14 +573,10 @@ var Timeline = (function(){
 
       _template.backup = _.template($("#T-Backup").html());
 
-      if(hasFlash()) {
-        Flash.init();
-      } else {
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/player_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      }
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/player_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
       // This doesn't reflect the filtered view ... it would be nice to know what the
       // "previous" and "next" track is effeciently with a filter.
