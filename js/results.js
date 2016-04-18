@@ -88,19 +88,19 @@ var Results = {
       dom = dbReference[0].jqueryObject;
     } else {
 
-      var splitup = obj.title.split(/ -+ /);
+      var splitup = obj.title.split(/ [-—]+ /);
 
       if(splitup.length == 1) {
-        splitup = splitup[0].split(/-+ /);
+        splitup = splitup[0].split(/[-—]+ /);
       }
       if(splitup.length == 1) {
-        splitup = splitup[0].split(/ -+/);
+        splitup = splitup[0].split(/ [-—]+/);
       }
       if(splitup.length == 1) {
         splitup = splitup[0].split(/ [@:]* /);
       }
       if(splitup.length == 1) {
-        splitup = splitup[0].split(/-/);
+        splitup = splitup[0].split(/[-—]/);
         // if the first group is small then we can
         // presume that this might have been a hyphen
         // and abort
