@@ -9,7 +9,11 @@ function pl_tracks($params) {
 
 function pl_find($params) {
   $qstr = mysqli_real_escape_string(get_db(), $params['id']);
-  return getall(run("select ytid from tracks where title like '%$qstr%'"));
+  $res = [];
+  foreach(getall(run("select ytid from tracks where title like '%$qstr%'")) as $row) {
+    $res[] = $row[0];
+  }
+  return $res;
 }
 
 // 
