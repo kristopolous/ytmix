@@ -1,3 +1,4 @@
 *~
 logs/
 import/node_modules
+secrets/*
