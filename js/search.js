@@ -44,6 +44,9 @@ var Search = {
     }
     loadRelated( _db.findFirst('ytid', ytid) );
   },
+  clear: function(){
+    $("#normal-search").val(''); 
+  },
   init: function(){
     var 
       lastSearch = '', 
@@ -54,9 +57,7 @@ var Search = {
       searchID = 0, 
       lastID = 0;
 
-    $("#clear-search").click(function(){ 
-      $("#normal-search").val(''); 
-    });
+    $("#clear-search").click(Search.clear);
 
     Utils.onEnter("#initial-search", function(){
       ev('app_state', 'main');
