@@ -197,6 +197,10 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 @media only screen and (max-device-width: 767px) {
   #header > span { display: block }
 
+  #status {
+    position:absolute;top:-100000px;left:-10000px;
+    width:0;height:0;font-size:0;display:none
+  }
   a.remove, a.reload,
   #edit-name,
   #clipboard-button,
@@ -204,6 +208,11 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   #normal-search { 
     display: none 
   }
+  #previous-track,
+  #pause-play,
+  #next-track { width: 26%;text-align: center }
+  .scrubber,
+  .result .timeline-inner {height:89px}
 }
 
 @media only screen and (min-device-width: 768px) {
