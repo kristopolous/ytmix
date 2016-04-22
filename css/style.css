@@ -196,14 +196,14 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   display: none
 }
 @media only screen and (max-device-width: 767px) {
-  #header > span { display: block }
+  .controls { display: block }
 
   #status {
     position:absolute;top:-100000px;left:-10000px;
     width:0;height:0;font-size:0;display:none
   }
   #playlist-name,
-  a.remove, a.reload,
+  a.remove, a.reload, #reload,
   #edit-name,
   #clipboard-button,
   .controls .volume,
@@ -229,7 +229,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   .timeline-container { height: 100%;bottom:0;left:0; }
   .scrubber,
   .result .timeline-inner {height: 100%;border:0  }
-  #search { position: relative;width: 100%;margin:0;right:0 }
+  #search { position: relative;width: 100%;margin:0;right:0;display:none }
   #search-mobile.button { display: inline-block;width:20px }
 }
 
