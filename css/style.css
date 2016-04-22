@@ -30,9 +30,31 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 
 #deck-control .button { width: 65px; text-align: center}
 #deck-control #quality-up, #deck-control #quality-down { width: auto }
-.splash-container{display:inline-block;padding:0.25em;border:2px solid #a9a;background:#434;margin:0 0.25em 0.75em 0;width:18em;vertical-align:top}
-.splash-container p{width:75%;float:right;margin:0.25em -20px 0 auto;font-size:0.85em}
+.splash-wrap {padding-right: 114px;overflow-hidden;}
+.splash-container{
+  display:inline-block;
+  padding:6px;
+  margin:6px 3px;
+  border:2px solid #a9a;
+  background:#434;
+  width:300px;
+  padding-right: 110px;
+  overflow: hidden;
+  vertical-align:top
+}
+.splash-container img{ 
+  width: 100px;
+  float: left;
+}
+.splash-container p{
+  margin:0 -109px 0 auto;
+  width:100%;
+  float:right;
+  font-size:0.85em;
+}
 .splash-container small{
+  margin-top:0;
+  display:block;
   font-size:0.7em
 }
 
@@ -215,7 +237,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
     display: none 
   }
   #splash { margin: 0 }
-  .splash-container { width: 90%;margin-left:2% }
+  .splash-container { max-width: 60%;margin-left:2% }
 
   .hero-unit { text-indent: 0; text-align: center;margin-bottom:1em; }
   .hero-unit h1{ margin: 0}
