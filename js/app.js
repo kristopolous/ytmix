@@ -295,8 +295,17 @@ function ytButton(el) {
   Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
 }
 
+function loadTemplates() {
+  $("#template > span").each(function(){
+    var id = this.id.slice(2); 
+    Template[id] = this.innerHTML();
+    console.log(">> template " + id);
+  });
+}
+
 $(function(){
   Splash.template = _.template( $("#T-Preview").html() );
+  loadTemplates();
   Results.init();
   Toolbar.init();
   Timeline.init();

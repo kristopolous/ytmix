@@ -8,6 +8,7 @@ var
   // How long to wait before forcing a reload of a video
   RELOAD_THRESHOLD = 6500,
   slice = Array.prototype.slice,
+  Template = {},
   UNIQ = 0,
   ev = EvDa({
     'volume': 100,
