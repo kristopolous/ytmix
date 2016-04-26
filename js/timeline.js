@@ -135,7 +135,7 @@ var Timeline = (function(){
       Player.active._start = (+new Date()) + 2000;
 
       $("#backupPlayer").html(
-        _template.backup({
+        Template.backup({
           offset: Math.floor(Player.offset),
           ytid: Player.activeData.ytid
         })
@@ -570,9 +570,6 @@ var Timeline = (function(){
     },
 
     init: function() {
-
-      _template.backup = _.template($("#T-Backup").html());
-
       var tag = document.createElement('script');
       tag.src = "https://www.youtube.com/player_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
