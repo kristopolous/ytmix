@@ -6,7 +6,9 @@ var Results = {
   init: function(){
     var timeout;
 
-    Results.template = _.template( $("#T-Result").html() );
+    Results.template = isMobile ? 
+      Template.resultMobile :
+      Template.reslutDesktop;
 
     // The scrollbar is consumed improperly and
     // so it must be accounted for in the width 

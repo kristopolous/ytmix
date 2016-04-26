@@ -82,7 +82,7 @@
   </object>
 
   <div id='template'>
-    <span id="t-backup" type="text/template">
+    <script id="t-backup" type="text/template">
       <param 
         name="movie" 
         value="http://www.youtube.com/v/<%=ytid%>?autoplay=1&amp;start=<%=offset%>&amp;version=3&amp;hl=en_US" 
@@ -100,9 +100,9 @@
         height="315" 
         allowscriptaccess="always"
       ></embed>
-    </span>
+    </script>
 
-    <span id='t-resultMobile'>
+    <script id='t-resultMobile' type='text/template'>
       <span class="result">
         <img class='thumbnail' src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg">
         <span>
@@ -113,9 +113,9 @@
         </span>
         <div class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div>
       </span>
-    </span>
+    </script>
   
-    <span id="t-resultDesktop">
+    <script id="t-resultDesktop" type='text/template'>
       <span class="result">
         <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
         <span>
@@ -132,16 +132,16 @@
         </span>
         <div class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div><a onclick="Timeline.remove('<%= ytid %>')" class="remove fa fa-times"></a><a onclick="replace(<%= id %>,true)" class="reload fa fa-refresh"></a>
       </span>
-    </span>
+    </script>
 
-    <span id="t-splash">
+    <script id="t-splash" type='text/template'>
       <a title="<%= id %>" onclick="Timeline.load(<%= id %>)" class="splash-container span3">
         <img src="http://i.ytimg.com/vi/<%= ytList[0][2] %>/default.jpg">
         <p><%= title %>
           <small>(<%= count %> tracks <%= duration %>)</small>
         </p>
       </a>
-    </span>
+    </script>
   </div>
 
   </body>

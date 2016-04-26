@@ -295,9 +295,9 @@ function ytButton(el) {
 }
 
 function loadTemplates() {
-  $("#template > span").each(function(){
+  $("#template > *").each(function(){
     var id = this.id.slice(2); 
-    Template[id] = this.innerHTML();
+    Template[id] = _.template(this.innerHTML);
     console.log(">> template " + id);
   });
 }
