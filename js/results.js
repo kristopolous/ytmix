@@ -8,7 +8,7 @@ var Results = {
 
     Results.template = isMobile ? 
       Template.resultMobile :
-      Template.reslutDesktop;
+      Template.resultDesktop;
 
     // The scrollbar is consumed improperly and
     // so it must be accounted for in the width 
