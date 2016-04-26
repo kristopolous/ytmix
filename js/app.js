@@ -12,14 +12,13 @@ function loadHistory(){
       if(!which.preview) {
         return;
       }
-      $("#splash-history").append(Splash.template({
+      $("#splash-history").append(Template.splash({
         id: which.id,
         ytList: which.preview.tracks,
         title: which.name,
         count: which.preview.count,
         duration: Utils.secondsToTime(which.preview.length)
       }));
-      console.log('history', new Date() - start);
     });
 
     $("#history").show();
@@ -304,7 +303,6 @@ function loadTemplates() {
 }
 
 $(function(){
-  Splash.template = _.template( $("#T-Preview").html() );
   loadTemplates();
   Results.init();
   Toolbar.init();
