@@ -82,9 +82,7 @@
   </object>
 
   <div id='template'>
-    <div id='sandbox'></div>
-
-    <script id="T-Backup" type="text/template">
+    <span id="t-backup" type="text/template">
       <param 
         name="movie" 
         value="http://www.youtube.com/v/<%=ytid%>?autoplay=1&amp;start=<%=offset%>&amp;version=3&amp;hl=en_US" 
@@ -102,48 +100,48 @@
         height="315" 
         allowscriptaccess="always"
       ></embed>
-    </script>
-
-    <script id='T-Result' type="text/template">
-
-    <span class="result-mobile">
-      <img class='thumbnail' src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg">
-      <span>
-        <p>
-          <em><%= artist %></em>
-          <%= title %>
-        </p>
-      </span>
-      <div class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div>
     </span>
-    </script>
 
-    <span class="result-desktop">
-      <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
-      <span>
-        <p>
-          <em>
-            <a onclick="Search.artist('<%= artist %>')">
-              <%= artist %>
-            </a>
-          </em>
-          <a onclick="Search.related('<%= ytid %>')">
+    <span id='t-resultMobile'>
+      <span class="result">
+        <img class='thumbnail' src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg">
+        <span>
+          <p>
+            <em><%= artist %></em>
             <%= title %>
-          </a>
-        </p>
+          </p>
+        </span>
+        <div class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div>
       </span>
-    <div class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div><a onclick="Timeline.remove('<%= ytid %>')" class="remove fa fa-times"></a><a onclick="replace(<%= id %>,true)" class="reload fa fa-refresh"></a></span>
-    </script>
+    </span>
+  
+    <span id="t-resultDesktop">
+      <span class="result">
+        <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
+        <span>
+          <p>
+            <em>
+              <a onclick="Search.artist('<%= artist %>')">
+                <%= artist %>
+              </a>
+            </em>
+            <a onclick="Search.related('<%= ytid %>')">
+              <%= title %>
+            </a>
+          </p>
+        </span>
+        <div class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div><a onclick="Timeline.remove('<%= ytid %>')" class="remove fa fa-times"></a><a onclick="replace(<%= id %>,true)" class="reload fa fa-refresh"></a>
+      </span>
+    </span>
 
-    <script id="T-Preview" type="text/template">
+    <span id="t-preview">
       <a title="<%= id %>" onclick="Timeline.load(<%= id %>)" class="splash-container span3">
         <img src="http://i.ytimg.com/vi/<%= ytList[0][2] %>/default.jpg">
         <p><%= title %>
           <small>(<%= count %> tracks <%= duration %>)</small>
         </p>
       </a>
-    </script>
-
+    </span>
   </div>
 
   </body>
