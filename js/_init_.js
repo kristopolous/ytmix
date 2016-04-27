@@ -24,7 +24,7 @@ var
   _epoch = 1334106009061,
   _video = {
     width: 260 + 8 * 2 + 4 * 2,
-    height: 77 + 8 * 2 + 4 * 2,
+    height: 63 + 8 * 2 + 4 * 2,
     old: {start: 0, stop: 0, query: ''}
   },
   _remote = {
