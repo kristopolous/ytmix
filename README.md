@@ -1,6 +1,10 @@
 This tool (in development since 2008!) is for quickly navigating and listening to large ad-hoc playlists from youtube:
 <img src=http://i.imgur.com/Gr17F7d.png>
 
+Also, as of April 2016, a large effort is being made to have a mobile-friendly version. Here's a screenshot from April 26, 2016:
+<img src="http://i.imgur.com/uZJHbWB.png">
+
+
 There's special attention for looking for and adding:
  
  * similar videos
@@ -23,8 +27,6 @@ This software may not be for you. That's fine. Widespread general utility wasn't
 Demo? See here:
 
 http://9ol.es/yt
-
-(note: This isn't consistantly updated).
 
 ### News
 Recently (2016), I normalized the database to have a table of tracks.  This table keeps track of whether a video can be played or not, how many times its been played and the total time listened throughout those plays.  It also keeps track of the uploader and channel.  
