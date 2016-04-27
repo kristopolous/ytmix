@@ -223,7 +223,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   display:inline-block;
   position:relative;
 }
-#search-mobile { display: none }
+.mobile { display: none }
 
 #remove-name { 
   display: none
@@ -239,7 +239,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   a.remove, a.reload, #reload,
   #edit-name,
   #clipboard-button,
-  .controls .volume,
+  .controls,
   #related,
   #use-internet,
   #clear-search,
@@ -255,9 +255,9 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 
   .hero-unit { text-indent: 0; text-align: center;margin-bottom:1em; }
   .hero-unit h1{ margin: 0}
-  #previous-track,
-  #pause-play,
-  #next-track { padding:0 0; width: 33%;text-align: center }
+  .previous-track,
+  .pause-play,
+  .next-track { padding:0 0; width: 33%;text-align: center }
   #header .controls a { padding: 3px 0 }
   #header { padding: 0 }
 
@@ -268,9 +268,10 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 
   .result .timeline-outer {opacity: 1}
 
+  .mobile { display: inline-block }
   #search { position: relative;width: 100%;margin:0;right:0;display:none }
   #search-mobile.button { display: inline-block;width:20px }
-  .result span{width:100%;padding:3px;}
+  .result span{width:100%;padding:0;margin-left:3px}
 
   .result {
     height:34px;

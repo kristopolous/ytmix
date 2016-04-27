@@ -2,7 +2,7 @@ var
   _db = DB(), 
   START = +new Date(),
   Splash = {},
-  isMobile = navigator.userAgent.search(/mobile/i) != -1,
+  isMobile = navigator.userAgent.search(/mobile/i) != -1 || $(document).width() < 768,
   DL_real = DamerauLevenshtein({}, false),
   CLOCK_FREQ = 150,
   QUALITY_LEVELS = ['large', 'medium', 'small', 'tiny'],

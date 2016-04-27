@@ -16,7 +16,7 @@
     <div class="main-app">
       <div id="header">
         <span class="controls">
-          <a id="previous-track" class="button"><i class="fa fa-backward"></i></a><a id="pause-play" class="button"><i class="fa fa-stop"></i></a><a id="next-track" class="button"><i class="fa fa-forward"></i></a><a class="volume button" id="volume-down"><i class="fa fa-minus"></i></a><a class="volume button" id="volume-up"><i class="fa fa-plus"></i></a>
+          <a class="previous-track button"><i class="fa fa-backward"></i></a><a class="pause-play button"><i class="fa fa-stop"></i></a><a class="next-track button"><i class="fa fa-forward"></i></a><a class="volume button" id="volume-down"><i class="fa fa-minus"></i></a><a class="volume button" id="volume-up"><i class="fa fa-plus"></i></a>
         </span>
         <span id="status">
           <div class="message"></div>
@@ -39,7 +39,10 @@
           <a id="reload" class="button">Reload</a>
           <input type='text' value='Youtube-dl' onclick='ytButton(this)' class="button" id="clipboard-button">
           <span id='quality-control'>Quality:<a class="button" id="quality-down">&#x25BC;</a><a class="button" id="quality-up">&#x25B2;</a></span>
+          <span class='mobile'>
           <a class='button' id="search-mobile"><i class="fa fa-search" aria-hidden="true"></i></a>
+          <a class="previous-track button"><i class="fa fa-backward"></i></a><a class="pause-play button"><i class="fa fa-stop"></i></a><a class="next-track button"><i class="fa fa-forward"></i></a>
+          </span>
         </div>
         <span class="control-wrapper">
           <a class="button" id="remove-name">remove</a>

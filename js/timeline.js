@@ -570,9 +570,9 @@ var Timeline = (function(){
       // This doesn't reflect the filtered view ... it would be nice to know what the
       // "previous" and "next" track is effeciently with a filter.
       // The controls in the upper left of the timeline
-      $("#previous-track").click(Timeline.prev);
-      $("#next-track").click(Timeline.next);
-      $("#pause-play").click(Timeline.pauseplay);
+      $(".previous-track").click(Timeline.prev);
+      $(".next-track").click(Timeline.next);
+      $(".pause-play").click(Timeline.pauseplay);
 
       $("#quality-down").click(Player.Quality.down);
       $("#quality-up").click(Player.Quality.up);

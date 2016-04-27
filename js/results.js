@@ -160,9 +160,9 @@ var Results = {
             point = (e.clientX - 8) - result.offset().left;
 
           point = Math.max(5, point);
-          point = Math.min(255, point);
+          point = Math.min(Results.width, point);
 
-          offset = (point - 5) / 255;
+          offset = (point - 5) / Results.width;
 
           Timeline.play(id, entry.length * offset);
         });
