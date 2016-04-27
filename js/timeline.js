@@ -87,7 +87,7 @@ var Timeline = (function(){
           if(!_isPlaying) {
             _isPlaying = true;
             Player.active.playVideo();
-            $("#pause-play").html('<i class="fa fa-stop"></i>');
+            $(".pause-play").html('<i class="fa fa-stop"></i>');
           }
         });
       }
@@ -389,7 +389,7 @@ var Timeline = (function(){
       ev.isset('player_load', function(){
         _isPlaying = false;
         Player.active.pauseVideo();
-        $("#pause-play").html('<i class="fa fa-play"></i>');
+        $(".pause-play").html('<i class="fa fa-play"></i>');
       });
     },
 
