@@ -151,7 +151,7 @@ var Results = {
       }
 
       if(isMobile) {
-        timeline.click(function(){
+        timeline.click(function(e){
           var 
             id = obj.ytid,
             entry = _db.findFirst({ ytid: id }),

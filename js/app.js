@@ -412,7 +412,10 @@ $(function(){
     phantom: { dom: $("#phantom-scrubber") }
   };
   
-  if(!isMobile) {
+  if(isMobile) {
+    // We do things less freuqently on mobile.
+    CLOCK_FREQ *= 4;
+  } else {
     Scrubber.phantom.dom.click(function() {
       var entry = _db.findFirst({ ytid: Scrubber.phantom.id });
       Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
