@@ -275,6 +275,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
     padding:4px;
     margin:2px 4px;
   }
+  .result .thumbnail { display: none }
   #daebug { display: none }
 }
 

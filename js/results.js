@@ -148,6 +148,7 @@ var Results = {
       result.appendTo($("#video-viewport"));
       if(!Results.width) {
         Results.width = result.width() - 5;
+        Results.height = result.height();
       }
 
       if(isMobile) {
