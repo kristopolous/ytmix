@@ -257,7 +257,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   .hero-unit h1{ margin: 0}
   .previous-track,
   .pause-play,
-  .next-track { padding:0 0; width: 33%;text-align: center }
+  .next-track { padding:7px 2px; width: 33%;text-align: center }
   #header .controls a { padding: 3px 0 }
   #header { padding: 0 }
 
