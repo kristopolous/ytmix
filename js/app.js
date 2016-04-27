@@ -272,27 +272,6 @@ function updateBlackList () {
   });
 }
 
-function volumeUp() {
-  ev.mod("volume", "*(11/10)");
-}
-
-function volumeDown() {
-  ev.mod("volume", "*(10/11)");
-}
-
-function ytButton(el) {
-  $(el)
-    .val('youtube-dl -f 140 -t -- ' + ev('active_track').ytid)
-    .select();
-
-  document.execCommand('copy');
-
-  $(el)
-    .val('Youtube-dl')
-    .blur();
-
-  Toolbar.status("Copied " + ev('active_track').title + " to clipboard");
-}
 
 function loadTemplates() {
   $("#template > *").each(function(){
@@ -309,97 +288,21 @@ $(function(){
   Timeline.init();
   Search.init();
 
-  var KEY = {
-    disable: false,
-    space: 32,
-    up: 38,
-    down: 40,
-    right: 39, 
-    left: 37,
-    '1': 49,
-    '9': 57
-  };
-
-  $("#search-mobile").click(function(){
-    var res = ev.toggle('btn:search');
-    if(res) {
-      $("#search").show();
-      setTimeout(function(){
-        $("#normal-search").focus();
-      },1);
-    } else {
-      Search.clear();
-      $("#search").hide();
-    }
-  });
-   
-  $(window).keydown( function(ev) {
-    var kc = ev.keyCode;
-    if(ev.ctrlKey) {
-      if(kc == KEY.up) { volumeUp(); }
-      else if(kc == KEY.down) { volumeDown(); }
-      else if(kc == KEY.right) { Timeline.next(); }
-      else if(kc == KEY.left) { Timeline.prev(); }
-      else if(kc == KEY.space) { Timeline.pauseplay(); }
-      else log(ev);
-    } else if (!KEY.disable) {
-      if(kc == KEY.left) { Timeline.seekTo(-30, {isOffsetRelative:true}); }
-      else if(kc == KEY.right) { Timeline.seekTo(30, {isOffsetRelative:true}); }
-      else if(kc >= KEY['1'] && kc <= KEY['9']) {
-        // Go to x% into the track with 1 = 10% and 9 = 90%
-        console.log((kc - KEY['1']) / 10 * Player.activeData.length, {isTrackRelative: true});
-        Timeline.seekTo((kc - KEY['1']) / 10 * Player.activeData.length + 0.5, {isTrackRelative: true});
-      }
-    }
-  });
-  $("#normal-search").focus(function(){
-    KEY.disable = true;
-  });
-  $("#normal-search").blur(function(){
-    KEY.disable = false;
-  });
-
-
-  ev.test('volume', function(what, cb) {
-    $("#volume-down")[
-      (what <= 0 ? 'add' : 'remove' ) + "Class"
-    ]('disabled');
-
-    $("#volume-up")[
-      (what >= 100 ? 'add' : 'remove') + "Class"
-    ]('disabled');
-
-    cb(what >= 0 && what <= 100);
-  });
-
-  $("#volume-down").click(volumeDown);
-  $("#volume-up").click(volumeUp);
-
-  // User ids for the favorites feature
-  ev.setter('uid', function(done){
-    if(localStorage['uid']) {
-      done(localStorage['uid']);
-    } else {
-      remote('getUser', done);
-    }
-  });
-
-  ev.isset('uid', function(uid){
-    localStorage['uid'] = uid;
-  });
-
   self.Scrubber = {
     real: { 
       dom: $("#real-scrubber"),
       attach: function(where) {
+        var res = false;
         if(Scrubber.real.container != where) {
           Scrubber.real.remove();
           Scrubber.real.container = where;
           Scrubber.real.dom.appendTo(where);
           Scrubber.real.container.addClass("active").css('display','block');
           Scrubber.real.container.parent().addClass("active");
+          res = true;
         }
         where.css('display','block');
+        return res;
       },
       remove: function() {
         if(Scrubber.real.container) {
@@ -413,13 +316,9 @@ $(function(){
   };
   
   if(isMobile) {
-    // We do things less freuqently on mobile.
-    CLOCK_FREQ *= 4;
+    Mobile.init();
   } else {
-    Scrubber.phantom.dom.click(function() {
-      var entry = _db.findFirst({ ytid: Scrubber.phantom.id });
-      Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
-    });
+    Desktop.init();
   }
 
   ev.set('init');

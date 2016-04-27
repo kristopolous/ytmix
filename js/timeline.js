@@ -168,14 +168,12 @@ var Timeline = (function(){
           stats,
           dtime,
           ctime, 
-          frac, 
-          rateEnd;
+          frac;
 
       if(!isMobile) {
         dtime = Player.active.getDuration() || 0;
         ctime = Player.active.getCurrentTime() || 0;
         frac = Player.active.getVideoLoadedFraction() || 0;
-        rateEnd = Player.active.getVideoBytesLoaded();
         stats = [
           dtime.toFixed(3),
           ctime.toFixed(3),
@@ -192,23 +190,6 @@ var Timeline = (function(){
           // How much do we have
           frac.toFixed(3)
         ];
-
-        _rateWindow.push(rateEnd);
-
-        // Update every CLOCK_FREQ so a 20 unit window is over 3 seconds
-        if(_rateWindow.length > (3000 / CLOCK_FREQ)) {
-          rateStart = _rateWindow.shift();
-        }
-
-        /*
-        if(rateStart < rateEnd) {
-          stats.push(
-            (
-              ((rateEnd - rateStart) / 3) / 1024
-            ).toFixed(3) + " KBps"
-          ); 
-        }
-        */
 
         debug(stats);
       }
@@ -239,8 +220,9 @@ var Timeline = (function(){
           // Otherwise, place ourselves underneath it so that the percentage
           // calculations will work out.
           scrubberPosition = time * 100 / Player.active.getDuration();
-          entry.jquery.timeline.css('display','block');
-          Scrubber.real.attach(entry.jquery.timeline);
+          if(Scrubber.real.attach(entry.jquery.timeline)) {
+            entry.jquery.timeline.css('display','block');
+          }
         } else {
           Scrubber.real.remove();
         }
@@ -259,11 +241,13 @@ var Timeline = (function(){
         // so?  Simply loading the video again appears to fix it.
         if(Player.active.getDuration() > 30 && (Player.active.getDuration() + 20 < Player.activeData.length)) {
           UserHistory.reload();
+          debug("reload " + new Date());
         }
 
         // If the player is active and we are at the end of a song, then move ahead.
         if(time > 0 && Player.active.getDuration() > 0 && (Player.active.getDuration() - time <= 0)) {
           _offset += 1;
+          debug("seeking " + new Date());
           Timeline.seekTo(_offset);
         } else {
           _offset = Player.activeData.offset + time;
