@@ -166,44 +166,52 @@ var Timeline = (function(){
     if(Player.active && !Player.active.on && Player.active.getVideoBytesLoaded && Player.activeData) {
       var rateStart = 1e10,
           stats,
-          dtime = Player.active.getDuration() || 0,
-          ctime = Player.active.getCurrentTime() || 0,
-          frac = Player.active.getVideoLoadedFraction() || 0,
-          rateEnd = Player.active.getVideoBytesLoaded();
+          dtime,
+          ctime, 
+          frac, 
+          rateEnd;
 
-      stats = [
-        dtime.toFixed(3),
-        ctime.toFixed(3),
-        Player.activeData.length,
+      if(!isMobile) {
+        dtime = Player.active.getDuration() || 0;
+        ctime = Player.active.getCurrentTime() || 0;
+        frac = Player.active.getVideoLoadedFraction() || 0;
+        rateEnd = Player.active.getVideoBytesLoaded();
+        stats = [
+          dtime.toFixed(3),
+          ctime.toFixed(3),
+          Player.activeData.length,
 
-        Player.active.getPlayerState(),
+          Player.active.getPlayerState(),
 
-        // How far in
-        (
-          Player.active.getCurrentTime() / 
-          Player.active.getDuration() 
-        ).toFixed(3),
-
-        // How much do we have
-        frac.toFixed(3)
-      ];
-
-      _rateWindow.push(rateEnd);
-
-      // Update every CLOCK_FREQ so a 20 unit window is over 3 seconds
-      if(_rateWindow.length > (3000 / CLOCK_FREQ)) {
-        rateStart = _rateWindow.shift();
-      }
-
-      if(rateStart < rateEnd) {
-        stats.push(
+          // How far in
           (
-            ((rateEnd - rateStart) / 3) / 1024
-          ).toFixed(3) + " KBps"
-        ); 
-      }
+            Player.active.getCurrentTime() / 
+            Player.active.getDuration() 
+          ).toFixed(3),
 
-      debug(stats);
+          // How much do we have
+          frac.toFixed(3)
+        ];
+
+        _rateWindow.push(rateEnd);
+
+        // Update every CLOCK_FREQ so a 20 unit window is over 3 seconds
+        if(_rateWindow.length > (3000 / CLOCK_FREQ)) {
+          rateStart = _rateWindow.shift();
+        }
+
+        /*
+        if(rateStart < rateEnd) {
+          stats.push(
+            (
+              ((rateEnd - rateStart) / 3) / 1024
+            ).toFixed(3) + " KBps"
+          ); 
+        }
+        */
+
+        debug(stats);
+      }
     } else {
       try {
       } catch(ex) {

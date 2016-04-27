@@ -75,7 +75,6 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #video-viewport .result img{background:#000;width:96px;height:72px}
 .result .thumbnail { padding: 1px; display: inline-block; line-height: 0 }
 .result {
-  opacity:0.7;
   height:89px;
   overflow:hidden;
   background:#101;
@@ -240,6 +239,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   }
   #splash { margin: 0 }
   .splash-container { max-width: 60%;margin-left:2% }
+  .track{box-shadow:0}
 
   .hero-unit { text-indent: 0; text-align: center;margin-bottom:1em; }
   .hero-unit h1{ margin: 0}
@@ -253,8 +253,14 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   .timeline-container { height: 100%;bottom:0;left:0; }
   .scrubber,
   .result .timeline-inner {height: 100%;border:0  }
+
+  .result .timeline-outer {opacity: 1}
+
   #search { position: relative;width: 100%;margin:0;right:0;display:none }
   #search-mobile.button { display: inline-block;width:20px }
+  .result {
+    height:75px;
+  }
 }
 
 @media only screen and (min-device-width: 768px) {

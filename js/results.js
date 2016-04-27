@@ -146,23 +146,43 @@ var Results = {
 
       // inlining html has fallen out of fashion for templates I know...
       result.appendTo($("#video-viewport"));
+      if(!Results.width) {
+        Results.width = result.width() - 5;
+      }
 
-      timeline
-        .hover(function(){
-          Scrubber.phantom.dom.detach().appendTo(timeline);
-          Scrubber.phantom.id = obj.ytid;
-          Scrubber.phantom.container = timeline;
-        }, function(){
-          Scrubber.phantom.dom.detach().appendTo("#offscreen");
-          Scrubber.phantom.container = false;
-        })
-        .mousemove(function(e) {
-          var point = (e.clientX - 8) - result.offset().left;
+      if(isMobile) {
+        timeline.click(function(e){
+          var 
+            id = obj.ytid,
+            entry = _db.findFirst({ ytid: id }),
+            offset,
+            point = (e.clientX - 8) - result.offset().left;
+
           point = Math.max(5, point);
           point = Math.min(255, point);
-          Scrubber.phantom.offset = ((point - 5) / 255);
-          Scrubber.phantom.dom.css("left", point + "px");
+
+          offset = (point - 5) / 255;
+
+          Timeline.play(id, entry.length * offset);
         });
+      } else {
+        timeline
+          .hover(function(){
+            Scrubber.phantom.dom.detach().appendTo(timeline);
+            Scrubber.phantom.id = obj.ytid;
+            Scrubber.phantom.container = timeline;
+          }, function(){
+            Scrubber.phantom.dom.detach().appendTo("#offscreen");
+            Scrubber.phantom.container = false;
+          })
+          .mousemove(function(e) {
+            var point = (e.clientX - 8) - result.offset().left;
+            point = Math.max(5, point);
+            point = Math.min(Results.width, point);
+            Scrubber.phantom.offset = ((point - 5) / Results.width);
+            Scrubber.phantom.dom.css("left", point + "px");
+          });
+      }
 
       // back reference of what we are generating
       result.get(0).ytid = obj.ytid;
