@@ -451,6 +451,7 @@ var Timeline = (function(){
 
       offset = offset || 0;
 
+          Player.Play();
       // Only run when the controller has been loaded
       ev.isset('player_load', function(){
         if(!_db.byId[dbid]) {

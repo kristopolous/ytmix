@@ -412,10 +412,12 @@ $(function(){
     phantom: { dom: $("#phantom-scrubber") }
   };
   
-  Scrubber.phantom.dom.click(function() {
-    var entry = _db.findFirst({ ytid: Scrubber.phantom.id });
-    Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
-  });
+  if(!isMobile) {
+    Scrubber.phantom.dom.click(function() {
+      var entry = _db.findFirst({ ytid: Scrubber.phantom.id });
+      Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
+    });
+  }
 
   ev.set('init');
 });
