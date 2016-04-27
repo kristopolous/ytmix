@@ -29,6 +29,16 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 #deck-control{float: left;font-size:11px;color:#aaa;}
 
 #deck-control .button { width: 65px; text-align: center}
+
+#deck-control a {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 #deck-control #quality-up, #deck-control #quality-down { width: auto }
 .splash-wrap {padding-right: 114px;overflow-hidden;}
 .splash-container{
@@ -80,8 +90,8 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   background:#101;
   display:inline-block;
   width:260px;
-  padding:0.4em;
-  margin:0.25em;
+  padding:4px;
+  margin:4px;
   vertical-align:top;
   position:relative
 }
@@ -258,8 +268,12 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
 
   #search { position: relative;width: 100%;margin:0;right:0;display:none }
   #search-mobile.button { display: inline-block;width:20px }
+  .result span{width:100%;padding:3px;}
+
   .result {
-    height:75px;
+    height:34px;
+    padding:4px;
+    margin:2px 4px;
   }
   #daebug { display: none }
 }
