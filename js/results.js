@@ -26,6 +26,7 @@ var Results = {
 
     setTimeout(Results.resize, 1000);
     $(window).resize(Results.resize);
+    window.addEventListener("orientationchange", Results.resize);
 
     // The gencheck function just makes sure
     // that we don't call the generator too
@@ -155,8 +156,6 @@ var Results = {
 
       // inlining html has fallen out of fashion for templates I know...
       result.appendTo($("#video-viewport"));
-      _video.width = result.width() - 5;
-      _video.height = result.height() + 5;
 
       if(isMobile) {
         timeline.click(function(e){
@@ -200,6 +199,9 @@ var Results = {
 
       dom = result;
     }
+
+    _video.width = $(dom).width() - 5;
+    _video.height = $(dom).height() + 5;
 
     // This is important. There's a mapper in
     // the generator that relies on the output
