@@ -350,6 +350,9 @@ var Timeline = (function(){
 
   ev('volume', function(volume){
     Toolbar.status("Set volume to " + volume.toFixed());
+    if(volume > 0 && Player.active.isMuted()) {
+      Player.active.unMute();
+    }
     Player.active.setVolume(volume);
   });
 
