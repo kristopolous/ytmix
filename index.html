@@ -104,15 +104,17 @@
     </script>
 
     <script id='t-resultMobile' type='text/template'>
-      <span class="result">
-        <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
-        <span>
-          <p>
-            <em><%= artist %></em>
-            <%= title %>
-          </p>
+      <span class="result-container">
+        <span class="result">
+          <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
+          <span>
+            <p>
+              <em><%= artist %></em>
+              <%= title %>
+            </p>
+          </span>
+          <div class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div>
         </span>
-        <div class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div>
       </span>
     </script>
   
