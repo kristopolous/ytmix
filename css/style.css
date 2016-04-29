@@ -106,7 +106,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   {position:absolute;bottom:0;left:0;width:100%}
 
 .result .timeline-outer {opacity: 0.5}
-.result .timeline-container {bottom:2px; left: 2px; display: none}
+.result .timeline-container {display: none}
 .result .timeline-inner {border: 9px solid #535;width:251px; height:9px}
 .result .timeline-container.active{display:block}
 
@@ -262,7 +262,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   #header { padding: 0 }
 
   #normal-search{width:98%;margin:0}
-  .timeline-container { height: 100%;bottom:0;left:0; }
+  .timeline-container { height: 100%}
   .scrubber,
   .result .timeline-inner {height: 100%;border:0  }
 
@@ -274,7 +274,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   .result span{width:100%;padding:0;margin-left:3px}
 
   .result {
-    height: 38px;
+    height: 30px;
     margin: 0px 2px;
     display: block;
     width: auto;
