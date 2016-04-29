@@ -299,6 +299,8 @@ var Timeline = (function(){
       Player.active = Player.controls;
       setInterval(updateytplayer, CLOCK_FREQ);
       ev.set('player_load'); 
+      // make
+      ev.fire('volume');
     });
   }
 

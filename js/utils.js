@@ -214,7 +214,9 @@ function stats(count) {
 }
 
 function debug(list) {
-  document.getElementById('debug').innerHTML = list.join(' ');
+  if(list.join) {
+    document.getElementById('debug').innerHTML = list.join(' ');
+  }
 }
 
 var Priority = (function(){
