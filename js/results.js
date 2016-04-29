@@ -201,7 +201,7 @@ var Results = {
     }
 
     _video.width = $(dom).width() - 5;
-    _video.height = $(dom).height() + 5;
+    _video.height = $(dom).height() + 6;
 
     // This is important. There's a mapper in
     // the generator that relies on the output
