@@ -1,8 +1,9 @@
 This tool (in development since 2008!) is for quickly navigating and listening to large ad-hoc playlists from youtube:
 <img src=http://i.imgur.com/Gr17F7d.png>
 
-Also, as of April 2016, a large effort is being made to have a mobile-friendly version. Here's a screenshot from April 26, 2016:
-<img src="http://i.imgur.com/uZJHbWB.png">
+Also, as of April 2016, a large effort is being made to have a mobile-friendly version. Here's two screenshots from April 29, 2016:
+<img src="http://i.imgur.com/7HswVaD.png">
+<img src="http://i.imgur.com/1bFQ1Js.png">
 
 
 There's special attention for looking for and adding:
