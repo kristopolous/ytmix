@@ -15,6 +15,15 @@ var Results = {
     // calculations.
     self._scrollwidth = Utils.scrollbarWidth();
 
+    if(isMobile) {
+      _video.width = $(document).width();
+      if(_video.width > 512) {
+        _video.width /= 2;
+      }
+    } else {
+      _video.width = 260;
+    }
+
     setTimeout(Results.resize, 1000);
     $(window).resize(Results.resize);
 
@@ -146,10 +155,8 @@ var Results = {
 
       // inlining html has fallen out of fashion for templates I know...
       result.appendTo($("#video-viewport"));
-      if(!Results.width) {
-        Results.width = result.width() - 5;
-        Results.height = result.height();
-      }
+      _video.width = result.width() - 5;
+      Results.height = result.height();
 
       if(isMobile) {
         timeline.click(function(e){
@@ -160,9 +167,9 @@ var Results = {
             point = (e.clientX - 8) - result.offset().left;
 
           point = Math.max(5, point);
-          point = Math.min(Results.width, point);
+          point = Math.min(_video.width, point);
 
-          offset = (point - 5) / Results.width;
+          offset = (point - 5) / _video.width;
 
           Timeline.play(id, entry.length * offset);
         });
@@ -179,8 +186,8 @@ var Results = {
           .mousemove(function(e) {
             var point = (e.clientX - 8) - result.offset().left;
             point = Math.max(5, point);
-            point = Math.min(Results.width, point);
-            Scrubber.phantom.offset = ((point - 5) / Results.width);
+            point = Math.min(_video.width, point);
+            Scrubber.phantom.offset = ((point - 5) / _video.width);
             Scrubber.phantom.dom.css("left", point + "px");
           });
       }
