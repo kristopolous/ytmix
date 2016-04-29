@@ -156,7 +156,7 @@ var Results = {
       // inlining html has fallen out of fashion for templates I know...
       result.appendTo($("#video-viewport"));
       _video.width = result.width() - 5;
-      Results.height = result.height();
+      _video.height = result.height() + 5;
 
       if(isMobile) {
         timeline.click(function(e){

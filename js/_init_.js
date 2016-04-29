@@ -23,7 +23,7 @@ var
   }),
   _epoch = 1334106009061,
   _video = {
-    height: isMobile ? (34 + 8 + 4) : (89 + 8 + 8),
+    height: isMobile ? (36 + 8 + 4) : (89 + 8 + 8),
     old: {start: 0, stop: 0, query: ''}
   },
   _remote = {

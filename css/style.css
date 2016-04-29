@@ -274,7 +274,7 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
   .result span{width:100%;padding:0;margin-left:3px}
 
   .result {
-    height:36px;
+    height: 38px;
     margin: 0px 2px;
     display: block;
     width: auto;
@@ -283,7 +283,9 @@ h1{text-shadow:0 0 8px #a9a;color:#212;margin:0;padding:0;font-size:2.75em}
     width: 100%;
   }
   #video-viewport {
-    padding-right: 8px;
+    margin-top: 4px;
+    padding-right: 4px;
+    padding-left: 4px;
   }
   .result .thumbnail { display: none }
   #daebug { display: none }
