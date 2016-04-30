@@ -101,16 +101,21 @@ That means that the file contains just your key, no other code, format, or synta
 
 An example would be
 
-    $ import/parse.js TheIDMMaster
-    User: TheIDMMaster
-     > ...s?part=contentDetails&forUsername=TheIDMMaster&key=super-secret << Find out the playlistid of the user
-     > ...ylistId=UUhS0SPpEqGMGRim7mebedPg&maxResults=50&key=super-secret << Get the playlist
-     > ...e/v3/videos?part=contentDetails&id=-U8rJlH_1y8&key=super-secret << Find the duration of a track found
-     +++ adding 1
-     > ...qGMGRim7mebedPg&maxResults=50&key=super-secret&pageToken=CDIQAA << Get the next page ...
-     > ...qGMGRim7mebedPg&maxResults=50&key=super-secret&pageToken=CGQQAA
-     > ...GMGRim7mebedPg&maxResults=50&key=super-secret&pageToken=CJYBEAA
-     > ...GMGRim7mebedPg&maxResults=50&key=super-secret&pageToken=CMgBEAA
+    $ node parse.js tangramten24
+    User: tangramten24
+     > createid{"id":"tangramten24"}
+     > update{"id":625,"name":"Uploads by tangramten24"}
+     > https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=tangramten24&key=AIzaSyD3cxApQz9auBO79CAy
+     > https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=UUQpIIWe6P3FN3G_Wx3ErrQw&key=A
+     > tracks{"id":"4WvAjndDs48,uqOXPuKLOUo,jt-HGIdRIv4,SRP78mA021I,CLi_m7Bwf1g,gk4OU6BJMAc,vP7-cNi4ZVc,mLw94okMaY0,wWCMZH4Hhts
+     > https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=4WvAjndDs48%2CuqOXPuKLOUo%2Cjt-HGIdRIv4%2CSRP78mA021
+     +++ adding 50
+     > addTracks{"id":625,"param":[[786,"Re-VoLt - MAGNETIC STORMS ON THE EVENT HORIZON.","4WvAjndDs48"],[232,"TANGERINE DREAM 
+     > https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=UUQpIIWe6P3FN3G_Wx3ErrQw&key=A
+     > tracks{"id":"EDDf34fqugs,R-S4916XWGA,CYqIA2sVgjA,YOBIc0eDXVI,P5QdLxxOWmI,O0HM-67IgkQ,FxmCNoUUjBg,JEj5lEEGvqk,9yRxR0bkz6I
+     > https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=EDDf34fqugs%2CR-S4916XWGA%2CCYqIA2sVgjA%2CYOBIc0eDXV
+     +++ adding 50
+     > addTracks{"id":625,"param":[[642,"KLAUS SCHULZE - FRANK HERBERT.","EDDf34fqugs"],[445,"TANGERINE DREAM - VERNAL RAPTURE.
     ...
     $
 
