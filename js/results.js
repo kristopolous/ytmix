@@ -200,7 +200,7 @@ var Results = {
       dom = result;
     }
 
-    _video.width = $(dom).width() - 5;
+    _video.width = $(dom).width() + (isMobile ? -5 : 16 );
     _video.height = $(dom).height() + 6;
 
     // This is important. There's a mapper in
