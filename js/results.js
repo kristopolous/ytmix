@@ -201,7 +201,7 @@ var Results = {
     }
 
     _video.width = $(dom).width() + (isMobile ? -5 : 16 );
-    _video.height = $(dom).height() + 6;
+    _video.height = $(dom).height() + (isMobile ? 6 : 16 );
 
     // This is important. There's a mapper in
     // the generator that relies on the output
