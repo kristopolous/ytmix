@@ -183,10 +183,10 @@ var Results = {
             Scrubber.phantom.container = false;
           })
           .mousemove(function(e) {
-            var point = (e.clientX - 8) - result.offset().left;
+            var point = (e.clientX - 8) - result.offset().left + 3;
             point = Math.max(5, point);
             point = Math.min(_video.width, point);
-            Scrubber.phantom.offset = ((point - 5) / _video.width);
+            Scrubber.phantom.offset = ((point + 3) / _video.width);
             Scrubber.phantom.dom.css("left", point + "px");
           });
       }
