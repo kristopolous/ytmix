@@ -413,10 +413,7 @@ var Timeline = (function(){
       }
     },
 
-    play: function(dbid, offset) {
-      if(_.isString(dbid)) {
-        dbid = _db.current.findFirst({ytid: dbid}).id;
-      }
+    play: function(ytid, offset) {
       if(!arguments.length) {
         return Player.Play();
       }
@@ -425,9 +422,7 @@ var Timeline = (function(){
 
       // Only run when the controller has been loaded
       ev.isset('player_load', function(){
-        if(!_db.byId[dbid]) {
-          Timeline.pause();
-        } else if(Player.activeData != _db.byId[dbid]) {
+        if(!Player.activeData || Player.activeData.ytid != ytid) {
           // NOTE:
           //
           // This is the only entry point for loading and playing a video
@@ -446,7 +441,7 @@ var Timeline = (function(){
               remote('updateDuration', Player.activeData.ytid, duration_listened);
             }
           }
-          Player.activeData = _db.byId[dbid];
+          Player.activeData = _db.first({ytid: ytid});
           Player.listen_total = 0;
           
           // After the assignment, then we add it to the userhistory
@@ -526,8 +521,9 @@ var Timeline = (function(){
       log("Playing ", track);
 
       if(track) {
-        if(!Player.activeData || (track.id != Player.activeData.id)) {
-          Timeline.play(track.id, absolute - track.offset);
+        console.log('>>', track);
+        if(!Player.activeData || (track.ytid != Player.activeData.ytid)) {
+          Timeline.play(track.ytid, absolute - track.offset);
         } else {
           Player.offset = absolute - track.offset;
           console.log("seek");
