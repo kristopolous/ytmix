@@ -1,31 +1,3 @@
-var UserHistory = {
-  reload: function(){
-    /*
-    log("Reloading");
-    UserHistory.view(Player.active, Player.activeData.ytid, Player.active.getCurrentTime());
-    */
-  },
-  view: function (object, id, offset) {
-    var opts = {
-      videoId: id, 
-      startSeconds: offset,
-      suggestedQuality: ev('quality')
-    };
-
-    Player.offset = offset;
-
-    Timeline
-      .backup
-      .off(object)
-      .loadVideoById(opts);
-
-    // TODO: This feels like a bad place to do this.
-    // There should probably be a more abstract and less 
-    // explicit way to handle this.
-    ev.set('deadair', 0);
-  }
-};
-
 var Timeline = (function(){
   var 
     // The current offset into the total
@@ -86,6 +58,7 @@ var Timeline = (function(){
         ev.isset('player_load', function(){
           if(!_isPlaying) {
             _isPlaying = true;
+            console.log("pause/play");
             Player.active.playVideo();
             $(".pause-play").html('<i class="fa fa-stop"></i>');
           }
@@ -230,7 +203,9 @@ var Timeline = (function(){
         // For some reason it appears that this value can
         // toggle back to different quality sometimes. So 
         // we check to see where it's at.
-        if( Player.active.getPlaybackQuality() != _quality) {
+        if( Player.active.getAvailableQualityLevels().indexOf(_quality) !== -1 && 
+            Player.active.getPlaybackQuality() != _quality) {
+
           Player.active.setPlaybackQuality(_quality);
         }
 
@@ -240,7 +215,6 @@ var Timeline = (function(){
         // video. This bug seems to have been around for almost a year or 
         // so?  Simply loading the video again appears to fix it.
         if(Player.active.getDuration() > 30 && (Player.active.getDuration() + 20 < Player.activeData.length)) {
-          UserHistory.reload();
           debug("reload " + new Date());
         }
 
@@ -260,7 +234,7 @@ var Timeline = (function(){
           if (_offset - prevOffset == 0) {
             // This means there's been dead-air for a few seconds.
             if ( ev.incr('deadair', CLOCK_FREQ) > RELOAD_THRESHOLD ) {
-              UserHistory.reload();
+              //UserHistory.reload();
             }
           } else {
             // this means we are playing so we should increment the total
@@ -393,6 +367,7 @@ var Timeline = (function(){
     pause: function(){
       ev.isset('player_load', function(){
         _isPlaying = false;
+        console.log("pause");
         Player.active.pauseVideo();
         $(".pause-play").html('<i class="fa fa-play"></i>');
       });
@@ -475,19 +450,40 @@ var Timeline = (function(){
           Player.listen_total = 0;
           
           // After the assignment, then we add it to the userhistory
-          UserHistory.view(Player.active, Player.activeData.ytid, offset);
+          Timeline.playById(Player.active, Player.activeData.ytid, offset);
 
           // At this point there is now active data, so anything depending
           // on that can run.
           ev('active_track', Player.activeData);
           ev.set('active_data');
 
-          Player.Play();
           log("Playing ", Player.activeData.ytid, Player.activeData.title);
         } else {
           Timeline.seekTo(offset, {isTrackRelative:true});
         }
       });
+    },
+
+    playById: function(object, id, offset){
+      var opts = {
+        videoId: id, 
+        startSeconds: offset,
+        suggestedQuality: ev('quality')
+      };
+
+      Player.offset = offset;
+
+      Timeline
+        .backup
+        .off(object)
+        .loadVideoById(opts);
+
+      Player.Play();
+
+      // TODO: This feels like a bad place to do this.
+      // There should probably be a more abstract and less 
+      // explicit way to handle this.
+      ev.set('deadair', 0);
     },
 
     next: function(){
@@ -534,6 +530,7 @@ var Timeline = (function(){
           Timeline.play(track.id, absolute - track.offset);
         } else {
           Player.offset = absolute - track.offset;
+          console.log("seek");
           Player.active.seekTo(absolute - track.offset);
 
           // TODO: This feels like a bad place to do this.
