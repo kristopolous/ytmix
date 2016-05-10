@@ -58,7 +58,6 @@ var Timeline = (function(){
         ev.isset('player_load', function(){
           if(!_isPlaying) {
             _isPlaying = true;
-            console.log("pause/play");
             Player.active.playVideo();
             $(".pause-play").html('<i class="fa fa-stop"></i>');
           }
@@ -367,7 +366,6 @@ var Timeline = (function(){
     pause: function(){
       ev.isset('player_load', function(){
         _isPlaying = false;
-        console.log("pause");
         Player.active.pauseVideo();
         $(".pause-play").html('<i class="fa fa-play"></i>');
       });
@@ -521,12 +519,10 @@ var Timeline = (function(){
       log("Playing ", track);
 
       if(track) {
-        console.log('>>', track);
         if(!Player.activeData || (track.ytid != Player.activeData.ytid)) {
           Timeline.play(track.ytid, absolute - track.offset);
         } else {
           Player.offset = absolute - track.offset;
-          console.log("seek");
           Player.active.seekTo(absolute - track.offset);
 
           // TODO: This feels like a bad place to do this.
