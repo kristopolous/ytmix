@@ -240,7 +240,10 @@ function pl_swapTracks($params) {
   return true;
 }
 
-function pl_recent() {
+function pl_recent($params) {
+  list($page) = get($params, 'id');
+  $page = intval($page ? $page : '0');
+  var_dump($page); exit(0);
   $res = run_assoc('select 
     id, name, preview 
     from playlist 
