@@ -243,14 +243,15 @@ function pl_swapTracks($params) {
 function pl_recent($params) {
   list($page) = get($params, 'id');
   $page = intval($page ? $page : '0');
-  var_dump($page); exit(0);
-  $res = run_assoc('select 
+  $count = 50;
+  $skip = $page * $count;
+  $res = run_assoc("select 
     id, name, preview 
     from playlist 
     where 
       preview is not null and
       type = 0
-    order by updated desc limit 90');
+    order by updated desc limit $skip, $count");
   $key = [['preview']];
   return toJson($res, $key);
 }
