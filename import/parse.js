@@ -320,6 +320,7 @@ api.add_tracks_to_playlist = function(tracklist) {
 api.get_playlist = function(who, cb) {
   api.do('createid', {id: who}, function(data) {
     api.id = data;
+    console.log("Using id " + data);
     // api.do('update', {id: api.id, name: 'Uploads by ' + who});
     cb();
   });
