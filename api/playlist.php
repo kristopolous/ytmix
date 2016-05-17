@@ -160,7 +160,7 @@ function pl_createID($params) {
   if(empty($param)) {
     $param = 0;
   }
-  mysqli_query(get_db(), 'insert into playlist (authors, type, method) values ("' . $source .'", ' . $param . ', "{}")');
+  mysqli_query(get_db(), "insert into playlist (authors, name, type, method) values ('$source', 'Uploads by $source', $param, '{}')");
   return mysqli_insert_id(get_db());
 }
 
