@@ -51,7 +51,7 @@ var module = module || {},
       isFun: function(obj) { return !!(obj && obj.constructor && obj.call && obj.apply) },
       isStr: function(obj) { return !!(obj === '' || (obj && obj.charCodeAt && obj.substr)) },
       isNum: function(obj) { return toString.call(obj) === '[object Number]' },
-      isUndef: function(obj) { return isNaN(obj) || (obj === null) || (obj === undefined) },
+      isUndef: function(obj) { return isNaN(obj) || (obj === null) || (obj === _u) },
       isScalar: function(obj) { return _.isStr(obj) || _.isNum(obj) || _.isBool(obj) },
       isArr: [].isArray || function(obj) { return toString.call(obj) === '[object Array]' },
       isBool: function(obj){
@@ -383,10 +383,31 @@ var module = module || {},
       return callback;
     }
   }
+  function val_comprehension(value) {
+    // this permits mongo-like invocation
+    if( _.isObj(value)) {
+      var 
+        _key = keys(value)[0],
+        _fn = _key.slice(1);
+
+      // see if the routine asked for exists
+      try { 
+        value = DB[_fn](value[_key]);
+      } catch(ex) {
+        throw new Error(_fn + " is an unknown function");
+      }
+    } else if( _.isArr(value)) {
+    // a convenience isin short-hand.
+      value = isin(value);
+    }
+
+    return value;
+  }
 
   function find() {
     var 
       filterList = slice.call(arguments),
+      filterComp_len,
       filter,
       filterIx,
       filterComp,
@@ -397,7 +418,7 @@ var module = module || {},
       // The dataset to compare against
       set = (_.isArr(this) ? this : filterList.shift());
 
-    if( filterList.length === 2 && _.isStr( filterList[0] )) {
+    if( filterList.length === 2  && _.isStr( filterList[0] )) {
       // This permits find(key, value)
       which = {};
       which[filterList[0]] = filterList[1];
@@ -411,26 +432,26 @@ var module = module || {},
       // that we just recursively do this.
       if(_.isArr(filter)) {
         // If there are two arguments, and the first one isn't a function
+        // then it acts as a comparison of multiple keys, such as 
+        //
+        // (['key1', 'key2', 'key3'], 'any of them can equal this')
+        //
         if(_.isScalar(filter[0]) && filterList.length === 2) {
-          var 
-            filterComp_len,
-            filterkey_list = filter, 
-            // remove it from the list so it doesn't get
-            // a further comprehension
-            filterkey_compare = filterList.pop();
+          // remove it from the list so it doesn't get
+          // a further comprehension
+          var filterkey_compare = val_comprehension(filterList.pop());
 
           filterComp = [function(row) {
-            for(var ix = 0; ix < filterkey_list.length; ix++) {
-              if(equal(row[filterkey_list[ix]], filterkey_compare)) {
+            for(var ix = 0; ix < filter.length; ix++) {
+              if(equal(row[filter[ix]], filterkey_compare)) {
                 return true;
               }
             }
-          }]
+          }];
         } else {
           filterComp = map(filter, expression());
         }
         //self.fComp = filterComp;
-        //console.log(filterComp);
         
         filterComp_len = filterComp.length;
         set = _filter.call(set, function(row) {
@@ -448,22 +469,7 @@ var module = module || {},
         set = _filter.call(set, filter);
       } else {
         each(filter, function(key, value) {
-          // this permits mongo-like invocation
-          if( _.isObj(value)) {
-            var 
-              _key = keys(value)[0],
-              _fn = _key.slice(1);
-
-            // see if the routine asked for exists
-            if(_fn in DB) {
-              value = DB[_fn](value[_key]);
-            } else {
-              throw new Error(_fn + " is an unknown function");
-            }
-          } else if( _.isArr(value)) {
-          // a convenience isin short-hand.
-            value = isin(value);
-          }
+          value = val_comprehension(value);
 
           if( _.isFun(value)) {
             filterComp = function(which) {
@@ -754,20 +760,51 @@ var module = module || {},
 
         var 
           cList = [], 
+          fnList = [],
           val;
+
         for(var key in arg0) {
-          if(_.isScalar(arg0[key])) {
-            val = arg0[key];
+          val = arg0[key];
+          if(_.isScalar(val)) {
             if(_.isStr(val)) {
               val = '"' + val + '"';
             }
             cList.push("rec['" + key + "']===" + val);
+          } else if(_.isArr(val)) {
+            fnList.push(isin(key, val));
           } else {
             cList.push("equal(rec['" + key + "'],arg0['" + key + "'])");
           }
         };
 
-        return ewrap('rec', 'return ' + cList.join('&&'));
+        if(cList.length) {
+          fnList.push(ewrap('rec,arg0', 'return ' + cList.join('&&')));
+        }
+
+        return function(rec,arg0) {
+          var val, key, fn;
+
+          for(var ix = 0; ix < fnList.length; ix++) {
+            val = fnList[ix];
+
+            if(_.isObj(val)) {
+              key = keys(val)[0];
+              fn = val[key]; 
+
+              if(_.isArr(fn)) {
+                if (indexOf(fn, rec[key]) === -1) {
+                  return false;
+                }
+              } else if(!fn(rec[key])) {
+                return false;
+              }
+            } else if(!val(rec,arg0)) {
+              return false;
+            }
+          }
+
+          return true;
+        }
       }
     }
   }
@@ -1099,7 +1136,7 @@ var module = module || {},
 
       each(filter, function(which) {
         // undefined is a valid thing.
-        var entry = (field in which) ? which[field] : [undefined];
+        var entry = (field in which) ? which[field] : [_u];
         each(entry, function(what) {
           // if it's an array, then we do each one.
 
@@ -1189,8 +1226,8 @@ var module = module || {},
 
           if(_.isStr(arg1)) {
             order = {
-              'asc': 'x-y',
-              'desc': 'y-x'
+              asc: 'x-y',
+              desc: 'y-x'
             }[arg1.toLowerCase()];
           } else {
             order = arg1;
@@ -1587,6 +1624,8 @@ var module = module || {},
     values: values,
     isin: isin,
     isArray: isArray,
+    isString: _.isStr,
+    isFunction: _.isFun,
 
     // like expr but for local functions
     local: function(){
@@ -1659,4 +1698,4 @@ var module = module || {},
   });
   return DB;
 })();
-DB.__version__='0.0.2-reorg-54-gab0a47b';
+DB.version='0.0.2.79-20160518';
