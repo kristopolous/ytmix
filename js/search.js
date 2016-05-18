@@ -44,9 +44,6 @@ var Search = {
     }
     loadRelated( _db.findFirst('ytid', ytid) );
   },
-  clear: function(){
-    $("#normal-search").val(''); 
-  },
   init: function(){
     var 
       lastSearch = '', 
@@ -56,8 +53,6 @@ var Search = {
       // that may have asynchronously came in later than newer ones
       searchID = 0, 
       lastID = 0;
-
-    $("#clear-search").click(Search.clear);
 
     Utils.onEnter("#initial-search", function(){
       ev('app_state', 'main');
@@ -69,7 +64,7 @@ var Search = {
     input.focus(function(){ this.select(); });
 
     function ui(query) {
-      $("#clear-search,#use-internet")[((query.length === 0) ? 'add' : 'del') + 'Class']('disabled');
+      $("#use-internet")[((query.length === 0) ? 'add' : 'remove') + 'Class']('disabled');
     }
     // We probe to see if the search query has changed.
     // And if so we instantiate an image based on that
