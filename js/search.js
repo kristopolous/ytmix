@@ -68,6 +68,9 @@ var Search = {
 
     input.focus(function(){ this.select(); });
 
+    function ui(query) {
+      $("#clear-search,#use-internet")[((query.length === 0) ? 'add' : 'del') + 'Class']('disabled');
+    }
     // We probe to see if the search query has changed.
     // And if so we instantiate an image based on that
     // Similar to google instant and ytinstant.
@@ -77,14 +80,16 @@ var Search = {
       if(query != lastSearch) {
         ev('search_query', query);
         lastSearch = query;
+        ui(query);
       }
 
       if(Search._useNet) {
         Search.net(ev('search_query'));
         Search._useNet = false;
       }
-
+      
     }, 250);
+    ui(input.val());
   
     $("#use-internet").click(function(){
       Search._useNet = true;
