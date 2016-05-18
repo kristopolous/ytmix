@@ -409,6 +409,11 @@ var Timeline = (function(){
 
         _db.byId[ix].previous = index;
       }
+
+      // we need to repoint this.
+      if(Player.activeData) {
+        Player.activeData = _db.current.first({ytid: Player.activeData.ytid});
+      }
     },
 
     play: function(ytid, offset) {

@@ -19,18 +19,10 @@ var Search = {
       });
     });
   },
-  _update: function() {
-    Timeline.updateOffset();
-
-    // we need to repoint this.
-    if(Player.activeData) {
-      Player.activeData = _db.current.first({ytid: Player.activeData.ytid});
-    }
-  },
   reset: function() {
     _db.byId = _db.ALL;
     _db.current = _db;
-    Search._update();
+    Timeline.updateOffset();
     log("search reset");
   },
   index: function(subset) {
@@ -41,8 +33,7 @@ var Search = {
       {id: eval(DB.local('id++'))}
     );
     _db.byId = _db.current.view('id');
-
-    Search._update();
+    Timeline.updateOffset();
   },
   artist: function(who) {
     $("#normal-search").val(who);
