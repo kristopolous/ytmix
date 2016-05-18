@@ -412,7 +412,14 @@ var Timeline = (function(){
 
       // we need to repoint this.
       if(Player.activeData) {
-        Player.activeData = _db.current.first({ytid: Player.activeData.ytid});
+        var rec = _db.current.first({ytid: Player.activeData.ytid});
+        // if this track is in our active track then we assign it
+        if(rec) {
+          Player.activeData = rec;
+        } else {
+          // otherwise we make its next track the first track
+          Player.activeData.next = Player.activeData.previous = 0;
+        }
       }
     },
 
