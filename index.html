@@ -111,7 +111,7 @@
               <%= title %>
             </p>
           </span>
-          <div class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div>
+          <div data-id="<%= ytid %>" class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div>
         </span>
       </span>
     </script>
@@ -131,7 +131,7 @@
             </a>
           </p>
         </span>
-        <div class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div><a onclick="Timeline.remove('<%= ytid %>')" class="remove fa fa-times"></a><a onclick="replace(<%= id %>,true)" class="reload fa fa-refresh"></a>
+        <div data-id="<%= ytid %>" class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div><a onclick="Timeline.remove('<%= ytid %>')" class="remove fa fa-times"></a><a onclick="replace(<%= id %>,true)" class="reload fa fa-refresh"></a>
       </span>
     </script>
 

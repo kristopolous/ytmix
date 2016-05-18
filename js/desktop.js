@@ -46,6 +46,7 @@ var Desktop = {
     $("#volume-up").click(volumeUp);
 
     Scrubber.phantom.dom.click(function() {
+      console.log( Scrubber.phantom.offset);
       var entry = _db.findFirst({ ytid: Scrubber.phantom.id });
       Timeline.play(Scrubber.phantom.id, entry.length * Scrubber.phantom.offset);
     });

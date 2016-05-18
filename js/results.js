@@ -59,6 +59,22 @@ var Results = {
     $("#related").click(Search.related);
   },
 
+  mobile: {
+    timeline: function(e) {
+      var 
+        ytid = $(this).data('id'),
+        entry = _db.findFirst({ ytid: ytid }),
+        offset,
+        point = (e.clientX - 8) - result.offset().left;
+
+      point = range(point, [0, _video.width]);
+
+      offset = point / _video.width;
+
+      Timeline.play(ytid, entry.length * offset);
+    }
+  },
+
   scrollTo: function(){
     var
       width = $("#video-list").width() - _scrollwidth,
@@ -158,20 +174,7 @@ var Results = {
       result.appendTo($("#video-viewport"));
 
       if(isMobile) {
-        timeline.click(function(e){
-          var 
-            id = obj.ytid,
-            entry = _db.findFirst({ ytid: id }),
-            offset,
-            point = (e.clientX - 8) - result.offset().left;
-
-          point = Math.max(5, point);
-          point = Math.min(_video.width, point);
-
-          offset = (point - 5) / _video.width;
-
-          Timeline.play(id, entry.length * offset);
-        });
+        timeline.click(Results.mobile.timeline);
       } else {
         timeline
           .hover(function(){
@@ -183,11 +186,10 @@ var Results = {
             Scrubber.phantom.container = false;
           })
           .mousemove(function(e) {
-            var point = (e.clientX - 8) - result.offset().left + 3;
-            point = Math.max(5, point);
-            point = Math.min(_video.width, point);
-            Scrubber.phantom.offset = ((point + 3) / _video.width);
-            Scrubber.phantom.dom.css("left", point + "px");
+            var point = e.clientX - result.offset().left;// - 5;
+            point = range(point, [0, _video.width]);
+            Scrubber.phantom.offset = point / _video.width;
+            Scrubber.phantom.dom.css("left", (point - 5) + "px");
           });
       }
 

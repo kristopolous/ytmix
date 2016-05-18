@@ -12,6 +12,12 @@ function when(condition) {
   }
 }
 
+function range(what, range) {
+  return Math.min(range[1], 
+    Math.max(range[0], what)
+  );
+}
+
 var Utils = {
   insertAfter: function(entry, list, db) {
     db = db || _db;
