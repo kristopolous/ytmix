@@ -274,9 +274,9 @@ var Results = {
     // to make sure that the last row is always visible.
     var bottom_buffer = Math.max(_video.height * 2, (total - stop) / perline * _video.height);
 
-    console.log(_video.height * 2, bottom_buffer, [top - topmodoffset, top], start, stop, height, _video.height);
-    $("#bottom-buffer").css('height', bottom_buffer + "px");
-    $("#top-buffer").css('height', _video.height + top - topmodoffset + "px");
+    //console.log(_video.height * 2, bottom_buffer, [top - topmodoffset, top], start, stop, height, _video.height);
+    $("#bottom-buffer").css('height', _video.height + bottom_buffer + "px");
+    $("#top-buffer").css('height', top - topmodoffset + "px");
 
     // These are sanity checks to see if we need to regenerate
     // the viewport based on say, a user scrolling something,
