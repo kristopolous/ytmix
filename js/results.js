@@ -1,6 +1,7 @@
 var Results = {
   viewable: {},
 
+  lock: 0,
   SortCompare: {pre: {}, post: {}},
 
   init: function(){
@@ -271,8 +272,11 @@ var Results = {
     // 
     // We also always have at least one empty row on the bottom 
     // to make sure that the last row is always visible.
-    $("#bottom-buffer").css('height', Math.max(_video.height / 2, (total - stop) / perline * _video.height) + "px");
-    $("#top-buffer").css('height', top - topmodoffset + "px");
+    var bottom_buffer = Math.max(_video.height * 2, (total - stop) / perline * _video.height);
+
+    console.log(_video.height * 2, bottom_buffer, [top - topmodoffset, top], start, stop, height, _video.height);
+    $("#bottom-buffer").css('height', bottom_buffer + "px");
+    $("#top-buffer").css('height', _video.height + top - topmodoffset + "px");
 
     // These are sanity checks to see if we need to regenerate
     // the viewport based on say, a user scrolling something,
