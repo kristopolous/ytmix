@@ -117,7 +117,7 @@ var Results = {
       dom = dbReference[0].jqueryObject;
     } else {
 
-      var splitup = obj.title.split(/ [-—]+ /);
+      var splitup = obj.title.split(/ [\|-—]+ /);
 
       if(splitup.length == 1) {
         splitup = splitup[0].split(/[-—]+ /);
