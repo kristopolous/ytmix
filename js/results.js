@@ -2,6 +2,7 @@ var Results = {
   viewable: {},
 
   lock: 0,
+  lastGen: new Date(),
   SortCompare: {pre: {}, post: {}},
 
   init: function(){
@@ -221,12 +222,21 @@ var Results = {
       bottom = height + top,
       set,
       total,
+      total_height,  
+      bottom_buffer,
+      content_height,
       constraints = {},
       query = ev('search_query'),
       perline = Math.floor(width / _video.width),
       start = Math.floor(top / _video.height) * perline,
       stop = Math.ceil(bottom / _video.height) * perline,
       topmodoffset = top % _video.height;
+
+    if(new Date() - Results.lastGen > 300) {
+      Results.lastGen = new Date();
+    } else {
+      return false
+    }
 
     if(query.length) {
       constraints.title = _db.like(query);
@@ -263,8 +273,13 @@ var Results = {
     // to clear everything and try again.
     total = set.length;
 
+    // This is the total height of the container, regardless of where we are.
+    total_height = Math.ceil(total / perline + 8) * _video.height
+
     start = Math.max(start, 0);
     stop = Math.min(stop, total);
+
+    content_height = Math.ceil((stop - start) / perline) * _video.height;
 
     // These are the two buffers of non-generation that are kept
     // at the top and the bottom of the query results. These
@@ -272,11 +287,13 @@ var Results = {
     // 
     // We also always have at least one empty row on the bottom 
     // to make sure that the last row is always visible.
-    var bottom_buffer = Math.max(_video.height * 2, (total - stop) / perline * _video.height);
-
-    //console.log(_video.height * 2, bottom_buffer, [top - topmodoffset, top], start, stop, height, _video.height);
-    $("#bottom-buffer").css('height', _video.height + bottom_buffer + "px");
     $("#top-buffer").css('height', top - topmodoffset + "px");
+
+    // The bottom buffer is the total height - the top buffer - viewport
+    bottom_buffer = total_height - (top - topmodoffset) - content_height;
+
+    $("#bottom-buffer").css('height',bottom_buffer + "px");
+    //console.log(content_height, bottom_buffer + ( top - topmodoffset), bottom_buffer, [top - topmodoffset, top], start, stop, height, _video.height);
 
     // These are sanity checks to see if we need to regenerate
     // the viewport based on say, a user scrolling something,
