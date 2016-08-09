@@ -2,9 +2,13 @@
 ini_set('mbstring.substitute_character', "none"); 
 
 function pl_tracks($params) {
-  $ytid_list = explode(',', $params['id']);
-  $sql_list = "'" . implode("','", $ytid_list) . "'";
-  return getall(run("select * from tracks where ytid in ($sql_list)"));
+  if(isset($params['id'])){ 
+    $ytid_list = explode(',', $params['id']);
+    $sql_list = "'" . implode("','", $ytid_list) . "'";
+    return getall(run("select * from tracks where ytid in ($sql_list)"));
+  } else {
+    return getall(run("select * from tracks"));
+  }
 }
 
 function pl_find($params) {
