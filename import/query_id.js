@@ -45,7 +45,9 @@ yt.api = function(ep, params) {
           return yt.api(ep, params);
         } 
         // otherwise, return that we are at the end.
-        return new Promise(function(resolve, reject) { resolve(false); }).catch(function (ex) { throw ex; });
+        return new Promise(function(resolve, reject) { 
+          resolve(false); 
+        });
       }
 
       resolve(res);
