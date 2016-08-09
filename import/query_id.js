@@ -1,56 +1,28 @@
 #!/usr/local/bin/node --harmony
 
-//
-// In the v3 version of the api we have to
-//
-//  1. Query the user for their upload playlist id
-//  2. Grab the the upload playlist to get the titles and ids
-//  3. Query each id to get the durations.
-//
 var 
   fs = require('fs'),
-  request = require('request'),
   https = require('https'),
-  http = require('http'),
-
-  // This is for excluding videos that are blocked in our country because you know,
-  // we have to make sure that the content distributor gets to limit their marketing 
-  // as per their contractual license agreement!
-  mylocale = 'US',
-
   querystring = require('querystring'),
-  url = require('url');
-
-var 
+  url = require('url'),
   yt = {
     id: process.argv[2],
     authkey: false,
     base: 'https://www.googleapis.com/youtube/v3/'
   };
 
-var lib = {
-  get: function (location, callback) {
-    var 
-      buffer = '', 
-      module = location.match(/https/) ? https : http;
+function get (location, callback) {
+  var buffer = '';
 
-    if(location.length) {
-      location = url.parse(location);
-    }
-
-    module.get(location, function(res) {
-
-      res.on('data', function(data) { buffer += data });
-
-      res.on('end', function(){
-        callback.call(this, JSON.parse(buffer));
-      });
-
-    }).on('error', function(e) { 
-      console.error(location, e) 
-    });
+  if(location.length) {
+    location = url.parse(location);
   }
-};
+
+  https.get(location, function(res) {
+    res.on('data', function(data) { buffer += data });
+    res.on('end', function(){ callback.call(this, JSON.parse(buffer)); });
+  });
+}
 
 // Returns a promise given an end point and 
 // set of parameters.
@@ -60,7 +32,7 @@ yt.api = function(ep, params) {
 
   var qparams = querystring.stringify(params);
   return new Promise(function(resolve, reject) {
-    lib.get(yt.base + ep + '?' + qparams, function(res) {
+    get(yt.base + ep + '?' + qparams, function(res) {
 
       // We presume that there's an 'items' in
       // the object that we are returning.
