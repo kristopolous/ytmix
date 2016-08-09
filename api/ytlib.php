@@ -35,32 +35,22 @@ function pl_ytinfo($params) {
   if(!isset($params['id'])) {
     return doError("Id isn't set.");
   }
+  $sections = isset($params['param']) ? $params['param'] : 'snippet,statistics';
+
   $ytid = $params['id'];
   
   if( !($res = yt_query([
-    'part' => 'snippet,',
+    'part' => $sections,
+    'ep' => 'videos',
+    'id' => $ytid,
     'maxResults' => 50,
-    'relatedToVideoId' => $ytid,
-    'videoEmbeddable' => 'true',
-    'type' => 'video'
   ]) ) ) {
     return false;
   }
 
-  foreach($res['items'] as $item) {
-    $related_videos[] = [
-      'ytid' => $item['id']['videoId'],
-      'title' => $item['snippet']['title'],
-      'uploader' => $item['snippet']['channelTitle'],
-      'cid' => $item['snippet']['channelId']
-    ]; 
-  }
-
-  return [
-    'ytid' => $ytid,
-    'related' => $related_videos
-  ];
+  return $res['items'];
 }
+
 function intget($what) {
   $ret = [];
   for($ix = 1; $ix < count($what); $ix++) {
