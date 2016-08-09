@@ -277,6 +277,9 @@ Adds `ytid` to user `id's`favorite list.
 ### (JSON) POST update {id, tracklist, blacklist, name}
 Updates the entry for id.
 
+### (JSON) tracks/{id}
+Returns a list of the tracks either system wide or specific to a playlist id.
+
 ## Miscellaneous hacks
 
 There's a function for displaying the most popular artists in a `console.table` using the `stats()` function (located in Utils.js).  The implementation is a pretty good example of my [db.js](https://github.com/kristopolous/db.js/tree/master) being utilized. Here's an example output:
