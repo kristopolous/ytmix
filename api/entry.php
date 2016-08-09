@@ -3,7 +3,7 @@ include ('common.php');
 include ('../lib/common.php');
 include ('playlist.php');
 include ('user.php');
-include ('ytsearch.php');
+include ('ytlib.php');
 
 function pl_help($message = false) {
   $list = get_defined_functions()['user'];

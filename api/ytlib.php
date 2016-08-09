@@ -31,6 +31,36 @@ function pl_related($params) {
   ];
 }
 
+function pl_ytinfo($params) {
+  if(!isset($params['id'])) {
+    return doError("Id isn't set.");
+  }
+  $ytid = $params['id'];
+  
+  if( !($res = yt_query([
+    'part' => 'snippet,',
+    'maxResults' => 50,
+    'relatedToVideoId' => $ytid,
+    'videoEmbeddable' => 'true',
+    'type' => 'video'
+  ]) ) ) {
+    return false;
+  }
+
+  foreach($res['items'] as $item) {
+    $related_videos[] = [
+      'ytid' => $item['id']['videoId'],
+      'title' => $item['snippet']['title'],
+      'uploader' => $item['snippet']['channelTitle'],
+      'cid' => $item['snippet']['channelId']
+    ]; 
+  }
+
+  return [
+    'ytid' => $ytid,
+    'related' => $related_videos
+  ];
+}
 function intget($what) {
   $ret = [];
   for($ix = 1; $ix < count($what); $ix++) {
