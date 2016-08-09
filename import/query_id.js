@@ -52,7 +52,7 @@ yt.api = function(ep, params) {
 
       resolve(res);
     });
-  }).catch(function (ex) { throw ex; });
+  });
 }
 
 function get_vid_info() {
@@ -69,7 +69,7 @@ function get_vid_info() {
     mypromise.then(function(data) {
       console.log(JSON.stringify(data.items, null, 4));
     });
-  }).catch(function (ex) { throw ex; });
+  });
 }
 
 fs.readFile(__dirname + '/../secrets/authkey', 'utf8', function (err, data) {
