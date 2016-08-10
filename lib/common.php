@@ -89,6 +89,14 @@ function yt_authkey() {
   return null;
 }
 
+function getfirst($sql) {
+  $res = [];
+  foreach(getall($sql) as $row) {
+    $res[] = $row[0];
+  }
+  return $res;
+}
+ 
 function getall($sql) {
   $ret = [];
   while($ret[] = mysqli_fetch_row($sql));
@@ -165,6 +173,10 @@ function dolog($str, $res = true, $path = 'sql.log') {
       $res ? '1' : '0',
       substr($str, 0, 200)
     ]) . "\n", FILE_APPEND);
+}
+
+function last_id() {
+  return mysqli_insert_id(get_db());
 }
 
 function run($mysql_string) {
