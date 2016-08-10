@@ -2,6 +2,8 @@
 ini_set('mbstring.substitute_character', "none"); 
 
 function author($name, $channel_id) {
+  $name = mysqli_real_escape_string(get_db(), $name);
+  $channel_id = mysqli_real_escape_string(get_db(), $channel_id);
   $res = getfirst(run("select id from authors where name = '$name' and channel_id = '$channel_id'"));
   if(!$res) {
     run("insert into authors (name, channel_id) values('$name', '$channel_id')");
@@ -16,12 +18,12 @@ function pl_tracksnoauthor($params) {
 
 function pl_ytupdate($params) {
   $ct = 0;
-  for($ix = 0; $ix < 70; $ix ++) {
-    $list = getfirst(run("select ytid from tracks where author is null order by ytid limit 20"));
+  for($ix = 0; $ix < 220; $ix ++) {
+    $list = getfirst(run("select ytid from tracks where (author < 1 and author > -2) and blacklist = 0 order by ytid limit 25"));
 
     foreach($list as $id) {
       run(
-        "update tracks set author=-1 where ytid='$id'"
+        "update tracks set author=author-1 where ytid='$id'"
       );
     }
 
