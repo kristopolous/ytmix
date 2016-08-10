@@ -1,6 +1,53 @@
 <?php 
 ini_set('mbstring.substitute_character', "none"); 
 
+function author($name, $channel_id) {
+  $res = getfirst(run("select id from authors where name = '$name' and channel_id = '$channel_id'"));
+  if(!$res) {
+    run("insert into authors (name, channel_id) values('$name', '$channel_id')");
+    return last_id();
+  }
+  return intval($res[0]);
+}
+
+function pl_tracksnoauthor($params) {
+  return getfirst(run("select ytid from tracks where author is null limit 50"));
+}
+
+function pl_ytupdate($params) {
+  $ct = 0;
+  for($ix = 0; $ix < 70; $ix ++) {
+    $list = getfirst(run("select ytid from tracks where author is null order by ytid limit 20"));
+
+    foreach($list as $id) {
+      run(
+        "update tracks set author=-1 where ytid='$id'"
+      );
+    }
+
+    $infoList = pl_ytinfo([
+      'id' => implode(',', $list),
+      'param' => 'snippet'
+    ]);
+
+    foreach($infoList as $row) {
+      echo $ct++ . "\n";
+      $id = $row['id'];
+      $snippet = &$row['snippet'];
+      $channel_id = $snippet['channelId'];
+      $name = $snippet['channelTitle'];
+      $description = $snippet['description'];
+      $channel_id = author($name, $channel_id);
+      run(
+        "update tracks set 
+          author=$channel_id, 
+          description='" . mysqli_real_escape_string(get_db(), $description) . "'
+          where ytid='$id'"
+      );
+    }
+  }
+}
+
 function pl_tracks($params) {
   if(isset($params['id'])){ 
     $ytid_list = explode(',', $params['id']);
