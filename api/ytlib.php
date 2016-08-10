@@ -41,9 +41,9 @@ function pl_ytinfo($params) {
   
   if( !($res = yt_query([
     'part' => $sections,
+    'maxResults' => 30,
     'ep' => 'videos',
-    'id' => $ytid,
-    'maxResults' => 50,
+    'id' => $ytid
   ]) ) ) {
     return false;
   }
