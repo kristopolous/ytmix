@@ -214,6 +214,7 @@ function pl_createID($params) {
     $param = 0;
   }
   mysqli_query(get_db(), "insert into playlist (authors, name, type, method) values ('$source', 'Uploads by $source', $param, '{}')");
+  // echo("insert into playlist (authors, name, type, method) values ('$source', 'Uploads by $source', $param, '{}')");
   return mysqli_insert_id(get_db());
 }
 
