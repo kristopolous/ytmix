@@ -279,7 +279,7 @@ function loadTemplates() {
 
 var App = {
   init: function() {
-    ev.set('request_gen', {forced: true});
+    ev.set('request_gen', {force: true});
 
     // we do this after
     ev('active_track', function(obj){
@@ -333,6 +333,7 @@ $(function(){
   }
 
   // so long as this is non-zero it appears to work.
+  // no, false, I don't know what's up with this.
   setTimeout(App.init, 10);
 });
 

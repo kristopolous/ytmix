@@ -220,7 +220,6 @@ var Results = {
       height = $("#video-list").height(),
       top = $("#video-list").scrollTop(),
       bottom = height + top,
-      forced = opts.forced,
       set,
       total,
       total_height,  
@@ -233,11 +232,7 @@ var Results = {
       stop = Math.ceil(bottom / _video.height) * perline,
       topmodoffset = top % _video.height;
 
-    console.log(Utils.stack());
-    if(forced || new Date() - Results.lastGen > 300) {
-      log("gen - yep", ev('app_state'));
-      Results.lastGen = new Date();
-    } else {
+    if(!opts.force && new Date() - Results.lastGen < 300) {
       log("gen - nope", ev('app_state'));
       return false
     }
@@ -297,7 +292,7 @@ var Results = {
     bottom_buffer = total_height - (top - topmodoffset) - content_height;
 
     $("#bottom-buffer").css('height',bottom_buffer + "px");
-    //console.log(content_height, bottom_buffer + ( top - topmodoffset), bottom_buffer, [top - topmodoffset, top], start, stop, height, _video.height);
+    // console.log(content_height, bottom_buffer + ( top - topmodoffset), bottom_buffer, [top - topmodoffset, top], start, stop, height, _video.height);
 
     // These are sanity checks to see if we need to regenerate
     // the viewport based on say, a user scrolling something,
@@ -308,13 +303,20 @@ var Results = {
     // try to thwart results changing with a bunch of other
     // things not.
     if(
-        opts.force || 
-        _video.old.start != start || 
-        _video.old.stop != stop  || 
-        _video.old.query != query  || 
-        _video.old.length != total ||
-        _video.old.current != ev('active_track').ytid
+        // The gen can be run when there is no content to be rendered.
+        // In that case, we skip it.
+        content_height && (
+          opts.force || 
+          _video.old.start != start || 
+          _video.old.stop != stop  || 
+          _video.old.query != query  || 
+          _video.old.length != total ||
+          _video.old.current != ev('active_track').ytid
+        )
       ) {
+
+      // If we get this far then we presume that things
+      Results.lastGen = new Date();
 
       _video.old = { 
         start : start, 
