@@ -463,7 +463,7 @@ var Timeline = (function(){
           ev('active_track', Player.activeData);
           ev.set('active_data');
 
-          log("Playing ", Player.activeData.ytid, Player.activeData.title);
+          log("Playing " + Player.activeData.ytid + Player.activeData.title);
         } else {
           Timeline.seekTo(offset, {isTrackRelative:true});
         }
@@ -529,7 +529,7 @@ var Timeline = (function(){
         track = _db.current.findFirst();
       }
 
-      log("Playing ", track);
+      log("Seeked to " + track.title);
 
       if(track) {
         if(!Player.activeData || (track.ytid != Player.activeData.ytid)) {

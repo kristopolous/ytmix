@@ -70,12 +70,8 @@ ev({
         id: ev('id')
       });
     }
-  },
+  }
 
-  'active_track': function(obj){
-    Toolbar.status("Playing " + obj.title);
-    ev.set('request_gen');
-  },
 });
 
 function getDuration(idList, cb) {
@@ -281,6 +277,21 @@ function loadTemplates() {
   });
 }
 
+var App = {
+  init: function() {
+    ev.set('request_gen', {forced: true});
+
+    // we do this after
+    ev('active_track', function(obj){
+      Toolbar.status("Playing " + obj.title);
+
+      // This removes the scrubber from the previous
+      ev.set('request_gen');
+    });
+    ev.set('init');
+  }
+};
+
 $(function(){
   loadTemplates();
   Results.init();
@@ -321,6 +332,7 @@ $(function(){
     Desktop.init();
   }
 
-  ev.set('init');
+  // so long as this is non-zero it appears to work.
+  setTimeout(App.init, 10);
 });
 

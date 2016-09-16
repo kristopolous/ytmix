@@ -46,8 +46,8 @@ var Utils = {
 
   stack: function(start, stop) {
     if (arguments.length == 0) {
-      start = 4;
-      stop = 22;
+      start = 3;
+      stop = 80;
     }
     try { throw new Error(); }
     catch (e) { return(
@@ -193,7 +193,7 @@ function log() {
   console.log.apply(console,
     [
       (new Date() - START),
-      Utils.stack(2,3).split('/').pop()
+      Utils.stack(0,2).split('/').pop()
     ].concat( slice.call(arguments) )
   );
 }

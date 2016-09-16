@@ -26,7 +26,6 @@ var Results = {
       _video.width = 260;
     }
 
-    setTimeout(Results.resize, 1000);
     $(window).resize(Results.resize);
     window.addEventListener("orientationchange", Results.resize);
 
@@ -215,11 +214,13 @@ var Results = {
   },
 
   gen: function(opts){
+    opts = opts || {};
     var 
       width = $("#video-list").width() - _scrollwidth,
       height = $("#video-list").height(),
       top = $("#video-list").scrollTop(),
       bottom = height + top,
+      forced = opts.forced,
       set,
       total,
       total_height,  
@@ -232,9 +233,12 @@ var Results = {
       stop = Math.ceil(bottom / _video.height) * perline,
       topmodoffset = top % _video.height;
 
-    if(new Date() - Results.lastGen > 300) {
+    console.log(Utils.stack());
+    if(forced || new Date() - Results.lastGen > 300) {
+      log("gen - yep", ev('app_state'));
       Results.lastGen = new Date();
     } else {
+      log("gen - nope", ev('app_state'));
       return false
     }
 
@@ -263,7 +267,7 @@ var Results = {
 
       if(query.length) {
         Search.index(set);
-      } else {
+      } else if(ev.isset('init')) {
         Search.reset();
       }
     }
