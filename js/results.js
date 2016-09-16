@@ -149,8 +149,10 @@ var Results = {
         }
       }
 
+      // There was a problem with a stray space going
+      // into the search query when clicking on the artist name.
       var 
-        artist = splitup.shift(),
+        artist = splitup.shift().replace(/\s*$/, ''),
         title = splitup.join(' - '),
         result = $(Results.template({
           id: obj.id,
