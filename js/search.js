@@ -44,6 +44,9 @@ var Search = {
     }
     loadRelated( _db.findFirst('ytid', ytid) );
   },
+  clear: function(){
+    ev('search_query', '');
+  },
   init: function(){
     var 
       lastSearch = '', 

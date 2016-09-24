@@ -61,7 +61,7 @@ var Results = {
   },
 
   mobile: {
-    timeline: function(e) {
+    timeline: function(e, result) {
       var 
         ytid = $(this).data('id'),
         entry = _db.findFirst({ ytid: ytid }),
@@ -177,7 +177,9 @@ var Results = {
       result.appendTo($("#video-viewport"));
 
       if(isMobile) {
-        timeline.click(Results.mobile.timeline);
+        timeline.click(function(e) {
+          Results.mobile.timeline.call(this, e, result);
+        });
       } else {
         timeline
           .hover(function(){
