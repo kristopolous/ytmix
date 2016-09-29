@@ -279,6 +279,8 @@ function loadTemplates() {
 
 var App = {
   init: function() {
+    // This has to be done to get the scrollbars of the main box to show.
+    Results.resize();
     ev.set('request_gen', {force: true});
 
     // we do this after
