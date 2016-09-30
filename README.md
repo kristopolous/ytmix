@@ -140,6 +140,8 @@ There's two tables ... one that has the playlist and one that has a normalized s
 
 ## Low Bandwidth Streaming
 
+Edit: There's a tool now at `tools/shell-listen.sh` that accomplishes this since recent (2016-09-30) FF dev versions have been eating up lots of CPU for the HTML5 yt videos.
+
 You can use [youtube-dl](http://rg3.github.io/youtube-dl/) with a FIFO-pipe and mplayer to play things over a low-bitrate connection like so:
 
     $ mkfifo audio-pipe
@@ -155,7 +157,7 @@ resources in top (or htop) drop a few percentage points with it - regardless of 
 
 ### terminal 2
 
-    $ curl localhost/ytmix/api/gettracks/(id) \ 
+    $ curl localhost/ytmix/api/gettracks.txt/(id) \ 
       | shuf \
       | xargs -n 1 youtube-dl -q -o audio-pipe -f 140 --
 
@@ -165,7 +167,7 @@ format 140 is an audio-only format.
 
 There's a much more obvious thing you can do to listen to your playlist offline.  Again, using xargs and its parallel magic...
 
-    $ curl localhost/ytmix/api/gettracks/(id) | xargs -n 1 -P 8 youtube-dl -q -f 140 --
+    $ curl localhost/ytmix/api/gettracks.txt/(id) | xargs -n 1 -P 8 youtube-dl -q -f 140 --
 
 Can allow you to go off and get a large assortment of m4as.
 
