@@ -12,6 +12,19 @@ function author($name, $channel_id) {
   return intval($res[0]);
 }
 
+function pl_popularity($params) {
+  list($id) = get($params, 'id');
+  // we need to get the tracks
+  $trackList = pl_getTracks($params);
+
+  // now we need the "popularity" of each
+  return getall(run('
+    select ytid, title, views, total_listen from tracks 
+    where ytid in (' . implode(',', $trackList) . ')
+    order by views desc
+  '));
+}
+
 function pl_tracksnoauthor($params) {
   return getfirst(run("select ytid from tracks where author is null limit 50"));
 }
