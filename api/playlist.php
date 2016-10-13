@@ -20,7 +20,7 @@ function pl_popularity($params) {
   // now we need the "popularity" of each
   return getall(run('
     select ytid, title, views, total_listen from tracks 
-    where ytid in (' . implode(',', $trackList) . ')
+    where ytid in ("' . implode('","', $trackList) . '")
     order by views desc
   '));
 }
