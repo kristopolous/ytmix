@@ -2,6 +2,7 @@ var Results = {
   viewable: {},
 
   lock: 0,
+  cache: {a:{}, t:{}},
   lastGen: new Date(),
   SortCompare: {pre: {}, post: {}},
 
@@ -97,6 +98,83 @@ var Results = {
     ev.set('request_gen');
   },
 
+  split: function(title) {
+    var splitup = title.split(/ [\|-—]+ /), artist, title, _a, _t, swap;
+
+    if(splitup.length == 1) {
+      splitup = splitup[0].split(/[-—]+ /);
+    }
+    if(splitup.length == 1) {
+      splitup = splitup[0].split(/ [-—]+/);
+    }
+    if(splitup.length == 1) {
+      splitup = splitup[0].split(/ [@:]* /);
+    }
+    if(splitup.length == 1) {
+      splitup = splitup[0].split(/[-—]/);
+      // if the first group is small then we can
+      // presume that this might have been a hyphen
+      // and abort
+      if(splitup[0].length < 8) {
+        splitup.join('-');
+      }
+    }
+    if(splitup.length == 1) {
+      splitup = splitup[0].split(/ by /i);
+
+      // The logic of [artist, title] has been reverse on us 
+      // Those wily tricksters!
+      if(splitup.length > 1) {
+        var tmp = splitup[1];
+        splitup[1] = splitup[0];
+        splitup[0] = tmp;
+      }
+    }
+    // supports things like Artist "Track"
+    if(splitup.length == 1) {
+      var form = splitup[0].match(/(.+)"(.+)"/);
+
+      if(!form) {
+        form = splitup[0].match(/(.+)\((.+)\)/);
+      }
+
+      if (form) {
+        splitup = form.slice(1,3);
+      }
+    }
+      
+
+    // There was a problem with a stray space going
+    // into the search query when clicking on the artist name.
+    artist = splitup.shift().replace(/\s*$/, '');
+    title = splitup.join(' - ');
+
+    // So two things ... first we want to have a cache to see if
+    // we *may be better* swapping these things.
+    _a = artist.toLowerCase().replace(/[^\w]/g,'');
+    _t = title.toLowerCase().replace(/[^\w]/g,'');
+
+    // well we've seen this title before so let's swap
+    if(title.length && artist.length) {
+      if( 
+          (Results.cache.t[_a] || 0) - (Results.cache.a[_a] || 0) +
+          (Results.cache.a[_t] || 0) - (Results.cache.t[_t] || 0) > 0
+        ) {
+        swap = artist;
+        artist = title;
+        title = swap;
+      }
+      Results.cache.t[_t] = (Results.cache.t[_t] || 0) + 1;
+      Results.cache.a[_a] = (Results.cache.a[_a] || 0) + 1;
+    }
+    
+    // Second we don't want to return an empty title
+    if(!title.trim().length) {
+      title = '(no title)';
+    }
+    return [artist, title];
+  },
+
   draw: function(obj) {
 
     // Look to see if we have generated this before.
@@ -117,51 +195,10 @@ var Results = {
       dom = dbReference[0].jqueryObject;
     } else {
 
-      var splitup = obj.title.split(/ [\|-—]+ /);
-
-      if(splitup.length == 1) {
-        splitup = splitup[0].split(/[-—]+ /);
-      }
-      if(splitup.length == 1) {
-        splitup = splitup[0].split(/ [-—]+/);
-      }
-      if(splitup.length == 1) {
-        splitup = splitup[0].split(/ [@:]* /);
-      }
-      if(splitup.length == 1) {
-        splitup = splitup[0].split(/[-—]/);
-        // if the first group is small then we can
-        // presume that this might have been a hyphen
-        // and abort
-        if(splitup[0].length < 8) {
-          splitup.join('-');
-        }
-      }
-      if(splitup.length == 1) {
-        splitup = splitup[0].split(/ by /i);
-
-        // The logic of [artist, title] has been reverse on us 
-        // Those wily tricksters!
-        if(splitup.length > 1) {
-          var tmp = splitup[1];
-          splitup[1] = splitup[0];
-          splitup[0] = tmp;
-        }
-      }
-      // supports things like Artist "Track"
-      if(splitup.length == 1) {
-        var form = splitup[0].match(/(.+)"(.+)"/);
-        if (form) {
-          splitup = form.slice(1,3);
-        }
-      }
-        
-
-      // There was a problem with a stray space going
-      // into the search query when clicking on the artist name.
       var 
-        artist = splitup.shift().replace(/\s*$/, ''),
-        title = splitup.join(' - '),
+        _res = Results.split(obj.title),
+        artist = _res[0],
+        title = _res[1],
         result = $(Results.template({
           id: obj.id,
           ytid: obj.ytid,

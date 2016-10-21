@@ -205,7 +205,7 @@ var Timeline = (function(){
         if( Player.active.getAvailableQualityLevels().indexOf(_quality) !== -1 && 
             Player.active.getPlaybackQuality() != _quality) {
 
-          log('set-quality');
+          //log('set-quality');
           Player.active.setPlaybackQuality(_quality);
         }
 

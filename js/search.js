@@ -30,7 +30,11 @@ var Search = {
     if(what === 'title') {
       _db.update(function(row) {
         if(!row._title) {
-          row._title = row.title.toLowerCase().replace(/[^\w]*/,'');
+          // we dump opening non-words and actually, you know what, fuck it, it's gotta be a word.
+          // fuck spaces ... those are sure to give false positives. This is a sort term not a display
+          // term.
+          var _title = Results.split(row.title).join('');
+          row._title = _title.toLowerCase().replace(/[^\w]*/g,'');
         }
       });
       what = '_title';
