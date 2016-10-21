@@ -148,6 +148,14 @@ var Results = {
           splitup[0] = tmp;
         }
       }
+      // supports things like Artist "Track"
+      if(splitup.length == 1) {
+        var form = splitup[0].match(/(.+)"(.+)"/);
+        if (form) {
+          splitup = form.slice(1,3);
+        }
+      }
+        
 
       // There was a problem with a stray space going
       // into the search query when clicking on the artist name.
