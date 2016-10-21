@@ -40,8 +40,6 @@ var Search = {
       what = '_title';
     }
     Search.index(_db.sort(what));
-    Results.gen();
-    Results.scrollTo();
   },
   index: function(subset) {
     var id = 0;
@@ -119,9 +117,9 @@ var Search = {
         Search.sort();
       } else {
         Search.reset();
-        Results.gen({force: true});
-        Results.scrollTo();
       }
+      Results.gen({force: true});
+      Results.scrollTo();
     });
 
     ev.after('tracklist', function() {

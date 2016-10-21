@@ -486,14 +486,10 @@ var Timeline = (function(){
 
       Player.offset = offset;
 
-      if(!object) {
-        Player.active.loadVideoById(opts);
-      } else {
-        Timeline
-          .backup
-          .off(object)
-          .loadVideoById(opts);
-      }
+      Timeline
+        .backup
+        .off(object)
+        .loadVideoById(opts);
 
       Player.Play();
 
