@@ -40,8 +40,7 @@ var Search = {
       what = '_title';
     }
     Search.index(_db.sort(what));
-    ev.set('sorted');
-    Results.gen({force: true});
+    Results.gen();
     Results.scrollTo();
   },
   index: function(subset) {
@@ -114,6 +113,22 @@ var Search = {
     });
 
     $('initial-search').focus();
+
+    $("#sort").click(function(){
+      if(ev.toggle('sort')) {
+        Search.sort();
+      } else {
+        Search.reset();
+        Results.gen({force: true});
+        Results.scrollTo();
+      }
+    });
+
+    ev.after('tracklist', function() {
+      if(ev('sort')) {
+        Search.sort();
+      }
+    });
   }
 };
 

@@ -309,7 +309,7 @@ var Results = {
 
       if(query.length) {
         Search.index(set);
-      } else if(ev.isset('init') && !ev.isset('sorted')) {
+      } else if(ev.isset('init') && !ev('sort')) {
         Search.reset();
       }
     }
