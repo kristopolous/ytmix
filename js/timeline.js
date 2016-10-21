@@ -356,7 +356,10 @@ var Timeline = (function(){
 
       // we should store that it was removed
       ev.setadd('blacklist', obj.ytid);
+
+      // we need to be aware of our current.
       _db.find('ytid', obj.ytid).remove();
+      _db.current.find('ytid', obj.ytid).remove();
 
       Timeline.updateOffset();
       Store.saveTracks();

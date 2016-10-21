@@ -246,14 +246,12 @@ var Results = {
 
     if(!opts.force && new Date() - Results.lastGen < 300) {
       log("gen - nope", ev('app_state'));
-      return false
+      return false;
     }
 
     if(query.length) {
-      constraints.title = _db.like(query);
+      constraints.title = _db.current.like(query);
     }
-
-    opts = opts || {};
 
     // There's a function that permits one to just display the related results
     // This not only show the isolated related results, but then modifies the
@@ -261,12 +259,12 @@ var Results = {
     // part should probably be removed and abstracted to somewhere else.
     if(ev('search_related').length) {
       var 
-        allrelated = _db.find('ytid', _db.isin(ev('search_related'))).select('related'),
+        allrelated = _db.current.find('ytid', _db.current.isin(ev('search_related'))).select('related'),
         unique = _.uniq(_.flatten(allrelated));
 
-      set = _db.find(constraints, {ytid: _db.isin(unique)});
+      set = _db.current.find(constraints, {ytid: _db.current.isin(unique)});
     } else {
-      set = _db.find(constraints).sort(function(a, b) { 
+      set = _db.current.find(constraints).sort(function(a, b) { 
         return a.id - b.id;
       });
 
@@ -274,7 +272,7 @@ var Results = {
 
       if(query.length) {
         Search.index(set);
-      } else if(ev.isset('init')) {
+      } else if(ev.isset('init') && !ev.isset('sorted')) {
         Search.reset();
       }
     }
@@ -352,7 +350,7 @@ var Results = {
       // We take the results from all the things that we
       // display on the screen (it returns a jquery element
       // with a back reference to the ytid).
-      _db.transaction.start(); {
+      _db.current.transaction.start(); {
         var view_list = set.slice(start, stop);
         self.view_list = view_list;
 
@@ -369,7 +367,7 @@ var Results = {
           };
 
         });
-      } _db.transaction.end();
+      } _db.current.transaction.end();
 
       // This is for sorting. We construct the list after the gen of the
       // elements in order to get an authortative one.
@@ -377,6 +375,8 @@ var Results = {
       for(var index = 0; index < elementList.length; index++) {
         Results.SortCompare.pre[elementList[index].ytid] = index;
       }
+    } else {
+      log("gen - nope", ev('app_state'));
     }
 
     Timeline.updateOffset();

@@ -25,13 +25,28 @@ var Search = {
     Timeline.updateOffset();
     log("search reset");
   },
+  sort: function(what) {
+    what = what || 'title';
+    if(what === 'title') {
+      _db.update(function(row) {
+        if(!row._title) {
+          row._title = row.title.toLowerCase().replace(/[^\w]*/,'');
+        }
+      });
+      what = '_title';
+    }
+    Search.index(_db.sort(what));
+    ev.set('sorted');
+    Results.gen({force: true});
+  },
   index: function(subset) {
     var id = 0;
     _db.current = DB( 
       DB.copy(subset)
-    ).update(
-      {id: eval(DB.local('id++'))}
     );
+    _db.current.update(function(m) {
+      m.id = id++;
+    });
     _db.byId = _db.current.view('id');
     Timeline.updateOffset();
   },
