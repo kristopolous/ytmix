@@ -175,10 +175,12 @@ var Timeline = (function(){
 
     // The mechanics for moving the centroid
     if(Player.active.getCurrentTime) {
-      localStorage[ev.db.id + 'offset'] = _offset;
-
       var time = Player.active.getCurrentTime(),
           prevOffset = _offset;
+
+      if(Player.activeData) {
+        localStorage[ev.db.id + 'offset'] = [Player.activeData.ytid, time].join(' ');
+      }
 
       if (time > 0 && Player.activeData) {
 
@@ -290,9 +292,11 @@ var Timeline = (function(){
     if (value == 'main') {
       _totalRuntime = Utils.runtime(_db.byId);
 
-      var myoffset = localStorage[ev.db.id + 'offset'];
-      if(myoffset) {
-        Timeline.seekTo(myoffset);
+      var parts = localStorage[ev.db.id + 'offset'].split(' '), _off
+      if(parts.length == 2) {
+        Timeline.updateOffset();
+        _off = _db.current.findFirst('ytid', parts[0]).offset;
+        Timeline.seekTo(_off + parseFloat(parts[1])); 
       } else {
         Timeline.seekTo((0.001 * (-_epoch + (+new Date()))) % _totalRuntime);
       }
@@ -482,10 +486,14 @@ var Timeline = (function(){
 
       Player.offset = offset;
 
-      Timeline
-        .backup
-        .off(object)
-        .loadVideoById(opts);
+      if(!object) {
+        Player.active.loadVideoById(opts);
+      } else {
+        Timeline
+          .backup
+          .off(object)
+          .loadVideoById(opts);
+      }
 
       Player.Play();
 

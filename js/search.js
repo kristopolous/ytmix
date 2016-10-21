@@ -42,6 +42,7 @@ var Search = {
     Search.index(_db.sort(what));
     ev.set('sorted');
     Results.gen({force: true});
+    Results.scrollTo();
   },
   index: function(subset) {
     var id = 0;
