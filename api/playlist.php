@@ -140,7 +140,7 @@ function pl_getPreview($params){
 }
 
 function pl_getTracks($params) {
-  list($id) = get($params, 'id');
+  list($id, $query) = get($params, 'id, param');
   $result = [];
   $index = YTID_OFFSET;
   $playlist = json_decode(getdata(run("select tracklist from playlist where id = $id")), true);
@@ -151,7 +151,13 @@ function pl_getTracks($params) {
     }
 
     foreach($playlist as $entry) {
-      $result[] = $entry[$index];
+      if($query) {
+        if(strpos(strtolower($entry[NAME_OFFSET]), $query) !== false) {
+          $result[] = $entry[$index];
+        }
+      } else {
+        $result[] = $entry[$index];
+      }
     }
   }
   return $result;

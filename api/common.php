@@ -1,5 +1,6 @@
 <?php
 // this is for things that aren't directly end points
+define("NAME_OFFSET", 1);
 define("YTID_OFFSET", 2);
 
 // make sure that the track that comes in is in the right format
