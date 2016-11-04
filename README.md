@@ -157,11 +157,13 @@ resources in top (or htop) drop a few percentage points with it - regardless of 
 
 ### terminal 2
 
-    $ curl localhost/ytmix/api/gettracks.txt/(id) \ 
+    $ curl localhost/ytmix/api/gettracks.txt/(id)[/query] \ 
       | shuf \
       | xargs -n 1 youtube-dl -q -o audio-pipe -f 140 --
 
 format 140 is an audio-only format.
+
+Also you can put an optional query on the end of it to get just those tracks that match it.
 
 ## Offline Listening
 
