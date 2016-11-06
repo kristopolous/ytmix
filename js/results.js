@@ -281,7 +281,7 @@ var Results = {
       stop = Math.ceil(bottom / _video.height) * perline,
       topmodoffset = top % _video.height;
 
-    if(!opts.force && new Date() - Results.lastGen < 300) {
+    if(!query.length && !opts.force && new Date() - Results.lastGen < 300) {
       log("gen - nope", ev('app_state'));
       return false;
     }
