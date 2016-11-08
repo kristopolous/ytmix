@@ -263,6 +263,7 @@ var Results = {
   },
 
   gen: function(opts){
+    console.log(" ---- gen ---");
     opts = opts || {};
     var 
       width = $("#video-list").width() - _scrollwidth,
@@ -281,10 +282,12 @@ var Results = {
       stop = Math.ceil(bottom / _video.height) * perline,
       topmodoffset = top % _video.height;
 
+    /*
     if(!query.length && !opts.force && new Date() - Results.lastGen < 300) {
       log("gen - nope", ev('app_state'));
       return false;
     }
+    */
 
     if(query.length) {
       constraints.title = _db.current.like(query);
@@ -353,6 +356,7 @@ var Results = {
         // The gen can be run when there is no content to be rendered.
         // In that case, we skip it.
         content_height && (
+          Results.last_query != ev('search_query') ||
           opts.force || 
           _video.old.start != start || 
           _video.old.stop != stop  || 
@@ -413,8 +417,9 @@ var Results = {
         Results.SortCompare.pre[elementList[index].ytid] = index;
       }
     } else {
-      log("gen - nope", ev('app_state'));
+      log("gen - nope - nothing changed", ev('app_state'));
     }
+    Results.last_query = ev('search_query');
 
     Timeline.updateOffset();
   }
