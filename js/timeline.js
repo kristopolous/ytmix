@@ -292,7 +292,7 @@ var Timeline = (function(){
     if (value == 'main') {
       _totalRuntime = Utils.runtime(_db.byId);
 
-      var parts = localStorage[ev.db.id + 'offset'].split(' '), _off
+      var parts = (localStorage[ev.db.id + 'offset'] || "").split(' '), _off
       if(parts.length == 2) {
         Timeline.updateOffset();
         _off = _db.current.findFirst('ytid', parts[0]).offset;
