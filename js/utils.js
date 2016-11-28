@@ -193,7 +193,7 @@ function log() {
   console.log.apply(console,
     [
       (new Date() - START),
-      Utils.stack(0,2).split('/').pop()
+      Utils.stack(2,3).split('/').pop()
     ].concat( slice.call(arguments) )
   );
 }
