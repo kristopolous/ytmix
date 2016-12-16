@@ -464,6 +464,13 @@ var Timeline = (function(){
           
           // After the assignment, then we add it to the userhistory
           Timeline.playById(Player.active, Player.activeData.ytid, offset);
+          
+          if(isNaN(Player.activeData.length)) {
+            log("No length for: ", Player.activeData);
+            // This should be a reference to everything...
+            Player.activeData.length = Player.controls.getDuration();
+            Store.saveTracks();
+          }
 
           // At this point there is now active data, so anything depending
           // on that can run.
@@ -471,6 +478,7 @@ var Timeline = (function(){
           ev.set('active_data');
 
           log("Playing " + Player.activeData.ytid + Player.activeData.title);
+          log(">>", Timeline.player.controls.getDuration());
         } else {
           Timeline.seekTo(offset, {isTrackRelative:true});
         }

@@ -49,9 +49,12 @@ var Results = {
       .keydown(gencheck);
 
     ev({
-      search_results: Results.gen,
       request_gen: Results.gen,
-      search_query: Results.gen
+      search_query: function(){
+        // make sure we scroll to the top
+        $("#video-list").scrollTop(0);
+        Results.gen();
+      }
     });
   
     // We need to scroll the video selector to put this
@@ -268,7 +271,8 @@ var Results = {
     var 
       width = $("#video-list").width() - _scrollwidth,
       height = $("#video-list").height(),
-      top = $("#video-list").scrollTop(),
+      newsearch = Results.last_query != ev('search_query'),
+      top = newsearch ? 0 : $("#video-list").scrollTop(),
       bottom = height + top,
       set,
       total,
@@ -299,16 +303,14 @@ var Results = {
     // part should probably be removed and abstracted to somewhere else.
     if(ev('search_related').length) {
       var 
-        allrelated = _db.current.find('ytid', _db.current.isin(ev('search_related'))).select('related'),
+        allrelated = _db.main.find('ytid', _db.current.isin(ev('search_related'))).select('related'),
         unique = _.uniq(_.flatten(allrelated));
 
-      set = _db.current.find(constraints, {ytid: _db.current.isin(unique)});
+      set = _db.main.find(constraints, {ytid: _db.current.isin(unique)});
     } else {
-      set = _db.current.find(constraints).sort(function(a, b) { 
+      set = _db.main.find(constraints).sort(function(a, b) { 
         return a.id - b.id;
       });
-
-      set = ev('search_results').concat(set);
 
       if(query.length) {
         Search.index(set);
@@ -355,8 +357,8 @@ var Results = {
     if(
         // The gen can be run when there is no content to be rendered.
         // In that case, we skip it.
+        newsearch || (total != Results.total) ||
         content_height && (
-          Results.last_query != ev('search_query') ||
           opts.force || 
           _video.old.start != start || 
           _video.old.stop != stop  || 
@@ -417,9 +419,10 @@ var Results = {
         Results.SortCompare.pre[elementList[index].ytid] = index;
       }
     } else {
-      log("gen - nope - nothing changed", ev('app_state'));
+      log("gen - nope - nothing changed",  Results.last_query, ev('search_query'), ev('app_state'));
     }
     Results.last_query = ev('search_query');
+    Results.total = total;
 
     Timeline.updateOffset();
   }
