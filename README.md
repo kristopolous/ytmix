@@ -30,6 +30,11 @@ Demo? See here:
 
 http://9ol.es/yt
 
+### Installation
+
+#### PHP 7 dependencies
+I ran into an issue (2017-01-04) that required the `php7.0-mbstring` apt package to be installed so be on the lookout.
+
 ### News
 Recently (2016), I normalized the database to have a table of tracks.  This table keeps track of whether a video can be played or not, how many times its been played and the total time listened throughout those plays.  It also keeps track of the uploader and channel.  
 
