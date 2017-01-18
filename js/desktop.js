@@ -62,7 +62,7 @@ Desktop.functions = function(){
   self.volumeDown = function() { ev.mod("volume", "*(10/11)"); }
   self.ytButton = function(el) {
     $(el)
-      .val('youtube-dl -f 140 -t -- ' + ev('active_track').ytid)
+      .val('youtube-dl --no-mtime -f 140 -t -- ' + ev('active_track').ytid)
       .select();
 
     document.execCommand('copy');
