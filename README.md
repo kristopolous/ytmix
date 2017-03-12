@@ -1,5 +1,5 @@
 This tool (in development since 2008!) is for quickly navigating and listening to large ad-hoc playlists from youtube:
-<img src=http://i.imgur.com/Gr17F7d.png>
+<img src="http://i.imgur.com/AZadWQQ.png">
 
 Also, as of April 2016, a large effort is being made to have a mobile-friendly version. Here's two screenshots from April 29, 2016:
 
@@ -15,13 +15,13 @@ There's special attention for looking for and adding:
 
 Where similar videos and group videos have a number of heuristic tests on them to keep the crap out.
 
-This isn't a fly-by-night project.  I've been using it consistently for 8 years - constantly updating and refining it. It's been through many iterations over the years and done many UI pivots.
+This isn't a fly-by-night project.  In use consistently since 2008 - it's been constantly updated and refined. It's been through many iterations over the years and done many UI pivots.  I honestly use it every day.
 
 The space for long-tail thematic grouping of music has certainly grown since my inception, but the solutions don't cut it because:
 
  * They require too much effort on my part to curate and follow hundreds of people, then unfollow ones that post junk
  * If things are 'automated', they aren't very good at guessing how I listen to music (I focus on things I haven't heard).
- * Many systems rightly weigh a songs popularity as part of the likelihood that I want to listen to it.  This is wrong.  If it's popular, I've already heard it and moved on.
+ * Many systems rightly weigh a song's popularity as part of the likelihood that I want to listen to it.  This is wrong.  If it's popular, I've already heard it and moved on.
  * These for-profit commercial services end up pitching promoted artists through some kind of revenue model in a way that disrupts the customer experience.
 
 This software may not be for you. That's fine. Widespread general utility wasn't on my roadmap. 
@@ -36,7 +36,7 @@ http://9ol.es/yt
 I ran into an issue (2017-01-04) that required the `php7.0-mbstring` apt package to be installed so be on the lookout.
 
 ### News
-Recently (2016), I normalized the database to have a table of tracks.  This table keeps track of whether a video can be played or not, how many times its been played and the total time listened throughout those plays.  It also keeps track of the uploader and channel.  
+Recently (2016), I normalized the database to have a table of tracks.  This table keeps track of whether a video can be played or not, how many times it's been played and the total time listened throughout those plays.  It also keeps track of the uploader and channel.  
 
 The eventual goal is to use this as data to discover more content.  There's a number of floating dimensions in this analysis which can lead to bad inferences, but the general idea is that if content is frequented often, listened to almost completely, and by the same uploader, then more content from that uploader would probably be good.
 
