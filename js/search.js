@@ -43,9 +43,11 @@ var Search = {
   },
   index: function(subset) {
     var id = 0;
-    _db.current = DB( 
-      DB.copy(subset)
-    );
+    if(subset) {
+      _db.current = DB( 
+        DB.copy(subset)
+      );
+    }
     _db.current.update(function(m) {
       m.id = id++;
     });

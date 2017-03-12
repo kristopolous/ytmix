@@ -8,6 +8,8 @@ var Desktop = {
       down: 40,
       right: 39, 
       left: 37,
+      tilde: 192,
+      '0': 48,
       '1': 49,
       '9': 57
     };
@@ -23,6 +25,8 @@ var Desktop = {
       } else if (!KEY.disable) {
         if(kc == KEY.left) { Timeline.seekTo(-30, {isOffsetRelative:true}); }
         else if(kc == KEY.right) { Timeline.seekTo(30, {isOffsetRelative:true}); }
+        else if(kc == KEY.tilde) { Timeline.prev(); }
+        else if(kc == KEY['0']) { Timeline.next(); }
         else if(kc >= KEY['1'] && kc <= KEY['9']) {
           // Go to x% into the track with 1 = 0% and 9 = 90%
           console.log((kc - KEY['1']) / 9 * Player.activeData.length, {isTrackRelative: true});
