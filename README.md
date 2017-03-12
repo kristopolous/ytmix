@@ -183,7 +183,7 @@ Can allow you to go off and get a large assortment of m4as.
 All the following can be accessed by doing a GET (unless otherwise specified) to `api/[the thing listed]`.
 The JSON results return 
 
-    {status: bool, result: json }
+    { status: bool, result: json }
 
 Where `status` is either True or False, depending on whether the call succeeded or failed. 
 If the call fails, then the result will hold an error string.
@@ -201,6 +201,9 @@ to get them as text.  Then if you want to update the playlists you could do
 
     curl localhos/api/names.txt | xargs -n 1 import/parse.js
 
+There's a tool for inspecting this API.  Since I made this tool, there's a bunch of complex crazy kool kid things for looking at APIs that the framework people love to use. I'm sure you can do that if you want.  Anyway this one is only a 50 line html file and it works fine. It's in `/test` here's a screen-shot:
+
+<img src=http://i.imgur.com/uMcAJyO.png>
 
 ### (JSON) help 
 List the supported functions (enumerated below).
