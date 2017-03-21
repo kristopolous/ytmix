@@ -111,7 +111,7 @@ var Results = {
       splitup = splitup[0].split(/ [-—]+/);
     }
     if(splitup.length == 1) {
-      splitup = splitup[0].split(/ [@:]* /);
+      splitup = splitup[0].split(/ [@:\*]* /);
     }
     if(splitup.length == 1) {
       splitup = splitup[0].split(/[-—]/);
