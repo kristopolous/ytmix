@@ -1,6 +1,5 @@
 <!doctype html>
-<html>
-  <html lang="en">
+<html lang="en">
 
   <head>
     <meta charset="utf-8">
@@ -170,4 +169,7 @@
     <script src="js/hash.js"></script>
   <!-- } -->
 
+    <script>
+    var AUTH_KEY = "<?php echo trim(file_get_contents('secrets/authkey')); ?>" || false;
+    </script>
 </html>
