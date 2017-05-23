@@ -170,6 +170,6 @@
   <!-- } -->
 
     <script>
-    var AUTH_KEY = "<?php echo trim(file_get_contents('secrets/authkey')); ?>" || false;
+    var AUTH_KEY = "<?php echo trim(file_get_contents('secrets/authkey')); ?>";
     </script>
 </html>
