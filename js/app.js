@@ -79,10 +79,23 @@ function getDuration(idList, cb) {
     var res = [];
     _.each(list, function(row) {
       // duration comes back like PT8M37S
-      var parts = _.map(row.contentDetails.duration.slice(2, -1).split(/[A-Z]/), function(m) { return parseInt(m); }),
-          duration = parts.pop() + (60 * parts.pop()) + (60 * 60 * (parts.pop() || 0));
+      var 
+        regex,
+        raw = row.contentDetails.duration, 
+        duration = 0;
 
-      res[row.id] = duration;
+      _.each(['H','M','S'], function(what) {
+        var reg = new RegExp("(\\d+)" + what);
+        regex = raw.match(reg);
+        if(regex) {
+          duration += parseInt(regex[1], 10);
+          if(what !== "S") {
+            duration *= 60;
+          }
+        }
+      });
+
+      res.push([row.id, duration]);
       _db.find({ytid: row.id}).update({length: duration});
     });
     if(cb) {
@@ -95,6 +108,7 @@ function findStatus(idList, cb, status) {
   var 
     count = idList.length,
     subgroup,
+    url,
     current = 0;
 
   status = status || [];
@@ -104,11 +118,15 @@ function findStatus(idList, cb, status) {
   }
 
   subgroup = idList.splice(0, 40);
-  $.getJSON("https://www.googleapis.com/youtube/v3/videos?" + [
+  url = "https://www.googleapis.com/youtube/v3/videos?" + [
       "id=" + subgroup.join(','), 
       "part=contentDetails",
       "key=" + AUTH_KEY
-    ].join('&'), function(res) {
+    ].join('&');
+
+  console.log(url);
+
+  $.getJSON(url, function(res) {
     _.each(res.items, function(row) {
       log("(status) " + row.id);
       status.push( row );
@@ -117,6 +135,8 @@ function findStatus(idList, cb, status) {
     if(current >= count) {
       cb(status);
     } else {
+      // if we are looking for more than what YT allows us, we
+      // 'recurse' with the lispian head of the list. 
       findStatus(idList, cb, status);
     }
   });
