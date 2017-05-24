@@ -21,7 +21,11 @@ var Desktop = {
         else if(kc == KEY.right) { Timeline.next(); }
         else if(kc == KEY.left) { Timeline.prev(); }
         else if(kc == KEY.space) { Timeline.pauseplay(); }
-        else log(ev);
+        else {
+          log(ev);
+          return true;
+        }
+        return false;
       } else if (!KEY.disable) {
         if(kc == KEY.left) { Timeline.seekTo(-30, {isOffsetRelative:true}); }
         else if(kc == KEY.right) { Timeline.seekTo(30, {isOffsetRelative:true}); }
