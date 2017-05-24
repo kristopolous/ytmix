@@ -11,11 +11,12 @@ function remote(opts) {
   remote.lock = true;
   
   var 
+    ret,
     reqID = remote.id ++,
     url = 'api/entry.php?',
     exposedParams = [],
-    onSuccess,
-    onFailure;
+    onSuccess = [],
+    onFailure = [];
 
   // This is the array way of calling things.
   if(_.isString(opts)) {
@@ -25,10 +26,8 @@ function remote(opts) {
     if(_.isFunction(_.last(list))) {
       // the success function is the last thing ... it
       // can also be omitted entirely.
-      onSuccess = list.pop();
-    } else {
-      onSuccess = function(){};
-    }
+      onSuccess.push(list.pop());
+    } 
 
     ["func", "id", "param"].forEach(function(which) {
       if(list) {
@@ -39,18 +38,7 @@ function remote(opts) {
       opts['extra'] = list;
     }
 
-  } else {
-    onFailure = opts.onFailure;
-    onSuccess = opts.onSuccess;
-  }
-
-  if(onSuccess) {
-    delete opts.onSuccess;
-  }
-
-  if(onFailure) {
-    delete opts.onFailure;
-  }
+  } 
 
   ["func", "id"].forEach(function(which) {
     if(opts[which]) {
@@ -59,8 +47,9 @@ function remote(opts) {
     }
   });
 
+  url = url + exposedParams.join('&');
   $.ajax({
-    url: url + exposedParams.join('&'),
+    url: url,
     data: opts,
     type: "POST",
     timeout: 7500,
@@ -100,17 +89,21 @@ function remote(opts) {
         }
       }
 
-      if(ret.status === true && onSuccess) {
-        try {
-          onSuccess(ret.result);
-        } catch (ex) { }
+      if(ret.status === true && onSuccess.length > 0) {
+        _.each(onSuccess, function(cb) {
+          try {
+            cb(ret.result);
+          } catch (ex) { }
+        });
       } 
 
       if(ret.status === false){
-        console.log(">> call failed", opts, meta);
+        console.log(">> call failed", opts, meta, url);
 
-        if(onFailure) { 
-          onFailure(ret.result);
+        if(onFailure.length > 0) { 
+          _.each(onFailure, function(cb) {
+            cb(ret.result);
+          });
         }
       }
 
@@ -126,7 +119,12 @@ function remote(opts) {
     }, remote.delay);
   });
 
-  return reqID;
+  ret = {
+    reqID: reqID,
+    then: function(cb) { onSuccess.push(cb); return ret;},
+    onFailure: function(cb) { onFailure.push(cb); return ret;}
+  };
+  return ret;
 }
 remote.queue = new Priority();
 remote.delay = 900;

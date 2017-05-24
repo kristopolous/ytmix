@@ -85,8 +85,7 @@ function getDuration(idList, cb) {
         duration = 0;
 
       _.each(['H','M','S'], function(what) {
-        var reg = new RegExp("(\\d+)" + what);
-        regex = raw.match(reg);
+        regex = raw.match(new RegExp("(\\d+)" + what));
         if(regex) {
           duration += parseInt(regex[1], 10);
           if(what !== "S") {
@@ -124,8 +123,6 @@ function findStatus(idList, cb, status) {
       "key=" + AUTH_KEY
     ].join('&');
 
-  console.log(url);
-
   $.getJSON(url, function(res) {
     _.each(res.items, function(row) {
       log("(status) " + row.id);
@@ -140,6 +137,15 @@ function findStatus(idList, cb, status) {
       findStatus(idList, cb, status);
     }
   });
+}
+
+function getMissingDurations() {
+  var missing = _db.find(function(row) { return isNaN(row.length) }).select('ytid');
+  if(missing.length) {
+    getDuration(missing, function(m) { 
+      Store.saveTracks();
+    });
+  }
 }
 
 function word_cut(what, howmany) {

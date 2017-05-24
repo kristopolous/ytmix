@@ -344,7 +344,7 @@ var Timeline = (function(){
 
     load: function(id) {
       ev('app_state', 'main');
-      Store.get(id);
+      Store.get(id).then(getMissingDurations);
     },
 
     // the current track

@@ -19,7 +19,7 @@ var Hash = (function(){
     hash: function(hash) {
       if(hash.id) {
         if(hash.id != ev('id')) {
-          Store.get(parseInt(hash.id));
+          Store.get(parseInt(hash.id)).then(getMissingDurations);
         }
       } else {
         ev('app_state','splash');

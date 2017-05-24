@@ -51,5 +51,5 @@ _db.beforeAdd(function(what) {
 
 _db.main = _db;
 
-ev.sniff('tick', 'deadair');
+//ev.sniff('tick', 'deadair');
 
