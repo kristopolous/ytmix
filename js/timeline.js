@@ -204,12 +204,14 @@ var Timeline = (function(){
         // For some reason it appears that this value can
         // toggle back to different quality sometimes. So 
         // we check to see where it's at.
+        /*
         if( Player.active.getAvailableQualityLevels().indexOf(_quality) !== -1 && 
             Player.active.getPlaybackQuality() != _quality) {
 
-          //log('set-quality');
-          Player.active.setPlaybackQuality(_quality);
+          log('set-quality');
+          /Player.active.setPlaybackQuality(_quality);
         }
+        */
 
         // There's this YouTube bug (2013/05/11) that can sometimes report 
         // totally incorrect values for the duration. If it's more than 
@@ -262,10 +264,26 @@ var Timeline = (function(){
     });
   }
 
+  self.onPlayerStateChange = function(e) {
+    if(e.data === YT.PlayerState.BUFFERING) {
+      //e.target.setPlaybackQuality('small');
+    }
+    if(e.data === 1) {
+      if(!Player.activeData.length) {
+        log(">>", Timeline.player.controls.getDuration());
+        Player.activeData.length = Timeline.player.controls.getDuration();
+        Timeline.updateOffset();
+      }
+    }
+  }
+
   self.onYouTubePlayerAPIReady = function() {
     Player.controls = new YT.Player('player-iframe', {
-      height: '390',
-      width: '640'
+      height: '120',
+      width: '160', 
+      events: {
+        'onStateChange': onPlayerStateChange
+      }
     });
 
     when(function(){
@@ -478,7 +496,6 @@ var Timeline = (function(){
           ev.set('active_data');
 
           log("Playing " + Player.activeData.ytid + Player.activeData.title);
-          log(">>", Timeline.player.controls.getDuration());
         } else {
           Timeline.seekTo(offset, {isTrackRelative:true});
         }
