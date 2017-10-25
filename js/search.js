@@ -152,7 +152,7 @@ var Search = {
 // incremental loads.
 //
 function loadRelated(obj, opts){
-  console.log(obj, opts);
+  //console.log(obj, opts);
   var match = _db.findFirst({ytid: obj.ytid});
   
   // The related entry will be null (see the template in
@@ -166,7 +166,7 @@ function loadRelated(obj, opts){
 
     // The match happens to be the same as the server
     // query in this case
-    console.log('related', match.ytid);
+    //console.log('related', match.ytid);
     remote.prioritize('related', match.ytid, 
       function (data){
 

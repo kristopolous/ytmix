@@ -30,16 +30,14 @@ var Utils = {
       { id: db('> ' + entry.id) }
     ).update(
       function(entry) {
-        log(entry.id, '>>', len + entry.id)
         entry.id += len;
       }
     );
 
-    log('starting at', start_id);
+    log('starting at', start_id, len);
 
     return db.insert(list).update(function(entry) {
-      entry.id = start_id++;
-      log('+', entry.id);
+      entry.id = ++start_id;
     });    
 
   },
