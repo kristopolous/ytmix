@@ -2,6 +2,7 @@
 include ('db.php');
 $g_uniq = uniqid();
 $g_error_stack = array();
+$g_rows_affected = 0;
 
 function trace(){
   static $which = 0;
@@ -165,12 +166,15 @@ function get($opts, $fieldList) {
 function dolog($str, $res = true, $path = 'sql.log') {
   global $g_uniq;
 
+  if(!is_string($res)) {
+    $res = $res ? '1' : '0';
+  }
   // it's ok if this fails, I still want valid JSON output
   @file_put_contents(__dir__ . '/../logs/' . $path, 
     implode(' | ', [
       $g_uniq,
       date('c'),
-      $res ? '1' : '0',
+      $res,
       substr($str, 0, 200)
     ]) . "\n", FILE_APPEND);
 }
@@ -180,11 +184,12 @@ function last_id() {
 }
 
 function run($mysql_string) {
-  global $g_uniq;
+  global $g_uniq, $g_rows_affected;
 
   $result = mysqli_query(get_db(), $mysql_string);
+  $g_rows_affected = mysqli_affected_rows(get_db());
 
-  dolog($mysql_string, $result);
+  dolog($mysql_string . '(' . $g_rows_affected . ')', $result);
 
   if(!$result) {
     return doError($mysql_string);
