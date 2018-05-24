@@ -183,6 +183,10 @@ function last_id() {
   return mysqli_insert_id(get_db());
 }
 
+function last_run() {
+  global $g_rows_affected;
+  return $g_rows_affected;
+}
 function run($mysql_string) {
   global $g_uniq, $g_rows_affected;
 

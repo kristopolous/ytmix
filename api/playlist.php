@@ -372,7 +372,7 @@ function pl_update($params) {
   
     // this sounds totally unsafe, let's do it anyway. WEEEEEE, 
     // livin on the edge ... you can't help yourself from fallllinnn.
-    run('update playlist set ' . $key . ' = "' . $value . '" where id = ' . $opts['id']);
+    $res = run('update playlist set ' . $key . ' = "' . $value . '" where id = ' . $opts['id']);
   }
 
   if(isset($opts['blacklist'])) {
