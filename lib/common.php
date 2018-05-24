@@ -85,7 +85,7 @@ function toJson(&$data, $decode = Array()) {
 
 function yt_authkey() {
   if(file_exists('../secrets/authkey')) {
-    return file_get_contents('../secrets/authkey');
+    return trim(file_get_contents('../secrets/authkey'));
   } 
   return null;
 }
