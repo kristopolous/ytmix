@@ -66,7 +66,7 @@ var Desktop = {
 };
 
 Desktop.functions = function(){ 
-  self.volumeUp = function() { ev.mod("volume", "*(11/10)"); }
+  self.volumeUp = function() { return ev.set("volume", Math.min(100, ev('volume')*(11/10))); }
   self.volumeDown = function() { ev.mod("volume", "*(10/11)"); }
   self.ytButton = function(el) {
     $(el)
