@@ -16,6 +16,22 @@ function addtrack($length, $title, $ytid) {
   );
 }
 
+if(!function_exists("dolog")) {
+  function dolog($str, $res = true, $path = 'sql.log') {
+    global $g_uniq;
+
+    // it's ok if this fails, I still want valid JSON output
+    @file_put_contents(__dir__ . '/../logs/' . $path, 
+      implode(' | ', [
+        $g_uniq,
+        date('c'),
+        $res ? '1' : '0',
+        substr($str, 0, 200)
+      ]) . "\n", FILE_APPEND);
+  }
+}
+
+
 function yt_query($opts = []) {
 
   $ep = 'search';

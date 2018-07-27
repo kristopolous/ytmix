@@ -33,13 +33,13 @@
       </div>
       <div id="lower">
         <div id="deck-control">
-          <a id="sort" class="button">Sort</a>
-          <a id="scroll-to" class="button">Scroll To</a>
+          <a id="sort" class="button"><i class="fa fa-sort-alpha-asc" aria-hidden="true"></i></a>
+          <a id="scroll-to" class="button">Scroll</a>
           <input type='text' value='Youtube-dl' onclick='ytButton(this)' class="button" id="clipboard-button">
           <span id='quality-control'>Quality:<a class="button" id="quality-down">&#x25BC;</a><a class="button" id="quality-up">&#x25B2;</a></span>
           <span class='mobile'>
-          <a class='button' id="search-mobile"><i class="fa fa-search" aria-hidden="true"></i></a>
-          <a class="previous-track button"><i class="fa fa-backward"></i></a><a class="pause-play button"><i class="fa fa-stop"></i></a><a class="next-track button"><i class="fa fa-forward"></i></a>
+            <a class='button' id="search-mobile"><i class="fa fa-search" aria-hidden="true"></i></a>
+            <a class="previous-track button"><i class="fa fa-backward"></i></a><a class="pause-play button"><i class="fa fa-stop"></i></a><a class="next-track button"><i class="fa fa-forward"></i></a>
           </span>
         </div>
         <span class="control-wrapper">
