@@ -16,13 +16,21 @@ function pl_related($params) {
     return false;
   }
 
+  $ytidList = [];
   foreach($res['items'] as $item) {
-    $related_videos[] = [
-      'ytid' => $item['id']['videoId'],
-      'title' => $item['snippet']['title'],
-      'uploader' => $item['snippet']['channelTitle'],
-      'cid' => $item['snippet']['channelId']
-    ]; 
+    $ytidList[] = $item['id']['videoId'];
+  }
+  $details = pl_ytinfo(['id' => implode(',', $ytidList)]);
+
+  foreach($details as $item) {
+    if($item['statistics']['viewCount'] < 300000) {
+      $related_videos[] = [
+        'ytid' => $item['id'],
+        'title' => $item['snippet']['title'],
+        'uploader' => $item['snippet']['channelTitle'],
+        'cid' => $item['snippet']['channelId']
+      ]; 
+    }
   }
 
   return [
@@ -38,13 +46,14 @@ function pl_ytinfo($params) {
   $sections = isset($params['param']) ? $params['param'] : 'snippet,statistics';
 
   $ytid = $params['id'];
-  
-  if( !($res = yt_query([
+  $params = [
     'part' => $sections,
     'maxResults' => 30,
     'ep' => 'videos',
     'id' => $ytid
-  ]) ) ) {
+  ];
+  
+  if( !($res = yt_query($params)) ) {
     return false;
   }
 
