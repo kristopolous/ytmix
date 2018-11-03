@@ -16,22 +16,6 @@ function addtrack($length, $title, $ytid) {
   );
 }
 
-if(!function_exists("dolog")) {
-  function dolog($str, $res = true, $path = 'sql.log') {
-    global $g_uniq;
-
-    // it's ok if this fails, I still want valid JSON output
-    @file_put_contents(__dir__ . '/../logs/' . $path, 
-      implode(' | ', [
-        $g_uniq,
-        date('c'),
-        $res ? '1' : '0',
-        substr($str, 0, 200)
-      ]) . "\n", FILE_APPEND);
-  }
-}
-
-
 function yt_query($opts = []) {
 
   $ep = 'search';
@@ -132,8 +116,10 @@ function modify_tracks($params, $func) {
       $ytid = $item;
     }
 
+    dolog("func", $add, "debug.log");
     if ($func == 'add') {
       if(!array_key_exists($ytid, $hash)) {
+        dolog("add", $item[0], "debug.log");
         // add the track to our list of known tracks
         addtrack($item[0], $item[1], $item[2]);
 
