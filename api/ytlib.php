@@ -147,17 +147,6 @@ function yt_search($query) {
   return $res;
 }
 
-function pl_getInfo($ytid) {
-  $res = [];
-  if( !($title = yt_query([
-    'ep' => 'videos',
-    'part' => 'snippet',
-    'id' => $ytid
-  ]) ) ) {
-    var_dump($title);
-  }
-}
-
 function pl_query($params) {
   $qstr = $params['param'] ?: $params['id'];
   $id = $params['id'];
