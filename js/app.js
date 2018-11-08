@@ -164,108 +164,122 @@ function replace(id, cb, attempt) {
     check_sorted = check.split(' ').sort().join(' '),
     check_wc = check.split(' ').length;
 
-  attempt = attempt || 0;
-  if(attempt) {
-    check = check.split(' ').slice(0, -1);
-    check_wc = check.split(' ').length
-  }
-
-  Toolbar.status("Attempting a replace of " + check_title);
-  log("[" + (attempt + 1) + "] Replacing (" + id + ") " + check_title);
-
-  remote('query', 1, check, function(resp) {
-
-    if(resp.vidList.length == 0 && check_wc > 2 && attempt != 1) {
-      replace(id, cb, 1);
-    }
-    _.each(resp.vidList, function(what, index) {
-      if(replaced) { return; } 
-
-      var 
-        attempt = replace.clean(what.title),
-        attempt_sorted = attempt.split(' ').sort().join(' '),
-        attempt_wc = attempt.split(' ').length,
-
-        // this is our lowest distance of all of our techniques
-        distance_lowest, 
-        
-        // the duration difference between the two in seconds.
-        length_difference = Math.abs(vid.length - what.length),
-        params,
-        cutoff;
-
-      // We check the sorted and unsorted titles and choose the best of the two.
-      distance_lowest = Math.min(
-        DL([index, "no-truncation", distance_lowest], check_sorted, attempt_sorted),
-        DL([index, "no-truncation", distance_lowest], check, attempt)
-      );
-
-      // we try to take the best of the three attempts ... the first one uses a
-      // sorted set of the words.
-      if(distance_lowest > 5) { 
-
-        // the second one makes sure that we are comparing the same amount of words between the two.
-        // try again but make the word count match
-        if(attempt_wc != check_wc) {
-          cutoff = Math.max(Math.min(attempt_wc, check_wc), 3);
-
-          // now we use the same number of words in a truncated manner between the two.
-          distance_lowest = Math.min(distance_lowest, 
-            DL([index, "words", distance_lowest], word_cut(check, cutoff), word_cut(attempt, cutoff)),
-            DL([index, "words", distance_lowest], word_cut(check_sorted, cutoff), word_cut(attempt_sorted, cutoff))
-          );
-        }
-
-        // If we have a reasonable chance of expecting them to match with a little
-        // more effort, then we try to just consider the first X number of characters
-        if(distance_lowest < 15) {
-          cutoff = Math.max(Math.min(attempt.length, check.length), 18);
-
-          distance_lowest = Math.min(distance_lowest, 
-            DL([index, 'chars', distance_lowest], check.slice(0, cutoff), attempt.slice(0, cutoff)),
-            DL([index, 'chars', distance_lowest], check_sorted.slice(0, cutoff), attempt_sorted.slice(0, cutoff))
-          );
-        }
-      }
-
-      console.log('final', length_difference, distance_lowest);
-
-      // Essentially what we do is we are more acceptable of video length differences so 
-      // long as the titles are more similar to each other.
-      if(
-        (length_difference < 4   && distance_lowest < 12) ||
-        (length_difference < 9   && distance_lowest < 7) ||
-        (length_difference < 35  && distance_lowest < 5) ||
-        (length_difference < 100 && distance_lowest < 3) ||
-        // if the video is longer and has an identical name, we'll be ok with it ... up to
-        // 4.5 minutes.
-        ((what.length - vid.length) > 0 && (what.length - vid.length) < 270 && distance_lowest < 2)
-      ) {
-        replaced = true;
-
-        log("Success >> (" + id + ") " + check_title);
-        // Keep the old title in case this is a bad match.
-        // I don't want to revoke all knowledge of it.
-        delete what.title;
-
-        _db.find({id: id})
-          .update(what)
-          .unset('jqueryObject');
-
-        ev.set('request_gen');
-      }
-    });
-    if(!replaced) {
-      log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title, resp.url);
-    }
-    if(cb) {
-      if(_.isFunction(cb)) {
-        cb(replaced);
-      } else {
-        replace.cb(replaced);
-      }
+  remote('ytinfo', vid.ytid, function(res) {
+    if(res[0] && res[0].snippet) {
+      _db.find({id: id}).update({
+        title: res[0].snippet.title
+      }).unset('jqueryObject');
+      Toolbar.status("Updating title");
+      ev.set('request_gen',  {force: true});
+      Store.saveTracks();
+    } else {
+      heuristic_search();
     }
   });
+
+
+  function heuristic_search() {
+    attempt = attempt || 0;
+    if(attempt) {
+      check = check.split(' ').slice(0, -1);
+      check_wc = check.split(' ').length
+    }
+    Toolbar.status("Attempting a replace of " + check_title);
+    log("[" + (attempt + 1) + "] Replacing (" + id + ") " + check_title);
+    remote('query', 1, check, function(resp) {
+
+      if(resp.vidList.length == 0 && check_wc > 2 && attempt != 1) {
+        replace(id, cb, 1);
+      }
+      _.each(resp.vidList, function(what, index) {
+        if(replaced) { return; } 
+
+        var 
+          attempt = replace.clean(what.title),
+          attempt_sorted = attempt.split(' ').sort().join(' '),
+          attempt_wc = attempt.split(' ').length,
+
+          // this is our lowest distance of all of our techniques
+          distance_lowest, 
+          
+          // the duration difference between the two in seconds.
+          length_difference = Math.abs(vid.length - what.length),
+          params,
+          cutoff;
+
+        // We check the sorted and unsorted titles and choose the best of the two.
+        distance_lowest = Math.min(
+          DL([index, "no-truncation", distance_lowest], check_sorted, attempt_sorted),
+          DL([index, "no-truncation", distance_lowest], check, attempt)
+        );
+
+        // we try to take the best of the three attempts ... the first one uses a
+        // sorted set of the words.
+        if(distance_lowest > 5) { 
+
+          // the second one makes sure that we are comparing the same amount of words between the two.
+          // try again but make the word count match
+          if(attempt_wc != check_wc) {
+            cutoff = Math.max(Math.min(attempt_wc, check_wc), 3);
+
+            // now we use the same number of words in a truncated manner between the two.
+            distance_lowest = Math.min(distance_lowest, 
+              DL([index, "words", distance_lowest], word_cut(check, cutoff), word_cut(attempt, cutoff)),
+              DL([index, "words", distance_lowest], word_cut(check_sorted, cutoff), word_cut(attempt_sorted, cutoff))
+            );
+          }
+
+          // If we have a reasonable chance of expecting them to match with a little
+          // more effort, then we try to just consider the first X number of characters
+          if(distance_lowest < 15) {
+            cutoff = Math.max(Math.min(attempt.length, check.length), 18);
+
+            distance_lowest = Math.min(distance_lowest, 
+              DL([index, 'chars', distance_lowest], check.slice(0, cutoff), attempt.slice(0, cutoff)),
+              DL([index, 'chars', distance_lowest], check_sorted.slice(0, cutoff), attempt_sorted.slice(0, cutoff))
+            );
+          }
+        }
+
+        console.log('final', length_difference, distance_lowest);
+
+        // Essentially what we do is we are more acceptable of video length differences so 
+        // long as the titles are more similar to each other.
+        if(
+          (length_difference < 4   && distance_lowest < 12) ||
+          (length_difference < 9   && distance_lowest < 7) ||
+          (length_difference < 35  && distance_lowest < 5) ||
+          (length_difference < 100 && distance_lowest < 3) ||
+          // if the video is longer and has an identical name, we'll be ok with it ... up to
+          // 4.5 minutes.
+          ((what.length - vid.length) > 0 && (what.length - vid.length) < 270 && distance_lowest < 2)
+        ) {
+          replaced = true;
+
+          log("Success >> (" + id + ") " + check_title);
+          // Keep the old title in case this is a bad match.
+          // I don't want to revoke all knowledge of it.
+          delete what.title;
+
+          _db.find({id: id})
+            .update(what)
+            .unset('jqueryObject');
+
+          ev.set('request_gen');
+        }
+      });
+      if(!replaced) {
+        log("[" + resp.vidList.length + "] Failure (" + id + ") " + vid.title, resp.url);
+      }
+      if(cb) {
+        if(_.isFunction(cb)) {
+          cb(replaced);
+        } else {
+          replace.cb(replaced);
+        }
+      }
+    });
+  }
 }
 
 // the default callback
