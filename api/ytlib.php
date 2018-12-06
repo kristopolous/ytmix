@@ -151,9 +151,14 @@ function pl_query($params) {
   $qstr = $params['param'] ?: $params['id'];
   $id = $params['id'];
   $resList = [];
-
-  if( !($res = yt_search($qstr)) ) {
-    return false;
+  if(strpos($qstr, 'youtube.com') !== false) {
+    $comp = parse_url($qstr);
+    parse_str($comp['query'], $query);
+    $res = ['items' => pl_ytinfo(['id' => $query['v']])];
+  } else {
+    if( !($res = yt_search($qstr)) ) {
+      return false;
+    }
   }
 
   if(count($res['items']) == 0) {

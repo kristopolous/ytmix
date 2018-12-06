@@ -102,7 +102,8 @@ var Results = {
   },
 
   split: function(title) {
-    var splitup = title.split(/ [\|-—]+ /), artist, title, _a, _t, swap;
+    var splitup = title.split(/\s[-—]+\s/), artist, title, _a, _t, swap;
+    console.log(title, splitup);
 
     if(splitup.length == 1) {
       splitup = splitup[0].split(/[-—]+ /);
