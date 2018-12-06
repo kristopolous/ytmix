@@ -148,13 +148,16 @@ function yt_search($query) {
 }
 
 function pl_query($params) {
-  $qstr = $params['param'] ?: $params['id'];
+  $qstr = $params['param'];
   $id = $params['id'];
   $resList = [];
+  if(empty($qstr)) {
+    return false;
+  }
   if(strpos($qstr, 'youtube.com') !== false) {
     $comp = parse_url($qstr);
     parse_str($comp['query'], $query);
-    $res = ['items' => pl_ytinfo(['id' => $query['v']])];
+    $res = yt_by_id($query['v']);
   } else {
     if( !($res = yt_search($qstr)) ) {
       return false;
@@ -165,6 +168,9 @@ function pl_query($params) {
     $parts = explode(' ', $qstr);
     array_pop($parts);
     $qstr = implode(' ', $parts);
+    if(empty($qstr)) {
+      return false;
+    }
     $res = yt_search($qstr);
     if(!$res) {
       return false;
