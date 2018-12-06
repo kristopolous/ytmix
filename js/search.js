@@ -3,6 +3,10 @@ var Search = {
   _useNet: false,
   _id: 0,
 
+  isLink: function(what) {
+    return what.indexOf('youtube.com') !== -1;
+  },
+
   // Search for videos from the net given a string.
   net: function(query) {
     remote('query', ++Search._id, query, function(res) {
@@ -12,9 +16,13 @@ var Search = {
         Store.addMethod('q:' + query, function(id) {
           // inject the id into all the results.
           _db.insert(res.vidList).update({method: id});
+          Store.saveTracks();
           ev.set('request_gen', {force: true});
           // we need to redo the search
           ev.fire('search_query');
+          if(Search.isLink(query)) {
+            Search.clear();
+          }
         })
       });
     });
@@ -65,6 +73,7 @@ var Search = {
   },
   clear: function(){
     ev('search_query', '');
+    $("#normal-search").val('');
   },
   init: function(){
     var 
@@ -97,7 +106,11 @@ var Search = {
       if(query != lastSearch) {
         ev('search_query', query);
         lastSearch = query;
-        ui(query);
+        if(Search.isLink(query)) {
+          Search._useNet = true;
+        } else {
+          ui(query);
+        }
       }
 
       if(Search._useNet) {
