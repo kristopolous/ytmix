@@ -1,4 +1,4 @@
-#!/usr/local/bin/node --harmony
+#!/usr/bin/nodejs --harmony
 
 //
 // In the v3 version of the api we have to

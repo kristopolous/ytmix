@@ -36,11 +36,14 @@ var Results = {
     // because it's perpetually trying to redraw
     // everything when it doesn't need to.
     function gencheck(){ 
+      if(new Date() - Results.lastGen < 500) {
+        return;
+      }
       if(timeout) {
         clearTimeout(timeout);
       }
 
-      timeout = setTimeout(Results.gen, 75);
+      timeout = setTimeout(Results.gen, 50);
       return true;
     }
 
@@ -103,7 +106,7 @@ var Results = {
 
   split: function(title) {
     var splitup = title.split(/\s[-—]+\s/), artist, title, _a, _t, swap;
-    console.log(title, splitup);
+    //console.log(title, splitup);
 
     if(splitup.length == 1) {
       splitup = splitup[0].split(/[-—]+ /);
@@ -347,6 +350,7 @@ var Results = {
     $("#bottom-buffer").css('height',bottom_buffer + "px");
     // console.log(content_height, bottom_buffer + ( top - topmodoffset), bottom_buffer, [top - topmodoffset, top], start, stop, height, _video.height);
 
+    //console.log(_video.old, [start,height, stop,query,total], content_height, total_height, {top: top - topmodoffset, bottom: bottom_buffer}, perline, top);
     // These are sanity checks to see if we need to regenerate
     // the viewport based on say, a user scrolling something,
     // new results coming in, old results being deleted, etc.
@@ -419,6 +423,9 @@ var Results = {
       for(var index = 0; index < elementList.length; index++) {
         Results.SortCompare.pre[elementList[index].ytid] = index;
       }
+      // Chrome tries to accomodate for this trickery by moving around the
+      // scroll on us so we undo their "smart scroll"
+      $("#video-list").scrollTop(top);
     } else {
       log("gen - nope - nothing changed",  Results.last_query, ev('search_query'), ev('app_state'));
     }
