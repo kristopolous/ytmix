@@ -473,7 +473,12 @@ var Timeline = (function(){
             var duration_listened = parseInt(Player.listen_total, 10);
             // if it's zero, we listened to none of it, so we should ignore it.
             if(duration_listened > 0) {
-              remote('addListen', Player.activeData.ytid);
+              remote({
+                func: 'addListen',
+                id: Player.activeData.ytid,
+                title: Player.activeData.title,
+                length: Player.activeData.length
+              });
               remote('updateDuration', Player.activeData.ytid, duration_listened);
             }
           }

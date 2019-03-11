@@ -28,7 +28,6 @@ function remote(opts) {
       // can also be omitted entirely.
       onSuccess.push(list.pop());
     } 
-
     ["func", "id", "param"].forEach(function(which) {
       if(list) {
         opts[which] = list.shift();
@@ -37,7 +36,6 @@ function remote(opts) {
     if(list) {
       opts['extra'] = list;
     }
-
   } 
 
   ["func", "id"].forEach(function(which) {

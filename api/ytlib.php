@@ -30,6 +30,7 @@ function pl_related($params) {
         'uploader' => $item['snippet']['channelTitle'],
         'cid' => $item['snippet']['channelId']
       ]; 
+      addtrack(-1, $item['snippet']['title'], $item['id']);
     }
   }
 

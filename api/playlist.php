@@ -270,8 +270,14 @@ function pl_updateDuration($params) {
 }
 
 function pl_addListen($params) {
-  $opts = getassoc($params, 'id');
-  return run("update tracks set views = views + 1, last = current_timestamp where ytid = '" . $opts['id'] . "'");
+  $opts = getassoc($params, 'id, title, length');
+  $id = "'" . $opts['id'] . "'" ;
+  $length = $opts['length'];
+  $res = run_assoc("select * from tracks where ytid = $id");
+  if(!$res) {
+    addtrack($opts['length'], $opts['title'], $opts['id']);
+  } 
+  return run("update tracks set duration = $length, views = views + 1, last = current_timestamp where ytid = $id");
 }
 
 function pl_updateTrack($params) {
