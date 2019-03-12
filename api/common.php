@@ -11,6 +11,9 @@ function sanitize_track($array) {
 
 function addtrack($length, $title, $ytid) {
   $title = mysqli_real_escape_string(get_db(), $title);
+  if(strlen($ytid) > 12) {
+    return;
+  }
   return run(
     "insert into tracks (duration, title, ytid) values ($length, '$title', '$ytid')"
   );

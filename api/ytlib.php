@@ -37,7 +37,7 @@ function pl_related($params) {
   $res = getfirst(run('select ytid from tracks where ytid in ("' . implode('","', array_keys($matchSet)) . '")'));
   $toAdd = array_diff(array_keys($matchSet), $res);
   foreach($toAdd as $id) {
-    addtrack(-1, $id, $matchSet[$id]);
+    addtrack(-1, mysqli_real_escape_string(get_db(), $matchSet[$id]), $id);
   }
 
   return [
