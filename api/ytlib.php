@@ -22,6 +22,7 @@ function pl_related($params) {
   }
   $details = pl_ytinfo(['id' => implode(',', $ytidList)]);
 
+  $matchSet = [];
   foreach($details as $item) {
     if($item['statistics']['viewCount'] < 300000) {
       $related_videos[] = [
@@ -30,8 +31,13 @@ function pl_related($params) {
         'uploader' => $item['snippet']['channelTitle'],
         'cid' => $item['snippet']['channelId']
       ]; 
-      addtrack(-1, $item['snippet']['title'], $item['id']);
+      $matchSet[$item['id']] = $item['snippet']['title'];
     }
+  }
+  $res = getfirst(run('select ytid from tracks where ytid in ("' . implode('","', array_keys($matchSet)) . '")'));
+  $toAdd = array_diff(array_keys($matchSet), $res);
+  foreach($toAdd as $id) {
+    addtrack(-1, $id, $matchSet[$id]);
   }
 
   return [
