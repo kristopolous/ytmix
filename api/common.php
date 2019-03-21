@@ -9,13 +9,33 @@ function sanitize_track($array) {
   return $array;
 }
 
-function addtrack($length, $title, $ytid) {
+function addtrack($length, $title, $ytid, $author = false, $description = false) {
   $title = mysqli_real_escape_string(get_db(), $title);
   if(strlen($ytid) > 12) {
     return;
   }
+
+  $keys = ['duration', 'title', 'ytid'];
+  $values = [$length, "'${title}'", "'${ytid}'"];
+
+  if($author) {
+    $keys[] = 'author';
+    // todo, if the author is not numeric we need to figure out
+    // how to insert it and the channel id into the author table
+    if(is_numeric($author)) {
+      $values[] = "'${author}'";
+    }
+  }
+  if($description) {
+    $keys[] = 'description';
+    $values[] = "'${description}'";
+  }
+
+  $keys = implode(',', $keys);
+  $values = implode(',', $values);
+
   return run(
-    "insert into tracks (duration, title, ytid) values ($length, '$title', '$ytid')"
+    "insert into tracks ($keys) values ($values)"
   );
 }
 
