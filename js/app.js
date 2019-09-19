@@ -152,6 +152,12 @@ function word_cut(what, howmany) {
   return what.split(' ').slice(0, howmany).join(' ');
 }
 
+function replaceAll() {
+  _db.find().each(function(row) {
+    replace(row.id, true);
+  });
+}
+
 function replace(id, cb, attempt) {
   var 
     vid = _db.findFirst({id: id}),
