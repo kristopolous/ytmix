@@ -287,7 +287,7 @@ function pl_updateTrack($params) {
   if(!is_numeric($value) && $value != 'true' && $value != 'false') {
     $value = "'$value'";
   }
-  return run("update tracks set $param = $value, last = current_timestamp where ytid = '$id'");
+  return run("update tracks set $param = $value, last = now() where ytid = '$id'");
 }
 
 function pl_swapTracks($params) {
