@@ -47,6 +47,7 @@ _db.addIf(function(what) {
 
 _db.beforeAdd(function(what) {
   what.length = parseInt(what.length, 10);
+  Results.split(what.title, what);
 });
 
 _db.main = _db;

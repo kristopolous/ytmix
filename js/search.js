@@ -34,7 +34,7 @@ var Search = {
     log("search reset");
   },
   sort: function(what) {
-    what = what || 'title';
+    what = what || 'artist';
     if(what === 'title') {
       _db.update(function(row) {
         if(!row._title) {
@@ -47,7 +47,9 @@ var Search = {
       });
       what = '_title';
     }
-    Search.index(_db.sort(what));
+    var sorted = _db.sort(what);
+    Search.index(sorted);
+    return sorted;
   },
   index: function(subset) {
     var id = 0;

@@ -104,7 +104,10 @@ var Results = {
     ev.set('request_gen');
   },
 
-  split: function(title) {
+  split: function(title, obj) {
+    if (obj.artist) {
+      return [obj.artist, obj.title];
+    }
     var splitup = title.split(/\s[-—]+\s/), artist, title, _a, _t, swap;
     //console.log(title, splitup);
 
@@ -179,6 +182,8 @@ var Results = {
     if(!title.trim().length) {
       title = '(no title)';
     }
+    obj.artist = artist;
+    obj.title = title;
     return [artist, title];
   },
 
@@ -203,7 +208,7 @@ var Results = {
     } else {
 
       var 
-        _res = Results.split(obj.title),
+        _res = Results.split(obj.title, obj),
         artist = _res[0],
         title = _res[1],
         result = $(Results.template({
@@ -312,7 +317,7 @@ var Results = {
 
       set = _db.main.find(constraints, {ytid: _db.current.isin(unique)});
     } else {
-      set = _db.main.find(constraints).sort(function(a, b) { 
+      set = _db.current.find(constraints).sort(function(a, b) { 
         return a.id - b.id;
       });
 
