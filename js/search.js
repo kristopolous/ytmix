@@ -47,7 +47,7 @@ var Search = {
       });
       what = '_title';
     }
-    var sorted = _db.sort(what);
+    var sorted = _db.sort('_lcartist');
     Search.index(sorted);
     return sorted;
   },
