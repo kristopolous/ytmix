@@ -3,6 +3,9 @@ function remote(opts) {
   // If more than one request is happening at a time, we build a
   // queue of the requests.
   if(remote.lock) {
+    if(opts.func === 'update') {
+      remote.queue = remote.queue.filter(row => row[0].func !== 'update');
+    }
     log("deferring. Queue size:", remote.queue.length);
     remote.queue.push(arguments);
     return;
