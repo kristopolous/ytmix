@@ -47,7 +47,9 @@ _db.addIf(function(what) {
 
 _db.beforeAdd(function(what) {
   what.length = parseInt(what.length, 10);
-  Results.split(what.title, what);
+  if(what.title) {
+    Results.split(what.title, what);
+  }
   what._lcartist = what.artist.toLowerCase();
 });
 

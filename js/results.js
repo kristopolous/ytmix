@@ -105,8 +105,8 @@ var Results = {
   },
 
   split: function(title, obj) {
-    if (obj.artist) {
-      return [obj.artist, obj.title];
+    if (obj.song && obj.song !== '(no title)') {
+      return [obj.artist, obj.song];
     }
     var splitup = title.split(/\s[-—]+\s/), artist, title, _a, _t, swap;
     //console.log(title, splitup);
@@ -183,7 +183,7 @@ var Results = {
       title = '(no title)';
     }
     obj.artist = artist;
-    obj.title = title;
+    obj.song = title;
     return [artist, title];
   },
 
@@ -210,11 +210,11 @@ var Results = {
       var 
         _res = Results.split(obj.title, obj),
         artist = _res[0],
-        title = _res[1],
+        song = _res[1],
         result = $(Results.template({
           id: obj.id,
           ytid: obj.ytid,
-          title: title,
+          song: song,
           artist: artist
         })),
 

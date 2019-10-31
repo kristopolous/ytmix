@@ -108,7 +108,7 @@
           <span>
             <p>
               <em><%= artist %></em>
-              <%= title %>
+              <%= song %>
             </p>
           </span>
           <div data-id="<%= ytid %>" class="timeline-container"><div class="timeline-outer"><div class="timeline-inner"></div></div></div>
@@ -127,7 +127,7 @@
               </a>
             </em>
             <a onclick="Search.related('<%= ytid %>')">
-              <%= title %>
+              <%= song %>
             </a>
           </p>
         </span>
