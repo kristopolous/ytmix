@@ -145,7 +145,9 @@ There's two tables ... one that has the playlist and one that has a normalized s
 
 ## Low Bandwidth Streaming
 
-Edit: There's a tool now at `tools/shell-listen.sh` that accomplishes this since recent (2016-09-30) FF dev versions have been eating up lots of CPU for the HTML5 yt videos.
+2019 Edit: The modern mplayer, `mpv` supports direct youtube urls. So you can do something like  curl localhost/ytmix/api/gettracks.txt/564/dopp | shuf | xargs -I %% mpv -vo null "https://youtube.com/watch?v=%%"
+
+2016 Edit: There's a tool now at `tools/shell-listen.sh` that accomplishes this since recent (2016-09-30) FF dev versions have been eating up lots of CPU for the HTML5 yt videos.
 
 You can use [youtube-dl](http://rg3.github.io/youtube-dl/) with a FIFO-pipe and mplayer to play things over a low-bitrate connection like so:
 
