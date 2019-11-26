@@ -382,9 +382,9 @@ $(function(){
   
   if(isMobile) {
     Mobile.init();
-  } else {
-    Desktop.init();
-  }
+  } 
+  // we can always do the desktop functions regardless.
+  Desktop.init();
 
   // so long as this is non-zero it appears to work.
   // no, false, I don't know what's up with this.
