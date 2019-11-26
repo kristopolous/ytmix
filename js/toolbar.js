@@ -2,6 +2,7 @@ var Toolbar = {
   status: function(message) {
     log("status", message);
 
+    $("#status").show();
     $("#status .message")
       .html(message)
       .css({
@@ -11,7 +12,9 @@ var Toolbar = {
       })
       .animate({top: "0px"}, 1000, function(){
         setTimeout(function(){
-          $("#status .message").fadeOut(1000);
+          $("#status .message").fadeOut(1000, function(){
+            $("#status").hide();
+          });
         }, 1500);
       });
   },
