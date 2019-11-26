@@ -12,7 +12,7 @@ var
   Template = {},
   UNIQ = 0,
   ev = EvDa({
-    'volume': 100,
+    'volume': parseFloat(localStorage['volume'] || '100'),
     'app_state': '',
     'name': '',
     'blacklist': [],
@@ -29,6 +29,10 @@ var
   _remote = {
     active: false
   };
+
+ev.after('volume', function(val) {
+  localStorage['volume'] = val;
+});
 
 function DL(title_array, lhs, rhs) {
   var ret = DL_real(lhs, rhs);
