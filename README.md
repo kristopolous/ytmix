@@ -6,6 +6,7 @@ Also, as of April 2016, a large effort is being made to have a mobile-friendly v
 <img src="http://i.imgur.com/TFGj0cD.png">
 <img src="http://i.imgur.com/1bFQ1Js.png">
 
+Nov 2019: This has long since been done and I use it constantly. Also I found a [reference to a previous version from 2010](http://kristopolous.blogspot.com/2010/02/youtube-music-searcher.html). I believe this goes back further, maybe in svn or cvs repositories, I'll have to look somewhere.
 
 There's special attention for looking for and adding:
  
