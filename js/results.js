@@ -275,7 +275,6 @@ var Results = {
   },
 
   gen: function(opts){
-    console.log(" ---- gen ---");
     opts = opts || {};
     var 
       width = $("#video-list").width() - _scrollwidth,
@@ -295,6 +294,7 @@ var Results = {
       stop = Math.ceil(bottom / _video.height) * perline,
       topmodoffset = top % _video.height;
 
+    console.log(" ---- gen ---", query);
     /*
     if(!query.length && !opts.force && new Date() - Results.lastGen < 300) {
       log("gen - nope", ev('app_state'));
@@ -303,7 +303,7 @@ var Results = {
     */
 
     if(query.length) {
-      constraints.title = _db.current.like(query);
+      constraints.title = _db.main.like(query);
     }
 
     // There's a function that permits one to just display the related results
@@ -317,7 +317,7 @@ var Results = {
 
       set = _db.main.find(constraints, {ytid: _db.current.isin(unique)});
     } else {
-      set = _db.current.find(constraints).sort(function(a, b) { 
+      set = _db.main.find(constraints).sort(function(a, b) { 
         return a.id - b.id;
       });
 
