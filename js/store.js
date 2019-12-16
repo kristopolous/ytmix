@@ -115,6 +115,7 @@ function remote(opts) {
       remote.lock = false;
       if(remote.queue.length) {
         log("Queue pop!", remote.queue.length);
+        // console.log(remote.apply, remote.queue);
         remote.apply(0, remote.queue.shift());
       }
     }, remote.delay);
@@ -136,7 +137,7 @@ remote.prioritize = function() {
   // queue of the requests.
   if(remote.lock) {
     log("deferring(priority). Queue size:", remote.queue.length);
-    remote.queue.push(arguments, 10);
+    remote.queue.push(arguments);//, 10);
     return;
   }
 
