@@ -9,10 +9,15 @@ var Search = {
 
   // Search for videos from the net given a string.
   net: function(query) {
+    var isLink = Search.isLink(query);
     remote('query', ++Search._id, query, function(res) {
       // add the method of this search string being the
       // way these were found
       ev.isset('id', function(){
+
+        if(isLink) {
+          query = query.split('=').pop();
+        }
         Store.addMethod('q:' + query, function(id) {
           // inject the id into all the results.
           _db.insert(res.vidList).update({method: id});
@@ -20,7 +25,7 @@ var Search = {
           ev.set('request_gen', {force: true});
           // we need to redo the search
           ev.fire('search_query');
-          if(Search.isLink(query)) {
+          if(isLink) {
             Search.clear();
           }
         })
