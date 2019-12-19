@@ -1,4 +1,5 @@
 <?php 
+mb_internal_encoding("UTF-8");
 ini_set('mbstring.substitute_character', "none"); 
 
 function author($name, $channel_id) {
@@ -359,7 +360,6 @@ function pl_update($params) {
 */
 
   $pdo = get_pdo();
-  $statement = $pdo->prepare("update playalist set :key = :value where id = :id");
   foreach($opts as $key => $value) {
     // skip past the id
     if($key == 'id') {
@@ -371,18 +371,15 @@ function pl_update($params) {
       continue;
     }
     if($key == 'tracklist') {
-      $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8'); 
+      $value = mb_convert_encoding($value, 'ASCII', 'UTF-8'); 
       $attempt = json_decode(stripslashes($value));
       if(!$attempt) {
         continue;
       }
     }
   
-    $res = $statement->execute([
-      'key' => $key,
-      'value' => $value,
-      'id' => $opts['id']
-    ]);
+    $statement = $pdo->prepare("update playlist set $key = ? where id = ?");
+    $res = $statement->execute([$value, $opts['id']]);
   }
 
   if(isset($opts['blacklist'])) {

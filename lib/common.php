@@ -76,7 +76,14 @@ function toJson(&$data, $decode = Array()) {
           toJson($child, $field);
         }
       } else {
+        $before = $data[$field];
         $data[$field] = json_decode($data[$field], true);
+        if(!$data[$field]) {
+          $data[$field] = json_decode(stripslashes($before), true);
+          if(!$data[$field]) {
+            error_log("Unable to decode $field: " . stripslashes($before));
+          }
+        }
       }
     }
   }
