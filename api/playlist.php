@@ -358,6 +358,8 @@ function pl_update($params) {
   }
 */
 
+  $pdo = get_pdo();
+  $statement = $pdo->prepare("update playalist set :key = :value where id = :id");
   foreach($opts as $key => $value) {
     // skip past the id
     if($key == 'id') {
@@ -376,9 +378,11 @@ function pl_update($params) {
       }
     }
   
-    // this sounds totally unsafe, let's do it anyway. WEEEEEE, 
-    // livin on the edge ... you can't help yourself from fallllinnn.
-    $res = run('update playlist set ' . $key . ' = "' . $value . '" where id = ' . $opts['id']);
+    $res = $statement->execute([
+      'key' => $key,
+      'value' => $value,
+      'id' => $opts['id']
+    ]);
   }
 
   if(isset($opts['blacklist'])) {
