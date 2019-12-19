@@ -2,6 +2,33 @@
 session_start();
 
 $_db = false;
+$_pdo = false; 
+
+function get_pdo() {
+  global $_pdo;
+  if(!$_pdo) {
+    $db_params = parse_ini_file('../secrets/db.ini');
+    $db_host = $db_params['host'];
+    $db   = 'yt';
+    $user = $db_params['user'];
+    $pass = $db_params['password'];
+    $charset = 'utf8mb4';
+
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $options = [
+      PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+      PDO::ATTR_EMULATE_PREPARES   => false,
+    ];
+    try {
+      $_pdo = new PDO($dsn, $user, $pass, $options);
+    } catch (\PDOException $e) {
+      throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    }
+  }
+  return $_pdo;
+}
+
 function get_db() {
   global $_db;
   if(!$_db) {
