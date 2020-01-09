@@ -104,7 +104,7 @@
     <script id='t-resultMobile' type='text/template'>
       <span class="result-container">
         <span class="result">
-          <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
+          <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="https://i.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
           <span>
             <p>
               <em><%= artist %></em>
@@ -118,7 +118,7 @@
   
     <script id="t-resultDesktop" type='text/template'>
       <span class="result">
-        <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="http://www.youtube.com/watch?v=<%= ytid %>"><img src="http://i.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
+        <a class="thumbnail" onclick="Timeline.pause()" target="_blank" href="https://www.youtube.com/watch?v=<%= ytid %>"><img src="https://i.ytimg.com/vi/<%= ytid %>/default.jpg"></a>
         <span>
           <p>
             <em>
@@ -137,7 +137,7 @@
 
     <script id="t-splash" type='text/template'>
       <a title="<%= id %>" onclick="Timeline.load(<%= id %>)" class="splash-container span3">
-        <img src="http://i.ytimg.com/vi/<%= ytList[0][2] %>/default.jpg">
+        <img src="https://i.ytimg.com/vi/<%= ytList[0][2] %>/default.jpg">
         <p><%= title %>
           <small>(<%= count %> tracks <%= duration %>)</small>
         </p>
