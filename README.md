@@ -1,12 +1,11 @@
 This tool (in development since 2008!) is for quickly navigating and listening to large ad-hoc playlists from youtube:
 <img src="http://i.imgur.com/AZadWQQ.png">
 
-Also, as of April 2016, a large effort is being made to have a mobile-friendly version. Here's two screenshots from April 29, 2016:
+Also, a large effort is being made to have a mobile-friendly version.
 
 <img src="http://i.imgur.com/TFGj0cD.png">
 <img src="http://i.imgur.com/1bFQ1Js.png">
 
-Nov 2019: This has long since been done and I use it constantly. Also I found a [reference to a previous version from 2010](http://kristopolous.blogspot.com/2010/02/youtube-music-searcher.html). I believe this goes back further, maybe in svn or cvs repositories, I'll have to look somewhere.
 
 There's special attention for looking for and adding:
  
@@ -33,11 +32,12 @@ http://9ol.es/yt
 
 ### Installation
 
-#### PHP 7 dependencies
-I ran into an issue (2017-01-04) that required the `php7.x-mbstring` apt package to be installed so be on the lookout.
-
 ### News
-Recently (2016), I normalized the database to have a table of tracks.  This table keeps track of whether a video can be played or not, how many times it's been played and the total time listened throughout those plays.  It also keeps track of the uploader and channel.  
+2020 Feb: I'm actively researching how to instrument bandcamp embeds. Currently I can leverage [youtube-dl](https://ytdl-org.github.io/youtube-dl/index.html) to generate link at runtime and then embed them into `<video>` embeds. I'm exploring indirect navigation and referencing schemes to be able to go cross domain seamlessly.
+2020 Jan: Added an ability to merge multiple yt users uploads into a single list
+2019 Nov: Mobile has long since been done and I use it constantly. Also I found a [reference to a previous version from 2010](http://kristopolous.blogspot.com/2010/02/youtube-music-searcher.html). I believe this goes back further, maybe in svn or cvs repositories, I'll have to look somewhere.
+2017 Jan: For PHP-7 make sure you have the mbstring extension installed.
+2016 April: I normalized the database to have a table of tracks.  This table keeps track of whether a video can be played or not, how many times it's been played and the total time listened throughout those plays.  It also keeps track of the uploader and channel.  
 
 The eventual goal is to use this as data to discover more content.  There's a number of floating dimensions in this analysis which can lead to bad inferences, but the general idea is that if content is frequented often, listened to almost completely, and by the same uploader, then more content from that uploader would probably be good.
 
