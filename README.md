@@ -30,14 +30,17 @@ Demo? See here:
 
 http://9ol.es/yt
 
-### Installation
-
 ### News
-2020 Feb: I'm actively researching how to instrument bandcamp embeds. Currently I can leverage [youtube-dl](https://ytdl-org.github.io/youtube-dl/index.html) to generate link at runtime and then embed them into `<video>` embeds. I'm exploring indirect navigation and referencing schemes to be able to go cross domain seamlessly.
-2020 Jan: Added an ability to merge multiple yt users uploads into a single list
-2019 Nov: Mobile has long since been done and I use it constantly. Also I found a [reference to a previous version from 2010](http://kristopolous.blogspot.com/2010/02/youtube-music-searcher.html). I believe this goes back further, maybe in svn or cvs repositories, I'll have to look somewhere.
-2017 Jan: For PHP-7 make sure you have the mbstring extension installed.
-2016 April: I normalized the database to have a table of tracks.  This table keeps track of whether a video can be played or not, how many times it's been played and the total time listened throughout those plays.  It also keeps track of the uploader and channel.  
+
+Last 5 years: 
+
+ * 2020 Feb: I'm actively researching how to instrument bandcamp embeds. Currently I can leverage [youtube-dl](https://ytdl-org.github.io/youtube-dl/index.html) to generate link at runtime and then embed them into `<video>` embeds. I'm exploring indirect navigation and referencing schemes to be able to go cross domain seamlessly.
+ * 2020 Jan: Added an ability to merge multiple yt users uploads into a single list
+ * 2019 Nov: Mobile has long since been done and I use it constantly. Also I found a [reference to a previous version from 2010](http://kristopolous.blogspot.com/2010/02/youtube-music-searcher.html). I believe this goes back further, maybe in svn or cvs repositories, I'll have to look somewhere.
+ * 2019 Feb: The modern mplayer, `mpv` supports direct youtube urls. So you can do something like  curl localhost/ytmix/api/gettracks.txt/564/dopp | shuf | xargs -I %% mpv -vo null "https://youtube.com/watch?v=%%"
+ * 2017 Jan: For PHP-7 make sure you have the mbstring extension installed.
+ * 2016 Aug: There's a tool now at `tools/shell-listen.sh` that accomplishes using this tool from the shell since recent (2016-09-30) FF dev versions have been eating up lots of CPU for the HTML5 yt videos.
+ * 2016 April: I normalized the database to have a table of tracks.  This table keeps track of whether a video can be played or not, how many times it's been played and the total time listened throughout those plays.  It also keeps track of the uploader and channel.  
 
 The eventual goal is to use this as data to discover more content.  There's a number of floating dimensions in this analysis which can lead to bad inferences, but the general idea is that if content is frequented often, listened to almost completely, and by the same uploader, then more content from that uploader would probably be good.
 
@@ -146,9 +149,6 @@ There's two tables ... one that has the playlist and one that has a normalized s
 
 ## Low Bandwidth Streaming
 
-2019 Edit: The modern mplayer, `mpv` supports direct youtube urls. So you can do something like  curl localhost/ytmix/api/gettracks.txt/564/dopp | shuf | xargs -I %% mpv -vo null "https://youtube.com/watch?v=%%"
-
-2016 Edit: There's a tool now at `tools/shell-listen.sh` that accomplishes this since recent (2016-09-30) FF dev versions have been eating up lots of CPU for the HTML5 yt videos.
 
 You can use [youtube-dl](http://rg3.github.io/youtube-dl/) with a FIFO-pipe and mplayer to play things over a low-bitrate connection like so:
 
