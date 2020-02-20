@@ -3,6 +3,14 @@
 define("NAME_OFFSET", 1);
 define("YTID_OFFSET", 2);
 
+function array_to_hash($array) {
+  $hash = [];
+  foreach($array as $item) {
+    $hash[$item] = true;
+  }
+  return $hash;
+}
+
 // make sure that the track that comes in is in the right format
 function sanitize_track($array) {
   $array[0] = intval($array[0]);
@@ -92,18 +100,21 @@ function is_assoc($array) {
   return false;
 }
 
-function get_playlist($id) {
+function _get_field($id, $what) {
   // Get the id playlist
-  $playlist = json_decode(
+  return json_decode(
     getdata(
-      run("select tracklist from playlist where id = $id")
+      run("select $what from playlist where id = $id")
     ), true
-  );
+  ) ?: [];
+}
 
-  if(!$playlist) {
-    $playlist = [];
-  }
-  return $playlist;
+function get_blacklist($id) {
+  return get_field($id, 'blacklist');
+}
+
+function get_playlist($id) {
+  return get_field($id, 'tracklist');
 }
 
 function playlist_to_hash($playlist) {
@@ -145,7 +156,7 @@ function modify_tracks($params, $func) {
   $id = $opts['id'];
 
   $playlist = get_playlist($id);
-  $hash = playlist_to_hash($playlist);
+  $hash = array_merge(playlist_to_hash($playlist), array_to_hash(get_blacklist($id)));
 
   // If what we want to insert isn't there, then we process it.
   foreach($track_list as $item) {
