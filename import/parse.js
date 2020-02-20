@@ -30,7 +30,7 @@ var
   },
   api = {
     base: 'http://localhost/ghub/ytmix/api/',
-    id: false
+    id: process.argv[3] || false,
   };
 
 yt.user = yt.user.replace(/\//g, '');
@@ -318,11 +318,17 @@ api.add_tracks_to_playlist = function(tracklist) {
 
 // createid Creates a playlist on the yt side.
 api.get_playlist = function(who, cb) {
+  function resolve() {
+    console.log("Using id " + api.id);
+    cb();
+  }
+
+  if(api.id) {
+    return resolve();
+  } 
   api.do('createid', {id: who}, function(data) {
     api.id = data;
-    console.log("Using id " + data, api);
-    // api.do('update', {id: api.id, name: 'Uploads by ' + who});
-    cb();
+    resolve();
   });
 }
 
