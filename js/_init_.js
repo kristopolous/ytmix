@@ -53,8 +53,10 @@ _db.beforeAdd(function(what) {
   what.length = parseInt(what.length, 10);
   if(what.title) {
     Results.split(what.title, what);
+    what._lcartist = what.artist.toLowerCase();
+  } else {
+    what._lcartist = what.artist = '';
   }
-  what._lcartist = what.artist.toLowerCase();
 });
 
 _db.main = _db;
