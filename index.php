@@ -73,7 +73,8 @@
     <div id="players"></div>
     <div class="scrubber" id="phantom-scrubber"></div>
     <div class="scrubber" id="real-scrubber"></div>
-    <div id="player-iframe"></div>
+    <div id="player-iframe-0"></div>
+    <div id="player-iframe-1"></div>
   </div>
 
   <div id="debug"></div>

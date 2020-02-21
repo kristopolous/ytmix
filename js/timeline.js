@@ -46,13 +46,8 @@ var Timeline = (function(){
           return _quality;
         },
 
-        down: function(){ 
-          return Player.Quality.set(_.indexOf(QUALITY_LEVELS, _quality) + 1);
-        },
-
-        up: function(){
-          return Player.Quality.set(_.indexOf(QUALITY_LEVELS, _quality) - 1);
-        }
+        down: () => Player.Quality.set(_.indexOf(QUALITY_LEVELS, _quality) + 1),
+        up: () => Player.Quality.set(_.indexOf(QUALITY_LEVELS, _quality) - 1),
       },
 
       Play: function(){
@@ -275,22 +270,25 @@ var Timeline = (function(){
   }
 
   self.onYouTubePlayerAPIReady = function() {
-    Player.controls = new YT.Player('player-iframe', {
-      height: '120',
-      width: '160', 
+    Player.controls = new YT.Player('player-iframe-0', {
+      height: 120, width: 160, 
       events: {
         'onStateChange': onPlayerStateChange
       }
     });
 
-    when(function(){
-      return Player.controls.loadVideoById;
-    }).run(function(){
+    Player.eager = new YT.Player('player-iframe-1', {
+      height: 120, width: 160, 
+      events: {
+        'onStateChange': onPlayerStateChange
+      }
+    });
+
+    when(() => Player.controls.loadVideoById).run(function(){
       ytDebugHook();
       Player.active = Player.controls;
       setInterval(updateytplayer, CLOCK_FREQ);
       ev.set('player_load'); 
-      // make
       ev.fire('volume');
     });
   }
