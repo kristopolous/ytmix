@@ -87,9 +87,7 @@ var Timeline = (function(){
       return Player.offset + ((new Date()) - _backup._start) / 1000;
     },
 
-    getDuration: function(){
-      return Player.activeData.length;
-    },
+    getDuration: () => Player.activeData.length,
 
     pauseVideo: function() {
       Player.offset = Player.active.getCurrentTime();
@@ -114,9 +112,7 @@ var Timeline = (function(){
       );
     },
 
-    getPlaybackQuality: function(){
-      return _quality;
-    },
+    getPlaybackQuality: () => _quality,
 
     on: function() {
       Player.offset = Player.offset || 0;
@@ -356,6 +352,7 @@ var Timeline = (function(){
 
   self.Player = Player;
 
+
   return {
     player: Player,
     backup: _backup,
@@ -366,8 +363,12 @@ var Timeline = (function(){
     },
 
     // the current track
-    current: function() {
-      return Player.activeData;
+    current: () => Player.activeData,
+
+    earlyLoad: (obj) => { 
+      return setTimeout(() => {
+        console.log(`loading ${obj.ytid}`);
+      }, 1000);
     },
 
     remove: function(ytid){

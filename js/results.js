@@ -199,9 +199,9 @@ var Results = {
       // append it to the video viewport, returning
       // the object that was previously created.
 
-//      if(!dbReference[0].jqueryObject.hasClass("active")) {
-        dbReference[0].jqueryObject.timeline.css('display','none');
- //     }
+      // if(!dbReference[0].jqueryObject.hasClass("active")) {
+      dbReference[0].jqueryObject.timeline.css('display','none');
+      // }
 
       $("#video-viewport").append(dbReference[0].jqueryObject);
       dom = dbReference[0].jqueryObject;
@@ -221,8 +221,15 @@ var Results = {
         timeline = $(".timeline-container", result);
 
       result.hover(
-        function(){ timeline.css('display','block') }, 
         function(){ 
+          timeline.data('load', Timeline.earlyLoad(obj));
+          timeline.css('display','block') 
+        }, 
+        function(){ 
+          let o = timeline.data('load');
+          if(o) {
+            clearTimeout(timeline.data('load'));
+          }
           if (timeline.hasClass('active')) {
             return;
           }
