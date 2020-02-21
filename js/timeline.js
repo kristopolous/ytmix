@@ -10,6 +10,7 @@ var Timeline = (function(){
 
     _isPlaying = true,
 
+    _earlyLoad = false,
     _backup = {},
     _template = {},
     _rateWindow = [],
@@ -366,9 +367,12 @@ var Timeline = (function(){
     current: () => Player.activeData,
 
     earlyLoad: (obj) => { 
-      return setTimeout(() => {
-        console.log(`loading ${obj.ytid}`);
-      }, 1000);
+      let localId = _earlyLoad = setTimeout(() => {
+        if(_earlyLoad == localId) {
+          console.log(`loading ${obj.ytid}`);
+        } 
+      }, 750);
+      return localId;
     },
 
     remove: function(ytid){

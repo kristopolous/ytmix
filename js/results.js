@@ -222,11 +222,15 @@ var Results = {
 
       result.hover(
         function(){ 
-          timeline.data('load', Timeline.earlyLoad(obj));
+          let o = Timeline.earlyLoad(obj);
+          timeline.data('load', o);
+          console.log(">> " + o + " " + obj.ytid);
           timeline.css('display','block') 
+          return true;
         }, 
         function(){ 
           let o = timeline.data('load');
+          console.log("<< " + o + " " + obj.ytid);
           if(o) {
             clearTimeout(timeline.data('load'));
           }
@@ -234,6 +238,7 @@ var Results = {
             return;
           }
           timeline.css('display','none') 
+          return true;
         }
       );
 
@@ -250,9 +255,11 @@ var Results = {
             Scrubber.phantom.dom.detach().appendTo(timeline);
             Scrubber.phantom.id = obj.ytid;
             Scrubber.phantom.container = timeline;
+            return true;
           }, function(){
             Scrubber.phantom.dom.detach().appendTo("#offscreen");
             Scrubber.phantom.container = false;
+            return true;
           })
           .mousemove(function(e) {
             var point = e.clientX - result.offset().left;// - 5;
