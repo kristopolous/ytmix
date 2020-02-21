@@ -224,13 +224,11 @@ var Results = {
         function(){ 
           let o = Timeline.earlyLoad(obj);
           timeline.data('load', o);
-          console.log(">> " + o + " " + obj.ytid);
           timeline.css('display','block') 
           return true;
         }, 
         function(){ 
           let o = timeline.data('load');
-          console.log("<< " + o + " " + obj.ytid);
           if(o) {
             clearTimeout(timeline.data('load'));
           }

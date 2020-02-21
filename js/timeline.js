@@ -11,6 +11,7 @@ var Timeline = (function(){
     _isPlaying = true,
 
     _earlyLoad = false,
+    _offsetRequest = false,
     _backup = {},
     _template = {},
     _rateWindow = [],
@@ -157,13 +158,7 @@ var Timeline = (function(){
 
         debug(stats);
       }
-    } else {
-      try {
-      } catch(ex) {
-        log(Player.active, ex);
-        debug([ "(backup) - failure" ]);
-      }
-    }
+    } 
 
     // The mechanics for moving the centroid
     if(Player.active.getCurrentTime) {
@@ -257,12 +252,17 @@ var Timeline = (function(){
   }
 
   self.onPlayerStateChange = function(e) {
-    if(e.data === YT.PlayerState.BUFFERING) {
-      //e.target.setPlaybackQuality('small');
+    if(e.target === Player.eager) { 
+      return;
     }
     if(e.data === 1) {
+      if(_offsetRequest) {
+        if( e.target.getVideoUrl().search(_offsetRequest.id) !== -1 && Math.abs(_offsetRequest.offset - e.target.getCurrentTime()) > 10) {
+          e.target.seekTo(_offsetRequest.offset);
+          _offsetRequest = false;
+        }
+      }
       if(!Player.activeData.length) {
-        log(">>", Timeline.player.controls.getDuration());
         Player.activeData.length = Timeline.player.controls.getDuration();
         Timeline.updateOffset();
       }
@@ -273,19 +273,19 @@ var Timeline = (function(){
     Player.controls = new YT.Player('player-iframe-0', {
       height: 120, width: 160, 
       events: {
-        'onStateChange': onPlayerStateChange
+        onStateChange: onPlayerStateChange
       }
     });
 
     Player.eager = new YT.Player('player-iframe-1', {
       height: 120, width: 160, 
       events: {
-        'onStateChange': onPlayerStateChange
+        onStateChange: onPlayerStateChange
       }
     });
 
     when(() => Player.controls.loadVideoById).run(function(){
-      ytDebugHook();
+      //ytDebugHook();
       Player.active = Player.controls;
       setInterval(updateytplayer, CLOCK_FREQ);
       ev.set('player_load'); 
@@ -367,9 +367,14 @@ var Timeline = (function(){
     earlyLoad: (obj) => { 
       let localId = _earlyLoad = setTimeout(() => {
         if(_earlyLoad == localId) {
-          console.log(`loading ${obj.ytid}`);
+          let off = .95 * Scrubber.phantom.offset * obj.length;
+          Player.eager.loadVideoById({
+            videoId: obj.ytid,
+            startSeconds: off
+          });
+          Player.eager.pauseVideo();
         } 
-      }, 750);
+      }, 500);
       return localId;
     },
 
@@ -519,10 +524,22 @@ var Timeline = (function(){
 
       Player.offset = offset;
 
-      Timeline
+      let active = Timeline
         .backup
-        .off(object)
-        .loadVideoById(opts);
+        .off(object);
+
+      let eagerVid = Player.eager ? Player.eager.getVideoUrl() : false;
+      if(eagerVid && eagerVid.search(id) !== -1) {
+        Player.active.stopVideo();
+        active = Player.eager;
+        Player.eager = Player.active;
+        Player.active = active;
+        Player.active.seekTo(offset);
+        _offsetRequest = { id, offset };
+        _isPlaying = false;
+      } else {
+        active.loadVideoById(opts);
+      }
 
       Player.Play();
 
