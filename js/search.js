@@ -36,7 +36,7 @@ var Search = {
     _db.byId = _db.ALL;
     _db.current = _db;
     Timeline.updateOffset();
-    log("search reset");
+    //log("search reset");
   },
   sort: function(what) {
     what = what || 'artist';
