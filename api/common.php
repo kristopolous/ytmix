@@ -110,11 +110,11 @@ function _get_field($id, $what) {
 }
 
 function get_blacklist($id) {
-  return get_field($id, 'blacklist');
+  return _get_field($id, 'blacklist');
 }
 
 function get_playlist($id) {
-  return get_field($id, 'tracklist');
+  return _get_field($id, 'tracklist');
 }
 
 function playlist_to_hash($playlist) {
@@ -166,7 +166,7 @@ function modify_tracks($params, $func) {
       $ytid = $item;
     }
 
-    dolog("func", $add, "debug.log");
+    dolog("func", $item, "debug.log");
     if ($func == 'add') {
       if(!array_key_exists($ytid, $hash)) {
         dolog("add", $item[0], "debug.log");
