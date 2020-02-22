@@ -261,8 +261,8 @@ var Timeline = (function(){
             e.target.getVideoUrl().search(_offsetRequest.id) !== -1 && 
             Math.abs(_offsetRequest.offset - e.target.getCurrentTime()) > 10) {
           e.target.seekTo(_offsetRequest.offset);
-          _offsetRequest = false;
         }
+        _offsetRequest = false;
       }
       if(!Player.activeData.length) {
         Player.activeData.length = Timeline.player.controls.getDuration();
