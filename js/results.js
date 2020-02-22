@@ -121,7 +121,7 @@ var Results = {
       splitup = splitup[0].split(/ [@:\*]* /);
     }
     if(splitup.length == 1) {
-      splitup = splitup[0].split(/[-—]/);
+      splitup = splitup[0].split(/[-—]+/);
       // if the first group is small then we can
       // presume that this might have been a hyphen
       // and abort
@@ -306,8 +306,8 @@ var Results = {
       stop = Math.ceil(bottom / _video.height) * perline,
       topmodoffset = top % _video.height;
 
-    console.log(" ---- gen ---", query);
     /*
+    console.log(" ---- gen ---", query);
     if(!query.length && !opts.force && new Date() - Results.lastGen < 300) {
       log("gen - nope", ev('app_state'));
       return false;
