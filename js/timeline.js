@@ -257,7 +257,9 @@ var Timeline = (function(){
     }
     if(e.data === 1) {
       if(_offsetRequest) {
-        if( e.target.getVideoUrl().search(_offsetRequest.id) !== -1 && Math.abs(_offsetRequest.offset - e.target.getCurrentTime()) > 10) {
+        if( e.target.getVideoUrl && 
+            e.target.getVideoUrl().search(_offsetRequest.id) !== -1 && 
+            Math.abs(_offsetRequest.offset - e.target.getCurrentTime()) > 10) {
           e.target.seekTo(_offsetRequest.offset);
           _offsetRequest = false;
         }
@@ -364,17 +366,20 @@ var Timeline = (function(){
     // the current track
     current: () => Player.activeData,
 
-    earlyLoad: (obj) => { 
+    earlyLoad: (obj, delay) => { 
       let localId = _earlyLoad = setTimeout(() => {
         if(_earlyLoad == localId) {
-          let off = .95 * Scrubber.phantom.offset * obj.length;
+          let off = Scrubber.phantom.container ?
+            .95 * Scrubber.phantom.offset * obj.length : 0;
+
+          log(`Eager Loading ${obj.ytid} (${off})`);
           Player.eager.loadVideoById({
             videoId: obj.ytid,
             startSeconds: off
           });
           Player.eager.pauseVideo();
         } 
-      }, 500);
+      }, delay || 500);
       return localId;
     },
 
@@ -508,7 +513,7 @@ var Timeline = (function(){
           ev('active_track', Player.activeData);
           ev.set('active_data');
 
-          log("Playing " + Player.activeData.ytid + Player.activeData.title);
+          //log("Playing " + Player.activeData.ytid + Player.activeData.title);
         } else {
           Timeline.seekTo(offset, {isTrackRelative:true});
         }
@@ -530,6 +535,7 @@ var Timeline = (function(){
 
       let eagerVid = Player.eager ? Player.eager.getVideoUrl() : false;
       if(eagerVid && eagerVid.search(id) !== -1) {
+        log("Eager loading");
         Player.active.stopVideo();
         active = Player.eager;
         Player.eager = Player.active;
@@ -547,6 +553,10 @@ var Timeline = (function(){
       // There should probably be a more abstract and less 
       // explicit way to handle this.
       ev.set('deadair', 0);
+      Timeline.earlyLoad(
+        _db.byId[Player.activeData.next],
+        5000
+      );
     },
 
     next: function(){
@@ -577,7 +587,7 @@ var Timeline = (function(){
 
       absolute = Math.max(0, absolute);
       absolute = Math.min(_totalRuntime, absolute);
-      log("Seeking to " + absolute);
+      //log("Seeking to " + absolute);
 
       var track = _db.current.findFirst(function(row) { 
         return (row.offset < absolute && (row.offset + row.length) > absolute) 
@@ -586,7 +596,7 @@ var Timeline = (function(){
         track = _db.current.findFirst();
       }
 
-      log("Seeked to " + track.title);
+      //log("Seeked to " + track.title);
 
       if(track) {
         if(!Player.activeData || (track.ytid != Player.activeData.ytid)) {

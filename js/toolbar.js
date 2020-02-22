@@ -1,6 +1,6 @@
 var Toolbar = {
   status: function(message) {
-    log("status", message);
+    //log("status", message);
 
     $("#status").show();
     $("#status .message")
