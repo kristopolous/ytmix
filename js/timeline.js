@@ -372,6 +372,7 @@ var Timeline = (function(){
           let off = Scrubber.phantom.container ?
             .95 * Scrubber.phantom.offset * obj.length : 0;
 
+          if(!obj) { console.log("no object", obj); return }
           log(`Eager Loading ${obj.ytid} (${off})`);
           Player.eager.loadVideoById({
             videoId: obj.ytid,
@@ -554,7 +555,12 @@ var Timeline = (function(){
       // explicit way to handle this.
       ev.set('deadair', 0);
       Timeline.earlyLoad(
-        _db.byId[Player.activeData.next],
+        // this search is needed for some reason ... the next
+        // pointer at this point of the code is incorrect for
+        // filtered lists.
+        _db.byId[
+          _db.current.findFirst({ytid: Player.activeData.ytid}).next
+        ],
         4000
       );
     },
