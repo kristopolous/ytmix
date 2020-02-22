@@ -533,7 +533,7 @@ var Timeline = (function(){
         .backup
         .off(object);
 
-      let eagerVid = Player.eager ? Player.eager.getVideoUrl() : false;
+      let eagerVid = ( Player.eager && Player.eager.getVideoUrl ) ? Player.eager.getVideoUrl() : false;
       if(eagerVid && eagerVid.search(id) !== -1) {
         log("Eager loading");
         Player.active.stopVideo();
