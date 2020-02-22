@@ -555,7 +555,7 @@ var Timeline = (function(){
       ev.set('deadair', 0);
       Timeline.earlyLoad(
         _db.byId[Player.activeData.next],
-        5000
+        4000
       );
     },
 
