@@ -29,7 +29,7 @@ var
     base: 'https://www.googleapis.com/youtube/v3/'
   },
   api = {
-    base: 'http://localhost/ghub/ytmix/api/',
+    base: 'http://9ol.es/yt/api/',
     id: process.argv[3] || false,
   };
 
@@ -293,7 +293,12 @@ api.do = function(ep, params, cb) {
           cb(res.result);
         }
       } catch (ex) {
-        throw [ex, "Unable to parse " + body, ep, params ? JSON.stringify(params) : ''];
+        console.log([
+          ex, "Unable to parse " + body, 
+          api.base + ep, 
+          (params ? JSON.stringify(params) : '')
+        ]);
+        throw ex
       }
     }
   });
