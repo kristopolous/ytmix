@@ -1,3 +1,4 @@
+<blockquote>Around 2020, I started developing a new approach that uses a bunch of terminal tools over yonder: https://github.com/kristopolous/music-explorer . This thing still works but I don't use it a lot. </blockquote>
 This tool (in development since 2008!) is for quickly navigating and listening to large ad-hoc playlists from youtube:
 <img src="http://i.imgur.com/AZadWQQ.png">
 
