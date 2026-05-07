@@ -18,7 +18,7 @@ function sanitize_track($array) {
 }
 
 function addtrack($length, $title, $ytid, $author = false, $description = false) {
-  $title = mysqli_real_escape_string(get_db(), $title);
+  $title = db_escape($title);
   if(strlen($ytid) > 12) {
     return;
   }
@@ -130,7 +130,7 @@ function playlist_to_hash($playlist) {
 }
 
 function set_playlist($id, $playlist) {
-  $string_playlist = mysqli_real_escape_string(get_db(), json_encode(array_values($playlist)));
+  $string_playlist = db_escape(json_encode(array_values($playlist)));
   if($string_playlist && strlen($string_playlist) > 0)  {
     run('update playlist set tracklist = \'' . $string_playlist . '\' where id = ' . $id);
     pl_generatePreview([ 'id' => $id ]);

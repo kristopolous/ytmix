@@ -59,10 +59,14 @@ function result($succeed, $message, $extra = false) {
   }
 }
 
+function db_escape($str) {
+  return get_db()->escapeString($str);
+}
+
 function sanitize($opts) {
   foreach ($opts as $k => $v) {
     if(gettype($v) == 'string') {
-      $opts[$k] = mysqli_real_escape_string(get_db(), $v);
+      $opts[$k] = db_escape($v);
     }
   }
   return $opts;
@@ -107,13 +111,14 @@ function getfirst($sql) {
  
 function getall($sql) {
   $ret = [];
-  while($ret[] = mysqli_fetch_row($sql));
-  array_pop($ret);
+  while($row = $sql->fetchArray(SQLITE3_NUM)) {
+    $ret[] = $row;
+  }
   return $ret;
 }
 
 function getdata($sql) {
-  $row = mysqli_fetch_assoc($sql);
+  $row = $sql->fetchArray(SQLITE3_ASSOC);
   if($row) {
     foreach($row as $key => $value) {
       return $value;
@@ -187,33 +192,37 @@ function dolog($str, $res = true, $path = 'sql.log') {
 }
 
 function last_id() {
-  return mysqli_insert_id(get_db());
+  return get_db()->lastInsertRowID();
 }
 
 function last_run() {
   global $g_rows_affected;
   return $g_rows_affected;
 }
-function run($mysql_string) {
+function run($sql_string) {
   global $g_uniq, $g_rows_affected;
 
-  $result = mysqli_query(get_db(), $mysql_string);
-  $g_rows_affected = mysqli_affected_rows(get_db());
+  $db = get_db();
+  $result = $db->query($sql_string);
+  $g_rows_affected = $db->changes();
 
-  dolog($mysql_string . '(' . $g_rows_affected . ')', $result);
+  dolog($sql_string . '(' . $g_rows_affected . ')', $result);
 
   if(!$result) {
-    return doError($mysql_string);
+    return doError($sql_string);
   }
 
   return $result;
 }
 
-function run_assoc($mysql_string) {
-  $result = run($mysql_string);
+function run_assoc($sql_string) {
+  $result = run($sql_string);
 
   $ret = array();
-  while($ret[] = mysqli_fetch_assoc($result));
-  array_pop($ret);
+  if ($result) {
+    while($row = $result->fetchArray(SQLITE3_ASSOC)) {
+      $ret[] = $row;
+    }
+  }
   return $ret;
 }

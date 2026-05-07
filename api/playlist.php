@@ -3,8 +3,8 @@ mb_internal_encoding("UTF-8");
 ini_set('mbstring.substitute_character', "none"); 
 
 function author($name, $channel_id) {
-  $name = mysqli_real_escape_string(get_db(), $name);
-  $channel_id = mysqli_real_escape_string(get_db(), $channel_id);
+  $name = db_escape($name);
+  $channel_id = db_escape($channel_id);
   $res = getfirst(run("select id from authors where name = '$name' and channel_id = '$channel_id'"));
   if(!$res) {
     run("insert into authors (name, channel_id) values('$name', '$channel_id')");
@@ -57,7 +57,7 @@ function pl_ytupdate($params) {
       run(
         "update tracks set 
           author=$channel_id, 
-          description='" . mysqli_real_escape_string(get_db(), $description) . "'
+          description='" . db_escape($description) . "'
           where ytid='$id'"
       );
     }
@@ -75,7 +75,7 @@ function pl_tracks($params) {
 }
 
 function pl_find($params) {
-  $qstr = mysqli_real_escape_string(get_db(), $params['id']);
+  $qstr = db_escape($params['id']);
   $res = [];
   foreach(getall(run("select ytid from tracks where title like '%$qstr%'")) as $row) {
     $res[] = $row[0];
@@ -184,7 +184,7 @@ function pl_generatePreview($params) {
 
     $preview['length'] = $length;
     $preview['count'] = count($playlist);
-    $preview = mysqli_real_escape_string(get_db(), json_encode($preview));
+    $preview = db_escape(json_encode($preview));
 
     return run('update playlist set preview="' . $preview . '" where id=' . $id);
   } else {
@@ -233,9 +233,9 @@ function pl_createID($params) {
   if(empty($param)) {
     $param = 0;
   }
-  mysqli_query(get_db(), "insert into playlist (authors, name, type, method) values ('$source', 'Uploads by $source', $param, '{}')");
+  run("insert into playlist (authors, name, type, method) values ('$source', 'Uploads by $source', $param, '{}')");
   // echo("insert into playlist (authors, name, type, method) values ('$source', 'Uploads by $source', $param, '{}')");
-  return mysqli_insert_id(get_db());
+  return last_id();
 }
 
 // Methods are how a track got into the playlist. In order to keep the payload of the playlist
@@ -252,7 +252,7 @@ function pl_addMethod($params) {
 
   $value = base_convert(count($method) + 1, 10, 36);
   $method[$param] = $value;
-  $string_method = mysqli_real_escape_string(get_db(), json_encode($method));
+  $string_method = db_escape(json_encode($method));
   run('update playlist set method = \'' . $string_method . '\' where id = ' . $id);
   return $value;
 }
@@ -343,7 +343,7 @@ function pl_get($params) {
     //run('update playlist set viewcount = viewcount + 1 where id=' . $id);
 
     $result = run("select * from playlist where id=$id");
-    $data = mysqli_fetch_assoc($result);
+    $data = $result->fetchArray(SQLITE3_ASSOC);
     return toJson($data, ['tracklist', 'preview', 'blacklist', 'method']);
   } else {
     return run_assoc('select id, name from playlist where preview is not null');
