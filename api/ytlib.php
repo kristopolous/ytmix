@@ -64,9 +64,9 @@ function pl_ytinfo($params) {
     return false;
   }
 
-  $title = mysqli_real_escape_string(get_db(), $res['items'][0]['snippet']['title']);
+  $title = db_escape($res['items'][0]['snippet']['title']);
   if($title) {
-    run("update tracks set title = '$title', last = now() where ytid = '$ytid'");
+    run("update tracks set title = '$title', last = CURRENT_TIMESTAMP where ytid = '$ytid'");
   }
 
   return $res['items'];

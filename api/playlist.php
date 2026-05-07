@@ -288,7 +288,7 @@ function pl_updateTrack($params) {
   if(!is_numeric($value) && $value != 'true' && $value != 'false') {
     $value = "'$value'";
   }
-  return run("update tracks set $param = $value, last = now() where ytid = '$id'");
+  return run("update tracks set $param = $value, last = CURRENT_TIMESTAMP where ytid = '$id'");
 }
 
 function pl_swapTracks($params) {
@@ -390,7 +390,7 @@ function pl_update($params) {
   }
 
   // make sure that the recent update sends it to the top.
-  run('update playlist set updated=now() where id = ' . $opts['id']);
+  run('update playlist set updated=CURRENT_TIMESTAMP where id = ' . $opts['id']);
 
   pl_generatePreview(['id' => $opts['id']]);
   return true;
