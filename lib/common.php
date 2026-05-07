@@ -202,16 +202,20 @@ function last_run() {
 function run($sql_string) {
   global $g_uniq, $g_rows_affected;
 
-  $db = get_db();
+  #$db = get_db();
+  error_log(__DIR__);
+  $db_path = '../db/yt.db';
+  $db = new SQLite3($db_path);
   $result = $db->query($sql_string);
+
   $g_rows_affected = $db->changes();
 
-  dolog($sql_string . '(' . $g_rows_affected . ')', $result);
-
   if(!$result) {
-    return doError($sql_string);
+    dolog($sql_string . ' FAILED: ' . $db->lastErrorMsg(), false);
+    return doError($sql_string . ' : ' . $db->lastErrorMsg());
   }
 
+  dolog($sql_string . '(' . $g_rows_affected . ')', true);
   return $result;
 }
 

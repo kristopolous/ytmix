@@ -216,7 +216,9 @@ function pl_createID($params) {
   list($source, $param) = get($params, 'id, param');
   
   if(!empty($source)) {
+    error_log('before');
     $result = getall(run("select id from playlist where authors like '%$source%' order by id desc"));
+    error_log('after');
 
     if($result) {
       $first = array_shift($result)[0];

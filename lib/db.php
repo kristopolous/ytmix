@@ -25,14 +25,20 @@ function get_pdo() {
 
 function get_db() {
   global $_db;
-  if(!$_db) {
-    $db_path = __DIR__ . '/../db/yt.db';
+  if(true) { //!$_db) {
+    $db_path = realpath(__DIR__ . '/../db/yt.db');
+    if (!$db_path) {
+      $db_path = __DIR__ . '/../db/yt.db';
+    }
     try {
       $_db = new SQLite3($db_path);
     } catch (Exception $e) {
+      error_log("Unable to connect to the database at $db_path: " . $e->getMessage());
       echo "Unable to connect to the database at $db_path: " . $e->getMessage();
       exit(0);
     }
+  } else {
+    error_log("reusing");
   }
   return $_db;
 }
