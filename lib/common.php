@@ -202,10 +202,7 @@ function last_run() {
 function run($sql_string) {
   global $g_uniq, $g_rows_affected;
 
-  #$db = get_db();
-  error_log(__DIR__);
-  $db_path = '../db/yt.db';
-  $db = new SQLite3($db_path);
+  $db = get_db();
   $result = $db->query($sql_string);
 
   $g_rows_affected = $db->changes();
