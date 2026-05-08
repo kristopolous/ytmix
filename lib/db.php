@@ -25,7 +25,7 @@ function get_pdo() {
 
 function get_db() {
   global $_db;
-  if(true) { //!$_db) {
+  if(!$_db) {
     $db_path = realpath(__DIR__ . '/../db/yt.db');
     if (!$db_path) {
       $db_path = __DIR__ . '/../db/yt.db';
