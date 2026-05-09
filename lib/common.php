@@ -199,6 +199,16 @@ function last_run() {
   global $g_rows_affected;
   return $g_rows_affected;
 }
+function pdo_query($sql, ...$params) {
+  $stmt = get_pdo()->prepare($sql);
+  $stmt->execute($params);
+  return $stmt;
+}
+
+function pdo_assoc($sql, ...$params) {
+  return pdo_query($sql, ...$params)->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function run($sql_string) {
   global $g_uniq, $g_rows_affected;
 

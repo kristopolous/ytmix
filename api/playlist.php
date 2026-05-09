@@ -184,9 +184,8 @@ function pl_generatePreview($params) {
 
     $preview['length'] = $length;
     $preview['count'] = count($playlist);
-    $preview = db_escape(json_encode($preview));
 
-    return run('update playlist set preview="' . $preview . '" where id=' . $id);
+    return pdo_query('update playlist set preview = ? where id = ?', json_encode($preview), $id);
   } else {
     return ("ok");
   }
